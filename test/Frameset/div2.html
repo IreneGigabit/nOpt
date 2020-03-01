@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>css+div模拟frameset布局代码</title>
+<script
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+<style>
+html{overflow:hidden;}
+body{margin:0px;}
+#top{height:100px;background:#eee;position:absolute;z-index:10;width:100%;top:0px;overflow:auto;}
+#left{position:absolute;top:0px;width:200px;height:100%;background:#ddd;z-index:5;overflow:auto;}
+#left .content{margin-top:100px;}
+#main{position:absolute;height:100%;width:100%;background:#ccc;overflow:auto;}
+#main .content{margin:100px 0px 0px 200px;}
+</style>
+</head>
+
+<body>
+<div id="top">
+	<input type="button" id="left2" name="" value="收起/显示左部2"/>
+	top
+	top
+	top
+	top
+	top
+	top
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+	top<HR>
+</div>
+<div id="left">
+	<div class="content">
+	<input type="button" id="top1" name="" value="收起/显示上部" onclick="document.getElementById('top').style.display='none'" />
+	left
+	left
+	left
+	left
+	left
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	left<HR>
+	</div>
+</div>
+<div id="main">
+	<div class="content">
+		main
+		main
+		<iframe frameborder="1" scrolling="auto" style="overflow:visible;width:99.5%; height:100%;" src="homtlist.htm" ></iframe>
+	</div>
+</div>
+</body>
+</html>
+
+<script language="javascript">
+$(function(){
+	$("#main .content").load("homtlist.htm");
+	
+	var sideClosed = false;
+	$("#left2").click(function(){
+		$('#left').toggle();
+		$('#main .content').animate({
+			marginLeft:(sideClosed)*200+'px'
+		}, 100);
+		sideClosed = !sideClosed;
+	});
+	var topClosed = false;
+	$("#top1").click(function(){
+		if(!topClosed) $('#top').hide(); else $('#top').show();
+		$('#left .content').animate({
+			marginTop:(topClosed)*100+'px'
+		}, 100);
+		$('#main .content').animate({
+			marginTop:(topClosed)*100+'px'
+		}, 100);
+		topClosed = !topClosed;
+	});
+});
+</script>

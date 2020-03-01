@@ -1,0 +1,1099 @@
+
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" Content="Microsoft Visual Studio 6.0">
+<meta http-equiv="Content-Type" content="text/html; charset=big5;no-caches;">
+<link rel="stylesheet" href="inc/setstyle.css">
+</HEAD>
+<BODY background="images/back01.gif">
+<form name="reg" method="POST" action="">
+<input type="hidden" name="hshowdefault" value="1"><!--進入時default角色，後於畫面上點下那個角色-->
+<input type="hidden" name="ctrlhomelist" value="" size=3><!--記錄點下那個角色，點list重load時要停在那個角色-->
+<input type="hidden" name="ctrlhomelistshow" value=""><!--資料要不要重load-->
+<div align="center">
+<center>
+<table border="1" width="95%" cellspacing="0" cellpadding="0" align=right>
+<TBODY>
+	<tr id=mytable>
+	<span id=tab class=notab1  onclick="VBScript: settab 0" onmouseover="vbs:me.style.cursor='hand'"><font size=2>&nbsp;<IMG src="images/flow/3.gif"><b>&nbsp;工作清單&nbsp;&nbsp;</font></span> 
+	<span id=tab class=selTab1 onclick="VBScript: settab 1" onmouseover="vbs:me.style.cursor='hand'"><font size=2>&nbsp;<IMG src="images/flow/1.gif">&nbsp;國內案流程&nbsp;&nbsp;</font></span>
+	<span id=tab class=selTab1 onclick="VBScript: settab 2" onmouseover="vbs:me.style.cursor='hand'"><font size=2>&nbsp;<IMG src="images/flow/2.gif">&nbsp;出口案流程&nbsp;&nbsp;</font></span>
+	<span id=tab class=selTab1 onclick="VBScript: settab 3" onmouseover="vbs:me.style.cursor='hand'"><font size=2>&nbsp;<IMG src="images/flow/11.gif">&nbsp;國內案統計&nbsp;&nbsp;</font></span>	
+	</tr>
+</center>
+<tr>
+	<td width="100%" id="Cont" valign="top"> 
+	<br><!--工作清單-->
+		<!--營洽-->
+		&nbsp;&nbsp;&nbsp;<span id="span_title1"><IMG src="images/flow/title1-1.gif" onclick="vbscript:span_title_onclick 1,2,2" style='cursor: hand;'></span>
+		<!--組主管-->
+		&nbsp;&nbsp;<span id="span_title13"><IMG src="images/flow/title13-1.gif" onclick="vbscript:span_title_onclick 13,2,2" style='cursor: hand;'></span>
+		<!--主管-->
+		&nbsp;&nbsp;<span id="span_title2"><IMG src="images/flow/title2-1.gif" onclick="vbscript:span_title_onclick 2,2,2" style='cursor: hand;'></span>
+		<!--程序-->
+		&nbsp;&nbsp;<span id="span_title3"><IMG src="images/flow/title3-1.gif" onclick="vbscript:span_title_onclick 3,2,2" style='cursor: hand;'></span>
+		<!--分案-->
+		&nbsp;&nbsp;<span id="span_title4"><IMG src="images/flow/title4-1.gif" onclick="vbscript:span_title_onclick 4,2,2" style='cursor: hand;'></span>
+		<!--承辦-->
+		&nbsp;&nbsp;<span id="span_title5"><IMG src="images/flow/title5-1.gif" onclick="vbscript:span_title_onclick 5,2,2" style='cursor: hand;'></span>
+		<!--分圖-->
+		&nbsp;&nbsp;<span id="span_title11"><IMG src="images/flow/title11-1.gif" onclick="vbscript:span_title_onclick 11,2,2" style='cursor: hand;'></span>
+		<!--製圖-->
+		&nbsp;&nbsp;<span id="span_title12"><IMG src="images/flow/title12-1.gif" onclick="vbscript:span_title_onclick 12,2,2" style='cursor: hand;'></span>
+		<!--會計-->
+		&nbsp;&nbsp;<span id="span_title6"><IMG src="images/flow/title6-1.gif" onclick="vbscript:span_title_onclick 6,2,2" style='cursor: hand;'></span>
+		
+		
+		<br><br>
+		<!--工作清單--舊版-->
+		<div id="tabcont" style="DISPLAY:">
+		<!--工作清單:營洽(title1)-->
+
+<TABLE cellpadding="0" cellspacing="0" align=center width="98%">
+<TBODY>
+	<TR>
+		<TD><IMG height=15 src="images/table/L_upb.gif" width=15 border=0></TD>
+		<TD background="images/table/upb.gif" width="100%" height="15" border="0"></TD>
+		<TD><IMG height=15 src="images/table/R_upb.gif" width=15 border=0></TD>
+	</TR>
+    <TR>
+		<TD background="images/table/leftb.gif" height="15" border="0"></TD>
+		<TD>
+			<TABLE WIDTH="95%" align=center>
+				<TR>
+					<TD width="30%"><P align=center><IMG src="images/flow/title1.gif"></P></TD>
+					<TD width="10%" align=middle><IMG src="images/flow/head03.gif"></STRONG></FONT></TD>
+					<TD width="10%" align=middle><IMG src="images/flow/head04.gif"></STRONG></FONT></TD>
+					<TD width="30%"><!--<P align=center><IMG src="images/flow/title1.gif"></P>--></TD>
+					<TD width="10%" align=middle><IMG src="images/flow/head03.gif"></STRONG></FONT></TD>
+					<TD width="10%" align=middle><IMG src="images/flow/head04.gif"></STRONG></FONT></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue align=center>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(未交辦)-->
+			   	   	<TD align=middle class=data251 nowrap>已洽案登錄未交辦：</TD><!--營洽尚未交辦案件-->
+			   		<TD align=middle class=data252>
+					
+								0
+							
+									(<a href="brp2m/brp23list.asp?stat_code=NN&ctrl_nocase_flag=Y&cust_area=N&homelist=homelist">29</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data252>
+					
+								0
+							
+									(<a href="brp2m/exp23list.asp?prgid=exp23&qstat_code=NN&ctrl_nocase_flag=Y&qcust_area=N&homelist=homelist">3</a>)
+								
+			   		</TD>
+			   		<!--<TD align=middle class=data261 width="9%"></TD>--><!--(已交辦)-->
+			   		<TD align=middle class=data261 nowrap><font color="MediumBlue">已交辦主管未簽准：</font><!--<IMG src="images/flow/6.gif">--></TD><!--已交辦未簽准件數-->
+			   		<TD align=middle class=data262>
+					
+								0
+							
+									(<a href="brp2m/brp23list.asp?stat_code=YN&stat_code1=YT&cust_area=N&homelist=homelist">6</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data262>
+					
+								0
+							
+									(<a href="brp2m/exp23list.asp?prgid=exp23&qstat_code=YN&qstat_code1=YT&qCust_area=N&homelist=homelist">4</a>)
+								
+			   		</TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue align=center>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(未交辦)-->
+			   	   	<TD align=middle class=data251 nowrap>後續處理待交辦：</TD><!--後續處理待交辦案件-->
+			   	   	<TD align=middle class=data252>
+					0
+								(<a href="brp2m/brp2elist.asp?prgid=brp2e&qryjob_no=N&qcust_area=N&homelist=homelist">128</a>)
+										   		
+			   	   	</td>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2elist.asp?prgid=exp2e&qryjob_no=N&qcust_area=N&homelist=homelist">348</a>)
+										   		
+			   		</TD>
+			   		<!--<TD align=middle class=data261 width="9%"></TD>--><!--(未確認)-->
+			   		<TD align=middle class=data261 nowrap><font color="MediumBlue">已交辦程序未確認：</font><!--<IMG src="images/flow/6.gif">--></TD><!--已交辦未確認件數-->
+			   		<TD align=middle class=data262>
+					
+								0
+							
+									(<a href="brp3m/brp31list.asp?job_status=YY&cust_area=N&homelist=homelist">21</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data262>
+					
+								0
+							
+									(<a href="brp2m/exp23list.asp?prgid=exp23&qstat_code=YY&cust_area=N&homelist=homelist&homelist1=homelist1">16</a>)
+									<!--(<a href="brp3m/exp31list.asp?prgid=exp31&job_status=YY&cust_area=N&homelist=homelist&homelist1=homelist1">16</a>)-->
+								
+			   		</TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(未交辦)-->
+			   		<TD align=middle class=data251 nowrap>交辦案件退回營洽：</TD>
+			   		<TD align=middle class=data252>
+					
+								0
+							
+									(<a href="brp2m/brp23list.asp?prgid=brp23&stat_code=NX&ctrl_nocase_flag=Y&cust_area=N&homelist=homelist">1</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data252>
+					
+							0 (0)
+						
+			   		</TD>
+			   		<!--<TD align=middle class=data271 width="9%"></TD>-->
+			   		<TD align=middle class=data271 nowrap><font color="MediumBlue">已交辦國外所主管未簽准：</font></TD>
+			   		<TD align=middle class=data272></TD>
+			   		<TD align=middle class=data272>
+					
+								0
+							
+									(<a href="brpcm/exp4c3_list.asp?prgid=exp27&submitTask=Q&qcust_area=N&homelist=homelist">11</a>)
+								
+			   		</TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap>承辦申請書列印：</TD>
+			   		<TD align=middle class=data282>
+					
+						<a href="brp6m/brp63.asp?prgid=brp63&homelist=homelist"><img src="images/print.gif" border=0></a>
+					
+			   		</TD>
+			   		<TD align=middle class=data282>
+					
+						<a href="brp6m/brp63.asp?prgid=exp63&homelist=homelist"><img src="images/print.gif" border=0></a>
+					
+			   		</TD>
+			   		<!--<TD align=middle class=data271 width="9%"></TD>-->
+			   		<TD align=middle class=data271 nowrap><font color="MediumBlue">已交辦官發/國外所程序未確認：</font></TD>
+			   		<TD align=middle class=data272>
+					
+								0
+							
+									(<a href="brpam/brpa313_list.asp?prgid=brp2h&submitTask=Q&qcust_area=N&homelist=homelist">17</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data272>
+					
+								0
+							
+									(<a href="brp3m/exp35list.asp?prgid=exp27&submitTask=Q&qcust_area=N&homelist=homelist">10</a>)
+								
+			   		</TD>	
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>--><!--(承辦計點)-->
+			   		<TD align=middle class=data281 nowrap>承辦提早計點未確認：</TD><!--尚未確認提早計點-->
+			   		<TD align=middle class=data282>
+					
+								0
+							
+									(<a href="brp6m/brp64list.asp?prgid=brp691&flag=M&homelist=homelist">5</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data282>
+					
+							0 (0)
+						
+			   		</TD>
+			   		<!--<TD align=middle class=data271 width="9%"></TD>-->
+			   		<TD align=middle class=data271 nowrap><font color="MediumBlue">不交辦官發/國外所主管未簽准：</font></TD>
+			   		<TD align=middle class=data272>
+					
+								0
+							
+									(<a href="brpcm/brp4c1_list.asp?prgid=brp2h&submitTask=Q&hdowhat='M_GS','M_GS1'&homelist=homelist">7</a>)
+								
+			   		</TD>
+			   		<TD align=middle class=data272>
+					
+								0
+							
+									(<a href="brpcm/exp4c3_list.asp?prgid=exp27&submitTask=Q&dowhat=M_LSD&homelist=homelist">2</a>)
+								
+			   		</TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>--><!--(承辦已結辦)-->
+			   		<TD align=middle class=data281 nowrap>承辦結辦未確認：</TD><!--尚未確認結辦件數-->
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp6m/brp64list.asp?prgid=brp64&homelist=homelist&flag=M">4</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp6m/exp64list.asp?prgid=exp64&homelist=homelist&flag=M">11</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data261 width="9%"></TD>-->
+			   		<TD align=middle class=data261 nowrap><font color="MediumBlue">區所送件主管未簽准：</font></TD>
+			   		<TD align=middle class=data262></TD>
+			   		<TD align=middle class=data262>
+						0
+									(<a href="brp4m/exp4d_list.asp?prgid=exp28&homelist=homelist&home_query=1">1</a>)
+											   		
+						   		
+			   		</TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>--><!--(承辦已退件)-->
+			   		<TD align=middle class=data281 nowrap>承辦退件未確認：</TD><!--尚未確認退件件數-->
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp6m/brp65list.asp?prgid=brp65&homelist=homelist&flag=Y">1</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp6m/exp65list.asp?prgid=exp65&homelist=homelist&flag=">2</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data261 width="9%"></TD>-->
+			   		<TD align=middle class=data261 nowrap><font color="MediumBlue">區所送件程序未確認：</font></TD>
+			   		<TD align=middle class=data262></TD>
+			   		<TD align=middle class=data262>
+					0
+								(<a href="brp3m/exp351_list.asp?prgid=exp28&homelist=homelist&home_query=1">3</a>)
+										   		
+			   		</TD>
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   		<TD align=middle class=data251 nowrap>尚未交辦官發/國外所：</TD><!--尚未交辦國外所件數-->
+			   		<TD align=middle class=data252>
+			   		0
+								(<a href="brp2m/brp2h_list.asp?prgid=brp2h&homelist=homelist">47</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp27_list.asp?prgid=exp27&homelist=homelist">159</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data271 width="9%"></TD>-->
+			   		<TD align=middle class=data271 nowrap><font color="MediumBlue">客函處理主管未簽准：</font></TD>
+			   		<TD align=middle class=data272>
+			   		0
+								(<a href="brpcm/brp4c1_list.asp?prgid=brp29&prtkind=N&submitTask=Q&hdowhat='M_CS','M_CSD'&homelist=homelist">5</a>)
+										   		
+			   		</TD>
+			   		<TD align=middle class=data272>
+			   		0
+								(<a href="brpcm/exp3c471_list.asp?prgid=exp3c47&prtkind=N&qrydowhat=M_CS,M_CSD&homelist=homelist">3</a>)
+										   		
+			   		</TD>
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   		<TD align=middle class=data251 nowrap>區所送件未確認：</TD><!--區所尚未送件確認-->
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp28_list.asp?prgid=exp28&homelist=homelist&home_query=1">35</a>)
+										   		
+			   		</TD>
+			   		<!--<TD align=middle class=data271 width="9%"></TD>-->
+			   		<TD align=middle class=data271 nowrap><font color="MediumBlue">客函程序未客發確認：</font></TD>
+			   		<TD align=middle class=data272>
+			   		0
+								(<a href="brpam/brpa39_list.asp?prgid=brp2a&prtkind=N&submitTask=Q&qrydowhat=DC_CS&homelist=homelist">43</a>)
+										   		
+			   		</TD>
+			   		<TD align=middle class=data272>
+			   		0
+								(<a href="brpcm/exp3c471_list.asp?prgid=exp3c47&prtkind=N&qrydowhat=DC_CS&homelist=homelist">83</a>)
+										   		
+			   		</TD>
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap>官收/聯絡書收文尚未確認：</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<img src='images/alarm.gif'><a href="brp2m/brp29_list.asp?prgid=brp29&homelist=homelist">9</a>)
+							
+					</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<img src='images/alarm.gif'><a href="brp2m/exp29_list.asp?prgid=exp29&homelist=homelist">72</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data261 width="9%"></TD>-->
+			   		<TD align=middle class=data261 nowrap><font color="MediumBlue">聖智契約書會計尚未檢核：</font></TD>
+			   		<TD align=middle class=data262></TD>
+			   		<TD align=middle class=data262>
+			   		0&nbsp;&nbsp;
+						
+								(<a href="brp2m/exp23list.asp?prgid=exp23&qstat_code=YZ&cust_area=N&homelist=homelist&homelist1=homelist1">51</a>)
+							
+			   		</TD>
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap><font color=red>官收/聯絡書收文尚未確認(7天前)</font>：</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<img src='images/alarm.gif'><a href="brp2m/brp29_list.asp?prgid=brp29&homelist=homelist&sstep_date=&todo_in_date=2019/10/21">9</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<img src='images/alarm.gif'><a href="brp2m/exp29_list.asp?prgid=exp29&homelist=homelist&sstep_date=&estep_date=2019/10/21">72</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   		<TD align=middle class=data261 nowrap><font color="MediumBlue">聖島契約書會計尚未檢核：</font></TD>
+			   		<TD align=middle class=data262>
+			   		0&nbsp;&nbsp;
+						
+								(<a href="brp2m/brp23list.asp?prgid=brp23&stat_code=YZ&cust_area=N&homelist=homelist&homelist1=homelist1">122</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data262>
+			   		0&nbsp;&nbsp;
+						
+								(0)
+							
+			   		</TD>
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap><font color=red>客函處理尚未確認</font>：</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp2m/brp2a_list.asp?prgid=brp2a&homelist=homelist">17</a>)
+										   		
+			   		</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp2m/exp2a_list.asp?prgid=exp2a&homelist=homelist">24</a>)
+										   		
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   		<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 wdith="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap>年費客函尚未確認：</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp2m/brp2a2_list.asp?prgid=brp2a2&homelist=homelist">1</a>)
+										   		
+			   		</TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp2m/exp2a2_list.asp?prgid=exp2a2&homelist=homelist">38</a>)
+										   		
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   		<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>			   		
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap>期限稽催尚未回覆：</TD>
+			   		<TD align=middle class=data282></TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp2m/exp2c1_list.asp?prgid=exp2c1&ctrlgs_type=bsales&homelist=homelist">103</a>)
+										   		
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   		<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>			   		
+			   	</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data281 width="9%"></TD>-->
+			   		<TD align=middle class=data281 nowrap>溝通記錄尚未回覆：</TD>
+			   		<TD align=middle class=data282></TD>
+			   		<TD align=middle class=data282>
+					0
+								(<a href="brp3m/exp36_6_list.asp?prgid=exp6a1&qcom_branch=N&sales_scode=''&qstep_chk=N2&homelist=homelist">75</a>)
+										   		
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>			   					   		   			   	
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(已交辦)-->
+			   		<TD align=middle class=data251 nowrap>已交辦未請款案件：</TD>
+			   		<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brp7m/exp76list.asp?qs_dept=p&todo=X&getdo=N&homelist=homelist">418</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brp7m/exp76list.asp?qs_dept=e&todo=X&getdo=N&homelist=homelist">23</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+<!--			   	<TR bgcolor=lightblue>-->
+							   		
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(已交辦)-->
+<!--			   		<TD align=middle class=data251 nowrap>已交辦未檢核案件(<font color=blue>智產</font>)：<!--<IMG src="images/flow/6.gif">--></TD>
+<!--			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					
+							<a href="brp2m/exp23list.asp?prgid=exp23&qstat_code=YZ&cust_area=N&qscode1=m1583&homelist=homelist&homelist1=homelist1"></a>&nbsp;&nbsp;
+						&nbsp;&nbsp;
+						
+'								(<a href="brp2m/exp23list.asp?prgid=exp23&qstat_code=YZ&cust_area=N&homelist=homelist&homelist1=homelist1"></a>)
+							
+								()
+							
+			   		</TD>
+			   		
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+<!--			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>-->
+			   	<TR bgcolor=lightblue>
+			   		
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(已交辦)-->
+			   		<TD align=middle class=data251 nowrap>已交辦未請款案件(<font color=blue>智產</font>)：</TD>
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brpdm/expd6list.asp?qs_dept=e&todo=X&getdo=N&homelist=homelist">534</a>)
+							
+			   		</TD>
+			   						   	
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   		
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(已交辦)-->
+			   		<TD align=middle class=data251 nowrap>已交辦未請款案件(<font color=blue>代收代付</font>)：</TD>
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brpdm/expd6list_emark.asp?qs_dept=e&todo=X&getdo=N&homelist=homelist">5</a>)
+							
+			   		</TD>
+			   						   	
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>			   				  			   				   			   	
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(已發文)-->
+			   		<TD align=middle class=data251 nowrap>已支出未請款案件：</TD>
+			   		<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brp7m/exp76list.asp?spkind=gs_fees&qs_dept=p&todo=X&homelist=homelist">141</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data252>
+				0&nbsp;&nbsp;
+					
+							(0)
+						
+			
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>
+				<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(已發文)-->
+			   		<TD align=middle class=data251 nowrap>已支出未請款案件(<font color=blue>智產</font>)：</TD>
+			   		<TD align=middle class=data252>
+					</TD>
+			   		<TD align=middle class=data252>
+				0&nbsp;&nbsp;
+					
+							(<a href="brpdm/expd6list.asp?spkind=gs_fees&qs_dept=e&todo=X&homelist=homelist">26</a>)
+						
+			
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>
+			  	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(未送簽)-->
+			   		<TD align=middle class=data251 nowrap>請款單尚未送確認(<font color=blue>一般</font>/英文Invoice)：&nbsp;&nbsp;&nbsp;</TD>
+			   		<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brp7m/exp76list.asp?qs_dept=p&todo=N&homelist=homelist">14</a>)
+							
+					&nbsp;/&nbsp;
+					0&nbsp;&nbsp;
+						
+								(<a href="brp7m/exp76list.asp?qs_dept=p&todo=N&homelist=homelist&e_invoice=Y">3</a>)
+							
+			   		</TD>
+			    	<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(0)
+							
+					&nbsp;/&nbsp;
+					0&nbsp;&nbsp;
+						
+								(0)
+							
+			    	</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			    </TR>
+			    <TR bgcolor=lightblue>
+						
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(未送簽)-->
+			   		<TD align=middle class=data251 nowrap>請款單尚未送確認(<font color=blue>智產</font>/英文Invoice)：&nbsp;&nbsp;&nbsp;</TD>
+			   		<TD align=middle class=data252></TD>
+			    	<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brpdm/expd6list.asp?qs_dept=e&todo=N&homelist=homelist">1</a>)
+							
+					&nbsp;/&nbsp;
+					0&nbsp;&nbsp;
+						
+								(<a href="brpdm/expd6list.asp?qs_dept=e&todo=N&homelist=homelist&e_invoice=Y">2</a>)
+							
+			    	</TD>
+			    		
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>			    	
+			    </TR>
+			    <TR bgcolor=lightblue>
+						
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>--><!--(未送簽)-->
+			   		<TD align=middle class=data251 nowrap>請款單尚未送確認(<font color=blue>代收代付</font>)：&nbsp;&nbsp;&nbsp;</TD>
+			   		<TD align=middle class=data252></TD>
+			    	<TD align=middle class=data252>
+					0&nbsp;&nbsp;
+						
+								(<a href="brpdm/expd6list_emark.asp?qs_dept=e&todo=N&homelist=homelist">1</a>)
+							
+			    	</TD>
+			    		
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>			    	
+			    </TR>
+	    
+	<!--		   	<TR bgcolor=lightblue>
+			   	    <TD align=middle class=data11>(已收文)</TD>
+			   		<TD align=middle class=data1>營洽到期案件件數：</TD>
+			   		<TD align=middle class=data2>
+		
+			0
+		
+			   		</TD>
+			   		<TD align=middle class=data3>
+			   		</TD>
+			   	    <TD align=middle class=data11>(已收文)</TD>
+			   		<TD align=middle class=data10>承辦到期案件件數：<IMG src="images/flow/6.gif"></TD>
+			   		<TD align=middle class=data2>
+		
+			0
+		
+			   		</TD>
+			   		<TD align=middle class=data3>
+			   		</TD>
+			   	</TR>
+	-->
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap>更正註銷尚未送簽：</TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp8m/brp82Framelist.asp?qs_dept=p&prgid=brp82&tfx_Cust_area=N&homelist=homelist">2</a>)
+							
+			   		</TD>
+			   		<TD align=middle class=data252>
+					0
+								(0)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+						   	
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap>更正註銷尚未送簽(<font color=blue>智產</font>)：</TD>
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="Brpdm/ExpdaFramehomelist.asp?qs_dept=e&tfx_scode=*&tfx_cust_area=N&homelist=homelist&qar_mark=A">5</a>)
+								<!--(<a href="Brpdm/ExpdaFramehomelist.asp?qs_dept=e&tfx_scode=*&tfx_cust_area=N&tran_status=S&homelist=homelist">5</a>)-->
+							
+			   		</TD>
+			   		
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+						   	
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap>更正註銷尚未送簽(<font color=blue>代收代付</font>)：</TD>
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0
+								(0)
+							
+			   		</TD>
+			   		
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap><font color=red>暫緩結匯稽催尚未回覆</font>：</TD>
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2mFrame.asp?prgid=exp2h&homelist=homelist">90</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap><font color=red>請款問題尚未結案</font>：</TD>
+			   		<TD align=middle class=data252></TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2mFrame.asp?prgid=exp2d&qrystatus=P&homelist=homelist">10</a>)
+							
+			   		</TD>
+			   		<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap><font color=red>規費不足尚未銷管</font>：</TD>
+			   		<TD align=middle class=data252></TD>
+					<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2mframe.asp?prgid=exp2g&homelist=homelist">41</a>)
+							
+					</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>	
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap>尚未確認結案案件(非同步結案)：</TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/brp2i1_list.asp?prgid=brp4i1&qend_type=A&homelist=homelist&submittask=Q">22</a>)
+							
+			   		</TD>
+					<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2i1_list.asp?prgid=exp4i1&qend_type=A&homelist=homelist&submittask=Q">323</a>)
+							
+					</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>	
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap>尚未確認結案案件(專利權屆滿)：</TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/brp2i1_list.asp?prgid=brp4i1&qend_type=E&homelist=homelist&submittask=Q">25</a>)
+							
+			   		</TD>
+					<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2i1_list.asp?prgid=exp4i1&qend_type=E&homelist=homelist&submittask=Q">3</a>)
+							
+					</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>	
+			   	<TR bgcolor=lightblue>
+			   	    <!--<TD align=middle class=data251 width="9%"></TD>-->
+			   	   	<TD align=middle class=data251 nowrap>尚未確認結案案件(雜卷主動結案)：</TD>
+			   		<TD align=middle class=data252>
+					0
+								(<a href="brp2m/brp2i1_list.asp?prgid=brp4i1&qend_type=Z&homelist=homelist&submittask=Q">8</a>)
+							
+			   		</TD>
+					<TD align=middle class=data252>
+					0
+								(<a href="brp2m/exp2i1_list.asp?prgid=exp4i1&qend_type=Z&homelist=homelist&submittask=Q">112</a>)
+							
+					</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>
+				
+			   	<TR bgcolor=lightblue>
+			   	   	<TD align=middle class=data251 nowrap>規費不足扣收入尚未處理：</TD>
+			   		<TD align=middle class=data252>
+			   		</TD>
+					<TD align=middle class=data252>
+					0
+					</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>	
+			   	<TR bgcolor=lightblue>
+			   	   	<TD align=middle class=data251 nowrap>規費餘額轉收入尚未處理：</TD>
+			   		<TD align=middle class=data252>
+			   		</TD>
+					<TD align=middle class=data252>
+					0
+					</TD>
+					<!--<TD align=middle class=data11 width="9%"></TD>-->
+			   	   	<TD align=middle class=data11 nowrap></TD>
+			   		<TD align=middle class=data11></TD>
+			   		<TD align=middle class=data11></TD>
+				</TR>	
+			</TABLE>
+		</TD>
+		<TD background="images/table/rightb.gif" height="15" border="0"></TD>
+	</TR>
+	<TR>
+		<TD><IMG height=15 src="images/table/L_downb.gif" width=15 border=0></TD>
+		<TD  background="images/table/downb.gif" height="15" border="0"></TD>
+		<TD><IMG height=15 src="images/table/R_downb.gif" width=15 border=0></TD>
+	</TR>
+</TBODY>
+</TABLE>
+<!--營洽-->
+			
+		</div>
+		<!--國內案流程-->
+		<div id="tabcont" style="DISPLAY: none">
+		<!--國內案流程-->
+<TABLE cellpadding="5" cellspacing="5"  align=right width="100%" >
+<TBODY>
+	<TR>
+		<td  align=right><IMG src="images/flow/head01.gif"></td>
+		<td></td></TR>
+	<TR>
+		<td align=right><font size=2 color=slateblue>交辦流程:&nbsp;</font></td>
+		<td><a href="brp2m/brp21Frame.htm"><IMG src="images/flow/menublue0.gif" border=0></a>
+		   	<a href="brp2m/brp22Frame.htm"><IMG src="images/flow/menublue1.gif" border=0></a>
+		   	<a href="brp4m/brp41Frame.htm"><IMG src="images/flow/menublue2.gif" border=0></a>
+		   	<a href="brp3m/brp31Frame.htm" title="國內案客戶收文作業"><IMG src="images/flow/menuyellow1.gif" border=0></a>
+		   	<a href="brp5m/brp51frame.htm"><IMG src="images/flow/menublue51.gif" border=0></a>
+		   	<a href="brp6m/brp61Frame.htm"><IMG src="images/flow/menublue4.gif" border=0></a>
+		</td></TR>
+	<TR>
+		<td align=right><font size=2 color=slateblue>收發文流程:&nbsp;</font></td>
+		<td>
+			<a href="brpam/BrpaFrame.asp?prgid=brpa31&cgrs=gs" title="國內案官方發文作業"><IMG src="images/flow/menuyellow2.gif" border=0></a>
+			<a href="brpam/BrpaFrame.asp?prgid=brpa21&cgrs=gr" title="國內案官方收文作業"><IMG src="images/flow/menuyellow3.gif" border=0></a>
+			<a href="brpam/BrpaFrame.asp?prgid=brpa32&cgrs=cs" title="國內案客戶發文作業"><IMG src="images/flow/menuyellow4.gif" border=0></a>
+			<a href="brpam/BrpaFrame.asp?prgid=brpa22"><IMG src="images/flow/menuyellow5.gif" border=0></a>
+			<a href="brpam/BrpaFrame.asp?prgid=brpa43m"><IMG src="images/flow/menuyellow6.gif" border=0></a>
+		</td></TR>
+	<TR>
+		<td align=right><font size=2 color=slateblue>請款流程:&nbsp;</font></td>
+		<td>
+			<a href="Brp7m/Exp71Frame.asp?qs_dept=p&Type=N"><IMG src="images/flow/menupink1.gif" border=0></a>
+			<a href="Brp7m/Exp72Frame.asp?qs_dept=p&prgid=brp721"><IMG src="images/flow/menupink2.gif" border=0></a>
+			<a href="brp7m/Exp74Frame.asp?qs_dept=p"><IMG src="images/flow/menupink3.gif" border=0></a>
+			<a href="Brp7m/exp73Frame.asp?qs_dept=p"><IMG src="images/flow/menupink4.gif" border=0></a>
+			<a href="Brp7m/Exp76Frame.asp?qs_dept=p"><IMG src="images/flow/menupink5.gif" border=0></a>
+		</td>
+	</TR>
+	<TR>
+		<td colspan=2>
+		</td>
+	</TR>
+</TBODY> 
+</TABLE>
+
+		</div>
+		<!--出口案流程 -->
+		<div id="tabcont" style="DISPLAY: none">
+		<!--出口案流程-->
+<TABLE cellpadding="5" cellspacing="5"  align=right width="100%" >
+<TBODY>
+	<TR>
+		<td  align=right><IMG src="images/flow/head02.gif"></td>
+		<td></td></TR>
+	<TR>
+		<td align=right><font size=2 color=slateblue>交辦流程:&nbsp;</font></td>
+		<td><a href="brp2m/exp21Frame.asp?prgid=exp21"><IMG src="images/flow/menublue0.gif" border=0></a>
+		   	<a href="brp2m/exp22Frame.asp?prgid=exp22"><IMG src="images/flow/menublue1.gif" border=0></a>
+		   	<a href="brp4m/exp41Frame.asp?prgid=exp41"><IMG src="images/flow/menublue2.gif" border=0></a>
+		   	<a href="brp3m/exp31Frame.asp?prgid=exp31" title="國內案客戶收文作業"><IMG src="images/flow/menuyellow1.gif" border=0></a>
+		   	<a href="brp5m/exp51frame.asp?prgid=exp51"><IMG src="images/flow/menublue51.gif" border=0></a>
+		   	<a href="brp6m/exp61Frame.asp?prgid=exp61"><IMG src="images/flow/menublue4.gif" border=0></a>
+		</td></TR>
+	<TR>
+		<td align=right><font size=2 color=slateblue>收發文流程:&nbsp;</font></td>
+		<td>
+			<IMG src="images/flow/menuyellow2.gif" border=0>
+			<IMG src="images/flow/menuyellow3.gif" border=0>
+			<IMG src="images/flow/menuyellow4.gif" border=0>
+			<IMG src="images/flow/menuyellow5.gif" border=0>
+			<IMG src="images/flow/menuyellow6.gif" border=0>
+		</td></TR>
+	<TR>
+		<td align=right><font size=2 color=slateblue>請款流程:&nbsp;</font></td>
+		<td>
+			<a href="brp7m/exp71Frame.asp?qs_dept=e&Type=N"><IMG src="images/flow/menupink1.gif" border=0></a>
+			<a href="brp7m/exp72Frame.asp?qs_dept=e&prgid=exp721"><IMG src="images/flow/menupink2.gif" border=0></a>
+			<a href="brp7m/exp74Frame.asp?qs_dept=e"><IMG src="images/flow/menupink3.gif" border=0></a>
+			<a href="brp7m/exp73Frame.asp?qs_dept=e"><IMG src="images/flow/menupink4.gif" border=0></a>
+			<a href="brp7m/exp76Frame.asp?qs_dept=e"><IMG src="images/flow/menupink5.gif" border=0></a>
+		</td></TR>
+	<TR>
+		<td colspan=2></td>
+	</TR>
+</TBODY> 
+</TABLE>
+
+		</div>
+		<!--國內案統計 -->
+		<div id="tabcont" style="DISPLAY: none"><!--rights(9)-->
+		<!--工作清單:營業(title1)-->
+<TABLE class=bluetable1 cellpadding="0" cellspacing="0" align=center width="80%">
+<TBODY>
+<!--
+		<TR>
+			<TD><IMG height=15 src="images/table/L_upb.gif" width=15 border=0></TD>
+			<TD background="images/table/upb.gif" width="100%" height="15" border="0"></TD>
+			<TD><IMG height=15 src="images/table/R_upb.gif" width=15 border=0></TD>
+		</TR>-->
+        <TR>
+        	<!--<TD background="images/table/leftb.gif" height="15" border="0"></TD>-->
+        	<TD></TD>
+			<TD>
+				<TABLE WIDTH="95%" align=center>
+				<TR>
+					<TD width="60%">
+					<P align=center><IMG src="images/flow/case1T.gif"></P></TD>
+					<TD width="20%" align=middle><IMG src="images/flow/case2.gif"></STRONG></FONT></TD>
+					<TD width="20%" align=middle><IMG src="images/flow/case3.gif"></STRONG></FONT></TD>
+			   	</TR>
+			   	<TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data1>◎ 創設申請件數：</TD>
+			   		<TD align=middle class=data2>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			   		<TD align=middle class=data3>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			    </TR>
+			   	<TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data1>◎ 客戶收文件數：</TD>
+			   		<TD align=middle class=data2>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			   		<TD align=middle class=data3>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			    </TR>
+			    <TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data1>◎ 官方收文件數：</TD>
+			   		<TD align=middle class=data2>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			   		<TD align=middle class=data3>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			    </TR>
+			    <TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data1>◎ 官方發文件數：</TD>
+			   		<TD align=middle class=data2>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			   		<TD align=middle class=data3>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			    </TR>
+			    <TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data1>◎ 請款單入帳件數：</TD>
+			   		<TD align=middle class=data2>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			   		<TD align=middle class=data3>
+						0&nbsp;&nbsp;
+							
+			   		</TD>
+			    </TR>
+			<!--    <TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data15>◎ 案件更正件數：</TD>
+			   		<TD align=middle class=data24>&nbsp;</TD>
+			   		<TD align=middle class=data34>&nbsp;</TD>
+			    </TR>
+			    <TR bgcolor=lightblue align=center>			   	   
+			   	   	<TD align=middle class=data15>◎ 請款單更正件數：</TD>
+			   		<TD align=middle class=data24>&nbsp;</TD>
+			   		<TD align=middle class=data34>&nbsp;</TD>
+			    </TR> -->
+				</TABLE>
+			</TD>
+			<TD></TD>
+			<!--<TD background="images/table/rightb.gif" height="15" border="0"></TD>-->
+		</TR>
+		<!--
+		<TR>
+			<TD><IMG height=15 src="images/table/L_downb.gif" width=15 border=0></TD>
+			<TD  background="images/table/downb.gif" height="15" border="0"></TD>
+			<TD><IMG height=15 src="images/table/R_downb.gif" width=15 border=0></TD>
+		</TR>-->
+</TBODY>
+</TABLE>
+		</div>
+		<!--出口案統計 --><!--rights(10)-->
+		<br>
+		
+	</td>
+</tr></TBODY></TABLE>
+<CENTER></CENTER></div>
+
+</form>
+</BODY>
+</HTML>
+<script language="VBScript">
+sub window_onLoad()
+	'20140501 因應新版menu修改
+	if window.parent.parent.parent.document.getElementById("ctrltab").value=empty then
+	else
+		settab(int(window.parent.parent.parent.document.getElementById("ctrltab").value))
+	end if	
+
+	'if window.parent.parent.titleFrame.document.all.ctrltab.value=empty then
+	'else
+	'	settab(int(window.parent.parent.titleFrame.document.all.ctrltab.value))
+	'end if
+	'msgbox "hshowdefault="& reg.hshowdefault.value
+	'msgbox "ctrlhomelist="& reg.ctrlhomelist.value
+	'msgbox "ctrlhomelistshow="& reg.ctrlhomelistshow.value
+	'msgbox "ctrlhomelistshow="& window.parent.parent.titleFrame.document.all.ctrlhomelistshow.value
+	'if window.parent.parent.titleFrame.document.all.ctrlhomelistshow.value<>empty then
+	
+		if reg.ctrlhomelist.value<>empty then
+			'call span_title_onclick(window.parent.parent.titleFrame.document.all.ctrlhomelist.value,2,window.parent.parent.titleFrame.document.all.ctrlhomelistshow.value)
+			'call span_title_onclick(reg.ctrlhomelist.value,2,window.parent.parent.titleFrame.document.all.ctrlhomelistshow.value)
+			'call span_title_onclick(reg.ctrlhomelist.value,2,reg.ctrlhomelistshow.value)
+			call span_title_onclick(reg.ctrlhomelist.value,2,1)
+		else
+			call span_title_onclick(reg.hshowdefault.value,2,1)
+		end if
+	
+end sub
+
+function span_title_onclick(p1,p2,p3)  'p1:顯示第幾個, p2:點了那個圖要變色, p3:要重新onload畫面嗎(1不要,2要)
+	reg.hshowdefault.value = p1
+	
+		document.all.span_title1.innerHtml = "<IMG src='images/flow/title1-1.gif' onclick='vbscript:span_title_onclick 1,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title13.innerHtml = "<IMG src='images/flow/title13-1.gif' onclick='vbscript:span_title_onclick 13,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title2.innerHtml = "<IMG src='images/flow/title2-1.gif' onclick='vbscript:span_title_onclick 2,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title3.innerHtml = "<IMG src='images/flow/title3-1.gif' onclick='vbscript:span_title_onclick 3,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title4.innerHtml = "<IMG src='images/flow/title4-1.gif' onclick='vbscript:span_title_onclick 4,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title5.innerHtml = "<IMG src='images/flow/title5-1.gif' onclick='vbscript:span_title_onclick 5,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title11.innerHtml = "<IMG src='images/flow/title11-1.gif' onclick='vbscript:span_title_onclick 11,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title12.innerHtml = "<IMG src='images/flow/title12-1.gif' onclick='vbscript:span_title_onclick 12,2,2' style='cursor: hand;'>"
+	
+		document.all.span_title6.innerHtml = "<IMG src='images/flow/title6-1.gif' onclick='vbscript:span_title_onclick 6,2,2' style='cursor: hand;'>"
+	
+
+	if p2=1 then
+		execute "document.all.span_title"& p1 &".innerHtml = ""<IMG src='images/flow/title"& p1 &"-"& p2 &".gif' onclick='vbscript:span_title_onclick "& p1 &",2,2' style='cursor: hand;'>"""
+	else
+		execute "document.all.span_title"& p1 &".innerHtml = ""<IMG src='images/flow/title"& p1 &"-"& p2 &".gif' onclick='vbscript:span_title_onclick "& p1 &",1,2' style='cursor: hand;'>"""
+	end if
+	if p3="2" then
+		'window.location.href = "homelist.asp?hshowdefault="& reg.hshowdefault.value &"&ctrlhomelist="&reg.ctrlhomelist.value
+		window.location.href = "homelist.asp?hshowdefault="& reg.hshowdefault.value  &"&ctrlhomelist="&p1
+	end if
+	
+	'window.parent.parent.titleFrame.document.all.ctrlhomelist.value = p1
+	'window.parent.parent.titleFrame.document.all.ctrlhomelistshow.value = 1
+	window.parent.parent.parent.document.getElementById("ctrlhomelist").value = p1
+	window.parent.parent.parent.document.getElementById("ctrlhomelistshow").value = 1
+	reg.ctrlhomelist.value = p1
+	reg.ctrlhomelistshow.value = 1
+	'msgbox reg.ctrlhomelist.value
+end function
+
+sub settab(k)
+	for i=0 to 3
+		if document.all.tab(i).classname="notab1" then document.all.tab(i).classname="selTab1"
+		if document.all.tabcont(i).style.display="" then document.all.tabcont(i).style.display="none"    
+	next
+	document.all.tab(k).classname="notab1"
+	document.all.tabcont(k).style.display=""
+	'window.parent.parent.titleFrame.document.all.ctrltab.value = k
+	window.parent.parent.parent.document.getElementById("ctrltab").value = k
+end sub
+</script>

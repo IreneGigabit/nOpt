@@ -1,0 +1,149 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Saint.Sysctrl;
+using System.Data;
+
+public class SysctrlService
+{
+    /// <summary>
+    /// 取得使用者可用系統
+    /// </summary>
+    /// <param name="scode">薪號</param>
+    /*
+    public IEnumerable<SYScode> GetUserSystemData(string scode, string excludeSys) {
+        string SQL = @"SELECT A.sysserver,A.syspath AS syspath, A.sysnameC, A.syscode 
+                     FROM sysctrl 
+                     INNER JOIN SYScode A ON sysctrl.syscode = A.syscode
+                        WHERE sysctrl.scode = '" + scode + "'";
+        SQL += (excludeSys != "" ? " and a.syscode not in('" + excludeSys + "')" : "");
+        using (DBHelper conn = new DBHelper(Conn.Sysctrl)) {
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+           return dt.Mapping<SYScode>();
+        }
+    }*/
+
+    /// <summary>
+    /// 取得使用者可用系統
+    /// </summary>
+    /// <param name="scode">薪號</param>
+    public IEnumerable<Dictionary<string, object>> GetUserSystemData(string scode, string excludeSys) {
+        string SQL = @"SELECT A.sysserver,A.syspath, A.sysnameC, A.syscode 
+                     FROM sysctrl 
+                     INNER JOIN SYScode A ON sysctrl.syscode = A.syscode
+                        WHERE sysctrl.scode = '" + scode + "'";
+        SQL += (excludeSys != "" ? " and a.syscode not in('" + excludeSys + "')" : "");
+        using (DBHelper conn = new DBHelper(Conn.Sysctrl)) {
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+            IEnumerable<Dictionary<string, object>> rtn = dt.ToDictionary();
+            return rtn;
+        }
+    }
+
+    /// <summary>
+    /// 取得群組系統選單
+    /// </summary>
+    /// <param name="scode">薪號</param>
+    public IEnumerable<MainMenu> GetSystemMenu(string syscode, string loginGrp) {
+        string SQL = "select row_number() OVER( PARTITION BY c.APseq,substring(a.APorder,1,1) ORDER BY a.APorder, a.APcode) AS grpnum " +
+         ",a.APcode, a.APnameC, a.APorder, a.APserver, a.APpath, a.ReMark " +
+         ",b.LoginGrp, b.Rights, c.APcatCName, c.APCatID " +
+         " FROM AP AS a" +
+         " INNER JOIN LoginAP AS b ON a.APcode = b.APcode AND a.SYScode = b.SYScode" +
+         " INNER JOIN APcat AS c ON a.APcat = c.APcatID AND a.SYScode = c.SYScode " +
+         " WHERE b.LoginGrp = '" + loginGrp + "'" +//BTBRTADMIN
+         " AND b.SYScode = '" + syscode + "'" +//NBRP
+         " AND (b.Rights & 1) > 0 " +
+         " ORDER BY c.APseq,a.APorder, a.APcode";
+        using (DBHelper conn = new DBHelper(Conn.Sysctrl)) {
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            List<MainMenu> returnData = null;
+            returnData = dt.Mapping<MainMenu>().Select(x => x.APcatCName).Distinct()
+                .Select(r =>
+                new MainMenu {
+                    APcatCName = r,
+                    CatLength = dt.Mapping<SubMenu>().Where(i => i.APcatCName == r).Max(itm => System.Text.Encoding.Default.GetBytes(itm.APnameC).Length)*8,//*7.2,
+                    submenu = dt.Mapping<SubMenu>().Where(i => i.APcatCName == r)
+                }).ToList();
+            return returnData;
+         }
+    }
+}
+
+/// <summary>
+/// 主選單
+/// </summary>
+public class MainMenu
+{
+    /// <summary>
+    /// 主選單名稱
+    /// </summary>
+    public string APcatCName { get; set; }
+
+    /// <summary>
+    /// 子選單寬度
+    /// </summary>
+    public double CatLength { get; set; }
+
+    /// <summary>
+    /// 子選單
+    /// </summary>
+    public IEnumerable<SubMenu> submenu { get; set; }
+}
+
+/// <summary>
+/// 子選單
+/// </summary>
+public class SubMenu
+{
+    /// <summary>
+    /// 程式代碼
+    /// </summary>
+    public string APcode { get; set; }
+
+    /// <summary>
+    /// 程式中文名稱
+    /// </summary>
+    public string APnameC { get; set; }
+
+    /// <summary>
+    /// 程式主機
+    /// </summary>
+    public string APserver { get; set; }
+
+    /// <summary>
+    /// 程式實體路徑
+    /// </summary>
+    public string APpath { get; set; }
+
+    /// <summary>
+    /// 程式順序
+    /// </summary>
+    public string APorder { get; set; }
+
+    /// <summary>
+    /// 群組順序
+    /// </summary>
+    public Int64 GrpNum { get; set; }
+
+    /// <summary>
+    /// 程式參數
+    /// </summary>
+    public string Remark { get; set; }
+
+    /// <summary>
+    /// Menu作業分類代碼(父層)
+    /// </summary>
+    public string APCatID { get; set; }
+
+    /// <summary>
+    /// menu中文名稱(父層)
+    /// </summary>
+    public string APcatCName { get; set; }
+
+}
