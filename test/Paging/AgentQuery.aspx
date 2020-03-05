@@ -256,6 +256,52 @@
 
 <script type="text/javascript" language="javascript">
     //執行查詢
+    function goSearch2() {
+
+        $("#divPaging,#noData,#dataList").hide();
+        $("#dataList>tbody tr").remove();
+        nRow = 0;
+
+        $.ajax({
+            url: "AgentList.aspx",
+            type: "get",
+            async: false,
+            data: $("#reg").serialize(),
+            cache: false,
+            success: function (json) {
+                var JSONdata = $.parseJSON(json);
+                $("#divPaging2").paging({ submitForm: "#reg", callback: goSearch2, data: JSONdata });
+                $("#divPaging3").paging({ submitForm: "#reg", callback: goSearch2, data: JSONdata });
+
+                $.each(JSONdata.pagedTable, function (i, item) {
+                    nRow++;
+                    //複製一筆
+                    $("#dataList>tfoot").each(function (i) {
+                        var strLine1 = $(this).html().replace(/##/g, nRow);
+                        var tclass = "";
+                        if (nRow % 2 == 1) tclass = "sfont9"; else tclass = "lightbluetable3";
+                        strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
+                        strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
+                        strLine1 = strLine1.replace(/{{scode}}/g, item.scode);
+                        strLine1 = strLine1.replace(/{{sc_name}}/g, item.sc_name);
+                        strLine1 = strLine1.replace(/{{se_name}}/g, item.se_name);
+                        strLine1 = strLine1.replace(/{{Email}}/g, item.Email);
+                        //alert(strLine1); // DEBUG AJAX 
+
+                        $("#dataList>tbody").append(strLine1);
+                    });
+                });
+            },
+            beforeSend: function (jqXHR, settings) {
+                jqXHR.url = settings.url;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("\n資料擷取剖析錯誤 !\n" + jqXHR.url);
+            }
+        });
+    };
+
+    //執行查詢
     function goSearch() {
 
         $("#divPaging,#noData,#dataList").hide();
@@ -270,8 +316,9 @@
             cache: false,
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                $("#divPaging2").paging({ data: JSONdata });
-                $("#divPaging3").paging({ data: JSONdata });
+                $("#divPaging2").paging({ submitForm: "#reg", callback:goSearch2, data: JSONdata });
+                $("#divPaging3").paging({ submitForm: "#reg", callback: goSearch2, data: JSONdata });
+
                 //////更新分頁變數
                 var totRow = parseInt(JSONdata.totRow, 10);
                 if (totRow > 0) {
@@ -318,9 +365,6 @@
                         $("#dataList>tbody").append(strLine1);
                     });
                 });
-
-
-
             },
             beforeSend: function (jqXHR, settings) {
                 jqXHR.url = settings.url;
@@ -332,8 +376,6 @@
     };
   
     $(function () {
-        $("#divPaging2").paging();
-        $("#divPaging3").paging();
         $("input.dateField").datepick();
         $("#imgCls").click(function (e) { window.parent.tt.rows = "100%,0%"; }).click();
        

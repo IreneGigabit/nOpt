@@ -2,18 +2,11 @@
     //#region Paging
     $.fn.paging = function (settings) {
         var defaultSettings = {
+            submitForm:"",
             data:{},
             prePage: [10, 20, 30, 50],
             bind: 'mouseover',
-            callback: function () {
-                $(this).animate({
-                    opacity: 0.25,
-                    left: '+=50',
-                    height: 'toggle'
-                }, 3000, function () {
-                    $("span").html('').append($(this).html() + '完成!').show().fadeOut(1000);
-                });
-            },
+            callback: function () {},
         };
         //將傳入的settings 覆蓋預設的 defaultSettings
         var _settings = $.extend(defaultSettings, settings);
@@ -36,49 +29,81 @@
         <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="">上一頁</a></span>\
         <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="">下一頁</a></span>\
         | 每頁筆數:\
-        <select id="PerPage" name="PerPage" style="color:#FF0000">{PerPageOpt}</select>\
+        <select id="PerPage" name="PerPage" style="color:#FF0000"></select>\
         <input type="hidden" name="SetOrder" id="SetOrder" />\
     </font>\
     </td>\
     </tr>\
 </TABLE>';
-        var initialize = function (obj) {
-            console.log(obj.id);
+        var render = function (obj) {
+            $(obj).html(tmpl);
+
             //每頁筆數
             var option = new Array(_settings.prePage.length);
             $.each(_settings.prePage, function (i, value) {
                 option[i] = ['<option value="' + value + '">' + value + '</option>'].join("");
             });
-            tmpl = tmpl.replace(/{PerPageOpt}/g, option.join(""));
+            $("#PerPage", $(obj)).replaceWith('<select id="PerPage" name="PerPage" style="color:#FF0000">' + option.join("") + '</select>');
 
-            //
-
-
-            $(obj).html(tmpl);
-
-            var totRow = parseInt(_settings.data.totRow, 10);
-            var nowPage = parseInt(_settings.data.nowPage, 10);
-            var totPage = parseInt(_settings.data.totPage, 10);
+            var totRow = parseInt(_settings.data.totRow||0, 10);
+            var totPage = parseInt(_settings.data.totPage||0, 10);
+            var nowPage = parseInt(_settings.data.nowPage||0, 10);
             $("#NowPage", $(obj)).html(nowPage);
             $("#TotPage", $(obj)).html(totPage);
             $("#TotRec", $(obj)).html(totRow);
-            console.log(_settings.data);
-            console.log(nowPage);
-            console.log(totPage);
+            var i = totPage + 1, option = new Array(i);
+            while (--i) {
+                option[i] = ['<option value="' + i + '">' + i + '</option>'].join("");
+            }
+            $("#GoPage", $(obj)).replaceWith('<select id="GoPage" name="GoPage" style="color:#FF0000">' + option.join("") + '</select>');
+            $("#GoPage", $(obj)).val(nowPage);
 
-            console.log($(obj).find("#PerPage").length);
-            console.log($("#PerPage", $(obj)).length);
-            console.log($("#NowPage", $(obj)).length);
-            console.log($("#TotPage", $(obj)).length);
-            console.log($("#TotRec", $(obj)).length);
+            nowPage > 1 ? $("#PageUp", $(obj)).show() : $("#PageUp", $(obj)).hide();
+            nowPage < totPage ? $("#PageDown", $(obj)).show() : $("#PageDown", $(obj)).hide();
+            $("a.pgU", $(obj)).attr("v1", nowPage - 1);
+            $("a.pgD", $(obj)).attr("v1", nowPage + 1);
+            $("#id-div-slide", $(obj)).slideUp("fast");
+
+            //
+            //console.log($(obj).find("#PerPage").length);
+            //console.log($("#PerPage", $(obj)).length);
+            //console.log($("#NowPage", $(obj)).length);
+            //console.log($("#TotPage", $(obj)).length);
+            //console.log($("#TotRec", $(obj)).length);
         };
-
-        //初始化
-        //initialize();
 
         //return 回去,this 指的是外面的 jQuey 物件
         return this.each(function () {
-            initialize(this);
+            var obj = this;
+            render(obj);
+
+            //每頁幾筆
+            //$("#PerPage", $(this)).change(_settings.callback());
+            ////指定第幾頁
+            //$("#divPaging", $(this)).on("change", "#GoPage", function (e) {
+            //    _settings.callback();
+            //});
+            ////上下頁
+            $(".pgU,.pgD", obj).click(function (e) {
+                $("#GoPage", obj).val($(this).attr("v1"));
+                _settings.callback();
+            });
+            ////排序
+            //$(".setOdr", $(this)).click(function (e) {
+            //    $("#dataList>thead tr .setOdr span").remove();
+            //    $(this).append("<span>▲</span>");
+            //    $("#SetOrder").val($(this).attr("v1"));
+            //    _settings.callback();
+            //});
+            ////重新整理
+            //$("#imgRefresh", $(this)).click(function (e) {
+            //    _settings.callback();
+            //});
+            ////查詢條件
+            //$("#imgQry", $(this)).click(function (e) {
+            //    $("#id-div-slide").slideToggle("fast");
+            //});
+
             //console.log(this.id);
             //$(this).bind(_settings.bind, _settings.callback);
         });
