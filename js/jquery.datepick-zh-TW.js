@@ -1,7 +1,10 @@
-﻿/* http://keith-wood.name/datepick.html
+/* http://keith-wood.name/datepick.html
    Traditional Chinese localisation for jQuery Datepicker.
    Written by Ressol (ressol@gmail.com). */
-(function($) {
+(function ($) {
+    var strPath = window.document.location.pathname;
+    var postPath = strPath.substring(0, strPath.substr(1).indexOf('/') + 1);
+
 	$.datepick.regional['zh-TW'] = {
 		monthNames: ['一月','二月','三月','四月','五月','六月',
 		'七月','八月','九月','十月','十一月','十二月'],
@@ -26,7 +29,7 @@
 		weekText: '周', weekStatus: '年內周次',
 		dayStatus: '選擇 m月 d日, DD', defaultStatus: '請選擇日期',
 		isRTL: false, todayClick: true,
-		showTrigger: '<img src="/js/img/calendar-green.gif" alt="Popup">', yearRange: '-80:+5'
+		showTrigger: '<img src="' + postPath + '/js/img/calendar-green.gif" alt="Popup">', yearRange: '-80:+5'
 	};
 	$.datepick.setDefaults($.datepick.regional['zh-TW']);
 })(jQuery);
