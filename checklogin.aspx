@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Text"%>
 <%@Import Namespace = "System.Data.SqlClient"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -31,9 +31,9 @@
         string sys_pwd = Request["sys_pwd"] ?? "";//密碼
         string tfx_sys_password = Request["tfx_sys_password"] ?? "";//明碼
 
-        if (tfx_sys_password != "")
+        if (tfx_sys_password != "") {
             sys_pwd = Util.GetHashValueMD5(tfx_sys_password.ToLower());//明碼轉md5
-
+        }
         string SQL = "";
         DBHelper conn = null;
         try
@@ -54,8 +54,8 @@
                 if (dr.Read())
                 {
                     Session["Password"] = true;
-                    Session["SeScode"] = dr["scode"].ToString();
-                    Session["Scode"] = dr["scode"].ToString();
+                    Session["se_scode"] = dr["scode"].ToString();
+                    Session["scode"] = dr["scode"].ToString();
                     Session["sc_name"] = dr["sc_name"].ToString();
                     Session["SeSysPwd"] = dr["sys_pwd"].ToString();
                     Session["SeBranch"] = dr["DataBranch"].ToString();
