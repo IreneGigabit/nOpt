@@ -1,75 +1,5 @@
-﻿(function ($) {
-    //#region $maskStart 
-    //不需元素即可呼叫(靜態函式)
-	$maskStart = function (msg) {
-		var w = Math.max($(window).width(), $(document).width());
-		var h = Math.max($(window).height(), $(document).height());
-
-		if ($("body").find("#divProgress").length == 0) {
-			$("body").append("<div id=\"divProgress\" style=\"display:none;\">" +
-			"<img id=\"imgLoading\" src=\"../images/loading.gif\" style=\"border-width:0px;\" /><br />" +
-			"<font color=\"#1B3563\">" + msg + "</font>" +
-			"</div>");
-		}
-
-		if ($("body").find("#divMaskFrame").length == 0) {
-			$("body").append("<div id=\"divMaskFrame\" style=\"display:none;\"></div>");
-		}
-
-		$("#divMaskFrame").css({
-			'overflow': 'hidden',
-			'background-color': '#F2F4F7',
-			'width': w,
-			'height': h,
-			'position': 'absolute',
-			'z-index': '999998',
-			'opacity': '0.7',
-			'-moz-opacity': '0.7',
-			'-khtml-opacity': '0.7',
-			'filter': 'alpha(opacity=70)',
-			'top': '0',
-			'left': '0'
-		});
-
-		var t = (h / 2) - ($("#divProgress").height() / 2);
-		$("#divProgress").css({
-			'text-align': 'center',
-			'position': 'absolute',
-			'top': t,
-			'left': '50%',
-			//'background-color': '#88bbff',
-			'opacity': '0.9',
-			'-moz-opacity': '0.9',
-			'-khtml-opacity': '0.9',
-			'filter': 'alpha(opacity=90)',
-			'z-index': '999999'
-		});
-
-
-		$("body").css("cursor", "wait");
-		$("#divMaskFrame").show();
-		if (msg != "" && msg != undefined && msg != null) {
-			$("#divProgress").show();
-		}
-	}
-	//#endregion
-
-	//#region $maskStop 
-	$maskStop = function (msg) {
-		$("#divMaskFrame").fadeOut(500);
-		$("#divProgress").fadeOut(500);
-		$("body").css("cursor", "default");
-	}
-	//#endregion
-
-	//#region BLen 
-	$.BLen = function (str) {
-		var arr = str.match(/[^\x00-\xff]/ig);
-		return arr == null ? str.length : str.length + arr.length;
-	}
-	//#endregion
-
-	//#region labelfor 
+(function ($) {
+	//#region labelfor 把radio/checkbox加上labelfor
 	$.fn.labelfor = function () {
 		return this.each(function () {
 			if (this.type == "radio" || this.type == "checkbox") {
@@ -81,7 +11,7 @@
 	}
 	//#endregion
 
-	//#region lock 
+	//#region lock 指定唯讀模式
 	$.fn.lock = function () {
 		return this.each(function () {
 			if ($(this).hasClass("dateField")) {
@@ -98,7 +28,7 @@
 	}
 	//#endregion
 
-	//#region unlock 
+    //#region unlock 指定解鎖模式
 	$.fn.unlock = function () {
 		return this.each(function () {
 			if ($(this).hasClass("dateField")) {
@@ -421,85 +351,84 @@
 	});
 	//#endregion
 
-	//#region getOption
+    //#region getOption
 	$.fn.extend({
-		getOption: function (option) {
-			var obj = $(this);
-			var defaults = {
-				debug: false,
-				url: "",
-				type: "post",
-				dataType: "xml",
-				data: null,
-				async: false,
-				showEmpty: true,
-				valPartSymbol:";",
-				value: [0],
-				textPartSymbol: "_",
-				text: [1],
-				firstOpt: "",
-				lastOpt: "",
-				preValue: ""
-			};
-			var settings = $.extend(defaults, option || {});  //初始化
-			var debugurl = settings.url + "?" + unescape(unescape($.param(settings.data)));
+	    getOption: function (option) {
+	        var obj = $(this);
+	        var defaults = {
+	            debug: false,
+	            url: "",
+	            data: null,
+	            showEmpty: true,//顯示"請選擇"
+	            valueFormat: "",//option的value格式,用{}包住欄位,ex:{scode}
+	            textFormat: "",//option的文字格式,用{}包住欄位,ex:{scode}_{sc_name}
+	            attrFormat: "",//option的attribute格式,用{}包住欄位,ex:value1='{scode1}' value2='{sscode}'
+	            firstOpt: "",//要在最上面額外增加option,ex:<option value='*'>全部<option>
+	            lastOpt: "",//要在最下面額外增加option,ex:<option value='*'>全部<option>
+	            setValue: ""//預設值
+	        };
+	        var settings = $.extend(defaults, option || {});  //初始化
+	        var debugurl = settings.url + "?";// + unescape(unescape($.param(settings.data)));
+	        if (settings.data != null) debugurl += unescape(unescape($.param(settings.data)));
+	        if (settings.debug) {
+	            if ($("body").find("#divDebug").length == 0) {
+	                $("body").append("<div id=\"divDebug\" style=\"display:none;color:#1B3563\"></div>");
+	            }
+	            $("#divDebug").html("<a href=\"" + debugurl + "\" target=\"_blank\">Open getOption Debug Win<a>");
+	            $("#divDebug").show();
+	            $("#divDebug").fadeOut(5000);
+	        }
 
-			if (settings.debug) window.open(debugurl);
+	        return this.each(function () {
+	            var obj = $(this);
 
-			return this.each(function () {
-				$.ajax({
-					url: settings.url,
-					type: settings.type,
-					dataType: settings.dataType,
-					data: settings.data,
-					async: settings.async,
-					success: function (xml) {
-						var opt = "";
-						if (settings.firstOpt!="") {
-							opt += settings.firstOpt;
-						}
-						if (settings.showEmpty) {
-							opt += '<option value="" style="COLOR:blue">請選擇</option>';
-						}
+	            $.ajax({
+	                async: false,
+	                cache: false,
+	                type: "get",
+	                data: settings.data,
+	                url: settings.url,
+	                success: function (json) {
+	                    var JSONdata = $.parseJSON(json);
+	                    if (settings.firstOpt != "") {
+	                        obj.append(settings.firstOpt);
+	                    }
+	                    if (settings.showEmpty) {
+	                        obj.append("<option value='' style='COLOR:blue'>請選擇</option>");
+	                    }
+	                    $.each(JSONdata, function (i, item) {
+	                        //處理value
+	                        var val = settings.valueFormat;
+	                        Object.keys(item).forEach(function (key) {
+	                            var re = new RegExp("{" + key + "}", "ig");
+	                            val = val.replace(re, item[key]);
+	                        });
 
-						var rows = $(xml).find("XMLRoot");
-						for (var i = 0 ; i < rows.length; i++) {
-							var value = "";
-							$.each(settings.value, function (idx, v) {
-								if (jQuery.type(v) === "number") {
-									value += (value != "" ? settings.valPartSymbol : "") + $(rows[i]).find(":eq(" + v + ")").text();
-								} else if (jQuery.type(v) === "string") {
-									value += (value != "" ? settings.valPartSymbol : "") + $(rows[i]).find(v).text();
-								}
-							});
+	                        //處理text
+	                        var txt = settings.textFormat;
+	                        Object.keys(item).forEach(function (key) {
+	                            var re = new RegExp("{" + key + "}", "ig");
+	                            txt = txt.replace(re, item[key]);
+	                        });
 
-							var txt = "";
-							$.each(settings.text, function (idx, v) {
-								if (jQuery.type(v) === "number") {
-									txt += (txt != "" ? settings.textPartSymbol : "") + $(rows[i]).find(":eq(" + v + ")").text();
-								} else if (jQuery.type(v) === "string") {
-									txt += (txt != "" ? settings.textPartSymbol : "") + $(rows[i]).find(v).text();
-								}
-							});
-							var selected = "";
-							if (settings.preValue == value) {
-								selected = " selected";
-							}
-							opt += '<option value="' + value + '"'+selected+'>' + txt + '</option>';
-						}
-						if (settings.lastOpt != "") {
-							opt += settings.lastOpt;
-						}
-						obj.html(opt);
-					},
-					error: function (xhr) {
-						//window.open(debugurl);
-						alert("載入查詢清單發生錯誤!!");
-					}
-				});
-			});
-		}
+	                        //處理attribute
+	                        var attr = settings.attrFormat;
+	                        Object.keys(item).forEach(function (key) {
+	                            var re = new RegExp("{" + key + "}", "ig");
+	                            attr = attr.replace(re, item[key]);
+	                        });
+	                        obj.append("<option value='" + val + "' " + attr + ">" + txt + "</option>");
+	                    });
+	                    obj.val(settings.setValue);
+	                },
+	                error: function (xhr) {
+	                    //window.open(debugurl);
+	                    alert("載入查詢清單發生錯誤!!");
+	                }
+	            });
+	        });
+	    }
 	});
-	//#endregion
+    //#endregion
 })(jQuery);
 
