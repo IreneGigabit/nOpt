@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.SqlClient;
 using System.Data;
 using System.Text.RegularExpressions;
 
@@ -10,7 +11,48 @@ using System.Text.RegularExpressions;
 /// </summary>
 public static class SHtml
 {
-    /// <summary>
+	/// <summary>
+	/// 產生Option字串
+	/// </summary> 
+	/// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
+	/// <param name="textFormat">option的文字格式用{}包住欄位,ex:{scode}_{sc_name}</param>
+	/// <param name="attrFormat">option的attribute格式用{}包住欄位,ex:value1='{scode1}'</param>
+	/// <param name="showEmpty">空白選項的顯示字串</param>
+	/// <returns></returns>
+	public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat, string attrFormat, string emptyStr) {
+		Regex rgx = new Regex("{([^{}]+)}", RegexOptions.IgnoreCase);
+		string rtnStr = "";
+
+		//處理空白選項
+		if (emptyStr != "")
+			rtnStr += "<option value='' style='color:blue' selected>" + emptyStr + "</option>\n";
+
+		using (SqlDataReader dr = conn.ExecuteReader(sql)) {
+			while (dr.Read()) {
+				//處理value
+				string val = valueFormat;
+				foreach (Match match in rgx.Matches(valueFormat)) {
+					val = val.Replace(match.Value, dr.SafeRead(match.Result("$1"), ""));
+				}
+
+				//處理text
+				string txt = textFormat;
+				foreach (Match match in rgx.Matches(textFormat)) {
+					txt = txt.Replace(match.Value, dr.SafeRead(match.Result("$1"), ""));
+				}
+
+				//處理attribute
+				string attr = attrFormat;
+				foreach (Match match in rgx.Matches(attrFormat)) {
+					attr = attr.Replace(match.Value, dr.SafeRead(match.Result("$1"), ""));
+				}
+				rtnStr += "<option value='" + val + "' " + attr + ">" + txt + "</option>\n";
+			}
+		}
+		return rtnStr;
+	}
+	
+	/// <summary>
     /// 產生Option字串
     /// </summary> 
     /// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
@@ -31,7 +73,7 @@ public static class SHtml
                 val = val.Replace(match.Value, dt.Rows[r][match.Result("$1")].ToString());
             }
 
-            //處理value
+			//處理text
             string txt = textFormat;
             foreach (Match match in rgx.Matches(textFormat)) {
                 txt = txt.Replace(match.Value, dt.Rows[r][match.Result("$1")].ToString());
