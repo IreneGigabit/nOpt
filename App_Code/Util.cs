@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -141,6 +141,28 @@ public static class Util
         return sret;
     }
     #endregion
+
+	#region CutData
+	public static string CutData(this string s, int n) {
+		if (n <= 0) return "";
+		else if (n > System.Text.Encoding.Default.GetBytes(s).Length) return s;
+		else {
+			int len = 0;
+			string tStr2 = "";
+			for (int i = 0; i < s.Length; i++) {
+				string thisChar = s.Mid(i, 1);
+				len += System.Text.Encoding.Default.GetBytes(thisChar).Length;
+
+				if (len > n) {
+					tStr2 += "...";
+					break;
+				}
+				tStr2 += thisChar;
+			}
+			return tStr2;
+		}
+	}
+	#endregion
 
     #region ToXmlUnicode - 將&#nnnn;轉成word用格式
     /// <summary>
