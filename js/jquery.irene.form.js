@@ -1,6 +1,5 @@
 ﻿(function ($) {
-    //#region $maskStart 
-    //不需元素即可呼叫(靜態函式)
+	//#region $maskStart 
 	$maskStart = function (msg) {
 		var w = Math.max($(window).width(), $(document).width());
 		var h = Math.max($(window).height(), $(document).height());

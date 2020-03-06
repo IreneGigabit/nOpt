@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Inherits="PageBase" %>
+﻿<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Web.Services"%>
 <%@ Import Namespace = "System.Web.Script.Services"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -31,7 +31,7 @@
     public static string GetViewData() {
         string NowSyscode = system.GetSession("Syscode");
         string ProjectName = system.getAppSetting("Project");
-        string Scode = system.GetSession("scode");
+        string Scode = system.GetSession("SeScode");
         string ScName = system.GetSession("sc_name");
         string LoginGrp = system.GetSession("LoginGrp");
         string GrpName = system.GetSession("GrpName");
@@ -157,7 +157,7 @@
     </div>
     <form method="post" name="reg" id="reg" target="_top">
     <input type="hidden" name="syscode" value="">
-    <input type="hidden" name="tfx_scode" value="<%=Session["scode"]%>">
+    <input type="hidden" name="tfx_scode" value="<%=Session["SeScode"]%>">
     <input type="hidden" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
     <input type="hidden" name="toppage" value="<%=Session["SeTopPage"]%>">
     <input type="hidden" name="ctrlleft" value="<%=Request["ctrlleft"]%>">
@@ -211,7 +211,7 @@ var app = new Vue({
             var element = $(e.target);
             var syspath = element.val();
             var syscode = $('option:selected', element).attr('value1');
-            window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["scode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
+            window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["SeScode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
         }
     }
 });

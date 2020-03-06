@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script>
+        function go() {
+            var i = 5000, html = new Array(i);
+            while(i--) {
+                html[i] = ['<option value="value', i, '">text', i, '</option>'].join("");
+            }
+            $("#ddl").replaceWith('<select id="ddl">' + html.join("") + '</select>');
+        }
+        function go1(){
+            var i = 5000;
+            var warp = document.createDocumentFragment();
+            while(i--) {
+                var option = document.createElement("option");
+                option.value = "value";
+                option.text = "text" + i.toString();
+                warp.appendChild(option);
+            }
+            $("#ddl2").append(warp);
+        }
+        $(document).ready(function () {
+            var d1 = +(new Date());
+            go();
+            console.log(+(new Date())-d1);
+            d1 = +(new Date());
+            go1();
+            console.log(+(new Date()) - d1);
+        })
+    </script>
+</head>
+<body>
+    <select id="ddl">
+        <option value="a">123</option>
+    </select>
+    <select id="ddl2">
+        <option value="a">123</option>
+    </select>
+</body>
+</html>

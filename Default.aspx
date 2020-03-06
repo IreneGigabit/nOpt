@@ -1,358 +1,287 @@
-<%@ Page Language="C#" Inherits="PageBase" %>
-<%@ Import Namespace = "System.Data"  %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+﻿<%@ Page Language="C#" Inherits="PageBase" %>
+<%@ Import Namespace = "System.Web.Services"%>
+<%@ Import Namespace = "System.Web.Script.Services"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
+<%@ Import Namespace = "Saint.Sysctrl"%>
+<%@ Import Namespace = "System.Data"%>
+<%@ Import Namespace = "Newtonsoft.Json"%>
 
 <script runat="server">
-    protected string SiServer = system.SIServer;//聖島人主機
-    protected string ProjectName = "";
-    protected string LoginGrp = "";
-    protected string StrUser = "";
-    protected string Eblank = "";
-	//protected string StrBkClr = "bgcolor=\"#5a63bd\"";
-	//protected string StrDisp = " style=\"display:none\"";
-	protected string theTop = "44px";
-	protected string StrMenus = "";
-	protected string scriptString = "";
-	//protected string gcTestDisp = " style=\"display:none\"";
-	protected string StrSYSs = "";//下拉選單
-	//protected string mainPage = "";
-
+    //protected string StrProjectName = system.getAppSetting("Project");
+    //protected string Syscode ="";
+    //protected string StrUser = "";
+    //protected string SIServer = system.SIServer;//聖島人主機
+    //https://www.jianshu.com/p/192552cb6a45
     protected void Page_PreInit(object sender, EventArgs e) {
-        base.LoginChk = false;//不檢查登入,或不要繼承PageBase即可
+        //base.LoginChk = false;//不檢查登入,或不要繼承PageBase即可
     }
 
-    private void Page_Load(System.Object sender, System.EventArgs e) {
-		Response.CacheControl = "Private";
-		Response.AddHeader("Pragma", "no-cache");
-		Response.Expires = -1;
+    private void Page_Load(Object sender, EventArgs e) {
+        Response.CacheControl = "Private";
+        Response.AddHeader("Pragma", "no-cache");
+        Response.Expires = -1;
+       
+        this.DataBind();
+    }
 
-        if (Convert.ToBoolean(Session["Password"])) {
-            ProjectName = system.getAppSetting("Project");
-            LoginGrp = system.GetSession("LoginGrp");
-            StrUser = system.GetSession("sc_name");
-            if (LoginGrp.ToUpper().IndexOf("ADMIN")>-1){
-                Eblank = "<span id='btnEblank' style='cursor:pointer;color:brown;' v1='65%,*' v2='100%,*'>[Eblank frame]</span>&nbsp;";
-            }
-            
-            CreateMenu();
-        }
+    //webservice framework須為4.0以上,iis pool也要改成4.0,<system.web> 的節點加入<webServices>...</webServices>內容
+    //https://dotblogs.com.tw/kevintan1983/archive/2012/12/26/86013.aspx
+    [WebMethod(enableSession: true)]
+    [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
+    public static string GetViewData() {
+        string NowSyscode = system.GetSession("Syscode");
+        string ProjectName = system.getAppSetting("Project");
+        string Scode = system.GetSession("SeScode");
+        string ScName = system.GetSession("sc_name");
+        string LoginGrp = system.GetSession("LoginGrp");
+        string GrpName = system.GetSession("GrpName");
         
-		this.DataBind();
-	}
-
-    private void CreateMenu() {
-        if (Convert.ToBoolean(Session["Password"])) {
-            //StrUser = ProjectName + " / " + Session["sc_name");
-            using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
-            {
-                string SQL = "SELECT a.APcode, a.APnameC, a.APorder, a.APserver, a.APpath, a.ReMark" +
-                     ", b.LoginGrp, b.Rights" +
-                     ", c.APcatCName, c.APCatID" +
-                     " FROM AP AS a" +
-                     " INNER JOIN LoginAP AS b ON a.APcode = b.APcode AND a.SYScode = b.SYScode" +
-                     " INNER JOIN APcat AS c ON a.APcat = c.APcatID AND a.SYScode = c.SYScode " +
-                     " WHERE b.LoginGrp = '" + Session["LoginGrp"] + "'" +
-                     " AND b.SYScode = '" + Session["Syscode"] + "'" +
-                     " AND (b.Rights & 1) > 0 " +
-                     " ORDER BY c.APseq, a.APorder, a.APcode";
-                DataTable dt = new DataTable();
-                cnn.DataTable(SQL, dt);
-
-                int xn = 0;
-                int xItemCount = 0;
-                //int xmIdx = 1;
-                int xmIdx = 0;
-                string xapcat = "";
-                string xaporder = "";
-                string xapcode = "";
-                string xapo = "";
-                //string xpath = "";
-
-                StrMenus = "<table cellSpacing=\"0\" cellPadding=\"0\" bgColor=\"#5A63BD\" border=\"0\"><tr>\n";
-                scriptString = "";
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    if (dt.Rows[i]["APcatCName"].ToString()  != xapcat)
-                    {
-                        xn = xn + 1;
-                        xapcat = dt.Rows[i]["APcatCName"].ToString();
-                        xaporder = "";
-                        xItemCount = 1;
-                        StrMenus += "<td width=\"87\" align=\"center\" class=\"apcat tab-title\" v1=\"" + xn.ToString() + "\" height=\"17\" valign=\"bottom\">" + xapcat + "</td>\n";
-                    }
-                    if (dt.Rows[i]["APNameC"].ToString() != xapcode)
-                    {
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "] = new MenuItem();\n";
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].mIdx = " + xn.ToString() + ";\n";
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].sIdx = " + xItemCount.ToString() + ";\n";
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Code = \"" + dt.Rows[i]["APcode"].ToString()  + "\";\n";
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Cat = \"" + dt.Rows[i]["APcatID"].ToString()  + "\";\n";
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Name = \"" + dt.Rows[i]["APNameC"].ToString()  + "\";\n";
-
-                        //scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Link = \"" + dt.Rows[i]["APpath"].ToString() + "?prgid=" + dt.Rows[i]["APcode"].ToString() + "\";\n";
-                        scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Link = \"http://" + dt.Rows[i]["APserver"].ToString() + "/" + dt.Rows[i]["APpath"].ToString() +
-                                                                                    "?prgid=" + dt.Rows[i]["APcode"].ToString() +
-                                                                                    "&prgname=" + dt.Rows[i]["APNameC"].ToString() +
-                                                                                    dt.Rows[i]["ReMark"].ToString() + "\";\n";
-
-                        xapo = dt.Rows[i]["APorder"].ToString().Substring(0, 1);
-                        if (xapo != xaporder)
-                        {
-                            if (xItemCount != 0)
-                                scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Bar = \"Y\";\n";
-                            xaporder = xapo;
-                        }
-                        xmIdx = xmIdx + 1;
-                        xItemCount = xItemCount + 1;
-                        xapcode = dt.Rows[i]["APNameC"].ToString();
-                    }
-                }
-                StrMenus += "</tr></table>";
-            }
-			
-			StrSYSs = "";
-            using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
-            {
-                //求取該登入人員所有的系統權限(不含本系統)
-                string SQL = "SELECT a.sysserver+ISNULL(a.syspath, '')path, a.sysnameC, a.syscode";
-                SQL += " FROM sysctrl AS b";
-                SQL += " INNER JOIN SYScode AS a ON b.syscode=a.syscode";
-                SQL += " WHERE b.scode='" + Session["scode"] + "'";
-                SQL += " AND a.syscode<>'" + Session["syscode"] + "'";
-                
-                DataTable dt_1 = new DataTable();
-                cnn.DataTable(SQL, dt_1);
-                for (int i = 0; i < dt_1.Rows.Count; i++)
-                {
-                    StrSYSs += "<option value=\"" +  dt_1.Rows[i]["path"].ToString()  + "\" value1=\"" + dt_1.Rows[i]["Syscode"].ToString()  + "\">◎" + dt_1.Rows[i]["sysnameC"].ToString() + "</option>";
-                }
-            }
-        }
+        var result = new {
+            siServer = system.SIServer,
+            titleUser = ScName + "/" + LoginGrp,
+            projectName = ProjectName,
+            nowSyscode = NowSyscode,
+            sysList = new SysctrlService().GetUserSystemData(Scode, NowSyscode).ToList(),//下拉選單
+            mainMenu = new SysctrlService().GetSystemMenu(NowSyscode, LoginGrp).ToList()//功能選單
+        };
+        
+        //序列化為JSON字串並輸出結果
+        return JsonConvert.SerializeObject(result);
     }
-
 </script>
+
+<%--<!DOCTYPE HTML>--%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="IE=9">
+    <%--<meta name="viewport" content="width=device-width" />--%>
     <title></title>
+    <link href="inc/setmenu.css" rel="stylesheet" />
     <link href="inc/setstyle.css" rel="stylesheet" />
     <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="js/vue.min.js"></script>
     <%--<script type="text/javascript"  src="js/json2.js"></script>--%>
-    <script type="text/javascript" src="js/toastr.js"></script>
+    <script type="text/javascript" src="js/jquery.blockUI.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
+    <style type="text/css">
+        html {
+            overflow: hidden;
+            /*overflow-y:scroll;*/
+        }
+        body {
+            margin: 0px;
+        }
+        #bottom{
+            position: absolute;
+            width: 100%;
+            z-index:0;
+        }
+        #left {
+            width: 200px;
+            overflow: auto;
+            height:100%;
+            float: left;
+        }
+        #main {
+            overflow-x: hidden;
+            overflow-y: auto;
+            height:100%;
+            float: left;
+        }
+        #main .content {
+            margin: 0px;
+            height:100%;
+        }
+        #workframe {
+            margin:0px;
+            position:relative;
+            z-index:0;
+            overflow: auto;
+            height:100%;
+        }
+    </style>
 </head>
-<body style="margin:0px 0px 0px 0px;overflow:hidden;background:url('images/top/back5.gif');background-repeat: no-repeat;">
-    <table id="toptable" cellspacing="0" cellpadding="0" width="100%" border="0">
-        <tr>
-            <td width="5%">&nbsp;</td>
-            <td align="left" style="background-image: url(images/top/w02.png); background-repeat: no-repeat;background-size: 199px 26px; padding-left: 65px;">
-                <%#ProjectName%>
-            </td>
-            <td align="right" width="30%">
-                <img class="headImg" onclick="javascript:gosite('list')" style="cursor:pointer;" title="回系統首頁" alt="回系統首頁" border="0" src="images/top/head05-list.gif">
-                <img class="headImg" onclick="javascript:gosite('menu')" style="cursor:pointer;" title="回主功能表" alt="回主功能表" border="0" src="images/top/head05-menu.gif">
-                <img class="headImg" onclick="javascript:gosite('home')" style="cursor:pointer;" title="登出回首頁" alt="登出回首頁" border="0" src="images/top/head05-home.gif">
-            </td>
-            <td align="right" valign=top>
-                <%#Eblank%>
-                <span style="font-size:12px;color:red" title="<%#LoginGrp%>"><%#StrUser%></span>
-                <img src="images/top/go-1.gif" alt="" width="22" height="10" />
-				<select id="goweb" name="goweb" size="1">
-	                <option value="" style="color:#000088">請選擇其他網路作業系統...</option>
-                    <%#StrSYSs%>
-                    <option value="">----------</option>	
-                    <option value="logout">→登出</option> 		
-                </select>	
-            </td>		
-        </tr>
-    </table>
-    <table cellspacing="0" cellpadding="0" width="100%" border="0">
-        <tr style="background-color:#5a63bd">
-            <td width="30">
-                <img id="imgSide" style="cursor:pointer;" src="images/x-2.gif" />&nbsp;&nbsp;
-            </td>
-            <td height="20">
-                <%#StrMenus%>
-            </td>
-        </tr>
-    </table>
-    <iframe id="workfram" src="mainFrame.aspx" style="z-index: 1; position:absolute; width: 99.8%; height: 800px; top: <%#theTop%>; left: 0px;"></iframe>
-    <div id="oPopBody" style="position:absolute; display:none;z-index: 10; width:250px"></div>
-    <form method="post" id="reg" name="reg" target="_top">
-        <input type="hidden" name="syscode" value="">
-        <input type="hidden" name="tfx_scode" value="<%=Session["Scode"]%>">
-        <input type="hidden" name="tfx_sys_password" value="" />
-        <input type="hidden" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
-        <input type="hidden" name="toppage" value="<%=Session["SeTopPage"]%>">
-        <input type="hidden" name="ctrlleft" value="<%=Request["ctrlleft"]%>">
-        <input type="hidden" name="ctrltab" value="<%=Request["ctrltab"]%>">
-        <input type="hidden" name="ctrlhomelist" value="<%=Request["ctrlhomelist"]%>">
-        <input type="hidden" name="ctrlhomelistshow" value="<%=Request["ctrlhomelistshow"]%>">
+<body style="margin: 0px;">
+    <div id="homeapp">
+        <table id="toptable" cellspacing="0" cellpadding="0" width="100%" border="0" style="background-color: #fff;">
+            <tr>
+                <td>
+                    <div style="width:20px;float:left">&nbsp;
+                        <!--img id="imgSide" style="cursor: pointer" alt="" src="images/x-2.gif" width="13" height="13"-->
+                    </div>
+                    <div style="float:left;background-image: url(images/top/w02.png); background-repeat: no-repeat;background-size:contain; padding-left: 65px;line-height:20px;">
+                        {{projectName}}　　　　　
+                        <img class="headImg" onclick="javascript:gosite('list')" style="cursor:pointer;" title="回系統首頁" alt="回系統首頁" border="0" src="images/top/head05-list.gif">
+                        <img class="headImg" onclick="javascript:gosite('menu')" style="cursor:pointer;" title="回主功能表" alt="回主功能表" border="0" src="images/top/head05-menu.gif">
+                        <img class="headImg" onclick="javascript:gosite('home')" style="cursor:pointer;" title="登出回首頁" alt="登出回首頁" border="0" src="images/top/head05-home.gif">
+                    </div>
+                    <div style="float:right">
+                        {{titleUser}}<img src="images/top/go-1.gif">
+                        <select id="goweb" v-on:change="goWeb($event)">
+                            <option style="color: darkslateblue" value="">請選擇其他網路作業系統 ...</option>
+                            <option v-for="item in sysList" v-bind:value="item.sysserver+item.syspath" v-bind:value1="item.syscode" v-if="item.syscode!=nowSyscode">
+                                ◎{{ item.sysnameC }}
+                            </option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div id="menu" style="z-index:99">
+            <div style="width:20px;float:left;height:20px;">
+                <span style="display: inline-block;height:100%;"></span>
+                <img id="imgSide" style="cursor: pointer;" alt="" src="images/x-2.gif" height="15">
+            </div>
+            <ul>
+                <li v-for="main in mainMenu" class="apcat">
+                  <a href='javascript:void(0)'>{{ main.APcatCName }}</a>
+                    <ul v-bind:style="{ width: main.CatLength + 'px' }">
+                        <li v-for="(sub,idx) in main.submenu">
+                            <a v-bind:class="[(sub.GrpNum == 1&& idx!=0) ? 'bar' : '']" v-bind:href="'/'+sub.APpath + 'x?prgname=' + sub.APnameC+sub.Remark" target='Etop'>
+                                {{sub.APnameC}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="bottom">
+            <div id="left">
+                <div class="content"></div>
+            </div>
+            <div id="main">
+                <div class="content">
+		            <iframe name="workframe" id="workframe" frameborder="0" src="mainFrame.aspx"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="post" name="reg" id="reg" target="_top">
+    <input type="hidden" name="syscode" value="">
+    <input type="hidden" name="tfx_scode" value="<%=Session["SeScode"]%>">
+    <input type="hidden" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
+    <input type="hidden" name="toppage" value="<%=Session["SeTopPage"]%>">
+    <input type="hidden" name="ctrlleft" value="<%=Request["ctrlleft"]%>">
+    <input type="hidden" name="ctrltab" value="<%=Request["ctrltab"]%>">
+    <input type="hidden" name="ctrlhomelist" value="<%=Request["ctrlhomelist"]%>">
+    <input type="hidden" name="ctrlhomelistshow" value="<%=Request["ctrlhomelistshow"]%>">
     </form>
 </body>
 </html>
 
+<script language="javascript" type="text/javascript">
+var sideClosed = false;
 
-<script type="text/javascript" language="javascript">
-    var zmenu = Array();
-    var oPopup;
-    var oPopup1;
-    var mi = 0;
-    var mLeft = 0
-
-    $(function () {
-        $("#imgSide").click(function (e) {
-            var ifrm = $("#workfram").contents();
-            if ($(ifrm).find("#f").attr("cols") == "0,*") {
-                $(ifrm).find("#f").attr("cols", "200,*");
-                $(this).attr("src", "images/x-2.gif");
-            } else {
-                $(ifrm).find("#f").attr("cols", "0,*");
-                $(this).attr("src", "images/x-1.gif");
-            }
+var app = new Vue({
+    el: '#homeapp',
+    data: {
+        siServer:"",//聖島人主機
+        titleUser: "",//目前使用者/群組
+        projectName:"",//系統名稱
+        nowSyscode: "",//目前系統
+        sysList: [],//系統下拉選單
+        mainMenu: []//作業選單
+    },
+    created: function () {
+        var self = this;
+        showBlockUI("");
+        ajaxByGet('Default.aspx/GetViewData', {})
+        .success(function (rtn) {
+            var Result = $.parseJSON(rtn.d)//JSON.parse(rtn.d)//webservice會多帶d
+            document.title = Result.projectName;
+            self.siServer = Result.siServer;
+            self.titleUser = Result.titleUser;
+            self.projectName = Result.projectName;
+            self.sysList = Result.sysList;
+            self.mainMenu = Result.mainMenu;
+            //$.each(Result.sysList, function (i, item) {
+            //    console.log(item.sysserver, item.syspath, item.sysnameC, item.syscode);
+            //})
+            $.unblockUI();
+        })
+        .error(function (error) {
+            $.unblockUI();
+            alert(error.status + "\n" + error.responseJSON.Message + "\n" + error.responseJSON.StackTrace);
         });
-        $(document).click(function (e) { $("#oPopBody").hide(); });
-        $(".apcat").mouseover(function (e) { $(this).addClass("tab-titleon").removeClass("tab-title") });
-        $(".apcat").mouseout(function (e) { $(this).addClass("tab-title").removeClass("tab-titleon") });
-        $(".apcat").click(menuClick);
-        $("#oPopBody").mouseleave(function (e) { $(this).hide(); });
-        $("#goweb").change(gosite);
+    },
+    updated:function(){
+        setIframe();
+    },
+    methods: {
+        goWeb: function (e) {
+            var element = $(e.target);
+            var syspath = element.val();
+            var syscode = $('option:selected', element).attr('value1');
+            window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["SeScode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
+        }
+    }
+});
 
-        $(window).load(setIframe);
-        $(window).resize(setIframe);
-        init();
+$(function () {
+    //框架大小
+    setIframe();
+    changeSide();
+    //$("#workframe").css("height", '70%');
+    //$("#eBlank").css("height", '30%');
+
+    $(window).resize(function () { setIframe(); changeSide() });
+    //標題按鈕
+    $(".headImg").mouseover(function(e) { $(this).css("background-color","#ffffcc") });
+    $(".headImg").mouseout(function (e) { $(this).css("background-color", "#ffffff") });
+    //側邊欄
+    $("#imgSide").click(function () {
+        sideClosed = !sideClosed;;
+        changeSide();
     });
-
-    function init() {
-    <%#scriptString%>
-    }
-
-    function setIframe(e) {
-        $("#workfram").height(($(window).height() - 48) + 'px');
-        $("#workfram").width("100%");
-    }
-
-    function menuClick(e) {
-        var sObj = e.target;
-        var pos = $(sObj).position();
-        mi = parseInt($(sObj).attr("v1"));
-        var i = 0;
-        var i0 = 0;
-        var maxLen = 0;
-        var menuHeight = 8;
-        var menuWidth = 0;
-        var menuHtm = "";
-
-        for (i = 0 ; i < zmenu.length ; i++) {
-            if (zmenu[i].mIdx == mi) {
-                if (zmenu[i].Bar == "Y" && i0 > 0) {
-                    menuHtm += "<hr style=\"height: 1px; color: #a0a0a0; background-color: #a0a0a0\" />";
-                    menuHeight += 15;
-                }
-                //if (zmenu[i].Name.CodeLength() > maxLen) maxLen = zmenu[i].Name.CodeLength();
-                maxLen = Math.max($.BLen(zmenu[i].Name), maxLen)
-                zmenu[i].pTop = menuHeight + 31
-                menuHtm += "<div style=\"margin: 0px 0px 0px 0px;padding: 2px 1px 1px 1px;color: #000;background-color: #f0f0f0;cursor: pointer;height: 18px;\" " +
-					"onmouseover=\"javascript:PopMenuOver(this)\" onmouseout=\"javascript:PopMenuOut(this)\" " +
-					"onclick=\"javascript:PopMenuClick(" + i.toString() + ")\">" + zmenu[i].Name + "&nbsp;</div>";
-                menuHeight += 22;
-                i0++;
-            }
-        }
-
-        menuWidth = 20 + 8 * maxLen;
-        mLeft = pos.left + 1 + menuWidth;
-
-        $("#oPopBody").css("margin", "0px 0px 0px 0px");
-        $("#oPopBody").css("padding", "3px 5px 3px 15px");
-        $("#oPopBody").css("background-color", "#f0f0f0");
-        $("#oPopBody").css("font-size", "10pt");
-        $("#oPopBody").css("font-family", "微軟正黑體, Verdana, Arial");
-        $("#oPopBody").css("border-left", "solid 2px #fff");
-        $("#oPopBody").css("border-top", "solid 2px #fff");
-        $("#oPopBody").css("border-bottom", "solid 2px #979797");
-        $("#oPopBody").css("border-right", "solid 2px #979797");
-        $("#oPopBody").html(menuHtm);
-        $("#oPopBody").css("left", (pos.left + 1).toString() + "px");
-        $("#oPopBody").css("top", "46px");
-        $("#oPopBody").css("width", menuWidth + "px");
-        $("#oPopBody").css("heigth", menuHeight + "px");
-
-        $("#oPopBody").show();
-        e.stopPropagation();
-        return;
-    }
-
-    function PopMenuOver(sObj) {
-        sObj.style.backgroundColor = "#898989";
-        sObj.style.color = "#fff";
-    }
-
-    function PopMenuOut(sObj) {
-        sObj.style.backgroundColor = "#f0f0f0";
-        sObj.style.color = "#000";
-    }
-
-    function PopMenuClick(ii) {
-        var lnk = zmenu[ii].Link;
-
-        var ifrm = $("#workfram").contents();
-        //$(ifrm).find("[name='mainFrame']").attr("src", lnk);
-        $("#Etop", ifrm).attr("src", lnk);
-        //$(ifrm).find("[name='mainFrame']")[0].location.href = lnk;
-
-        //workfram.mainFrame.location.href = lnk;
-        $("#oPopBody").hide();
-    }
-
-    function MenuItem() {
-        this.mIdx = 0;
-        this.sIdx = 0;
-        this.pTop = 0;
-        this.Code = "";
-        this.Cat = "";
-        this.Name = "";
-        this.Link = "";
-        this.Bar = "N";
-    }
-
-    function gosite(pType) {
-        switch (pType) {
-            case "list"://回系統首頁
-                reg.action = "default.aspx";
-                reg.submit();
-                break;
-            case "menu"://回主功能表(各系統清單)
-                reg.action = "http://<%#SiServer%>/system/sys_main.asp";
-                reg.submit();
-                break;
-            case "home"://聖島人
-                window.top.location.href = "http://<%#SiServer%>";
-                break;
-            default:
-                var syspath = $("#goweb").val();
-                if (syspath == "logout") {//登出
-                    window.open("logout.aspx", "_top");
-                }else if (syspath != "") {
-                    var syscode = $("#goweb option:selected").attr("value1");
-                    window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["scode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
-                }
-                break;
-        }
-    }
-    //Eblank frame
-    $("#btnEblank").click(function () {
-        var ifrm = $("#workfram").contents();
-
-        if ($(this).attr("v1") != null) {
-            if ($("#tt", ifrm).length>0) {
-                if ($("#tt", ifrm).attr("rows") != $(this).attr("v1")) {
-                    $("#tt", ifrm).attr("rows", $(this).attr("v1"))
-                } else {
-                    $("#tt", ifrm).attr("rows", $(this).attr("v2"))
-                }
-            }
-        }
+    //下拉控制
+    $(document).on("mouseover", ".apcat ul",function (e) { $(this).show(); });
+    $(document).on("mouseout", ".apcat ul",function (e) { $(this).hide(); });
+    $(document).on("click", ".apcat", function () {
+        $(".apcat ul").hide();
+        $("ul", $(this)).show();
     });
+});
+function setIframe(e) {
+    var menuHeight = parseInt($("#menu ul").get(0).offsetHeight);
+    var tTableHeight = parseInt($("#toptable").get(0).offsetHeight);
+    $("#bottom").css('margin-top', menuHeight - 19);
+    $("#bottom").height(($(window).height() - menuHeight - tTableHeight)-3 + 'px');//-14
+}
+function changeSide(e) {
+    if (sideClosed) {
+        $("#imgSide").attr("src", "images/x-1.gif");
+
+        $('#left').css("width", "0px");
+        var mainWidth = $(window).width();
+        $("#main").css("width", (mainWidth) + 'px');
+        $("#workframe").css("width", (mainWidth) + 'px');
+        $("#eBlank").css("width", (mainWidth) + 'px');
+    } else {
+        $("#imgSide").attr("src", "images/x-2.gif");
+
+        $('#left').css("width", "200px");
+        var mainWidth = $(window).width();
+        $("#main").css("width", (mainWidth - 200) + 'px');
+        $("#workframe").css("width", (mainWidth - 200) + 'px');
+        $("#eBlank").css("width", (mainWidth - 200) + 'px');
+    }
+}
+function gosite(pType){
+    switch (pType){
+        case "list"://回系統首頁
+            reg.action = "default.aspx";
+            reg.submit();
+            break;
+        case "menu"://回主功能表(各系統清單)
+            reg.action = "http://"+app.siServer+"/system/sys_main.asp";
+            reg.submit();
+            break;
+        case "home"://聖島人
+            reg.action = "http://" + app.siServer;
+            reg.submit();
+            break;
+    }
+}
 </script>
