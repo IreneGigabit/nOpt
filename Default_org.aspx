@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="PageBase" %>
+<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Web.Services"%>
 <%@ Import Namespace = "System.Web.Script.Services"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -40,7 +40,7 @@
     [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
     public static string GetUserSystem() {
         string nowSyscode = system.GetSession("Syscode");
-        string Scode = system.GetSession("SeScode");
+        string Scode = system.GetSession("scode");
         
         /*
         List<SYScode> sysList = new SysctrlService().GetUserSystemData(Scode).ToList();
@@ -61,7 +61,7 @@
             string SQL = @"SELECT A.sysserver,A.syspath AS syspath, A.sysnameC, A.syscode 
                          FROM sysctrl 
                          INNER JOIN SYScode A ON sysctrl.syscode = A.syscode
-                            WHERE sysctrl.scode = '"+system.GetSession("SeScode")+"'";
+                            WHERE sysctrl.scode = '"+system.GetSession("scode")+"'";
             List<SYScode> sysList = null;
             using (DBHelper conn = new DBHelper(Conn.Sysctrl)) {
                 DataTable dt = new DataTable();
@@ -150,7 +150,7 @@
             SQL = "SELECT A.sysserver,A.syspath AS syspath, A.sysnameC, A.syscode ";
             SQL += "FROM sysctrl ";
             SQL += "INNER JOIN SYScode A ON sysctrl.syscode = A.syscode ";
-            SQL += "WHERE sysctrl.scode = '" + system.GetSession("SeScode") + "' ";
+            SQL += "WHERE sysctrl.scode = '" + system.GetSession("scode") + "' ";
             SQL += "and sysctrl.syscode<>'" + system.GetSession("Syscode") + "' ";
             using (DBHelper conn = new DBHelper(Conn.Sysctrl)) {
                 DataTable dt = new DataTable();
@@ -261,7 +261,7 @@
     </div>
     <form method="post" name="reg" id="reg" target="_top">
     <input type="hidden" name="syscode" value="<%=Syscode%>">
-    <input type="hidden" name="tfx_scode" value="<%=Session["SeScode"]%>">
+    <input type="hidden" name="tfx_scode" value="<%=Session["scode"]%>">
     <input type="hidden" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
     <input type="hidden" name="toppage" value="<%=Session["SeTopPage"]%>">
     <input type="hidden" name="ctrlleft" value="<%=Request["ctrlleft"]%>">
@@ -343,7 +343,7 @@ function gosite(pType){
 var app = new Vue({
     el: '#goweb',
     data: {
-        nowSyscode: "OPT",    //目前系統
+        nowSyscode: "NOPT",    //目前系統
         sysList: []//系統選單
     },
     created: function () {
@@ -391,7 +391,7 @@ var app = new Vue({
             var element = $(e.target);
             var syspath = element.val();
             var syscode = $('option:selected', element).attr('value1');
-            window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["SeScode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
+            window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["scode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
         }
     }
 });
