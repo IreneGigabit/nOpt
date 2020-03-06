@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Data.SqlClient;
@@ -16,13 +16,14 @@ public class Token
     public string APcode { get; set; }//程式
     
     public string UGrpID { get; set; }//群組
-    public int Rights { get; set; }//權限值
+    public int Rights { get; set; }//取得的權限值
     private bool _Passworded { get; set; }//是否已登入
+	//public int chkRight { get; set; }//要檢查的權限值
 
     public Token()
         : this(
-         system.GetSession("Syscode")
-        , ""
+		 system.GetSession("Syscode")
+		, ""
         , system.GetSession("LoginGrp")
         , Conn.Sysctrl
         ) { }
@@ -53,19 +54,19 @@ public class Token
         this._Passworded = Boolean.TryParse(system.GetSession("Password"), out flag);
      }
 
-    public int Check() {
-        return Check(1, true);
+   public int CheckMe() {
+	   return CheckMe(1, true);
     }
 
-    public int Check(bool chkRef) {
-        return Check(1, chkRef);
+	public int CheckMe(bool chkRef) {
+		return CheckMe(1, chkRef);
     }
 
-    public int Check(int chkRight) {
-        return Check(chkRight, true);
+	public int CheckMe(int chkRight) {
+		return CheckMe(chkRight, true);
     }
 
-    public int Check(int chkRight, bool chkRef) {
+	public int CheckMe(int chkRight, bool chkRef) {
         try {
             this.Rights = 0;
 
