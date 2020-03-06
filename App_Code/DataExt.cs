@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Collections;
 using System.Text;
 using System.Reflection;
-using System.Dynamic;
 using System.Linq;
 
 /// <summary>
