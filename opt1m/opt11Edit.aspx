@@ -1,11 +1,10 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgCode = HttpContext.Current.Request["prgid"];//功能權限代碼
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
     protected string HTProgPrefix = "opt11";//程式檔名前綴
+    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
     protected int HTProgRight = 0;
 
     protected string StrQueryLink = "";
@@ -16,7 +15,7 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        Token myToken = new Token(HTProgCode);
+        Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             QueryPageLayout();
@@ -52,7 +51,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#HTProgCode%><%#HTProgCap%>‧<b style="color:Red">清單</b>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">清單</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;        
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>

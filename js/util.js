@@ -34,6 +34,22 @@ function getRootDir() {
     return postPath;
 }
 
+//判斷字串是否為JSON格式
+function isJSON(str) {
+    if (typeof str == 'string') {
+        try {
+            var obj = JSON.parse(str);
+            if (typeof obj == 'object' && obj) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+    }
+    return false;
+}
 /*將數值轉換貨幣表示法
 c:取到小數第幾位
 d:小數符號

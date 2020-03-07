@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Web;
 using System.Data.SqlClient;
 using System.Text;
-using System.Security.Cryptography;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 /// <summary>
 /// Token 的摘要描述
@@ -54,19 +54,27 @@ public class Token
         this._Passworded = Boolean.TryParse(system.GetSession("Password"), out flag);
      }
 
-   public int CheckMe() {
-	   return CheckMe(1, true);
+    public int CheckMe() {
+        return CheckMe(1, true, false);
     }
 
-	public int CheckMe(bool chkRef) {
-		return CheckMe(1, chkRef);
+    public int CheckMe(bool chkRef) {
+        return CheckMe(1, chkRef, false);
     }
 
-	public int CheckMe(int chkRight) {
-		return CheckMe(chkRight, true);
+    public int CheckMe(int chkRight) {
+        return CheckMe(chkRight, true, false);
     }
 
-	public int CheckMe(int chkRight, bool chkRef) {
+    public int CheckMe(bool chkRef, bool rtnJson) {
+        return CheckMe(1, chkRef, rtnJson);
+    }
+
+    public int CheckMe(int chkRight, bool rtnJson) {
+        return CheckMe(chkRight, true, rtnJson);
+    }
+
+    public int CheckMe(int chkRight, bool chkRef,bool rtnJson) {
         try {
             this.Rights = 0;
 
@@ -121,7 +129,7 @@ public class Token
                     dr.Close();
                     cn.Close();
 
-                    if (!myRights) throw new Exception("該系統未授權 !");
+                    if (!myRights) throw new Exception("該作業未授權 !");
                 }
                 catch (Exception ex) {
                     throw;
@@ -137,14 +145,22 @@ public class Token
             }
         }
         catch (Exception ex) {
-            HttpContext.Current.Response.Write(PageDirect(ex.Message));
+            HttpContext.Current.Response.Write(PageDirect(ex.Message, rtnJson));
             HttpContext.Current.Response.End();
         }
 
         return this.Rights;
     }
 
-    private string PageDirect(string strMsg) {
+    private string PageDirect(string strMsg,bool rtnJson) {
+        if (rtnJson) {
+            JObject obj = new JObject(
+                             new JProperty("error", 000),
+                             new JProperty("msg", strMsg)
+                            );
+            return JsonConvert.SerializeObject(obj, Formatting.Indented);
+        }
+
         string url = "Default.aspx";
         if (!_Passworded) url = "Login.aspx";
 

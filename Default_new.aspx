@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Inherits="PageBase" %>
+﻿<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Web.Services"%>
 <%@ Import Namespace = "System.Web.Script.Services"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>

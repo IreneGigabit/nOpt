@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Inherits="PageBase" %>
+﻿<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Web.Services"%>
 <%@ Import Namespace = "System.Web.Script.Services"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -343,7 +343,7 @@ function gosite(pType){
 var app = new Vue({
     el: '#goweb',
     data: {
-        nowSyscode: "NOPT",    //目前系統
+        nowSyscode: "<%#Syscode%>",    //目前系統
         sysList: []//系統選單
     },
     created: function () {
@@ -388,10 +388,10 @@ var app = new Vue({
     },
     methods: {
         goWeb: function (e) {
-            var element = $(e.target);
-            var syspath = element.val();
-            var syscode = $('option:selected', element).attr('value1');
-            window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["scode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
+        var element = $(e.target);
+        var syspath = element.val();
+        var syscode = $('option:selected', element).attr('value1');
+        window.top.location.href = "http://" + syspath + "/checklogin.asp?tfx_scode=<%#Session["scode"]%>&sys_pwd=<%#Session["SeSysPwd"]%>&syscode=" + syscode;
         }
     }
 });

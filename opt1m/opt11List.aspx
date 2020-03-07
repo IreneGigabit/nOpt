@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
 <%@Import Namespace = "System.Text"%>
 <%@Import Namespace = "System.Data.SqlClient"%>
@@ -7,17 +7,20 @@
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Web.Script.Serialization"%>
 <%@ Import Namespace = "Newtonsoft.Json"%>
-<%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
     protected string isql = "";
+    protected string prgid = HttpContext.Current.Request["prgid1"];//功能權限代碼
 
     protected void Page_Load(object sender, EventArgs e) {
+        Token myToken = new Token(prgid);
+        myToken.CheckMe(false, true);
+
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "select a.*,''fseq,''ap_cname ";
             isql += "from vbr_opt a ";
             isql += "where a.Bstat_code is null and Bmark='N' ";
-            
+
             if ((Request["qryBranch"]??"")!=""){
                 isql+=" and a.Branch='"+Request["qryBranch"]+"'";
             }
@@ -33,7 +36,7 @@
             if ((Request["qryBCaseDateE"]??"")!=""){
                 isql+=" and a.Bcase_date<='"+Request["qryBCaseDateE"]+"'";
             }
-	
+
             if ((Request["SetOrder"] ?? "") != "") {
                 isql += " order by " + Request["SetOrder"];
             }else{
@@ -42,13 +45,13 @@
 
             DataTable dt = new DataTable();
             conn.DataTable(isql, dt);
-            
+
             //處理分頁
             int nowPage = Convert.ToInt32(Request["GoPage"] ?? "1"); //第幾頁
             int PerPageSize = Convert.ToInt32(Request["PerPage"] ?? "10"); //每頁筆數
             Paging page = new Paging(nowPage, PerPageSize);
             page.GetPagedTable(dt);
-            
+
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
                 //組本所編號
@@ -65,7 +68,7 @@
                 isql += "where case_no='"+ page.pagedTable.Rows[i].SafeRead("case_no", "") + "' ";
                 isql += "and opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
                 conn.DataTable(isql, dt_ap);
-	            string ap_cname="";
+                string ap_cname="";
                 for (int j = 0; j < dt_ap.Rows.Count; j++) {
                     ap_cname+="、" + dt_ap.Rows[j]["ap_cname"].ToString();
                 }
@@ -82,5 +85,5 @@
         }
     }
 
-   
+
 </script>
