@@ -2,14 +2,14 @@
 toastr.options = {
     "closeButton": true,//是否顯示關閉按鈕
     //"debug": false,//是否使用debug模式
-    //"newestOnTop": false,//是否新的訊息放上面
+    //"newestOnTop": false,//最新一筆顯示在最上面
     "progressBar": true,//是否訊息下方顯示進度條
     "positionClass": "toast-top-center",//彈出窗的位置
-    //"preventDuplicates": false,//是否啟用避免重複顯示
+    "preventDuplicates": true,//是否啟用避免重複顯示
     //"onclick": null,//Click event
-    //"showDuration": "300",//顯示的動畫時間
-    //"hideDuration": "1000",//消失的動畫時間
-    //"timeOut": "5000",//展現時間
+    //"showDuration": 300,//顯示的動畫時間
+    //"hideDuration": 1000,//消失的動畫時間
+    timeOut: 0,//展現時間(progressBar),0=不自動消失
     //"extendedTimeOut": "1000",//加長展示時間
     //"showEasing": "swing",//顯示時的動畫緩衝方式
     //"hideEasing": "linear",/消失時的動畫緩衝方式
@@ -50,24 +50,74 @@ function isJSON(str) {
     }
     return false;
 }
-/*將數值轉換貨幣表示法
-c:取到小數第幾位
-d:小數符號
-t:分位數符號
-Number(-1654349.7).toMoney(0, ".", ""); →   -1654350
-Number(-1654349.7).toMoney(2, ".", ""); →   -1654349.70
-Number(-1654349.7).toMoney();   →   -1,654,349.70
-Number.prototype.formatMoney = function (c, d, t) {
-    var n = this,
-    c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+
+/*ajax function(get)*/
+function ajaxByGet(url, param) {
+    return $.ajax({
+        url: url,
+        type: "get",
+        cache: false,
+        async: false,
+        data: param
+    });
 }
-*/
+
+/*ajax function(post)*/
+function ajaxByPost(url, param) {
+    return $.ajax({
+        url: url,
+        type: "post",
+        cache: false,
+        async: false,
+        data: JSON.stringify(param)
+    });
+}
+
+//#region dateReviver // json日期格式轉js日期格式
+var dateReviver = function (value, pstr) {
+    var a;
+    var b;
+    //2018-12-26T10:47:00
+    if (typeof value === 'string') {
+        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/.exec(value);
+        if (a) {
+            b = new Date(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
+        }
+    }
+    if (b != null) {
+        return b.format(pstr);
+    }
+    else {
+        return "";
+    }
+
+};
+//end region
+
+//#region Date.prototype.format // js日期格式fotmat轉換
+//("yyyy-MM-dd")
+//("yyyy-MM-dd hh:mm:ss")
+Date.prototype.format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1,
+        "d+": this.getDate(),
+        "h+": this.getHours(),
+        "m+": this.getMinutes(),
+        "s+": this.getSeconds(),
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        "S": this.getMilliseconds()
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+    return fmt;
+}
+//#end region
 
 /*將數值轉換貨幣表示法
 n:取到小數第幾位
@@ -80,6 +130,10 @@ Number.prototype.format = function (n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~ ~n)).replace(new RegExp(re, 'g'), '$&,');
 };
+
+String.prototype.ReplaceAll = function (s1, s2) {
+    return this.replace(new RegExp(s1, "gm"), s2);
+}
 
 String.prototype.Right = function (n) {
 	if (n <= 0)
@@ -141,28 +195,6 @@ if (!String.prototype.trim) {
 		//return this.replace(/^\s+|\s+$/g,""); //  
 		return this.replace(/^\s+/g, "").replace(/\s+$/g, "");
 	};
-}
-
-/*ajax function(get)*/
-function ajaxByGet(url, param) {
-    return $.ajax({
-        url: url,
-        type: "get",
-        cache: false,
-        async: false,
-        data: param
-    });
-}
-
-/*ajax function(post)*/
-function ajaxByPost(url, param) {
-    return $.ajax({
-        url: url,
-        type: "post",
-        cache: false,
-        async: false,
-        data: JSON.stringify(param)
-    });
 }
 
 //靜態函式
@@ -243,49 +275,3 @@ function ajaxByPost(url, param) {
     }
     //#endregion
 })(jQuery);
-
-//#region dateReviver // json日期格式轉js日期格式
-var dateReviver = function (value, pstr) {
-    var a;
-    var b;
-    //2018-12-26T10:47:00
-    if (typeof value === 'string') {
-        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/.exec(value);
-        if (a) {
-            b = new Date(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
-        }
-    }
-    if (b != null) {
-        return b.format(pstr);
-    }
-    else {
-        return "";
-    }
-
-};
-//end region
-
-//#region Date.prototype.format // js日期格式fotmat轉換
-//("yyyy-MM-dd")
-//("yyyy-MM-dd hh:mm:ss")
-Date.prototype.format = function (fmt) {
-    var o = {
-        "M+": this.getMonth() + 1,
-        "d+": this.getDate(),
-        "h+": this.getHours(),
-        "m+": this.getMinutes(),
-        "s+": this.getSeconds(),
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        "S": this.getMilliseconds()
-    };
-    if (/(y+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    for (var k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        }
-    }
-    return fmt;
-}
-//#end region

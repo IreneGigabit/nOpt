@@ -138,7 +138,7 @@
 		<td class="whitetablebg" nowrap>{{arcase_name}}</td>
 		<td class="whitetablebg" align="right">{{last_date}}</td>
 		<td class="whitetablebg" align="center">
-            <a href="opt11Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>" target="Eblank">[確認]</a>
+            <a href="opt11Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[確認]</a>
 		</td>
 	</tr>
 	</tfoot>

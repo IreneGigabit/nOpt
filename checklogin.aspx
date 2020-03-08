@@ -92,7 +92,7 @@
         catch (Exception ex)
         {
             exMsg = Conn.Sysctrl + "\n" + SQL;
-            system.errorLog(ex, conn.exeSQL, "0000");
+            if (conn != null) system.errorLog(ex, conn.exeSQL, "0000");
             strRet = "執行錯誤 !" + ex.Message + "\\n\\n" + SQL;
             Session["Password"] = false;
             Session.Abandon();

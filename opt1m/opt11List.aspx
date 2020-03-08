@@ -10,11 +10,11 @@
 
 <script runat="server">
     protected string isql = "";
-    protected string prgid = HttpContext.Current.Request["prgid1"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
 
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(prgid);
-        myToken.CheckMe(false, true);
+        myToken.CheckMe(true, true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "select a.*,''fseq,''ap_cname ";

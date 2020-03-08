@@ -328,12 +328,13 @@ td.btab
 }
 td.notab2
 {
-	font-weight:900;
+	font-weight:bold;
 	background: url(../images/notab2.gif) no-repeat top left;
     color: #00a;
 }
 td.seltab2
 {
+    font-weight:bold;
 	background: url(../images/seltab2.gif) no-repeat top left;
     color: #ddd
 }
