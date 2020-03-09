@@ -170,7 +170,8 @@ button.toast-close-button {
   background-color: #2F96B4;
 }
 .toast-warning {
-  background-color: #F89406;
+  /*background-color: #F89406;*/
+  background-color: Peru;
 }
 .toast-progress {
   position: absolute;
