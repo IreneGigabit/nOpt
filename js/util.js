@@ -73,6 +73,13 @@ function ajaxByPost(url, param) {
     });
 }
 
+//將&#nnnn;轉為字元
+function decodeStr(encodedString) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = encodedString;
+    return textArea.value;
+}
+
 //#region dateReviver // json日期格式轉js日期格式
 var dateReviver = function (value, pstr) {
     var a;

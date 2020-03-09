@@ -1,57 +1,14 @@
-<%@ Control Language="C#" ClassName="cust_form" %>
+﻿<%@ Control Language="C#" ClassName="cust_form" %>
 <%@ Import Namespace = "Newtonsoft.Json"%>
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string SQL = "";
 
-    protected string F_ap_country_opt = "";
-    protected string MClass = "";
     protected string branch = "";
     protected string opt_sqlno = "";
-    protected string Mdisabled = "";
-    protected string SQL = "";
-    protected string apclass = "";
-    protected string apclassnm = "";
-    protected string ref_seq = "";
-    protected string ref_seqnm = "";
-    protected string apcust_no = "";
-    protected string cust_cname1 = "";
-    protected string cust_cname2 = "";
-    protected string cust_ename1 = "";
-    protected string cust_ename2 = "";
-    protected string ap_crep = "";
-    protected string ap_erep = "";
-    protected string ap_zip = "";
-    protected string ap_addr1 = "";
-    protected string ap_addr2 = "";
-    protected string ap_eaddr1 = "";
-    protected string ap_eaddr2 = "";
-    protected string ap_eaddr3 = "";
-    protected string ap_eaddr4 = "";
-    protected string www = "";
-    protected string email = "";
-    protected string ap_tel = "";
-    protected string ap_tel1 = "";
-    protected string acc_zip = "";
-    protected string acc_addr1 = "";
-    protected string acc_addr2 = "";
-    protected string acc_tel0 = "";
-    protected string acc_tel1 = "";
-    protected string acc_tel = "";
-    protected string acc_fax = "";
-    protected string magnm = "";
-    protected string con_term = "";
-    protected string cust_remark = "";
-	protected string ap_country = "";
-	protected string con_code = "";
-	protected string plevel = "";
-	protected string tlevel = "";
-	protected string pdis_type = "";
-	protected string ppay_type = "";
-	protected string tdis_type = "";
-    protected string tpay_type = "";
-
+    
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
@@ -61,96 +18,106 @@
     }
 </script>
 
-<table border="0" class=bluetable cellspacing="1" cellpadding="2" style="font-size: 9pt" width="100%">			
+<table border="0" class=bluetable cellspacing="1" cellpadding="2" style="font-size: 9pt">			
 <TR>
 	<TD class=lightbluetable align="right">客戶編號：</TD>
 	<TD class=whitetablebg>
-	<input TYPE="text" id="F_cust_area" name="F_cust_area" SIZE="1" <%=MClass%>>-
-	<input TYPE="text" id="F_cust_seq" name="F_cust_seq" size="6"  <%=MClass%>>
+	<input TYPE="text" id="F_cust_area" name="F_cust_area" SIZE="1" class="Lock">-
+	<input TYPE="text" id="F_cust_seq" name="F_cust_seq" size="6"  class="Lock">
 	</TD>
 	<TD class=lightbluetable  align="right">客戶國籍：</TD>
 	<TD class=whitetablebg>
-        <Select id="F_ap_country" name="F_ap_country" size=1 <%=Mdisabled%>></SELECT>
+        <Select id="F_ap_country" name="F_ap_country" size=1 class="Lock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right width=16%>客戶種類：</TD>
-	<TD class=whitetablebg><input type=text id="F_apclass" name="F_apclass" size="30" <%=MClass%> value="<%=apclass+" "+apclassnm%>"></TD>
+	<TD class=whitetablebg><input type=text id="F_apclass" name="F_apclass" size="30" class="Lock"></TD>
 	<TD class=lightbluetable align="right" width="15%">客戶群組：</TD>
-	<TD class=whitetablebg><INPUT TYPE=text id=F_ref_seq name=F_ref_seq <%=MClass%> Value="<%=ref_seq+" "+ref_seqnm%>"></TD>
+	<TD class=whitetablebg><INPUT TYPE=text id=F_ref_seq name=F_ref_seq class="Lock"</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>統一編號：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_id_no" name="F_id_no" SIZE=12 MAXLENGTH=10 <%=MClass%> Value="<%=apcust_no%>"></TD>					
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_id_no" name="F_id_no" SIZE=12 MAXLENGTH=10 class="Lock"></TD>					
 </TR>
 <TR>		
 	<TD class=lightbluetable align=right>客戶名稱：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_cname1" name="F_ap_cname1" size=44 maxlength=60 <%=MClass%> value="<%=cust_cname1%>">
-	<INPUT TYPE=text id="F_ap_cname2" name="F_ap_cname2" size=44 maxlength=60 <%=MClass%> value="<%=cust_cname2%>"></TD>
+	<TD class=whitetablebg colspan=3>
+        <INPUT TYPE=text id="F_ap_cname1" name="F_ap_cname1" size=44 maxlength=60 class="Lock">
+	    <INPUT TYPE=text id="F_ap_cname2" name="F_ap_cname2" size=44 maxlength=60 class="Lock" >
+	</TD>
 </TR>
 <TR>	
 	<TD class=lightbluetable align=right>英文名稱：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_ename1" name="F_ap_ename1" size=60 maxlength=100 <%=MClass%> value="<%=cust_ename1%>">
-	<INPUT TYPE=text id="F_ap_ename2" name="F_ap_ename2" size=60 maxlength=100 <%=MClass%> value="<%=cust_ename2%>"></TD>
+	<TD class=whitetablebg colspan=3>
+        <INPUT TYPE=text id="F_ap_ename1" name="F_ap_ename1" size=60 maxlength=100 class="Lock">
+	    <INPUT TYPE=text id="F_ap_ename2" name="F_ap_ename2" size=60 maxlength=100 class="Lock">
+	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>代表人(中)：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_crep" name="F_ap_crep" SIZE=20 MAXLENGTH=20 <%=MClass%> value="<%=ap_crep%>"></TD>					
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_crep" name="F_ap_crep" SIZE=20 MAXLENGTH=20 class="Lock"></TD>					
 </TR>
 <TR>
 	<TD class=lightbluetable  align=right>代表人(英)：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_erep" name="F_ap_erep" size=40 maxlength=40 <%=MClass%> value="<%=ap_erep%>"></TD>
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_erep" name="F_ap_erep" size=40 maxlength=40 class="Lock"></TD>
 </TR>
 <TR>	
 	<TD class=lightbluetable align=right>証照地址(中)：</TD>
-	<TD class=whitetablebg colspan=3>(<INPUT TYPE=text id=F_ap_zip name=F_ap_zip size=8 maxlength=8 <%=MClass%> value="<%=ap_zip%>">)
-	<INPUT TYPE=text id=F_ap_addr1 name=F_ap_addr1 size=103 maxlength=120 <%=MClass%> value="<%=ap_addr1%>">
-	<INPUT TYPE=text id=F_ap_addr2 name=F_ap_addr2 size=103 maxlength=120 <%=MClass%> value="<%=ap_addr2%>"></TD>
+	<TD class=whitetablebg colspan=3>(<INPUT TYPE=text id=F_ap_zip name=F_ap_zip size=8 maxlength=8 class="Lock">)
+	<INPUT TYPE=text id=F_ap_addr1 name=F_ap_addr1 size=103 maxlength=120 class="Lock">
+	<INPUT TYPE=text id=F_ap_addr2 name=F_ap_addr2 size=103 maxlength=120 class="Lock"></TD>
 </TR>		
 <TR>	
 	<TD class=lightbluetable align=right>登記地址(英)：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_ap_eaddr1 size=103 maxlength=120 <%=MClass%> value="<%=ap_eaddr1%>"><br>
-	<INPUT TYPE=text id=F_ap_eaddr2 size=103 maxlength=120 <%=MClass%> value="<%=ap_eaddr2%>"><br>
-	<INPUT TYPE=text id=F_ap_eaddr3 size=103 maxlength=120 <%=MClass%> value="<%=ap_eaddr3%>"><br>
-	<INPUT TYPE=text id=F_ap_eaddr4 size=103 maxlength=120 <%=MClass%> value="<%=ap_eaddr4%>"></TD>
+	<TD class=whitetablebg colspan=3>
+        <INPUT TYPE=text id=F_ap_eaddr1 size=103 maxlength=120 class="Lock"><br>
+	    <INPUT TYPE=text id=F_ap_eaddr2 size=103 maxlength=120 class="Lock"><br>
+	    <INPUT TYPE=text id=F_ap_eaddr3 size=103 maxlength=120 class="Lock"><br>
+	    <INPUT TYPE=text id=F_ap_eaddr4 size=103 maxlength=120 class="Lock">
+	</TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align="right">公司網址：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_www SIZE=40 MAXLENGTH=40 <%=MClass%> value="<%=www%>"></TD>
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_www SIZE=40 MAXLENGTH=40 class="Lock"></TD>
 </TR>
 <TR>  
 	<TD class=lightbluetable align="right">公司電子郵件：</TD>		  
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_email SIZE=40 MAXLENGTH=40 <%=MClass%> value="<%=email%>"></TD>		  
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_email SIZE=40 MAXLENGTH=40 class="Lock"></TD>		  
 </TR>
 <TR>		  
 	<TD class=lightbluetable align="right">對帳地址：</TD>
-	<TD class=whitetablebg colspan=3>(<INPUT TYPE=text id=F_acc_zip size=8 maxlength=8 <%=MClass%> value="<%=acc_zip%>">)
-	<input type="text" id="F_acc_addr1" size="47" maxlength="60" <%=MClass%> value="<%=acc_addr1%>">
-	<input type="text" id="F_acc_addr2" size="47" maxlength="60" <%=MClass%> value="<%=acc_addr2%>"></TD>  		  
+	<TD class=whitetablebg colspan=3>
+        (<INPUT TYPE=text id=F_acc_zip size=8 maxlength=8 class="Lock">)
+	    <input type="text" id="F_acc_addr1" size="47" maxlength="60" class="Lock">
+	    <input type="text" id="F_acc_addr2" size="47" maxlength="60" class="Lock">
+	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align="right">會計電話：</TD>
-	<TD class=whitetablebg>(<INPUT TYPE=text id=F_acc_tel0 size=4 maxlength=4 <%=MClass%> value="<%=acc_tel0%>">)
-	<INPUT TYPE=text id=F_acc_tel size=10 maxlength=10 <%=MClass%> value="<%=acc_tel%>">-
-	<INPUT TYPE=text id=F_acc_tel1 size=5 maxlength=5 <%=MClass%> value="<%=acc_tel1%>"></TD>
+	<TD class=whitetablebg>
+        (<INPUT TYPE=text id=F_acc_tel0 size=4 maxlength=4 class="Lock">)
+	    <INPUT TYPE=text id=F_acc_tel size=10 maxlength=10 class="Lock">-
+	    <INPUT TYPE=text id=F_acc_tel1 size=5 maxlength=5 class="Lock">
+	</TD>
 	<TD class=lightbluetable align="right">會計傳真：</TD>
-	<TD class=whitetablebg><INPUT TYPE=text id=F_acc_fax size=10 maxlength=15 <%=MClass%> value="<%=acc_fax%>"></TD>
+	<TD class=whitetablebg><INPUT TYPE=text id=F_acc_fax size=15 maxlength=15 class="Lock"></TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align="right">郵寄雜誌：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_mag size=10 maxlength=15 <%=MClass%> value="<%=magnm%>"></TD>
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_mag size=10 maxlength=15 class="Lock"></TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align="right">顧問種類：</TD>
 	<TD class=whitetablebg>
-        <select id=F_con_code SIZE=1 <%=Mdisabled%>></SELECT>
+        <select id=F_con_code SIZE=1 class="Lock"></SELECT>
 	</TD>
 	<TD class=lightbluetable align="right">顧問迄日：</TD>
-	<TD class=whitetablebg><INPUT TYPE=text id=F_con_term SIZE=10 <%=MClass%> value="<%=con_term%>"></TD>
+	<TD class=whitetablebg><INPUT TYPE=text id=F_con_term SIZE=10 class="Lock"></TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align=right>專利客戶等級：</TD>
-	<TD class=whitetablebg ><select id=F_plevel size=1 <%=Mdisabled%>>
+	<TD class=whitetablebg ><select id=F_plevel size=1 class="Lock">
 		<option value="" style="color:blue">請選擇</option>
 		<option value="A">大客戶</option>
 		<option value="B">中客戶</option>
@@ -159,7 +126,7 @@
 		<option value="O">結束客戶</option>
 	</SELECT></TD>
 	<TD class=lightbluetable align=right>商標客戶等級：</TD>
-	<TD class=whitetablebg><select id=F_tlevel size=1 <%=Mdisabled%>>
+	<TD class=whitetablebg><select id=F_tlevel size=1 class="Lock">
 		<option value="" style="color:blue">請選擇</option>
 		<option value="A">大客戶</option>
 		<option value="B">中客戶</option>
@@ -171,26 +138,26 @@
 <TR>
 	<TD class=lightbluetable align=right>專利折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_pdis_type size=1 <%=Mdisabled%>></SELECT>
+        <Select id=F_pdis_type size=1 class="Lock"></SELECT>
 	</TD>
 <TD class=lightbluetable align=right>商標折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tdis_type size=1 <%=Mdisabled%>></SELECT>
+        <Select id=F_tdis_type size=1 class="Lock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>專利付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_ppay_type size=1 <%=Mdisabled%>></SELECT>
+        <Select id=F_ppay_type size=1 class="Lock"></SELECT>
 	</TD>
 	<TD class=lightbluetable align=right>商標付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tpay_type size=1 <%=Mdisabled%>></SELECT>
+        <Select id=F_tpay_type size=1 class="Lock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>備註說明：</td>
-	<TD class=whitetablebg colspan=3><textarea rows=5 cols=80 id=F_mark <%=MClass%>><%=cust_remark%></textarea>
+	<TD class=whitetablebg colspan=3><textarea rows=5 cols=80 id=F_mark class="Lock"></textarea>
 </TR>		        
 </table>
 <script language="javascript" type="text/javascript">
@@ -235,6 +202,43 @@
                 var j = JSONdata[0];
                 $("#F_cust_area").val(j.cust_area);
                 $("#F_cust_seq").val(j.cust_seq);
+                $("#F_ap_country").val(j.ap_country);
+                $("#F_apclass").val(j.apclass + " " + j.apclassnm);
+                $("#F_ref_seq").val(j.ref_seq + " " + j.ref_seqnm);
+                $("#F_id_no").val(j.apcust_no);
+                $("#F_ap_cname1").val(j.ap_cname1);
+                $("#F_ap_cname2").val(j.ap_cname2);
+                $("#F_ap_ename1").val(j.ap_ename1);
+                $("#F_ap_ename2").val(j.ap_ename2);
+                $("#F_ap_crep").val(decodeStr(j.ap_crep));
+                $("#F_ap_erep").val(j.ap_erep);
+                $("#F_ap_zip").val(j.ap_zip);
+                $("#F_ap_addr1").val(j.ap_addr1);
+                $("#F_ap_addr2").val(j.ap_addr2);
+                $("#F_ap_eaddr1").val(j.ap_eaddr1);
+                $("#F_ap_eaddr2").val(j.ap_eaddr2);
+                $("#F_ap_eaddr3").val(j.ap_eaddr3);
+                $("#F_ap_eaddr4").val(j.ap_eaddr4);
+                $("#F_www").val(j.www);
+                $("#F_email").val(j.email);
+                $("#F_acc_zip").val(j.acc_zip);
+                $("#F_acc_addr1").val(j.acc_addr1);
+                $("#F_acc_addr2").val(j.acc_addr2);
+                $("#F_acc_tel0").val(j.acc_tel0);
+                $("#F_acc_tel").val(j.acc_tel);
+                $("#F_acc_tel1").val(j.acc_tel1);
+                $("#F_acc_fax").val(j.acc_fax);
+                $("#F_mag").val(j.magnm);
+                $("#F_con_code").val(j.con_code);
+                $("#F_con_term").val(dateReviver(j.con_term, "yyyy/M/d"));
+                $("#F_plevel").val(j.plevel);
+                $("#F_tlevel").val(j.tlevel);
+                $("#F_pdis_type").val(j.pdis_type);
+                $("#F_tdis_type").val(j.tdis_type);
+                $("#F_ppay_type").val(j.ppay_type);
+                $("#F_tpay_type").val(j.tpay_type);
+                $("#F_mark").val(decodeStr(j.cust_remark));
+
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>資料載入失敗！<BR>點擊顯示詳細訊息</a>"); }
         });

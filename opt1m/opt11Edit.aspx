@@ -56,7 +56,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;        
+            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>&nbsp;        
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
     </tr>
@@ -76,21 +76,27 @@
             <td class="tab" href="#case_form">交辦內容</td>
         </tr>
     </table>
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <table border="0" width="98%" cellspacing="0" cellpadding="0">
         <tr>
             <td>
                 <div class="tabCont" id="#cust">
-                    <uc1:cust_form runat="server" ID="cust_form" /><!--案件客戶欄位畫面-->
-                    <!--include file="../commonForm/dmt/cust_form.ascx"--><!--案件客戶欄位畫面-->
+                    <uc1:cust_form runat="server" ID="cust_form" />
+                    <!--include file="../commonForm/dmt/cust_form.ascx"--><!--案件客戶-->
                 </div>
                 <div class="tabCont" id="#attent">
-                    <!--include file="../commonForm/dmt/attent_form.ascx"--><!--案件聯絡人欄位畫面-->
+                    <!--include file="../commonForm/dmt/attent_form.ascx"--><!--案件聯絡人-->
                 </div>
                 <div class="tabCont" id="#apcust_re">
-                    <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人欄位畫面-->
+                    <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人-->
                 </div>
                 <div class="tabCont" id="#case">
                     <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
+                </div>
+                <div class="tabCont" id="#dmt">
+                    <!--include file="../commonForm/dmt/dmt_form.ascx"--><!--案件主檔-->
+                </div>
+                <div class="tabCont" id="#case_form">
+                    <!--include file="../commonForm/dmt/case_form.ascx"--><!--交辦內容欄位畫面-->
                 </div>
             </td>
         </tr>
@@ -98,18 +104,44 @@
 </form>
 
 <script>
-settab("#cust");
-window.parent.tt.rows = "20%,80%"
-cust.init();
+$(function () {
+    if (!(window.parent.tt === undefined)) {
+        window.parent.tt.rows = "20%,80%";
+    }
+    this_init();
+});
+
+//初始化
+function this_init() {
+    settab("#cust");
+    cust.init();
+
+    //欄位開關
+    $(".Lock").lock();
+}
+
+// 切換頁籤
 $("#CTab td.tab").click(function (e) {
     settab($(this).attr('href'));
 });
-
-// 切換頁籤
 function settab(k) {
     $("#CTab td.tab").removeClass("seltab").addClass("notab");
     $("#CTab td.tab[href='" + k + "']").addClass("seltab").removeClass("notab");
     $("div.tabCont").hide();
     $("div.tabCont[id='" + k + "']").show();
 }
+
+//重新整理
+$(".imgRefresh").click(function (e) {
+    this_init();
+});
+
+//關閉視窗
+$(".imgCls").click(function (e) {
+    if (!(window.parent.tt === undefined)) {
+        window.parent.tt.rows = "100%,0%";
+    } else {
+        window.close();
+    }
+}).click();
 </script>

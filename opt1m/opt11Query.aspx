@@ -283,6 +283,12 @@
     //查詢條件
     $(".imgQry").click(function (e) { $("#id-div-slide").slideToggle("fast"); });
     //關閉視窗
-    $(".imgCls").click(function (e) { window.parent.tt.rows = "100%,0%"; }).click();
+    $(".imgCls").click(function (e) {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        } else {
+            window.close();
+        }
+    }).click();
     //////////////////////
 </script>
