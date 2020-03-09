@@ -421,9 +421,14 @@
 	                    });
 	                    obj.val(settings.setValue);
 	                },
-	                error: function (xhr) {
-	                    //window.open(debugurl);
-	                    alert("載入查詢清單發生錯誤!!");
+	                beforeSend: function (jqXHR, settings) {
+	                    jqXHR.url = settings.url;
+	                    //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                        //window.open(debugurl);
+	                    //alert("載入查詢清單發生錯誤!!");
+	                    toastr.error("<a href='" + jqXHR.url + "' target='_new'>載入查詢清單發生錯誤！<BR>(點擊顯示詳細訊息)</a>");
 	                }
 	            });
 	        });
