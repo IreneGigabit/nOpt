@@ -1,4 +1,7 @@
 ﻿<%@Page Language="C#" CodePage="65001"%>
+
+<%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
@@ -63,7 +66,7 @@
 </table>
 
 <form id="reg" name="reg" method="post" action="<%#HTProgPrefix%>Update.aspx">
-    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed" align="left">
+    <table border="0" cellspacing="0" cellpadding="0">
         <tr id="CTab">
             <td class="tab" href="#cust">案件客戶</td>
             <td class="tab" href="#attent">案件聯絡人</td>
@@ -77,16 +80,17 @@
         <tr>
             <td>
                 <div class="tabCont" id="#cust">
-                    <!--#include file="../commonForm/dmt/cust_form.aspx"--><!--案件客戶欄位畫面-->
+                    <uc1:cust_form runat="server" ID="cust_form" /><!--案件客戶欄位畫面-->
+                    <!--include file="../commonForm/dmt/cust_form.ascx"--><!--案件客戶欄位畫面-->
                 </div>
                 <div class="tabCont" id="#attent">
-                    <!--#include file="../commonForm/dmt/attent_form.aspx"--><!--案件聯絡人欄位畫面-->
+                    <!--include file="../commonForm/dmt/attent_form.ascx"--><!--案件聯絡人欄位畫面-->
                 </div>
                 <div class="tabCont" id="#apcust_re">
-                    <!--#include file="../commonForm/dmt/apcust_re_form.aspx"--><!--案件申請人欄位畫面-->
+                    <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人欄位畫面-->
                 </div>
                 <div class="tabCont" id="#case">
-                    <!--#include file="../commonForm/dmt/case_form.aspx"--><!--收費與接洽事項-->
+                    <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
                 </div>
             </td>
         </tr>
@@ -96,15 +100,15 @@
 <script>
 settab("#cust");
 window.parent.tt.rows = "20%,80%"
-
+cust.init();
 $("#CTab td.tab").click(function (e) {
     settab($(this).attr('href'));
 });
 
 // 切換頁籤
 function settab(k) {
-    $("#CTab td.tab").removeClass("seltab2").addClass("notab2");
-    $("#CTab td.tab[href='" + k + "']").addClass("seltab2").removeClass("notab2");
+    $("#CTab td.tab").removeClass("seltab").addClass("notab");
+    $("#CTab td.tab[href='" + k + "']").addClass("seltab").removeClass("notab");
     $("div.tabCont").hide();
     $("div.tabCont[id='" + k + "']").show();
 }
