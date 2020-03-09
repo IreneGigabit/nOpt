@@ -298,21 +298,28 @@ hr
 td.tab
 {
     cursor: pointer;
+    PADDING-TOP: 3px;
+    PADDING-BOTTOM: 0pt;
+    padding-right:10px;
+    padding-left:10px;
+    border-right:3px solid #777;
+    font-weight: bolder;
     font-size: 10pt;
-    padding-bottom: 0pt;
-    padding-top: 3px;
     text-align: center;
-    width:110px;
 }
 td.notab
 {
-	background: url(../images/notab.gif) no-repeat top left;
-    color: #00a;
+    BORDER-LEFT: #faebb6 thin solid;
+    COLOR: navy;
+    /*BACKGROUND-COLOR: gold;*/
+    BACKGROUND-COLOR:#ECE2D9;
 }
 td.seltab
 {
-	background: url(../images/seltab.gif) no-repeat top left;
-    color: #fff;
+    BORDER-LEFT: white thin solid;
+    COLOR: #ddd;
+    /*BACKGROUND-COLOR: lightsteelblue;*/
+    BACKGROUND-COLOR:#698DAF;
 }
 td.btab
 {
@@ -325,18 +332,6 @@ td.btab
     color: #185590;
     border-bottom: gray thin solid;
     background-color: #ffcc00;
-}
-td.notab2
-{
-	font-weight:bold;
-	background: url(../images/notab2.gif) no-repeat top left;
-    color: #00a;
-}
-td.seltab2
-{
-    font-weight:bold;
-	background: url(../images/seltab2.gif) no-repeat top left;
-    color: #ddd
 }
 td.btab2
 {
