@@ -398,7 +398,7 @@ td
 {
     BACKGROUND-COLOR: beige
 }
-.sfont9
+.sfont9,.sfont9>td
 {
     FONT-SIZE: 9pt;
     BACKGROUND-COLOR: white
@@ -495,7 +495,7 @@ input.redbutton
     BACKGROUND-COLOR: white;
     TEXT-ALIGN: center
 }
-.lightbluetable3
+.lightbluetable3,.lightbluetable3>td
 {
     FONT-SIZE: 10pt;
     COLOR: black;
