@@ -49,7 +49,7 @@
 </head>
 
 <body>
-<table cellspacing="1" cellpadding="0" width="98%" border="0">
+<table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">清單</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
@@ -117,27 +117,27 @@
 	<font color="red">=== 目前無資料 ===</font>
 </div>
 
-<TABLE style="display:none" border=0 class=greentable cellspacing=1 cellpadding=2 width="85%" align="center" id="dataList">
+<table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	<thead>
       <Tr>
-	    <td  class="lightbluetable" nowrap align="center"><u class="setOdr" v1="bseq,bseq1">區所案件編號</u></td>
-	    <td  class="lightbluetable" nowrap align="center">營洽</td>
-	    <td  class="lightbluetable" nowrap align="center">申請人</td>
-	    <td  class="lightbluetable" nowrap align="center">案件名稱</td> 
-	    <td  class="lightbluetable" nowrap align="center">案性</td> 
-	    <td  class="lightbluetable" nowrap align="center">法定期限</td>
-	    <td  class="lightbluetable" nowrap align="center">作業</td>
+	    <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="bseq,bseq1">區所案件編號</u></td>
+	    <td class="lightbluetable" nowrap align="center">營洽</td>
+	    <td class="lightbluetable" nowrap align="center">申請人</td>
+	    <td class="lightbluetable" nowrap align="center">案件名稱</td> 
+	    <td class="lightbluetable" nowrap align="center">案性</td> 
+	    <td class="lightbluetable" nowrap align="center">法定期限</td>
+	    <td class="lightbluetable" nowrap align="center">作業</td>
       </tr>
 	</thead>
 	<tfoot style="display:none">
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-		<td class="whitetablebg" align="center">{{fseq}}</td>
-		<td class="whitetablebg" align="center">{{scode_name}}</td>
-		<td class="whitetablebg" align=left>{{ap_cname}}</td>
-		<td class="whitetablebg" nowrap>{{appl_name}}</td>
-		<td class="whitetablebg" nowrap>{{arcase_name}}</td>
-		<td class="whitetablebg" align="right">{{last_date}}</td>
-		<td class="whitetablebg" align="center">
+		<td align="center">{{fseq}}</td>
+		<td align="center">{{scode_name}}</td>
+		<td align=left>{{ap_cname}}</td>
+		<td nowrap>{{appl_name}}</td>
+		<td nowrap>{{arcase_name}}</td>
+		<td align="center">{{last_date}}</td>
+		<td align="center">
             <a href="opt11Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[確認]</a>
 		</td>
 	</tr>
