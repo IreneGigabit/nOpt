@@ -12,44 +12,29 @@
 <script runat="server">
     protected string SQL = "";
     protected string strConnB = "";
-    /*Set connB = Server.CreateObject("ADODB.Connection")
-Select Case Branch
-Case "N"
-	dbname="sindbs"
-	connB.Open session("optBN")
-Case "C"
-	dbname="sicdbs"
-	connB.Open session("optBC")
-Case "S"
-	dbname="sisdbs"
-	connB.Open session("optBS")
-Case "K"
-	dbname="sikdbs"
-	connB.Open session("optBK")
-End Select
-    */
-    protected void Page_Load(object sender, EventArgs e)
-    {
+    protected string cust_area = "";
+    protected string cust_seq = "";
+
+    protected void Page_Load(object sender, EventArgs e) {
         if (Request["branch"] == "N") strConnB = Conn.OptBN;
         if (Request["branch"] == "C") strConnB = Conn.OptBC;
         if (Request["branch"] == "S") strConnB = Conn.OptBS;
         if (Request["branch"] == "K") strConnB = Conn.OptBK;
-        
-        if(Request["type"]=="brcust") GetSquare();
-    }
-    
-    private void GetSquare() {
-        string cust_area = "";
-        string cust_seq = "";
+
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "Select * from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
-            using(SqlDataReader dr = conn.ExecuteReader(SQL)){
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                 if (dr.Read()) {
                     cust_area = dr.SafeRead("cust_area", "");
                     cust_seq = dr.SafeRead("cust_seq", "");
                 }
             }
         }
+
+        if (Request["type"] == "brcust") GetBRCust();
+    }
+
+    private void GetBRCust() {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "Select *,''apclassnm,''ref_seqnm,''magnm ";
             SQL += "from vcustlist ";
@@ -59,13 +44,13 @@ End Select
 
             for (int i = 0; i < dt.Rows.Count; i++) {
                 switch (dt.Rows[i].SafeRead("apclass", "").Trim()) {
-                    case "AA": dt.Rows[i]["apclassnm"] = "¥»°ê¤½¥q¾÷ÃöµL²Î½sªÌ"; break;
-                    case "AB": dt.Rows[i]["apclassnm"] = "¤½¥q»P¾÷Ãö¹ÎÅé(¤j¥ø·~)"; break;
-                    case "AC": dt.Rows[i]["apclassnm"] = "¤½¥q»P¾÷Ãö¹ÎÅé(¤p¥ø·~)"; break;
-                    case "B": dt.Rows[i]["apclassnm"] = "¥»°ê¤H(¨­¥÷ÃÒ)"; break;
-                    case "CA": dt.Rows[i]["apclassnm"] = "¥~°ê¤H(¦Û°Ê¬y¤ô¸¹)"; break;
-                    case "CB": dt.Rows[i]["apclassnm"] = "¥~°ê¤H(´¼¼z°]²£§½½s½X)"; break;
-                    case "CT": dt.Rows[i]["apclassnm"] = "¥~°ê¤H(°ê¥~©Ò¥Ó½Ð¤H¸¹)"; break;
+                    case "AA": dt.Rows[i]["apclassnm"] = "æœ¬åœ‹å…¬å¸æ©Ÿé—œç„¡çµ±ç·¨è€…"; break;
+                    case "AB": dt.Rows[i]["apclassnm"] = "å…¬å¸èˆ‡æ©Ÿé—œåœ˜é«”(å¤§ä¼æ¥­)"; break;
+                    case "AC": dt.Rows[i]["apclassnm"] = "å…¬å¸èˆ‡æ©Ÿé—œåœ˜é«”(å°ä¼æ¥­)"; break;
+                    case "B": dt.Rows[i]["apclassnm"] = "æœ¬åœ‹äºº(èº«ä»½è­‰)"; break;
+                    case "CA": dt.Rows[i]["apclassnm"] = "å¤–åœ‹äºº(è‡ªå‹•æµæ°´è™Ÿ)"; break;
+                    case "CB": dt.Rows[i]["apclassnm"] = "å¤–åœ‹äºº(æ™ºæ…§è²¡ç”¢å±€ç·¨ç¢¼)"; break;
+                    case "CT": dt.Rows[i]["apclassnm"] = "å¤–åœ‹äºº(åœ‹å¤–æ‰€ç”³è«‹äººè™Ÿ)"; break;
                 }
 
                 if (dt.Rows[i].SafeRead("ref_seq", "").Trim() != "" && dt.Rows[i].SafeRead("ref_seq", "").Trim() != "0") {
@@ -77,16 +62,15 @@ End Select
                     }
                 }
                 
-			    //°t¦X°Ï©ÒÅã¥Ü¸ê®Æ­×§ï¬°¤U­±¼gªk
+			    //é…åˆå€æ‰€é¡¯ç¤ºè³‡æ–™ä¿®æ”¹ç‚ºä¸‹é¢å¯«æ³•
                 if (dt.Rows[i].SafeRead("mag", "").Trim() == "Y")
-                    dt.Rows[i]["magnm"] = "»Ý­n";
+                    dt.Rows[i]["magnm"] = "éœ€è¦";
                 else
-                    dt.Rows[i]["magnm"] = "¤£»Ý­n";
+                    dt.Rows[i]["magnm"] = "ä¸éœ€è¦";
             }
-                
-            Response.Write(JsonConvert.SerializeObject(dt, Formatting.Indented));
+
+            Response.Write(JsonConvert.SerializeObject(dt, Formatting.Indented, new DBNullCreationConverter()));
             Response.End();
         }
     }
-
 </script>
