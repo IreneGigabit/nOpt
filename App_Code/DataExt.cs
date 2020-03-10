@@ -67,7 +67,7 @@ public static class DataExt
         conn.DataTable(SQL, dt);
 
         //第N頁
-        string StrPgSel = "<select id=\"GoPage\" name=\"GoPage\" size=\"1\" style=\"color:red\">\n";
+        string StrPgSel = "<select id=\"GoPage\" name=\"GoPage\" style=\"color:red\">\n";
         for (int i = 1; i <= totPage; i++) {
             StrPgSel += "<option value=\"" + i + "\" " + (i == nowPage ? "selected=\"selected\"" : "") + ">" + i + "</option>\n";
         }
@@ -83,7 +83,7 @@ public static class DataExt
         }
 
         //每頁N筆
-        string StrPgSz = "<select id=\"PerPage\" name=\"PerPage\" size=\"1\" style=\"color:red\">\n";
+        string StrPgSz = "<select id=\"PerPage\" name=\"PerPage\" style=\"color:red\">\n";
         foreach (int p in arrPerPage) {
             StrPgSz += String.Format("<option value=\"{0}\" {1}>{0}</option>\n", p, (p == perPageSize ? " selected=\"selected\"" : ""));
         }

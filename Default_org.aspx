@@ -227,7 +227,7 @@
                 </div>
                 <div style="float:right">
                     <%#StrUser%><img src="images/top/go-1.gif">
-                    <select size="1" id="goweb0">
+                    <select id="goweb0">
                         <%#SystemList%>
                     </select>
                     <select id="goweb" v-on:change="goWeb($event)">

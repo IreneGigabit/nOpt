@@ -15,7 +15,7 @@
     }
 </script>
 
-<table border="0" class=bluetable cellspacing="1" cellpadding="2" style="font-size: 9pt">			
+<table border="0" class=bluetable cellspacing="1" cellpadding="2" style="font-size: 9pt">
 <TR>
 	<TD class=lightbluetable align="right">客戶編號：</TD>
 	<TD class=whitetablebg>
@@ -24,7 +24,7 @@
 	</TD>
 	<TD class=lightbluetable  align="right">客戶國籍：</TD>
 	<TD class=whitetablebg>
-        <Select id="F_ap_country" name="F_ap_country" size=1 class="Lock"></SELECT>
+        <Select id="F_ap_country" name="F_ap_country" class="Lock"></SELECT>
 	</TD>
 </TR>
 <TR>
@@ -107,14 +107,14 @@
 <TR>
 	<TD class=lightbluetable align="right">顧問種類：</TD>
 	<TD class=whitetablebg>
-        <select id=F_con_code SIZE=1 class="Lock"></SELECT>
+        <select id=F_con_code class="Lock"></SELECT>
 	</TD>
 	<TD class=lightbluetable align="right">顧問迄日：</TD>
 	<TD class=whitetablebg><INPUT TYPE=text id=F_con_term SIZE=10 class="Lock"></TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align=right>專利客戶等級：</TD>
-	<TD class=whitetablebg ><select id=F_plevel size=1 class="Lock">
+	<TD class=whitetablebg ><select id=F_plevel class="Lock">
 		<option value="" style="color:blue">請選擇</option>
 		<option value="A">大客戶</option>
 		<option value="B">中客戶</option>
@@ -123,7 +123,7 @@
 		<option value="O">結束客戶</option>
 	</SELECT></TD>
 	<TD class=lightbluetable align=right>商標客戶等級：</TD>
-	<TD class=whitetablebg><select id=F_tlevel size=1 class="Lock">
+	<TD class=whitetablebg><select id=F_tlevel class="Lock">
 		<option value="" style="color:blue">請選擇</option>
 		<option value="A">大客戶</option>
 		<option value="B">中客戶</option>
@@ -135,21 +135,21 @@
 <TR>
 	<TD class=lightbluetable align=right>專利折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_pdis_type size=1 class="Lock"></SELECT>
+        <Select id=F_pdis_type class="Lock"></SELECT>
 	</TD>
 <TD class=lightbluetable align=right>商標折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tdis_type size=1 class="Lock"></SELECT>
+        <Select id=F_tdis_type class="Lock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>專利付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_ppay_type size=1 class="Lock"></SELECT>
+        <Select id=F_ppay_type class="Lock"></SELECT>
 	</TD>
 	<TD class=lightbluetable align=right>商標付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tpay_type size=1 class="Lock"></SELECT>
+        <Select id=F_tpay_type class="Lock"></SELECT>
 	</TD>
 </TR>
 <TR>
@@ -187,7 +187,7 @@
 
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/CustData.aspx?type=brcust&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
+            url: getRootPath() + "/AJAX/DmtData.aspx?type=brcust&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

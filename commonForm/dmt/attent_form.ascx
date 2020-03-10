@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Classname="attent_form" %>
+﻿<%@ Control Language="C#" Classname="attent_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
@@ -25,7 +25,7 @@
 	<TR>
 		<td class="lightbluetable" align="right">聯絡人：</td>
 		<td class="whitetablebg">
-            <select id=tfy_att_sql name=tfy_att_sql SIZE="1" class="Lock"></select>
+            <select id=tfy_att_sql name=tfy_att_sql class="Lock"></select>
         </td>
 		<TD class=lightbluetable align=right>所屬部門：</TD>
 		<TD class=whitetablebg><INPUT TYPE=text id=dept name=dept class="Lock"></TD>
@@ -70,7 +70,7 @@
     var attent = {};
     attent.init = function () {
         $("#tfy_att_sql").getOption({//聯絡人
-            url: getRootPath() + "/AJAX/AttData.aspx",
+            url: getRootPath() + "/AJAX/DmtData.aspx",
             data: { type: "brattlist", branch: "<%#branch%>", opt_sqlno: "<%#opt_sqlno%>" },
             valueFormat: "{att_sql}",
             textFormat: "{att_sql}---{attention}"
@@ -78,7 +78,7 @@
 
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/AttData.aspx?type=bratt&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
+            url: getRootPath() + "/AJAX/DmtData.aspx?type=bratt&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

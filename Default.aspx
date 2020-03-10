@@ -158,7 +158,7 @@
                 <%#Eblank%>
                 <span style="font-size:12px;color:red" title="<%#LoginGrp%>"><%#StrUser%></span>
                 <img src="images/top/go-1.gif" alt="" width="22" height="10" />
-				<select id="goweb" name="goweb" size="1">
+				<select id="goweb" name="goweb">
 	                <option value="" style="color:#000088">請選擇其他網路作業系統...</option>
                     <%#StrSYSs%>
                     <option value="">----------</option>	
