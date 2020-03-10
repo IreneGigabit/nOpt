@@ -1,6 +1,4 @@
 ﻿<%@ Control Language="C#" ClassName="cust_form" %>
-<%@ Import Namespace = "Newtonsoft.Json"%>
-<%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
@@ -13,7 +11,6 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         
-
         this.DataBind();
     }
 </script>
