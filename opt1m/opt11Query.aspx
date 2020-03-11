@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
@@ -203,8 +203,8 @@
                     $("#noData").show();
                 }
 
-                var nowPage = parseInt(JSONdata.nowPage);
-                var totPage = parseInt(JSONdata.totPage);
+                var nowPage = parseInt(JSONdata.nowPage, 10);
+                var totPage = parseInt(JSONdata.totPage, 10);
                 $("#NowPage").html(nowPage);
                 $("#TotPage").html(totPage);
                 $("#TotRec").html(totRow);
