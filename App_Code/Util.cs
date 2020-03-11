@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -172,19 +172,19 @@ public static class Util
         return str.ToXmlUnicode(false);
     }
     public static string ToXmlUnicode(this string str, bool isEng) {
-        str = HttpUtility.HtmlDecode(str);
-        foreach (System.Text.RegularExpressions.Match m
-            in System.Text.RegularExpressions.Regex.Matches(str, "&#(?<ncr>\\d+?);"))
-            str = str.Replace(m.Value, Convert.ToChar(int.Parse(m.Groups["ncr"].Value)).ToString());
-        //str = str.Replace("&", "&amp;");
-        //str = str.Replace("<", "&lt;");
-        if (isEng) {//防止英文欄位只能半型
-            str = str.Replace("’", "'");
-            str = str.Replace("＆", "&");
-        }
-        //ret=str.Replace(">","&gt;");
-        //ret=str.Replace("'","&apos;");
-        //ret=str.Replace("""","&quot;");
+		foreach (System.Text.RegularExpressions.Match m
+			in System.Text.RegularExpressions.Regex.Matches(str, "&#(?<ncr>\\d+?);"))
+			str = str.Replace(m.Value, char.ConvertFromUtf32(int.Parse(m.Groups["ncr"].Value)).ToString());
+		str = HttpUtility.HtmlDecode(str);
+		//str = str.Replace("&", "&amp;");
+		//str = str.Replace("<", "&lt;");
+		if (isEng) {//防止英文欄位只能半型
+			str = str.Replace("’", "'");
+			str = str.Replace("＆", "&");
+		}
+		//ret=str.Replace(">","&gt;");
+		//ret=str.Replace("'","&apos;");
+		//ret=str.Replace("""","&quot;");
 
         return str.Trim();
     }
@@ -196,30 +196,109 @@ public static class Util
     /// </summary>
     public static string ToUnicode(this string str) {
         //HttpUtility.HtmlDecode("中b文a字&amp;&copy;&Agrave;α-澱粉水解&#37238;之製造方法");
-        foreach (System.Text.RegularExpressions.Match m
-            in System.Text.RegularExpressions.Regex.Matches(str, "&#(?<ncr>\\d+?);"))
-            str = str.Replace(m.Value, Convert.ToChar(int.Parse(m.Groups["ncr"].Value)).ToString());
-        return str;
+		foreach (System.Text.RegularExpressions.Match m
+			in System.Text.RegularExpressions.Regex.Matches(str, "&#(?<ncr>\\d+?);"))
+			str = str.Replace(m.Value, char.ConvertFromUtf32(int.Parse(m.Groups["ncr"].Value)).ToString());
+		return str;
     }
     #endregion
 
     #region ToBig5 - 將難字轉成&#nnnn;
-    /// <summary>
-    /// 將難字轉成&amp;#nnnn;
-    /// </summary>
-    public static string ToBig5(this string str) {
-        StringBuilder sb = new StringBuilder();
-        Encoding big5 = Encoding.GetEncoding("big5");
-        foreach (char c in str) {
-            string cInBig5 = big5.GetString(big5.GetBytes(new char[] { c }));
-            if (c != '?' && cInBig5 == "?")
-                sb.AppendFormat("&#{0};", Convert.ToInt32(c));
-            else
-                sb.Append(c);
-        }
-        return sb.ToString();
-    }
-    #endregion
+	/// <summary>
+	/// 將難字轉成&amp;#nnnn;
+	/// </summary>
+	public static string ToBig5(this string str) {
+		StringBuilder sb = new StringBuilder();
+		Encoding big5 = Encoding.GetEncoding("big5");
+		Encoding utf32 = Encoding.UTF32;
+
+		//有包含用到第二輔助平面的unicode要特別處理
+		if (str.Len() != str.Length) {
+			for (int i = 0; i < str.Len(); i++) {
+				string c = str.Substr(i, 1);
+
+				//string cInBig5 = big5.GetString(Encoding.Convert(utf32, big5, utf32.GetBytes(c)));
+				string cInBig5 = big5.GetString(big5.GetBytes(c.ToCharArray()));
+				//HttpContext.Current.Response.Write("\r\n<HR>　　c　　　　　→" + c);
+				//HttpContext.Current.Response.Write("\r\n<HR>　　cInBig5　　　　　→" + cInBig5);
+				//if (c != "?" && cInBig5.IndexOf('?') > -1) {
+				if (c != cInBig5) {
+					if (cInBig5 == "??")//用到第二輔助平面的unicode
+						sb.AppendFormat("&#{0};", c.GetCharCode());
+					else
+						sb.Append(HttpUtility.HtmlEncode(c));
+				} else {
+					sb.Append(c);
+				}
+			}
+		} else {
+			foreach (char c in str) {
+				string cInBig5 = big5.GetString(big5.GetBytes(new char[] { c }));
+				//if (c != '?' && cInBig5 == "?") {
+				if (c.ToString() != cInBig5) {
+					//sb.AppendFormat("&#{0};", Convert.ToInt32(c));
+					sb.Append(HttpUtility.HtmlEncode(c.ToString()));
+				} else {
+					sb.Append(c);
+				}
+			}
+		}
+		return sb.ToString();
+	}
+	#endregion
+
+	#region  取得CharCode(支援罕字)
+	public static int GetCharCode(this string character) {
+		UTF32Encoding encoding = new UTF32Encoding();
+		byte[] bytes = encoding.GetBytes(character.ToCharArray());
+		return BitConverter.ToInt32(bytes, 0);
+	}
+	#endregion
+
+	#region  "字串".Len();
+	//相當VB 的 String.Len()  用以取代 string.Length 可以計算 Unicode 第二字面的內碼
+	/// <summary>
+	/// 取得字串的長度，會先換成 UTF32再計算，可以避免第二字面的字被拆成兩組字
+	/// 使用方法："字串".Len();</summary>
+	/// <param name="s">待處理的字串</param>
+	/// <returns>字串的文字個數</returns>
+	public static int Len(this string s) {
+		return Encoding.UTF32.GetByteCount(s) / 4;
+	}
+	#endregion
+
+	#region  "字串".Substr(int startIndex, int length);    用以取代 string.Substring
+	/// <summary>
+	/// 取得指定位置、長度的子字串，字串會先轉成 UTF-32
+	/// 使用方法："字串".Substr(起始位置, 擷取長度);
+	/// 如果 startIndex 大於字數，則傳回 ""  (空字串)
+	/// 如果 startIndex + length > 字數，則傳回由 startIndex 起之剩餘的字數
+	///           </summary>
+	/// <param name="s">待處理的字串</param>
+	/// <param name="startIndex">擷取的起始位置，不能大於字串長度</param>
+	/// <param name="length">擷取的長度，與起始位置相加，不能大於字串長度</param>
+	/// <returns>字串</returns>
+	public static string Substr(this string s, int startIndex, int length) {
+		byte[] byte32Array = Encoding.UTF32.GetBytes(s);
+		startIndex *= 4;
+		length *= 4;
+
+		if (startIndex >= byte32Array.Length) return "";
+		length = (startIndex + length) > byte32Array.Length ? byte32Array.Length - startIndex : length;
+		return Encoding.UTF32.GetString(byte32Array, startIndex, length);
+	}
+
+	/// <summary>
+	/// 取得指定位置起算的右方所有子字串，字串會先轉成 UTF-32
+	/// 使用方法："字串".Substr(起始位置);
+	/// 如果 startIndex 大於字數，則傳回 ""  (空字串)</summary>
+	/// <param name="s">待處理的字串</param>
+	/// <param name="startIndex">擷取的起始位置，不能大於字串長度</param>
+	/// <returns>字串</returns>
+	public static string Substr(this string s, int startIndex) {
+		return s.Substr(startIndex, Int32.MaxValue);
+	}
+	#endregion
 
     #region GetHashValueMD5 - 依據帶入的字串，產生MD5
     //依據帶入的字串，產生MD5
