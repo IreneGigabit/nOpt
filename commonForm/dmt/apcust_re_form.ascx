@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="cust_re_form" %>
+<%@ Control Language="C#" ClassName="cust_re_form" %>
 
 <script runat="server">
     protected string html_apclass = "";//Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld ShowSelect2(ConnB,aSQL,false,"Y")
@@ -19,41 +19,44 @@
 </script>
 
 
-<input type=text id=apnum name=apnum value=0><!--筆數-->
+<input type=hidden id=apnum name=apnum value=0><!--筆數-->
 <table border="0" id=tabap_re class="bluetable" cellspacing="1" cellpadding="2" style="font-size: 9pt" width="100%">
 	<TFOOT>
-	<TR>
-		<TD class=whitetablebg colspan=4 align=right>
-			<input type=button value ="增加一筆申請人" class="cbutton" id=AP_Add_button name=AP_Add_button>
-			<input type=button value ="減少一筆申請人" class="cbutton" id=AP_Del_button name=AP_Del_button onclick="deleteAP(reg.apnum.value)">
+	<TR style="display:none">
+		<TD class="bluetable sfont9" style="border-color:red" colspan=4 align=right>
+			<input type=button value="增加一筆申請人" class="cbutton" id=AP_Add_button name=AP_Add_button>
+			<input type=button value="減少一筆申請人" class="cbutton" id=AP_Del_button name=AP_Del_button>
 		</TD>
 	</TR>
 	</TFOOT>
-	<THEAD>
+	<THEAD style="display:none">
 		<TR>
 			<TD class=lightbluetable align=right>
-				<input type=text id="apnum_##" name="apnum_##" class="Lock" size=2>申請人種類：
+				<input type=text id="apnum_##" name="apnum_##" value="##." class="Lock" size=2>申請人種類：
 			</TD>
 			<TD class=sfont9>
 				<select id="apclass_##" name="apclass_##" class="Lock"></select>
-                <input type="checkbox" id="ap_hserver_flag_##" name="ap_hserver_flag_##" value="Y" onclick="apserver_flag('_##')" class="Lock">註記此申請人為應受送達人
+                <input type="checkbox" id="ap_hserver_flag_##" name="ap_hserver_flag_##" value="Y" onclick="apserver_flag('##')" class="Lock">註記此申請人為應受送達人
                 <input type="hidden" id="ap_server_flag_##" name="ap_server_flag_##" value="N">
 			</TD>
 			<TD class=lightbluetable align=right title="輸入編號並點選確定，即顯示申請人資料；若無資料，請直接輸入申請人資料。">
 				<span id="span_Apcust_no_##" style="cursor:pointer;color:blue">申請人編號<br>(統一編號/身份證字號)：</span>
 			</TD>
 			<TD class=sfont9>
-				<input type=text id="Apcust_no_##" name="Apcust_no_##" size=11 maxlength=10 onblur="chkapcust_no('_##')" class="Lock">
+				<input type=text id="Apcust_no_##" name="Apcust_no_##" size=11 maxlength=10 onblur="chkapcust_no('##')" class="Lock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>申請人國籍：</TD>
-			<TD class=sfont9 colspan=3><select id="ap_country_##" name="ap_country_##" class="Lock"></select></TD>
+			<TD class=sfont9 colspan=3>
+                <select id="ap_country_##" name="ap_country_##" class="Lock"></select>
+			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>申請人名稱(中)：</TD>
 			<TD class=sfont9 colspan=3>
-                <input type=text id="ap_cname_##" name="ap_cname_##">
+                <input type=hidden id="ap_cname_##" name="ap_cname_##">
+		        <input type=hidden id="apsqlno_##" name="apsqlno_##">
 		        <INPUT TYPE=text id="ap_cname1_##" name="ap_cname1_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock"><br>
 		        <INPUT TYPE=text id="ap_cname2_##" name="ap_cname2_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock">
 			</TD>
@@ -74,7 +77,7 @@
 		<TR>
 			<TD class=lightbluetable align=right>申請人名稱(英)：</TD>
 			<TD class=sfont9 colspan=3>
-                <input type=text id="ap_ename_##" name="ap_ename_##">
+                <input type=hidden id="ap_ename_##" name="ap_ename_##">
 		        <INPUT TYPE=text id="ap_ename1_##" name="ap_ename1_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock"><br>
 		        <INPUT TYPE=text id="ap_ename2_##" name="ap_ename2_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock">
 			</TD>
@@ -143,5 +146,120 @@
 <script language="javascript" type="text/javascript">
     var apcust_re={};
     apcust_re.init = function () {
+        $("select[id='apclass_##']").getOption({//申請人種類
+            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            data: { branch: "<%#branch%>", sql: "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld" },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}"
+        });
+        $("select[id='ap_country_##']").getOption({//申請人國籍
+            url: "../ajax/AjaxGetSqlDataCnn.aspx",
+            data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
+            valueFormat: "{coun_code}",
+            textFormat: "{coun_c}"
+        });
+        getapp();
     };
+    
+    //取得申請人資料
+    function getapp() {
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/AJAX/DmtData.aspx?type=braplist&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
+            async: false,
+            cache: false,
+            data: $("#reg").serialize(),
+            success: function (json) {
+                var JSONdata = $.parseJSON(json);
+                if (JSONdata.length == 0) {
+                    toastr.warning("無申請人資料可載入！");
+                    return false;
+                }
+                $.each(JSONdata, function (i, item) {
+                    //增加一筆
+                    $("#AP_Add_button").click();
+                    //填資料
+                    var nRow = $("#apnum").val();
+                    $("#apsqlno_" + nRow).val(item.apsqlno);
+                    $("#apclass_" + nRow).val(item.Apclass);
+                    $("#Apcust_no_" + nRow).val(item.apcust_no);
+                    $("#ap_country_" + nRow).val(item.Ap_country);
+                    $("#ap_cname1_" + nRow).val(item.ap_cname1);
+                    $("#ap_cname2_" + nRow).val(item.ap_cname2);
+                    $("#ap_cname_" + nRow).val(item.ap_cname1 + item.ap_cname2);
+                    $("#ap_ename1_" + nRow).val(item.ap_ename1);
+                    $("#ap_ename2_" + nRow).val(item.ap_ename2);
+                    $("#ap_ename_" + nRow).val(item.ap_ename1 + item.ap_ename2);
+                    $("#ap_crep_" + nRow).val(item.Ap_crep);
+                    $("#ap_erep_" + nRow).val(item.Ap_erep);
+                    $("#ap_zip_" + nRow).val(item.Ap_zip);
+                    $("#ap_addr1_" + nRow).val(item.Ap_addr1);
+                    $("#ap_addr2_" + nRow).val(item.Ap_addr2);
+                    $("#ap_eaddr1_" + nRow).val(item.Ap_eaddr1);
+                    $("#ap_eaddr2_" + nRow).val(item.Ap_eaddr2);
+                    $("#ap_eaddr3_" + nRow).val(item.Ap_eaddr3);
+                    $("#ap_eaddr4_" + nRow).val(item.Ap_eaddr4);
+                    $("#apatt_zip_" + nRow).val(item.Apatt_zip);
+                    $("#apatt_addr1_" + nRow).val(item.Apatt_addr1);
+                    $("#apatt_addr2_" + nRow).val(item.Apatt_addr2);
+                    $("#apatt_tel0_" + nRow).val(item.Apatt_tel0);
+                    $("#apatt_tel_" + nRow).val(item.Apatt_tel);
+                    $("#apatt_tel1_" + nRow).val(item.Apatt_tel1);
+                    $("#apatt_fax_" + nRow).val(item.Apatt_fax);
+                    if (item.Server_flag == "Y") {
+                        $("#ap_hserver_flag_" + nRow).attr("checked", true);
+                    } else {
+                        $("#ap_hserver_flag_" + nRow).attr("checked", false);
+                    }
+                    apserver_flag(nRow);
+                    $("#ap_fcname_" + nRow).val(item.ap_fcname);
+                    $("#ap_lcname_" + nRow).val(item.ap_lcname);
+                    $("#ap_fename_" + nRow).val(item.ap_fename);
+                    $("#ap_lename_" + nRow).val(item.ap_lename);
+                    $("#ap_sql_" + nRow).val(item.ap_sql);
+                    //申請人序號空值不顯示
+                    if (item.ap_sql == "" || item.ap_sql == "0") {
+                        $("#trap_sql_" + nRow).hide();
+                    }
+                });
+            },
+            beforeSend: function (jqXHR, settings) {
+                jqXHR.url = settings.url;
+                //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert("\n資料擷取剖析錯誤 !\n" + jqXHR.url);
+                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！\n" + jqXHR.url + "</a>");
+            }
+        });
+    }
+
+    //增加一筆申請人
+    $("#AP_Add_button").click(function () { apcust_re.appendAP(); });
+    apcust_re.appendAP = function () {
+        var nRow = parseInt($("#apnum").val(), 10) + 1;
+        //複製樣板
+        var copyStr = "";
+        $("#tabap_re>thead tr").each(function (i) {
+            copyStr += "<tr>" + $(this).html().replace(/##/g, nRow) + "</tr>"
+        });
+        $("#tabap_re>tbody").append("<tr id='tr_ap_" + nRow + "' class='sfont9'><td><table border='0' class='bluetable' cellspacing='1' cellpadding='2' width='100%'>" + copyStr + "</table></tr></td>");
+        $("#apnum").val(nRow)
+    }
+
+    //減少一筆申請人
+    $("#AP_Del_button").click(function () { apcust_re.deleteAP(); });
+    apcust_re.deleteAP = function () {
+        var nRow = parseInt($("#apnum").val(), 10);
+        $('#tr_ap_'+nRow).remove();
+        $("#apnum").val(nRow-1)
+    }
+
+    //應受送達人給值
+    function apserver_flag(papnum){
+        if ($("#ap_hserver_flag_"+papnum).attr("checked"))
+            $("#ap_server_flag_"+papnum).val("Y")
+        else
+            $("#ap_server_flag_"+papnum).val("N")
+    }
 </script>
