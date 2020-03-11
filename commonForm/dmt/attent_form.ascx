@@ -105,7 +105,7 @@
                 $("#Att_email").val(j.att_email);
                 $("#att_mag").val(j.magnm);
             },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>資料載入失敗！<BR>點擊顯示詳細訊息</a>"); }
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>聯絡人資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
     };
 </script>

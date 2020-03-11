@@ -428,7 +428,7 @@
 	                error: function (jqXHR, textStatus, errorThrown) {
 	                        //window.open(debugurl);
 	                    //alert("載入查詢清單發生錯誤!!");
-	                    toastr.error("<a href='" + jqXHR.url + "' target='_new'>載入查詢清單發生錯誤！<BR>(點擊顯示詳細訊息)</a>");
+	                    toastr.error("<a href='" + jqXHR.url + "' target='_new'>載入查詢清單發生錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
 	                }
 	            });
 	        });

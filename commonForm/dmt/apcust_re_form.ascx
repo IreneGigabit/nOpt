@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="cust_re_form" %>
+﻿<%@ Control Language="C#" ClassName="cust_re_form" %>
 
 <script runat="server">
     protected string html_apclass = "";//Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld ShowSelect2(ConnB,aSQL,false,"Y")
@@ -228,8 +228,7 @@
                 //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                //alert("\n資料擷取剖析錯誤 !\n" + jqXHR.url);
-                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！\n" + jqXHR.url + "</a>");
+                toastr.error("<a href='" + jqXHR.url + "' target='_new'>申請人資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
     }

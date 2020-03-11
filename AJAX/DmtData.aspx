@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -25,16 +25,16 @@
         string arcase_type = "";
         string case_no = "";
 
+        DataTable dt = new DataTable();
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "Select * from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
-            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                if (dr.Read()) {
-                    cust_area = dr.SafeRead("cust_area", "");
-                    cust_seq = dr.SafeRead("cust_seq", "");
-                    att_sql = dr.SafeRead("att_sql", "");
-                    arcase_type = dr.SafeRead("arcase_type", "");
-                    case_no = dr.SafeRead("case_no", "");
-                }
+            conn.DataTable(SQL, dt);
+            if (dt.Rows.Count>0) {
+                cust_area = dt.Rows[0].SafeRead("cust_area", "");
+                cust_seq = dt.Rows[0].SafeRead("cust_seq", "");
+                att_sql = dt.Rows[0].SafeRead("att_sql", "");
+                arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
+                case_no = dt.Rows[0].SafeRead("case_no", "");
             }
         }
 
@@ -54,11 +54,17 @@
             rtnStr = GetBRAP(case_no);
         }
 
+        if (Request["type"] == "brcase") {//案件資料
+            rtnStr = dt;
+        }
         if (Request["type"] == "arcaselist") {//案性
             rtnStr = GetArcase(arcase_type);
         }
-        if (Request["type"] == "arcaseItemList") {//其他費用
-            rtnStr = GetArcaseOther();
+        if (Request["type"] == "arcaseItemList") {//其他費用案性
+            rtnStr = GetArcaseItem();
+        }
+        if (Request["type"] == "arcaseOtherList") {//轉帳費用案性
+            rtnStr = GetArcaseOther(arcase_type);
         }
 
         var serializerSettings = new JsonSerializerSettings()
@@ -187,9 +193,9 @@
     #region GetArcase 案辦案性
     private DataTable GetArcase(string pType) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
-            SQL = "SELECT rs_code,prt_code,rs_detail,remark FROM  code_br WHERE  (mark = 'B' )";
-            SQL += " And cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' ";
-            SQL += "and getdate() >= beg_date ";
+            SQL = "SELECT rs_code,prt_code,rs_detail,remark ";
+            SQL += "FROM code_br ";
+            SQL += "WHERE  (mark = 'B' ) And cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' and getdate() >= beg_date ";
             SQL += "ORDER BY rs_code";
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);
@@ -199,12 +205,28 @@
     }
     #endregion
 
-    #region GetArcaseOther 其他費用案性
-    private DataTable GetArcaseOther() {
+    #region GetArcaseItem 其他費用案性
+    private DataTable GetArcaseItem() {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
-            SQL = "SELECT  rs_code, rs_detail FROM  code_br WHERE rs_class = 'Z1' ";
-            SQL += "And cr= 'Y' and dept='T' AND no_code='N' ";
-            SQL += "and getdate() >= beg_date ";
+            SQL = "SELECT  rs_code, rs_detail ";
+            SQL += "FROM code_br ";
+            SQL += "WHERE rs_class = 'Z1' And cr= 'Y' and dept='T' AND no_code='N' and getdate() >= beg_date ";
+            SQL += "ORDER BY rs_code";
+            DataTable dt = new DataTable();
+            connB.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region GetArcaseOther 轉帳費用案性
+    private DataTable GetArcaseOther(string pType) {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
+            SQL = "SELECT rs_code,prt_code,rs_detail ";
+            SQL += "FROM code_br ";
+            SQL += "WHERE cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' and mark='M' ";
+			SQL += "and getdate() >= beg_date and end_date is null ";
             SQL += "ORDER BY rs_code";
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);

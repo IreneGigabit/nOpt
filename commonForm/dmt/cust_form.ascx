@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="cust_form" %>
+﻿<%@ Control Language="C#" ClassName="cust_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
@@ -237,7 +237,7 @@
                 $("#F_mark").val(j.cust_remark);
 
             },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>資料載入失敗！<BR>點擊顯示詳細訊息</a>"); }
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>客戶資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
     };
 </script>

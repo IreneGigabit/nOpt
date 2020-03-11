@@ -1,8 +1,10 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
 <%@ Register Src="~/commonForm/dmt/apcust_re_form.ascx" TagPrefix="uc1" TagName="apcust_re_form" %>
+<%@ Register Src="~/commonForm/dmt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
@@ -96,6 +98,7 @@
                     <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人-->
                 </div>
                 <div class="tabCont" id="#case">
+                    <uc1:case_form runat="server" ID="case_form" />
                     <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
                 </div>
                 <div class="tabCont" id="#dmt">
@@ -123,6 +126,7 @@ function this_init() {
     cust.init();
     attent.init();
     apcust_re.init();
+    case_form.init();
 
     //欄位開關
     $(".Lock").lock();

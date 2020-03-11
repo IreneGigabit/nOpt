@@ -1,4 +1,4 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
@@ -250,8 +250,7 @@
                 //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                //alert("\n資料擷取剖析錯誤 !\n" + jqXHR.url);
-                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！\n" + jqXHR.url + "</a>");
+                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
     };
