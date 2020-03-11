@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="case_form" %>
+<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
@@ -153,7 +153,6 @@
             textFormat: "{rs_code}---{rs_detail}"
         });
 
-
         $.ajax({
             type: "get",
             url: getRootPath() + "/AJAX/DmtData.aspx?type=brcust&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
@@ -176,7 +175,7 @@
                 $("#F_ap_cname2").val(j.ap_cname2);
                 $("#F_ap_ename1").val(j.ap_ename1);
                 $("#F_ap_ename2").val(j.ap_ename2);
-                $("#F_ap_crep").val(decodeStr(j.ap_crep));
+                $("#F_ap_crep").val(j.ap_crep);
                 $("#F_ap_erep").val(j.ap_erep);
                 $("#F_ap_zip").val(j.ap_zip);
                 $("#F_ap_addr1").val(j.ap_addr1);
@@ -203,7 +202,7 @@
                 $("#F_tdis_type").val(j.tdis_type);
                 $("#F_ppay_type").val(j.ppay_type);
                 $("#F_tpay_type").val(j.tpay_type);
-                $("#F_mark").val(decodeStr(j.cust_remark));
+                $("#F_mark").val(j.cust_remark);
 
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>資料載入失敗！<BR>點擊顯示詳細訊息</a>"); }
