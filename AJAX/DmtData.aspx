@@ -1,7 +1,7 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
-<%@Import Namespace = "System.Text"%>
-<%@Import Namespace = "System.Data.SqlClient"%>
+<%@ Import Namespace = "System.Text"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.IO"%>
 <%@ Import Namespace = "System.Linq"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -23,6 +23,7 @@
         string cust_seq = "";
         string att_sql = "";
         string arcase_type = "";
+        string case_no = "";
 
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "Select * from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
@@ -32,6 +33,7 @@
                     cust_seq = dr.SafeRead("cust_seq", "");
                     att_sql = dr.SafeRead("att_sql", "");
                     arcase_type = dr.SafeRead("arcase_type", "");
+                    case_no = dr.SafeRead("case_no", "");
                 }
             }
         }
@@ -47,6 +49,10 @@
         if (Request["type"] == "bratt") {//指定聯絡人
             rtnStr = GetBRAtt(cust_area,cust_seq,att_sql);
         }
+        
+        if (Request["type"] == "braplist") {//案件申請人
+            rtnStr = GetBRAP(case_no);
+        }
 
         if (Request["type"] == "arcaselist") {//案性
             rtnStr = GetArcase(arcase_type);
@@ -55,15 +61,22 @@
             rtnStr = GetArcaseOther();
         }
 
-        Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()));
+        var serializerSettings = new JsonSerializerSettings()
+        {
+            Formatting = Formatting.Indented,
+            Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+        };
+        Response.Write(JsonConvert.SerializeObject(rtnStr, serializerSettings).ToUnicode());
+
+        //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
     }
 
     #region GetBRCust 案件客戶
-    private DataTable GetBRCust(string pcust_area,string pcust_seq) {
+    private DataTable GetBRCust(string pCustArea,string pCustSeq) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "Select *,''apclassnm,''ref_seqnm,''magnm ";
             SQL += "from vcustlist ";
-            SQL += "where cust_area='" + pcust_area + "' and  cust_seq='" + pcust_seq + "' ";
+            SQL += "where cust_area='" + pCustArea + "' and  cust_seq='" + pCustSeq + "' ";
             DataTable dt = new DataTable();
             connB.DataTable(SQL,dt);
 
@@ -100,12 +113,12 @@
     #endregion
 
     #region GetBRAtt 案件聯絡人
-        private DataTable GetBRAtt(string pcust_area,string pcust_seq) {
+    private DataTable GetBRAtt(string pCustArea, string pCustSeq) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "Select *,''deptnm,''magnm ";
             SQL += "from custz_att ";
-            SQL += "where cust_area='" + pcust_area + "' ";
-            SQL += "and cust_seq='" + pcust_seq + "' ";
+            SQL += "where cust_area='" + pCustArea + "' ";
+            SQL += "and cust_seq='" + pCustSeq + "' ";
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);
 
@@ -125,18 +138,57 @@
         }
     }
 
-    private DataTable GetBRAtt(string pcust_area,string pcust_seq,string patt_sql) {
-        DataTable oTable = GetBRAtt(pcust_area,pcust_seq);
-        DataTable nTable = oTable.Select("att_sql='" + patt_sql + "'").CopyToDataTable();
+    private DataTable GetBRAtt(string pCustArea, string pCustSeq, string pAttSql) {
+        DataTable oTable = GetBRAtt(pCustArea, pCustSeq);
+        DataTable nTable = oTable.Select("att_sql='" + pAttSql + "'").CopyToDataTable();
         return nTable;
     }
     #endregion
 
+    #region GetBRAP 案件申請人
+    private DataTable GetBRAP(string pCaseNo) {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
+            SQL = "SELECT d.apsqlno,d.Server_flag,d.ap_cname1,d.ap_cname2,d.ap_ename1,d.ap_ename2 ";
+            SQL += ",d.ap_fcname,d.ap_lcname,d.ap_fename,d.ap_lename ";
+            SQL += ",d.ap_sql,d.ap_zip as dmt_ap_zip,d.ap_addr1 as dmt_ap_addr1,d.ap_addr2 as dmt_ap_addr2 ";
+            SQL += ",d.ap_eaddr1 as dmt_ap_eaddr1,d.ap_eaddr2 as dmt_ap_eaddr2,d.ap_eaddr3 as dmt_ap_eaddr3,d.ap_eaddr4 as dmt_ap_eaddr4 ";
+            SQL += ",a.apcust_no,a.Apclass,a.Ap_country,a.Ap_crep,a.Ap_erep,a.Ap_addr1,a.Ap_addr2 ";
+            SQL += ",a.Ap_eaddr1,a.Ap_eaddr2,a.Ap_eaddr3,a.Ap_eaddr4 ";
+            SQL += ",a.Apatt_zip,a.Apatt_addr1,a.Apatt_addr2,a.Apatt_tel0 ";
+            SQL += ",a.Apatt_tel,a.Apatt_tel1,a.Apatt_fax,a.Ap_zip ";
+            SQL += "From dmt_temp_ap as d ";
+            SQL += "inner join apcust as a on d.apsqlno=a.apsqlno ";
+            SQL += "inner join case_dmt as b on d.in_no=b.in_no ";
+            SQL += "Where b.case_no = '" + pCaseNo + "' and d.case_sqlno=0 ";
+            DataTable dt = new DataTable();
+            connB.DataTable(SQL, dt);
+
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                //因交辦案件申請人先前無中英文地址，當無申請人序號，則依申請人檔資料顯示
+                //若申請人序號>=0，則以交辦案件申請人為準
+                if (dt.Rows[i].SafeRead("ap_sql", "") == "") {
+                    dt.Rows[i]["ap_sql"] = "0";
+                } else {
+                    dt.Rows[i]["ap_zip"] = dt.Rows[i].SafeRead("dmt_ap_zip", "");
+                    dt.Rows[i]["ap_addr1"] = dt.Rows[i].SafeRead("dmt_ap_addr1", "");
+                    dt.Rows[i]["ap_addr2"] = dt.Rows[i].SafeRead("dmt_ap_addr2", "");
+                    dt.Rows[i]["ap_eaddr1"] = dt.Rows[i].SafeRead("dmt_ap_eaddr1", "");
+                    dt.Rows[i]["ap_eaddr2"] = dt.Rows[i].SafeRead("dmt_ap_eaddr2", "");
+                    dt.Rows[i]["ap_eaddr3"] = dt.Rows[i].SafeRead("dmt_ap_eaddr3", "");
+                    dt.Rows[i]["ap_eaddr4"] = dt.Rows[i].SafeRead("dmt_ap_eaddr4", "");
+                }
+            }
+            
+            return dt;
+        }
+    }
+    #endregion
+
     #region GetArcase 案辦案性
-    private DataTable GetArcase(string type) {
+    private DataTable GetArcase(string pType) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "SELECT rs_code,prt_code,rs_detail,remark FROM  code_br WHERE  (mark = 'B' )";
-            SQL += " And cr= 'Y' and dept='T' And rs_type='" + type + "' AND no_code='N' ";
+            SQL += " And cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' ";
             SQL += "and getdate() >= beg_date ";
             SQL += "ORDER BY rs_code";
             DataTable dt = new DataTable();
