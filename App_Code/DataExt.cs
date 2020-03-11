@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Data;
@@ -95,6 +95,32 @@ public static class DataExt
     #endregion
 
     #region DataTable 擴展
+    /// <summary>
+    /// 顯示DataTable內容。
+    /// </summary>
+    public static void ShowTable(this DataTable table) {
+        string showStr = "";
+        if (table != null) {
+            showStr += "<table width='100%' border='1'>\n";
+            //表頭
+            showStr += "<tr>\n";
+            foreach (DataColumn column in table.Columns) {
+                showStr += "<td>" + column.ColumnName + "</td>\n";
+            }
+            showStr += "</tr>\n";
+
+            //內容
+            for (int i = 0; i < table.Rows.Count; i++) {
+                showStr += "<tr>\n";
+                foreach (DataColumn column in table.Columns) {
+                    showStr += "<td>" + table.Rows[i][column.ColumnName] + "</td>\n";
+                }
+                showStr += "</tr>\n";
+            }
+            showStr += "</table>\n";
+        }
+        HttpContext.Current.Response.Write(showStr);
+    }
     /// <summary>
     /// 轉換為物件實體：T為資料型別
     /// ref:https://blog.csdn.net/qiqingli/article/details/78999284
