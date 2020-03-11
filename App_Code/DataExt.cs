@@ -121,6 +121,7 @@ public static class DataExt
         }
         HttpContext.Current.Response.Write(showStr);
     }
+
     /// <summary>
     /// 轉換為物件實體：T為資料型別
     /// ref:https://blog.csdn.net/qiqingli/article/details/78999284
