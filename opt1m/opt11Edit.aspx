@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -122,6 +122,7 @@ function this_init() {
     settab("#cust");
     cust.init();
     attent.init();
+    apcust_re.init();
 
     //欄位開關
     $(".Lock").lock();
