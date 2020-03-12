@@ -103,6 +103,18 @@ public class system
 		}
 	}
 
+	/// <summary>
+	/// 案件資料庫名稱
+	/// </summary>
+	public static string tdbname {
+		get {
+			switch (Host) {
+				case "SIK10": return "sikdbs";//正式環境
+				default: return "sindbs";//開發環境
+			}
+		}
+	}
+
 	/// <summary>  
 	/// 組本所編號
 	/// </summary>  
