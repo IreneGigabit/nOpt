@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="cust_re_form" %>
+﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
     protected string html_apclass = "";//Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld ShowSelect2(ConnB,aSQL,false,"Y")
