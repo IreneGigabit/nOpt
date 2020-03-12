@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -19,6 +19,8 @@
         if (Request["branch"] == "S") strConnB = Conn.OptBS;
         if (Request["branch"] == "K") strConnB = Conn.OptBK;
 
+        string branch = "";
+        string opt_sqlno = "";
         string cust_area = "";
         string cust_seq = "";
         string att_sql = "";
@@ -30,6 +32,8 @@
             SQL = "Select * from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
             conn.DataTable(SQL, dt);
             if (dt.Rows.Count>0) {
+                branch = dt.Rows[0].SafeRead("branch", "");
+                opt_sqlno = dt.Rows[0].SafeRead("opt_sqlno", "");
                 cust_area = dt.Rows[0].SafeRead("cust_area", "");
                 cust_seq = dt.Rows[0].SafeRead("cust_seq", "");
                 att_sql = dt.Rows[0].SafeRead("att_sql", "");
@@ -56,6 +60,9 @@
 
         if (Request["type"] == "brcase") {//案件資料
             rtnStr = dt;
+        }
+        if (Request["type"] == "brcasefees") {//案件費用
+            rtnStr = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);
         }
         if (Request["type"] == "arcaselist") {//案性
             rtnStr = GetArcase(arcase_type);
@@ -190,7 +197,24 @@
     }
     #endregion
 
-    #region GetArcase 案辦案性
+    #region GetCaseFees 交辦費用
+    private DataTable GetCaseFees(string pType, string pOptSqlno,string pCaseNo,string pBranch) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select a.item_sql,a.item_arcase,a.item_count,a.item_service,a.item_fees,b.prt_code,c.service,c.fees,c.others,c.oth_code,c.oth_code1 ";
+            SQL += "from caseitem_opt a ";
+            SQL += "inner join "+system.tdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
+            SQL += "left outer join "+system.tdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
+            SQL += "where a.opt_sqlno='" + pOptSqlno + "' and a.Case_no= '" + pCaseNo + "' and a.Branch='" + pBranch + "' ";
+            SQL += "order by a.item_sql";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region GetArcase 委辦案性
     private DataTable GetArcase(string pType) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "SELECT rs_code,prt_code,rs_detail,remark ";
