@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Classname="attent_form" %>
 
 <script runat="server">
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
 
     protected string branch = "";
