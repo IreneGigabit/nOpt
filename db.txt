@@ -108,3 +108,8 @@ D:\Data\document\NT\6\02\60249.jpg
 D:\Data\Document\NT\temp\20100428013.jpg
 /btbrt/NT/temp/20170426014.jpg
 /btbrt/NT/7/26/72677.jpg
+
+
+select stat_code,* from br_opt 
+--update br_opt set stat_code=null--YS
+where opt_sqlno in(2400,2453)
