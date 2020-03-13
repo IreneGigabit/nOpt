@@ -2,7 +2,7 @@
 <%@ Import Namespace = "System.Data.SqlClient"%>
 
 <script runat="server">
-    protected string StrProjectName = system.getAppSetting("Project");
+    protected string StrProjectName = Sys.getAppSetting("Project");
     private int HTProgRight = 0;
 
     private void Page_Load(Object sender, EventArgs e) {
