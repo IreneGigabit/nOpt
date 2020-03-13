@@ -3,7 +3,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
-    protected string SiServer = system.SIServer;//聖島人主機
+    protected string SiServer = Sys.SIServer;//聖島人主機
     protected string ProjectName = "";
     protected string LoginGrp = "";
     protected string StrUser = "";
@@ -27,9 +27,9 @@
 		Response.Expires = -1;
 
         if (Convert.ToBoolean(Session["Password"])) {
-            ProjectName = system.getAppSetting("Project");
-            LoginGrp = system.GetSession("LoginGrp");
-            StrUser = system.GetSession("sc_name");
+            ProjectName = Sys.getAppSetting("Project");
+            LoginGrp = Sys.GetSession("LoginGrp");
+            StrUser = Sys.GetSession("sc_name");
             if (LoginGrp.ToUpper().IndexOf("ADMIN")>-1){
                 Eblank = "<span id='btnEblank' style='cursor:pointer;color:brown;' v1='65%,*' v2='100%,*'>[Eblank frame]</span>&nbsp;";
             }
