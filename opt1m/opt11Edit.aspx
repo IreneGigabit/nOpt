@@ -1,26 +1,32 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
 <%@ Register Src="~/commonForm/dmt/apcust_re_form.ascx" TagPrefix="uc1" TagName="apcust_re_form" %>
 <%@ Register Src="~/commonForm/dmt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
-
+<%@ Register Src="~/commonForm/dmt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
     protected string StrQueryLink = "";
     protected string StrQueryBtn = "";
 
+    protected string branch = "";
+    protected string opt_sqlno = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        branch = Request["branch"] ?? "";
+        opt_sqlno = Request["opt_sqlno"] ?? "";
 
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
@@ -31,7 +37,6 @@
     }
     
     private void QueryPageLayout() {
-        prgid = Request["prgid"].ToString();
 
         //if ((HTProgRight & 2) > 0) {
             StrQueryLink = "<input type=\"image\" id=\"imgSrch\" src=\"../icon/inquire_in.png\" title=\"查詢\" />&nbsp;";
@@ -43,7 +48,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><%#HTProgCap%></title>
+<title><%=HTProgCap%></title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/jquery.datepick.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/toastr.css")%>" />
@@ -58,7 +63,9 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
+            <font color="blue">區所案件編號：<span id="fseq"></span></font>
+        </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>&nbsp;        
         </td>
@@ -68,7 +75,7 @@
     </tr>
 </table>
 
-<form id="reg" name="reg" method="post" action="<%#HTProgPrefix%>Update.aspx">
+<form id="reg" name="reg" method="post" action="<%=HTProgPrefix%>Update.aspx">
     <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr><td>
     <table border="0" cellspacing="0" cellpadding="0">
@@ -102,6 +109,7 @@
                     <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
                 </div>
                 <div class="tabCont" id="#dmt">
+                    <uc1:dmt_form runat="server" ID="dmt_form" />
                     <!--include file="../commonForm/dmt/dmt_form.ascx"--><!--案件主檔-->
                 </div>
                 <div class="tabCont" id="#case_form">
@@ -123,10 +131,29 @@ $(function () {
 //初始化
 function this_init() {
     settab("#cust");
+    //案號
+    $.ajax({
+        type: "get",
+        url: getRootPath() + "/AJAX/DmtData.aspx?type=brcase&branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+        async: false,
+        cache: false,
+        success: function (json) {
+            var JSONdata = $.parseJSON(json);
+            if (JSONdata.length == 0) {
+                toastr.warning("無案件資料可載入！");
+                return false;
+            }
+            var j = JSONdata[0];
+            $("#fseq").html(j.fseq);
+        },
+        error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+    });
+
     cust.init();
     attent.init();
     apcust_re.init();
     case_form.init();
+    dmt.init();
 
     //欄位開關
     $(".Lock").lock();
