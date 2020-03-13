@@ -22,24 +22,24 @@ public class Token
 
     public Token()
         : this(
-		 system.GetSession("Syscode")
+		 Sys.GetSession("Syscode")
 		, ""
-        , system.GetSession("LoginGrp")
+        , Sys.GetSession("LoginGrp")
         , Conn.Sysctrl
         ) { }
 
     public Token(string APcode)
         : this(
-         system.GetSession("Syscode")
+         Sys.GetSession("Syscode")
         , APcode
-        , system.GetSession("LoginGrp")
+        , Sys.GetSession("LoginGrp")
         , Conn.Sysctrl
         ) { }
 
      public Token(string Syscode, string APcode)
         : this(
         Syscode, APcode
-        , system.GetSession("LoginGrp")
+        , Sys.GetSession("LoginGrp")
         , Conn.Sysctrl
         ) { }
 
@@ -51,7 +51,7 @@ public class Token
         this.ConnectionString = ConnectionString;
         this.Rights = 0;
         bool flag;
-        this._Passworded = Boolean.TryParse(system.GetSession("Password"), out flag);
+        this._Passworded = Boolean.TryParse(Sys.GetSession("Password"), out flag);
      }
 
     public int CheckMe() {
@@ -88,19 +88,19 @@ public class Token
                     if (stmp.IndexOf(":") > -1) {
                         if (stmp != string.Format("{0}:{1}", HttpContext.Current.Request.Url.Host, HttpContext.Current.Request.Url.Port)) {//localhost:8011
                             //HttpContext.Current.Session["Password"] = false;
-                            system.SetSession("Password", false);
+                            Sys.SetSession("Password", false);
                             throw new Exception("頁面參照錯誤！(0)");
                         }
                     } else {
                         if (stmp != HttpContext.Current.Request.Url.Authority) {//localhost
                             //HttpContext.Current.Session["Password"] = false;
-                            system.SetSession("Password", false);
+                            Sys.SetSession("Password", false);
                             throw new Exception("頁面參照錯誤！(1)");
                         }
                     }
                 } else {
                     //HttpContext.Current.Session["Password"] = false;
-                    system.SetSession("Password", false);
+                    Sys.SetSession("Password", false);
                     throw new Exception("無頁面參照！");
                 }
             }
