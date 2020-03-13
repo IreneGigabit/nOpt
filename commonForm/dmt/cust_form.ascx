@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" ClassName="cust_form" %>
 
 <script runat="server">
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
     //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
