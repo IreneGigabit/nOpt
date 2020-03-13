@@ -150,8 +150,8 @@
             SQL = "SELECT A.sysserver,A.syspath AS syspath, A.sysnameC, A.syscode ";
             SQL += "FROM sysctrl ";
             SQL += "INNER JOIN SYScode A ON sysctrl.syscode = A.syscode ";
-            SQL += "WHERE sysctrl.scode = '" + system.GetSession("scode") + "' ";
-            SQL += "and sysctrl.syscode<>'" + system.GetSession("Syscode") + "' ";
+            SQL += "WHERE sysctrl.scode = '" + Sys.GetSession("scode") + "' ";
+            SQL += "and sysctrl.syscode<>'" + Sys.GetSession("Syscode") + "' ";
             using (DBHelper conn = new DBHelper(Conn.Sysctrl)) {
                 DataTable dt = new DataTable();
                 conn.DataTable(SQL, dt);
