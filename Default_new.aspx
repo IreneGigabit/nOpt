@@ -29,15 +29,15 @@
     [WebMethod(enableSession: true)]
     [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
     public static string GetViewData() {
-        string NowSyscode = system.GetSession("Syscode");
-        string ProjectName = system.getAppSetting("Project");
-        string Scode = system.GetSession("scode");
-        string ScName = system.GetSession("sc_name");
-        string LoginGrp = system.GetSession("LoginGrp");
-        string GrpName = system.GetSession("GrpName");
+        string NowSyscode = Sys.GetSession("Syscode");
+        string ProjectName = Sys.getAppSetting("Project");
+        string Scode = Sys.GetSession("scode");
+        string ScName = Sys.GetSession("sc_name");
+        string LoginGrp = Sys.GetSession("LoginGrp");
+        string GrpName = Sys.GetSession("GrpName");
         
         var result = new {
-            siServer = system.SIServer,
+            siServer = Sys.SIServer,
             titleUser = ScName + "/" + LoginGrp,
             projectName = ProjectName,
             nowSyscode = NowSyscode,
