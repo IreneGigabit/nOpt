@@ -26,10 +26,24 @@
         string att_sql = "";
         string arcase_type = "";
         string case_no = "";
-
+        
         DataTable dt = new DataTable();
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "Select * from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
+            //抓區所商標圖server主機名稱(iis)
+            string uploadserver_name="";
+            SQL = "Select code_name,form_name from cust_code where code_type='OSerName' and cust_code='" + Request["branch"] + "'";
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    uploadserver_name = dr.SafeRead("form_name", "");
+                }
+                if (uploadserver_name == "") {
+                    if (Sys.Host == "web10") uploadserver_name = "web01";
+                    else if (Sys.Host == "web08") uploadserver_name = "web02";
+                    else uploadserver_name = Sys.Host;
+                }
+            }
+            
+            SQL = "Select *,''fseq,''drfile from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
             conn.DataTable(SQL, dt);
             if (dt.Rows.Count>0) {
                 branch = dt.Rows[0].SafeRead("branch", "");
@@ -39,6 +53,15 @@
                 att_sql = dt.Rows[0].SafeRead("att_sql", "");
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
+                dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
+                
+                string drawFile = dt.Rows[0].SafeRead("draw_file", "");
+                if (drawFile.IndexOf("\\") > -1) {//絕對路徑
+                    string a = drawFile.Replace("\\", "/").ToLower();//斜線改方向
+                    dt.Rows[0]["drfile"] = "http://" + uploadserver_name + "/btbrt" + a.Substring(a.IndexOf("/" + branch + "t/", StringComparison.OrdinalIgnoreCase));//擷取『/XT/』後(含)的字串
+                } else {
+                    dt.Rows[0]["drfile"] = "http://" + uploadserver_name + drawFile;
+                }
             }
         }
 
@@ -74,12 +97,13 @@
             rtnStr = GetArcaseOther(arcase_type);
         }
 
-        var serializerSettings = new JsonSerializerSettings()
+        var settings = new JsonSerializerSettings()
         {
             Formatting = Formatting.Indented,
+            ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
             Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
         };
-        Response.Write(JsonConvert.SerializeObject(rtnStr, serializerSettings).ToUnicode());
+        Response.Write(JsonConvert.SerializeObject(rtnStr, settings).ToUnicode());
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
     }
@@ -202,8 +226,8 @@
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select a.item_sql,a.item_arcase,a.item_count,a.item_service,a.item_fees,b.prt_code,c.service,c.fees,c.others,c.oth_code,c.oth_code1 ";
             SQL += "from caseitem_opt a ";
-            SQL += "inner join "+system.tdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
-            SQL += "left outer join "+system.tdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
+            SQL += "inner join "+Sys.tdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
+            SQL += "left outer join "+Sys.tdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
             SQL += "where a.opt_sqlno='" + pOptSqlno + "' and a.Case_no= '" + pCaseNo + "' and a.Branch='" + pBranch + "' ";
             SQL += "order by a.item_sql";
             DataTable dt = new DataTable();
