@@ -19,7 +19,14 @@
             SQL = Request["SQL"];
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
-            Response.Write(JsonConvert.SerializeObject(dt, Formatting.Indented));
+            
+            var settings = new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
+                Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+            };
+            Response.Write(JsonConvert.SerializeObject(dt, settings).ToUnicode());
         }
     }
 </script>
