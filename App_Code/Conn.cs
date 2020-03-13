@@ -16,9 +16,9 @@ public static class Conn
     public static string OptK {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_optk");//正式環境
-                case "WEB10": return system.getConnString("test_optk");//使用者測試環境
-                default: return system.getConnString("dev_optk");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optk");//正式環境
+                case "WEB10": return Sys.getConnString("test_optk");//使用者測試環境
+                default: return Sys.getConnString("dev_optk");//開發環境
             }
         }
     }
@@ -28,9 +28,9 @@ public static class Conn
     public static string OptBN {
         get {
             switch (Host) {
-				case "SIK10": return system.getConnString("prod_optBN");//正式環境
-				case "WEB10": return system.getConnString("test_optBN");//使用者測試環境
-                default: return system.getConnString("dev_optBN");//開發環境
+				case "SIK10": return Sys.getConnString("prod_optBN");//正式環境
+				case "WEB10": return Sys.getConnString("test_optBN");//使用者測試環境
+                default: return Sys.getConnString("dev_optBN");//開發環境
             }
         }
     }
@@ -40,9 +40,9 @@ public static class Conn
     public static string OptBC {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_optBC");//正式環境
-				case "WEB10": return system.getConnString("test_optBC");//使用者測試環境
-                default: return system.getConnString("dev_optBC");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optBC");//正式環境
+				case "WEB10": return Sys.getConnString("test_optBC");//使用者測試環境
+                default: return Sys.getConnString("dev_optBC");//開發環境
             }
         }
     }
@@ -52,9 +52,9 @@ public static class Conn
     public static string OptBS {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_optBS");//正式環境
-				case "WEB10": return system.getConnString("test_optBS");//使用者測試環境
-                default: return system.getConnString("dev_optBS");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optBS");//正式環境
+				case "WEB10": return Sys.getConnString("test_optBS");//使用者測試環境
+                default: return Sys.getConnString("dev_optBS");//開發環境
             }
         }
     }
@@ -64,9 +64,9 @@ public static class Conn
     public static string OptBK {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_optBK");//正式環境
-				case "WEB10": return system.getConnString("test_optBK");//使用者測試環境
-                default: return system.getConnString("dev_optBK");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optBK");//正式環境
+				case "WEB10": return Sys.getConnString("test_optBK");//使用者測試環境
+                default: return Sys.getConnString("dev_optBK");//開發環境
             }
         }
     }
@@ -76,9 +76,9 @@ public static class Conn
     public static string OptBM {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_optBM");//正式環境
-				case "WEB10": return system.getConnString("test_optBM");//使用者測試環境
-                default: return system.getConnString("dev_optBM");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optBM");//正式環境
+				case "WEB10": return Sys.getConnString("test_optBM");//使用者測試環境
+                default: return Sys.getConnString("dev_optBM");//開發環境
             }
         }
     }
@@ -88,9 +88,9 @@ public static class Conn
     public static string AccN {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_Nacc");//正式環境
-				case "WEB10": return system.getConnString("test_Nacc");//使用者測試環境
-                default: return system.getConnString("dev_Nacc");//開發環境
+                case "SIK10": return Sys.getConnString("prod_Nacc");//正式環境
+				case "WEB10": return Sys.getConnString("test_Nacc");//使用者測試環境
+                default: return Sys.getConnString("dev_Nacc");//開發環境
             }
         }
     }
@@ -100,9 +100,9 @@ public static class Conn
     public static string AccC {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_Cacc");//正式環境
-				case "WEB10": return system.getConnString("test_Cacc");//使用者測試環境
-                default: return system.getConnString("dev_Cacc");//開發環境
+                case "SIK10": return Sys.getConnString("prod_Cacc");//正式環境
+				case "WEB10": return Sys.getConnString("test_Cacc");//使用者測試環境
+                default: return Sys.getConnString("dev_Cacc");//開發環境
             }
         }
     }
@@ -112,9 +112,9 @@ public static class Conn
     public static string AaccS {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_Sacc");//正式環境
-				case "WEB10": return system.getConnString("test_Sacc");//使用者測試環境
-                default: return system.getConnString("dev_Sacc");//開發環境
+                case "SIK10": return Sys.getConnString("prod_Sacc");//正式環境
+				case "WEB10": return Sys.getConnString("test_Sacc");//使用者測試環境
+                default: return Sys.getConnString("dev_Sacc");//開發環境
             }
         }
     }
@@ -124,9 +124,9 @@ public static class Conn
     public static string AccK {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_Kacc");//正式環境
-				case "WEB10": return system.getConnString("test_Kacc");//使用者測試環境
-                default: return system.getConnString("dev_Kacc");//開發環境
+                case "SIK10": return Sys.getConnString("prod_Kacc");//正式環境
+				case "WEB10": return Sys.getConnString("test_Kacc");//使用者測試環境
+                default: return Sys.getConnString("dev_Kacc");//開發環境
             }
         }
     }
@@ -136,9 +136,9 @@ public static class Conn
     public static string Sysctrl {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_sysctrl");//正式環境
-				case "WEB10": return system.getConnString("test_sysctrl");//使用者測試環境
-                default: return system.getConnString("dev_sysctrl");//開發環境
+                case "SIK10": return Sys.getConnString("prod_sysctrl");//正式環境
+				case "WEB10": return Sys.getConnString("test_sysctrl");//使用者測試環境
+                default: return Sys.getConnString("dev_sysctrl");//開發環境
             }
         }
     }
@@ -148,9 +148,9 @@ public static class Conn
     public static string ODBCDSN {
         get {
             switch (Host) {
-                case "SIK10": return system.getConnString("prod_sysctrl");//正式環境
-				case "WEB10": return system.getConnString("test_sysctrl");//使用者測試環境
-                default: return system.getConnString("dev_sysctrl");//開發環境
+                case "SIK10": return Sys.getConnString("prod_sysctrl");//正式環境
+				case "WEB10": return Sys.getConnString("test_sysctrl");//使用者測試環境
+                default: return Sys.getConnString("dev_sysctrl");//開發環境
             }
         }
     }
