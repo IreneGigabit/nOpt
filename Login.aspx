@@ -3,7 +3,7 @@
 
 <!DOCTYPE html>
 <script runat="server">
-    protected string StrProjectName = system.getAppSetting("Project");
+    protected string StrProjectName = Sys.getAppSetting("Project");
     protected string syscode = "";//系統
 
     private void Page_Load(Object sender, EventArgs e) {
@@ -11,7 +11,7 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        syscode = Request["syscode"] ?? system.getAppSetting("syscode");//系統
+        syscode = Request["syscode"] ?? Sys.getAppSetting("syscode");//系統
 
         this.DataBind();
     }
