@@ -1,10 +1,7 @@
 ﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
-    protected string html_apclass = "";//Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld ShowSelect2(ConnB,aSQL,false,"Y")
-    protected string html_country = "";//select coun_code,coun_c from country where markb<>'X' ShowSelect2(Cnn,cSQL,false,"Y")
-    
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
 
     protected string branch = "";
@@ -168,7 +165,6 @@
             url: getRootPath() + "/AJAX/DmtData.aspx?type=braplist&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
             async: false,
             cache: false,
-            data: $("#reg").serialize(),
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
                 if (JSONdata.length == 0) {
@@ -181,31 +177,31 @@
                     //填資料
                     var nRow = $("#apnum").val();
                     $("#apsqlno_" + nRow).val(item.apsqlno);
-                    $("#apclass_" + nRow).val(item.Apclass);
+                    $("#apclass_" + nRow).val(item.apclass);
                     $("#Apcust_no_" + nRow).val(item.apcust_no);
-                    $("#ap_country_" + nRow).val(item.Ap_country);
+                    $("#ap_country_" + nRow).val(item.ap_country);
                     $("#ap_cname1_" + nRow).val(item.ap_cname1);
                     $("#ap_cname2_" + nRow).val(item.ap_cname2);
                     $("#ap_cname_" + nRow).val(item.ap_cname1 + item.ap_cname2);
                     $("#ap_ename1_" + nRow).val(item.ap_ename1);
                     $("#ap_ename2_" + nRow).val(item.ap_ename2);
                     $("#ap_ename_" + nRow).val(item.ap_ename1 + item.ap_ename2);
-                    $("#ap_crep_" + nRow).val(item.Ap_crep);
-                    $("#ap_erep_" + nRow).val(item.Ap_erep);
-                    $("#ap_zip_" + nRow).val(item.Ap_zip);
-                    $("#ap_addr1_" + nRow).val(item.Ap_addr1);
-                    $("#ap_addr2_" + nRow).val(item.Ap_addr2);
-                    $("#ap_eaddr1_" + nRow).val(item.Ap_eaddr1);
-                    $("#ap_eaddr2_" + nRow).val(item.Ap_eaddr2);
-                    $("#ap_eaddr3_" + nRow).val(item.Ap_eaddr3);
-                    $("#ap_eaddr4_" + nRow).val(item.Ap_eaddr4);
-                    $("#apatt_zip_" + nRow).val(item.Apatt_zip);
-                    $("#apatt_addr1_" + nRow).val(item.Apatt_addr1);
-                    $("#apatt_addr2_" + nRow).val(item.Apatt_addr2);
-                    $("#apatt_tel0_" + nRow).val(item.Apatt_tel0);
-                    $("#apatt_tel_" + nRow).val(item.Apatt_tel);
-                    $("#apatt_tel1_" + nRow).val(item.Apatt_tel1);
-                    $("#apatt_fax_" + nRow).val(item.Apatt_fax);
+                    $("#ap_crep_" + nRow).val(item.ap_crep);
+                    $("#ap_erep_" + nRow).val(item.ap_erep);
+                    $("#ap_zip_" + nRow).val(item.ap_zip);
+                    $("#ap_addr1_" + nRow).val(item.ap_addr1);
+                    $("#ap_addr2_" + nRow).val(item.ap_addr2);
+                    $("#ap_eaddr1_" + nRow).val(item.ap_eaddr1);
+                    $("#ap_eaddr2_" + nRow).val(item.ap_eaddr2);
+                    $("#ap_eaddr3_" + nRow).val(item.ap_eaddr3);
+                    $("#ap_eaddr4_" + nRow).val(item.ap_eaddr4);
+                    $("#apatt_zip_" + nRow).val(item.apatt_zip);
+                    $("#apatt_addr1_" + nRow).val(item.apatt_addr1);
+                    $("#apatt_addr2_" + nRow).val(item.apatt_addr2);
+                    $("#apatt_tel0_" + nRow).val(item.apatt_tel0);
+                    $("#apatt_tel_" + nRow).val(item.apatt_tel);
+                    $("#apatt_tel1_" + nRow).val(item.apatt_tel1);
+                    $("#apatt_fax_" + nRow).val(item.apatt_fax);
                     if (item.Server_flag == "Y") {
                         $("#ap_hserver_flag_" + nRow).attr("checked", true);
                     } else {
