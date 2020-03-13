@@ -8,7 +8,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 
 namespace System.Runtime.CompilerServices
@@ -121,7 +121,6 @@ public static class DataExt
         }
         HttpContext.Current.Response.Write(showStr);
     }
-
     /// <summary>
     /// 轉換為物件實體：T為資料型別
     /// ref:https://blog.csdn.net/qiqingli/article/details/78999284
@@ -674,11 +673,11 @@ public static class DataExt
 }
 
 
+#region class DBNullCreationConverter
 /// <summary>
 /// Json.Net對DBNull的轉換處理，此處只寫了轉換成JSON字符串的處理，JSON字符串轉物件的未處理
 /// ref:https://www.cnblogs.com/wsq-blog/p/10888566.html
 /// </summary>
-#region class DBNullCreationConverter
 public class DBNullCreationConverter : JsonConverter
 {
 	/// <summary>
@@ -714,6 +713,15 @@ public class DBNullCreationConverter : JsonConverter
 		get {
 			return true;
 		}
+	}
+}
+#endregion
+
+#region class LowercaseContractResolver
+public class LowercaseContractResolver : DefaultContractResolver
+{
+	protected override string ResolvePropertyName(string propertyName) {
+		return propertyName.ToLower();
 	}
 }
 #endregion
