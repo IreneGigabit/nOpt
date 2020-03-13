@@ -26,7 +26,7 @@
     {
         string strRet = "";
 
-        string syscode = Request["syscode"] ?? system.GetRootDir().Replace("/", "");//系統
+        string syscode = Request["syscode"] ?? Sys.GetRootDir().Replace("/", "");//系統
         string Uid = Request["tfx_scode"] ?? "";//帳號
         string sys_pwd = Request["sys_pwd"] ?? "";//密碼
         string tfx_sys_password = Request["tfx_sys_password"] ?? "";//明碼
@@ -92,7 +92,7 @@
         catch (Exception ex)
         {
             exMsg = Conn.Sysctrl + "\n" + SQL;
-            if (conn != null) system.errorLog(ex, conn.exeSQL, "0000");
+            if (conn != null) Sys.errorLog(ex, conn.exeSQL, "0000");
             strRet = "執行錯誤 !" + ex.Message + "\\n\\n" + SQL;
             Session["Password"] = false;
             Session.Abandon();
