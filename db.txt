@@ -94,3 +94,17 @@ GO
 ALTER TABLE dbo.bstep_temp SET (LOCK_ESCALATION = TABLE)
 GO
 COMMIT
+
+
+update opt_detail set draw_file='D:\Data\Document\NT\temp\20100428013.jpg' where opt_sqlno in(2587)
+update opt_detail set draw_file='/btbrt/NT/temp/20170426014.jpg' where opt_sqlno in(2588)
+update opt_detail set draw_file='/btbrt/NT/7/26/72677.jpg' where opt_sqlno in(2589)
+
+
+select draw_file,* from opt_detail where opt_sqlno in(2453,2587,2588,2589)
+select opt_detail from br_opt where opt_sqlno in(2453,2587,2588,2589)
+
+D:\Data\document\NT\6\02\60249.jpg
+D:\Data\Document\NT\temp\20100428013.jpg
+/btbrt/NT/temp/20170426014.jpg
+/btbrt/NT/7/26/72677.jpg
