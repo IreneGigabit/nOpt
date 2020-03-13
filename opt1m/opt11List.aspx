@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
 <%@Import Namespace = "System.Text"%>
 <%@Import Namespace = "System.Data.SqlClient"%>
@@ -10,7 +10,7 @@
 
 <script runat="server">
     protected string isql = "";
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
 
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(prgid);
@@ -55,12 +55,12 @@
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
                 //組本所編號
-                page.pagedTable.Rows[i]["fseq"]=system.formatSeq(
+                page.pagedTable.Rows[i]["fseq"]=Sys.formatSeq(
                     page.pagedTable.Rows[i].SafeRead("Bseq", "")
                     ,page.pagedTable.Rows[i].SafeRead("Bseq1", "")
                     ,""
                     ,page.pagedTable.Rows[i].SafeRead("Branch", "")
-                    ,system.GetSession("dept"));
+                    ,Sys.GetSession("dept"));
 
                 //申請人
                 DataTable dt_ap = new DataTable();
@@ -79,8 +79,13 @@
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(30);
             }
 
-            string str_json = JsonConvert.SerializeObject(page, Formatting.Indented);
-            Response.Write(str_json);
+            var settings = new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
+                Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+            };
+            Response.Write(JsonConvert.SerializeObject(page, settings).ToUnicode());
             Response.End();
         }
     }
