@@ -12,7 +12,7 @@
 <script runat="server">
     protected string SQL = "";
     protected string strConnB = "";
-
+    //http://web08/nOpt/AJAX/DmtData_New.aspx?type=brcase&branch=N&opt_sqlno=2453&_=1584086771124
     protected void Page_Load(object sender, EventArgs e) {
         if (Request["branch"] == "N") strConnB = Conn.OptBN;
         if (Request["branch"] == "C") strConnB = Conn.OptBC;
@@ -58,17 +58,18 @@
             rtnStr = GetArcaseOther(arcase_type);
         }
 
-        var serializerSettings = new JsonSerializerSettings()
+        var settings = new JsonSerializerSettings()
         {
             Formatting = Formatting.Indented,
+            ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
             Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
         };
         Response.Write("{");
-        Response.Write("\"cust\":" + JsonConvert.SerializeObject(GetBRCust(cust_area, cust_seq), serializerSettings).ToUnicode());
-        Response.Write(",\"brattlist\":" + JsonConvert.SerializeObject(GetBRAtt(cust_area, cust_seq), serializerSettings).ToUnicode() + "}");
-        Response.Write(",\"braplist\":" + JsonConvert.SerializeObject(GetBRAP(case_no), serializerSettings).ToUnicode() + "}");
-        Response.Write(",\"brcase\":" + JsonConvert.SerializeObject(dt, serializerSettings).ToUnicode() + "}");
-        Response.Write(",\"brcasefees\":" + JsonConvert.SerializeObject(GetCaseFees(arcase_type, opt_sqlno, case_no, branch), serializerSettings).ToUnicode() + "}");
+        Response.Write("\"cust\":" + JsonConvert.SerializeObject(GetBRCust(cust_area, cust_seq), settings).ToUnicode());
+        Response.Write(",\"brattlist\":" + JsonConvert.SerializeObject(GetBRAtt(cust_area, cust_seq), settings).ToUnicode() + "}");
+        Response.Write(",\"braplist\":" + JsonConvert.SerializeObject(GetBRAP(case_no), settings).ToUnicode() + "}");
+        Response.Write(",\"brcase\":" + JsonConvert.SerializeObject(dt, settings).ToUnicode() + "}");
+        Response.Write(",\"brcasefees\":" + JsonConvert.SerializeObject(GetCaseFees(arcase_type, opt_sqlno, case_no, branch), settings).ToUnicode() + "}");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
@@ -192,8 +193,8 @@
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select a.item_sql,a.item_arcase,a.item_count,a.item_service,a.item_fees,b.prt_code,c.service,c.fees,c.others,c.oth_code,c.oth_code1 ";
             SQL += "from caseitem_opt a ";
-            SQL += "inner join "+system.tdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
-            SQL += "left outer join "+system.tdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
+            SQL += "inner join "+Sys.tdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
+            SQL += "left outer join "+Sys.tdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
             SQL += "where a.opt_sqlno='" + pOptSqlno + "' and a.Case_no= '" + pCaseNo + "' and a.Branch='" + pBranch + "' ";
             SQL += "order by a.item_sql";
             DataTable dt = new DataTable();
