@@ -8,8 +8,8 @@
 *.user
 *.userosscache
 *.sln.docstates
-web.config
-vwd.webinfo
+/web.config
+/vwd.webinfo
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
