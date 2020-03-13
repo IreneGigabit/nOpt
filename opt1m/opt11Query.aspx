@@ -1,10 +1,10 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"];//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
     protected string StrQueryLink = "";
@@ -24,8 +24,6 @@
     }
     
     private void QueryPageLayout() {
-        prgid = Request["prgid"].ToString();
-
         //if ((HTProgRight & 2) > 0) {
             StrQueryLink = "<input type=\"image\" id=\"imgSrch\" src=\"../icon/inquire_in.png\" title=\"查詢\" />&nbsp;";
             StrQueryBtn = "<input type=\"button\" id=\"btnSrch\" value =\"查詢\" class=\"cbutton\" />";
@@ -190,12 +188,12 @@
             data: $("#reg").serialize(),
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                if (!JSONdata.totRow) {
+                if (!JSONdata.totrow) {
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }
                 //////更新分頁變數
-                var totRow = parseInt(JSONdata.totRow, 10);
+                var totRow = parseInt(JSONdata.totrow, 10);
                 if (totRow > 0) {
                     $("#divPaging").show();
                     $("#dataList").show();
@@ -203,8 +201,8 @@
                     $("#noData").show();
                 }
 
-                var nowPage = parseInt(JSONdata.nowPage, 10);
-                var totPage = parseInt(JSONdata.totPage, 10);
+                var nowPage = parseInt(JSONdata.nowpage, 10);
+                var totPage = parseInt(JSONdata.totpage, 10);
                 $("#NowPage").html(nowPage);
                 $("#TotPage").html(totPage);
                 $("#TotRec").html(totRow);
@@ -220,7 +218,7 @@
                 $("a.pgD").attr("v1", nowPage + 1);
                 $("#id-div-slide").slideUp("fast");
 
-                $.each(JSONdata.pagedTable, function (i, item) {
+                $.each(JSONdata.pagedtable, function (i, item) {
                     nRow++;
                     //複製一筆
                     $("#dataList>tfoot").each(function (i) {
@@ -235,7 +233,7 @@
                         strLine1 = strLine1.replace(/{{ap_cname}}/g, item.ap_cname);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
-                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.Last_date,"yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date,"yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
                         strLine1 = strLine1.replace(/{{Case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);
