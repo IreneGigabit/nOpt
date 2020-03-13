@@ -7,7 +7,7 @@
 <%@ Import Namespace = "Newtonsoft.Json"%>
 
 <script runat="server">
-    protected string StrProjectName = system.getAppSetting("Project");
+    protected string StrProjectName = Sys.getAppSetting("Project");
     protected string Syscode ="";
     protected string StrUser = "";
     protected string StrMenus = "";
@@ -39,8 +39,8 @@
     [WebMethod(enableSession: true)]
     [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
     public static string GetUserSystem() {
-        string nowSyscode = system.GetSession("Syscode");
-        string Scode = system.GetSession("scode");
+        string nowSyscode = Sys.GetSession("Syscode");
+        string Scode = Sys.GetSession("scode");
         
         /*
         List<SYScode> sysList = new SysctrlService().GetUserSystemData(Scode).ToList();
