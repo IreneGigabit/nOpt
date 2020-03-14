@@ -141,20 +141,17 @@
             textFormat: "{sc_name}"
         });
         $("#tfy_Arcase").getOption({//案性
-            url: getRootPath() + "/AJAX/DmtData.aspx",
-            data: { type: "arcaselist", branch: "<%#branch%>", opt_sqlno: "<%#opt_sqlno%>" },
+            dataList: br_opt.arcase,
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
         $("select[id='nfyi_item_Arcase_##']").getOption({//其他費用
-            url: getRootPath() + "/AJAX/DmtData.aspx",
-            data: { type: "arcaseItemList", branch: "<%#branch%>", opt_sqlno: "<%#opt_sqlno%>" },
+            dataList: br_opt.arcase_item,
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
         $("#tfy_oth_arcase").getOption({//轉帳費用
-            url: getRootPath() + "/AJAX/DmtData.aspx",
-            data: { type: "arcaseOtherList", branch: "<%#branch%>", opt_sqlno: "<%#opt_sqlno%>" },
+            dataList: br_opt.arcase_other,
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
@@ -178,90 +175,61 @@
         });
 
         //案性/案源
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?type=brcase&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無案件資料可載入！");
-                    return false;
-                }
-                var j = JSONdata[0];
-                $("#F_tscode").val(j.in_scode);
-                $("#tfy_Arcase").val(j.arcase);
-                $("#tfy_oth_code").val(j.oth_code);
-                $("#tfy_oth_arcase").val(j.oth_arcase);
-                $("#tfy_Ar_mark").val(j.ar_mark);
-                $("#tfy_discount_chk").attr("checked", j.discount_chk=="Y");
-                $("#tfy_source").val(j.source);
-                if (j.contract_type != "") {
-                    $("input[name='Contract_no_Type'][value='" + j.contract_type + "']").attr("checked", true);
-                    if (j.contract_type == "M") {
-                        $("#span_btn_contract").show();
-                        $("#Mcontract_no").val(j.contract_no);
-                    }
-                    if (j.contract_type == "N") {
-                        $("#tfy_Contract_no").val(j.contract_no);
-                    }
-                }
-                
-                $("#dfy_last_date").val(dateReviver(j.Last_date, "yyyy/M/d"));
-                $("#tfy_Remark").val(j.remark);
-                $("#nfy_service").val(j.service);
-                $("#nfy_fees").val(j.fees);
-                $("#nfy_oth_money").val(j.oth_money);
-                $("#OthSum").val(j.othsum);
-                $("#nfy_Discount").val(j.discount);
-                $("#Discount").val(j.discount+"%");
+        var jCase = br_opt.opt[0];
+        $("#F_tscode").val(jCase.in_scode);
+        $("#tfy_Arcase").val(jCase.arcase);
+        $("#tfy_oth_code").val(jCase.oth_code);
+        $("#tfy_oth_arcase").val(jCase.oth_arcase);
+        $("#tfy_Ar_mark").val(jCase.ar_mark);
+        $("#tfy_discount_chk").attr("checked", jCase.discount_chk == "Y");
+        $("#tfy_source").val(jCase.source);
+        if (jCase.contract_type != "") {
+            $("input[name='Contract_no_Type'][value='" + jCase.contract_type + "']").attr("checked", true);
+            if (jCase.contract_type == "M") {
+                $("#span_btn_contract").show();
+                $("#Mcontract_no").val(jCase.contract_no);
+            }
+            if (jCase.contract_type == "N") {
+                $("#tfy_Contract_no").val(jCase.contract_no);
+            }
+        }
 
-                //產生其他費用tr
-                for (z=1;z<=j.tot_case;z++){
-                    var copyStr = "<tr id='ta_" + z + "' style='display:none'>" + $("tr[id='ta_##']").html().replace(/##/g, z) + "</tr>";
-                    $(copyStr).insertBefore("tr[id='ta_##']");
-                }
+        $("#dfy_last_date").val(dateReviver(jCase.last_date, "yyyy/M/d"));
+        $("#tfy_Remark").val(jCase.remark);
+        $("#nfy_service").val(jCase.service);
+        $("#nfy_fees").val(jCase.fees);
+        $("#nfy_oth_money").val(jCase.oth_money);
+        $("#OthSum").val(jCase.othsum);
+        $("#nfy_Discount").val(jCase.discount);
+        $("#Discount").val(jCase.discount + "%");
 
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-        });
+        //產生其他費用tr
+        for (z = 1; z <= jCase.tot_case; z++) {
+            var copyStr = "<tr id='ta_" + z + "' style='display:none'>" + $("tr[id='ta_##']").html().replace(/##/g, z) + "</tr>";
+            $(copyStr).insertBefore("tr[id='ta_##']");
+        }
 
         //費用
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?type=brcasefees&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無費用資料可載入！");
-                    return false;
-                }
-                $.each(JSONdata, function (i, item) {
-                    if (item.item_sql == "0") {
-                        $("#tfy_Arcase").val(item.item_arcase);
-                        $("#nfyi_Service").val(item.item_service);
-                        $("#nfyi_Fees").val(item.item_fees);
-                        $("#Service").val(item.service==""?"0":item.service);
-                        $("#fees").val(item.fees==""?"0":item.fees);
-                        $("#TaCount").val(item.item_sql);
-                    } else {
-                        $("#nfyi_item_Arcase_"+item.item_sql).val(item.item_arcase);
-                        $("#nfyi_item_count_" + item.item_sql).val(item.item_count);
-                        $("#nfyi_Service_" + item.item_sql).val(item.item_service);
-                        $("#nfzi_Service_" + item.item_sql).val(item.item_service);
-                        $("#nfyi_fees_" + item.item_sql).val(item.item_fees);
-                        $("#nfzi_fees_" + item.item_sql).val(item.item_fees);
-                        $("#nfzi_service_" + item.item_sql).val(item.service == "" ? "0" : item.service);
-                        $("#nfzi_fees_" + item.item_sql).val(item.fees == "" ? "0" : item.fees);
-                        $("#TaCount").val(item.item_sql);
-                        $("#ta_" + item.item_sql).show();
-                    }
-                });
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>費用資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        $.each(br_opt.casefee, function (i, item) {
+            if (item.item_sql == "0") {
+                $("#tfy_Arcase").val(item.item_arcase);
+                $("#nfyi_Service").val(item.item_service);
+                $("#nfyi_Fees").val(item.item_fees);
+                $("#Service").val(item.service == "" ? "0" : item.service);
+                $("#fees").val(item.fees == "" ? "0" : item.fees);
+                $("#TaCount").val(item.item_sql);
+            } else {
+                $("#nfyi_item_Arcase_" + item.item_sql).val(item.item_arcase);
+                $("#nfyi_item_count_" + item.item_sql).val(item.item_count);
+                $("#nfyi_Service_" + item.item_sql).val(item.item_service);
+                $("#nfzi_Service_" + item.item_sql).val(item.item_service);
+                $("#nfyi_fees_" + item.item_sql).val(item.item_fees);
+                $("#nfzi_fees_" + item.item_sql).val(item.item_fees);
+                $("#nfzi_service_" + item.item_sql).val(item.service == "" ? "0" : item.service);
+                $("#nfzi_fees_" + item.item_sql).val(item.fees == "" ? "0" : item.fees);
+                $("#TaCount").val(item.item_sql);
+                $("#ta_" + item.item_sql).show();
+            }
         });
-    };
+    }
 </script>

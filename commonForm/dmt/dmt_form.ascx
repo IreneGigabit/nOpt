@@ -166,32 +166,45 @@
 		<td class="lightbluetable" align="right">延展次數：</td>
 		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_renewal" NAME="tfzd_renewal" class="Lock" SIZE="2"></TD>
 	</tr>
-	<tr>
-	<td class=whitetablebg colspan=8>
-	    <TABLE id=tabbr1 border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
-	        <tr>
-		        <td class=lightbluetable align=right>類別：</td>		
-		        <td class=whitetablebg colspan=7>共<input type="text" class="Lock" name=tfzr_class_count size=2 onchange="add_button(this.value)">類<input type="text" name=tfzr_class class="Lock" readonly>
-		        <input type=hidden name=ctrlnum1 value="1">
-			        <input type=hidden name=ctrlcount1 value="">
-			        <input type=hidden name=num1 value="1">
-		        </td>
-	        </tr>
-	        <tr>
-		        <td class="lightbluetable" align="right" style="cursor:hand" title="請輸入類別，並以逗號分開(例如：1,5,32)。或輸入類別範圍，並以  -  (半形) 分開(例如：8-16)。也可複項組合(例如：3,5,13-32,35)">類別1：</td>		
-		        <td class="whitetablebg" colspan="7"><!--2013/1/22玉雀告知不顯示商標法施行細則第13條-->第<INPUT type="text" class="Lock" name=class11 size=2 maxlength=2 onchange="count_kind(reg.class11.value,1)">類</td>		
-	        </tr>
-	        <tr style="height:107.6pt">
-		        <td class="lightbluetable" align="right" width="18%">商品名稱1：</td>			
-		        <td class="whitetablebg" colspan="7"><textarea NAME="good_name11" ROWS="10" COLS="75" class="Lock"></textarea><br>共<input type="text" name=good_count11 size=2 class="Lock">項</td>
-	        </tr>		
-	        <tr>
-		        <td class="lightbluetable" align="right">商品群組代碼1：</td>
-		        <td class="whitetablebg" colspan="7"><textarea NAME=grp_code11 ROWS="1" COLS="50" class="Lock"></textarea>(跨群組請以全形「、」作分隔)</td>
-		        <input type="hidden" name="color1" value="">
-	        </tr>
-	    </table>
-	</td>
+    <tr>
+	    <td class=whitetablebg colspan=8>
+	        <TABLE border=0 id="goodllist" class="bluetable" cellspacing=1 cellpadding=2 width="100%">
+                <thead>
+	                <tr>
+		                <td class=lightbluetable align=right>類別：</td>		
+		                <td class=whitetablebg colspan=7>
+                            共<input type="text" class="Lock" id=tfzr_class_count name=tfzr_class_count size=2 onchange="add_button(this.value)">類
+                            <input type="text" id=tfzr_class name=tfzr_class class="Lock">
+		                </td>
+	                </tr>
+                </thead>
+                <tfoot style="display:none;">
+	                <tr>
+		                <td class="lightbluetable" align="right" style="cursor:pointer" title="請輸入類別，並以逗號分開(例如：1,5,32)。或輸入類別範圍，並以  -  (半形) 分開(例如：8-16)。也可複項組合(例如：3,5,13-32,35)">
+                            類別##：
+		                </td>
+		                <td class="whitetablebg" colspan="7"><!--2013/1/22玉雀告知不顯示商標法施行細則第13條-->
+                            第<INPUT type="text" class="Lock" id=class1_## name=class1_## size=2 maxlength=2 onchange="count_kind(this.value,1)">類
+		                </td>
+	                </tr>
+	                <tr>
+		                <td class="lightbluetable" align="right" width="18%">商品名稱##：</td>
+		                <td class="whitetablebg" colspan="7">
+                            <textarea id="good_name1_##" name="good_name1_##" ROWS="10" COLS="75" class="Lock"></textarea><br>
+                            共<input type="text" id=good_count1_## name=good_count1_## size=2 class="Lock">項
+		                </td>
+	                </tr>
+	                <tr>
+		                <td class="lightbluetable" align="right">商品群組代碼##：</td>
+		                <td class="whitetablebg" colspan="7">
+                            <textarea id=grp_code1_## name=grp_code1_## ROWS="1" COLS="50" class="Lock"></textarea>(跨群組請以全形「、」作分隔)
+		                    <input type="text" id="color_##" name="color_##" value="">
+                        </td>
+	                </tr>
+                </tfoot>
+                <tbody></tbody>
+	        </table>
+	    </td>
 	</tr>
 </table>
 
@@ -217,60 +230,75 @@
             textFormat: "{chrelname}"
         });
 
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?type=brcase&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無案件資料可載入！");
-                    return false;
-                }
-                var j = JSONdata[0];
-                $("#opt_no").val(j.opt_no);
-                $("#Branch").val(j.branch);
-                $("#Bseq").val(j.bseq);
-                $("#Bseq1").val(j.bseq1);
-                $("#tfzd_ref_no").val(j.ref_no);
-                $("#tfzd_ref_no1").val(j.ref_no1);
-                $("input[name='tfzy_S_Mark'][value='" + j.s_mark + "']").attr("checked", true);
-                $("#tfzd_S_Mark").val(j.s_mark);
-                $("#tfzy_Pul").val(j.pul);
-                $("#tfzy_Zname_type").val(j.zname_type);
-                $("#tfzd_Zname_type").val(j.zname_type);
-                $("input[name='tfzy_color'][value='" + j.color + "']").attr("checked", true);
-                $("#tfzy_prior_country").val(j.prior_country);
-                $("#tfzy_end_code").val(j.end_code);
+        var jCase = br_opt.opt[0];
+        $("#opt_no").val(jCase.opt_no);
+        $("#Branch").val(jCase.branch);
+        $("#Bseq").val(jCase.bseq);
+        $("#Bseq1").val(jCase.bseq1);
+        $("#tfzd_ref_no").val(jCase.ref_no);
+        $("#tfzd_ref_no1").val(jCase.ref_no1);
+        $("input[name='tfzy_S_Mark'][value='" + jCase.s_mark + "']").attr("checked", true);
+        $("#tfzd_S_Mark").val(jCase.s_mark);
+        $("#tfzy_Pul").val(jCase.pul);
+        $("#tfzy_Zname_type").val(jCase.zname_type);
+        $("#tfzd_Zname_type").val(jCase.zname_type);
+        $("input[name='tfzy_color'][value='" + jCase.color + "']").attr("checked", true);
+        $("#tfzy_prior_country").val(jCase.prior_country);
+        $("#tfzy_end_code").val(jCase.end_code);
 
-                $("#tfzd_apply_no").val(j.apply_no);
-                $("#tfzd_issue_no").val(j.issue_no);
-                $("#tfzd_Appl_name").val(j.appl_name);
-                $("#draw_icon").attr("href", j.drfile);
-                if (j.draw_file != "") $("#draw_icon").show();
-                $("#file").val(j.draw_file);
-                $("#tfz1_Draw_file").val(j.draw_file);
-                $("#tfzd_Oappl_name").val(j.oappl_name);
-                $("#tfzd_Cappl_name").val(j.cappl_name);
-                $("#tfzd_Eappl_name").val(j.eappl_name);
-                $("#tfzd_eappl_name1").val(j.eappl_name1);
-                $("#tfzd_eappl_name2").val(j.eappl_name2);
-                $("#tfzd_Zname_type").val(j.zname_type);
-                $("#tfzd_Draw").val(j.draw);
-                $("#tfzd_Symbol").val(j.symbol);
-                $("#pfzd_prior_date").val(dateReviver(j.prior_date,"yyyy/M/d"));
-                $("#tfzd_prior_no").val(j.prior_no);
-                $("#tfzd_apply_date").val(dateReviver(j.apply_date,"yyyy/M/d"));
-                $("#tfzd_issue_date").val(dateReviver(j.issue_date,"yyyy/M/d"));
-                $("#tfzd_open_date").val(dateReviver(j.open_date,"yyyy/M/d"));
-                $("#tfzd_rej_no").val(j.rej_no);
-                $("#tfzd_end_date").val(dateReviver(j.end_date,"yyyy/M/d"));
-                $("#tfzd_dmt_term1").val(j.dmt_term1);
-                $("#tfzd_dmt_term2").val(j.dmt_term2);
-                $("#tfzd_renewal").val(j.renewal);
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-        });
-    };
+        $("#tfzd_apply_no").val(jCase.apply_no);
+        $("#tfzd_issue_no").val(jCase.issue_no);
+        $("#tfzd_Appl_name").val(jCase.appl_name);
+        $("#draw_icon").attr("href", jCase.drfile);
+        if (jCase.draw_file != "") $("#draw_icon").show();
+        $("#file").val(jCase.draw_file);
+        $("#tfz1_Draw_file").val(jCase.draw_file);
+        $("#tfzd_Oappl_name").val(jCase.oappl_name);
+        $("#tfzd_Cappl_name").val(jCase.cappl_name);
+        $("#tfzd_Eappl_name").val(jCase.eappl_name);
+        $("#tfzd_eappl_name1").val(jCase.eappl_name1);
+        $("#tfzd_eappl_name2").val(jCase.eappl_name2);
+        $("#tfzd_Zname_type").val(jCase.zname_type);
+        $("#tfzd_Draw").val(jCase.draw);
+        $("#tfzd_Symbol").val(jCase.symbol);
+        $("#pfzd_prior_date").val(dateReviver(jCase.prior_date, "yyyy/M/d"));
+        $("#tfzd_prior_no").val(jCase.prior_no);
+        $("#tfzd_apply_date").val(dateReviver(jCase.apply_date, "yyyy/M/d"));
+        $("#tfzd_issue_date").val(dateReviver(jCase.issue_date, "yyyy/M/d"));
+        $("#tfzd_open_date").val(dateReviver(jCase.open_date, "yyyy/M/d"));
+        $("#tfzd_rej_no").val(jCase.rej_no);
+        $("#tfzd_end_date").val(dateReviver(jCase.end_date, "yyyy/M/d"));
+        $("#tfzd_dmt_term1").val(jCase.dmt_term1);
+        $("#tfzd_dmt_term2").val(jCase.dmt_term2);
+        $("#tfzd_renewal").val(jCase.renewal);
+
+        //商品
+        var good = br_opt.casegood;
+        var classCount = good.length;
+        if (classCount == 0) classCount = 1;//至少有1筆
+        $("#tfzr_class_count").val(good.length == 0 ? "" : classCount);//共N類
+        Add_button(classCount);//產生類別清單
+
+        if (good.length!=0){
+            $.each(good, function (i, item) {
+                var nRow = i + 1;
+                $("#class1_" + nRow).val(item.class);
+                $("#good_count1_" + nRow).val(item.dmt_goodcount);
+                $("#grp_code1_" + nRow).val(item.dmt_grp_code);
+                $("#good_name1_" + nRow).val(item.dmt_goodname);
+            });
+        }
+        //類別串接
+        $("#tfzr_class").val($("#goodllist>tbody input[id^='class1_']").map(function () { return $(this).val(); }).get().join(','));
+    }
+    
+    function Add_button(classCount) {
+        for (var nRow = 1; nRow <= classCount; nRow++) {
+            //複製一筆
+            $("#goodllist>tfoot").each(function (i) {
+                var strLine1 = $(this).html().replace(/##/g, nRow);
+                $("#goodllist>tbody").append(strLine1);
+            });
+        }
+    }
 </script>

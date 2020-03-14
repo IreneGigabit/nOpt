@@ -12,7 +12,7 @@
 <script runat="server">
     protected string SQL = "";
     protected string strConnB = "";
-    //http://web08/nOpt/AJAX/DmtData_New.aspx?type=brcase&branch=N&opt_sqlno=2453&_=1584086771124
+
     protected void Page_Load(object sender, EventArgs e) {
         if (Request["branch"] == "N") strConnB = Conn.OptBN;
         if (Request["branch"] == "C") strConnB = Conn.OptBC;
@@ -26,10 +26,24 @@
         string att_sql = "";
         string arcase_type = "";
         string case_no = "";
-
+        
         DataTable dt = new DataTable();
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "Select * from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
+            //抓區所商標圖server主機名稱(iis)
+            string uploadserver_name="";
+            SQL = "Select code_name,form_name from cust_code where code_type='OSerName' and cust_code='" + Request["branch"] + "'";
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    uploadserver_name = dr.SafeRead("form_name", "");
+                }
+                if (uploadserver_name == "") {
+                    if (Sys.Host == "web10") uploadserver_name = "web01";
+                    else if (Sys.Host == "web08") uploadserver_name = "web02";
+                    else uploadserver_name = Sys.Host;
+                }
+            }
+            
+            SQL = "Select *,''fseq,''drfile from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
             conn.DataTable(SQL, dt);
             if (dt.Rows.Count>0) {
                 branch = dt.Rows[0].SafeRead("branch", "");
@@ -39,15 +53,40 @@
                 att_sql = dt.Rows[0].SafeRead("att_sql", "");
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
+                dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
+                
+                string drawFile = dt.Rows[0].SafeRead("draw_file", "");
+                if (drawFile.IndexOf("\\") > -1) {//絕對路徑
+                    string a = drawFile.Replace("\\", "/").ToLower();//斜線改方向
+                    dt.Rows[0]["drfile"] = "http://" + uploadserver_name + "/btbrt" + a.Substring(a.IndexOf("/" + branch + "t/", StringComparison.OrdinalIgnoreCase));//擷取『/XT/』後(含)的字串
+                } else {
+                    dt.Rows[0]["drfile"] = "http://" + uploadserver_name + drawFile;
+                }
             }
         }
 
         DataTable rtnStr = null;
+        if (Request["type"] == "brcust"){//客戶資料
+            rtnStr = GetBRCust(cust_area,cust_seq);
+        }
 
+        if (Request["type"] == "brattlist") {//聯絡人清單
+            rtnStr = GetBRAtt(cust_area,cust_seq);
+        }
         if (Request["type"] == "bratt") {//指定聯絡人
             rtnStr = GetBRAtt(cust_area,cust_seq,att_sql);
         }
         
+        if (Request["type"] == "braplist") {//案件申請人
+            rtnStr = GetBRAP(case_no);
+        }
+
+        if (Request["type"] == "brcase") {//案件資料
+            rtnStr = dt;
+        }
+        if (Request["type"] == "brcasefees") {//案件費用
+            rtnStr = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);
+        }
         if (Request["type"] == "arcaselist") {//案性
             rtnStr = GetArcase(arcase_type);
         }
@@ -64,13 +103,7 @@
             ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
             Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
         };
-        Response.Write("{");
-        Response.Write("\"cust\":" + JsonConvert.SerializeObject(GetBRCust(cust_area, cust_seq), settings).ToUnicode());
-        Response.Write(",\"brattlist\":" + JsonConvert.SerializeObject(GetBRAtt(cust_area, cust_seq), settings).ToUnicode() + "}");
-        Response.Write(",\"braplist\":" + JsonConvert.SerializeObject(GetBRAP(case_no), settings).ToUnicode() + "}");
-        Response.Write(",\"brcase\":" + JsonConvert.SerializeObject(dt, settings).ToUnicode() + "}");
-        Response.Write(",\"brcasefees\":" + JsonConvert.SerializeObject(GetCaseFees(arcase_type, opt_sqlno, case_no, branch), settings).ToUnicode() + "}");
-        Response.Write("}");
+        Response.Write(JsonConvert.SerializeObject(rtnStr, settings).ToUnicode());
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
     }

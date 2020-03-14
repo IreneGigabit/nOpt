@@ -155,80 +155,57 @@
             valueFormat: "{coun_code}",
             textFormat: "{coun_c}"
         });
-        getapp();
-    };
-    
-    //取得申請人資料
-    function getapp() {
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?type=braplist&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無申請人資料可載入！");
-                    return false;
-                }
-                $.each(JSONdata, function (i, item) {
-                    //增加一筆
-                    $("#AP_Add_button").click();
-                    //填資料
-                    var nRow = $("#apnum").val();
-                    $("#apsqlno_" + nRow).val(item.apsqlno);
-                    $("#apclass_" + nRow).val(item.apclass);
-                    $("#Apcust_no_" + nRow).val(item.apcust_no);
-                    $("#ap_country_" + nRow).val(item.ap_country);
-                    $("#ap_cname1_" + nRow).val(item.ap_cname1);
-                    $("#ap_cname2_" + nRow).val(item.ap_cname2);
-                    $("#ap_cname_" + nRow).val(item.ap_cname1 + item.ap_cname2);
-                    $("#ap_ename1_" + nRow).val(item.ap_ename1);
-                    $("#ap_ename2_" + nRow).val(item.ap_ename2);
-                    $("#ap_ename_" + nRow).val(item.ap_ename1 + item.ap_ename2);
-                    $("#ap_crep_" + nRow).val(item.ap_crep);
-                    $("#ap_erep_" + nRow).val(item.ap_erep);
-                    $("#ap_zip_" + nRow).val(item.ap_zip);
-                    $("#ap_addr1_" + nRow).val(item.ap_addr1);
-                    $("#ap_addr2_" + nRow).val(item.ap_addr2);
-                    $("#ap_eaddr1_" + nRow).val(item.ap_eaddr1);
-                    $("#ap_eaddr2_" + nRow).val(item.ap_eaddr2);
-                    $("#ap_eaddr3_" + nRow).val(item.ap_eaddr3);
-                    $("#ap_eaddr4_" + nRow).val(item.ap_eaddr4);
-                    $("#apatt_zip_" + nRow).val(item.apatt_zip);
-                    $("#apatt_addr1_" + nRow).val(item.apatt_addr1);
-                    $("#apatt_addr2_" + nRow).val(item.apatt_addr2);
-                    $("#apatt_tel0_" + nRow).val(item.apatt_tel0);
-                    $("#apatt_tel_" + nRow).val(item.apatt_tel);
-                    $("#apatt_tel1_" + nRow).val(item.apatt_tel1);
-                    $("#apatt_fax_" + nRow).val(item.apatt_fax);
-                    if (item.Server_flag == "Y") {
-                        $("#ap_hserver_flag_" + nRow).attr("checked", true);
-                    } else {
-                        $("#ap_hserver_flag_" + nRow).attr("checked", false);
-                    }
-                    apserver_flag(nRow);
-                    $("#ap_fcname_" + nRow).val(item.ap_fcname);
-                    $("#ap_lcname_" + nRow).val(item.ap_lcname);
-                    $("#ap_fename_" + nRow).val(item.ap_fename);
-                    $("#ap_lename_" + nRow).val(item.ap_lename);
-                    $("#ap_sql_" + nRow).val(item.ap_sql);
-                    //申請人序號空值不顯示
-                    if (item.ap_sql == "" || item.ap_sql == "0") {
-                        $("#trap_sql_" + nRow).hide();
-                    }
-                });
-            },
-            beforeSend: function (jqXHR, settings) {
-                jqXHR.url = settings.url;
-                //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                toastr.error("<a href='" + jqXHR.url + "' target='_new'>申請人資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+
+        var jCaseap = br_opt.caseap;
+        $.each(jCaseap, function (i, item) {
+            //增加一筆
+            $("#AP_Add_button").click();
+            //填資料
+            var nRow = $("#apnum").val();
+            $("#apsqlno_" + nRow).val(item.apsqlno);
+            $("#apclass_" + nRow).val(item.apclass);
+            $("#Apcust_no_" + nRow).val(item.apcust_no);
+            $("#ap_country_" + nRow).val(item.ap_country);
+            $("#ap_cname1_" + nRow).val(item.ap_cname1);
+            $("#ap_cname2_" + nRow).val(item.ap_cname2);
+            $("#ap_cname_" + nRow).val(item.ap_cname1 + item.ap_cname2);
+            $("#ap_ename1_" + nRow).val(item.ap_ename1);
+            $("#ap_ename2_" + nRow).val(item.ap_ename2);
+            $("#ap_ename_" + nRow).val(item.ap_ename1 + item.ap_ename2);
+            $("#ap_crep_" + nRow).val(item.ap_crep);
+            $("#ap_erep_" + nRow).val(item.ap_erep);
+            $("#ap_zip_" + nRow).val(item.ap_zip);
+            $("#ap_addr1_" + nRow).val(item.ap_addr1);
+            $("#ap_addr2_" + nRow).val(item.ap_addr2);
+            $("#ap_eaddr1_" + nRow).val(item.ap_eaddr1);
+            $("#ap_eaddr2_" + nRow).val(item.ap_eaddr2);
+            $("#ap_eaddr3_" + nRow).val(item.ap_eaddr3);
+            $("#ap_eaddr4_" + nRow).val(item.ap_eaddr4);
+            $("#apatt_zip_" + nRow).val(item.apatt_zip);
+            $("#apatt_addr1_" + nRow).val(item.apatt_addr1);
+            $("#apatt_addr2_" + nRow).val(item.apatt_addr2);
+            $("#apatt_tel0_" + nRow).val(item.apatt_tel0);
+            $("#apatt_tel_" + nRow).val(item.apatt_tel);
+            $("#apatt_tel1_" + nRow).val(item.apatt_tel1);
+            $("#apatt_fax_" + nRow).val(item.apatt_fax);
+            if (item.Server_flag == "Y") {
+                $("#ap_hserver_flag_" + nRow).attr("checked", true);
+            } else {
+                $("#ap_hserver_flag_" + nRow).attr("checked", false);
+            }
+            apserver_flag(nRow);
+            $("#ap_fcname_" + nRow).val(item.ap_fcname);
+            $("#ap_lcname_" + nRow).val(item.ap_lcname);
+            $("#ap_fename_" + nRow).val(item.ap_fename);
+            $("#ap_lename_" + nRow).val(item.ap_lename);
+            $("#ap_sql_" + nRow).val(item.ap_sql);
+            //申請人序號空值不顯示
+            if (item.ap_sql == "" || item.ap_sql == "0") {
+                $("#trap_sql_" + nRow).hide();
             }
         });
     }
-
+    
     //增加一筆申請人
     $("#AP_Add_button").click(function () { apcust_re.appendAP(); });
     apcust_re.appendAP = function () {

@@ -359,6 +359,7 @@
 	            debug: false,
 	            url: "",
 	            data: null,
+	            dataList: null,
 	            showEmpty: true,//顯示"請選擇"
 	            valueFormat: "",//option的value格式,用{}包住欄位,ex:{scode}
 	            textFormat: "",//option的文字格式,用{}包住欄位,ex:{scode}_{sc_name}
@@ -368,6 +369,7 @@
 	            setValue: ""//預設值
 	        };
 	        var settings = $.extend(defaults, option || {});  //初始化
+
 	        var debugurl = settings.url + "?";// + unescape(unescape($.param(settings.data)));
 	        if (settings.data != null) debugurl += unescape(unescape($.param(settings.data)));
 	        if (settings.debug) {
@@ -382,55 +384,60 @@
 	        return this.each(function () {
 	            var obj = $(this);
 
-	            $.ajax({
-	                async: false,
-	                cache: false,
-	                type: "get",
-	                data: settings.data,
-	                url: settings.url,
-	                success: function (json) {
-	                    var JSONdata = $.parseJSON(json);
-	                    if (settings.firstOpt != "") {
-	                        obj.append(settings.firstOpt);
-	                    }
-	                    if (settings.showEmpty) {
-	                        obj.append("<option value='' style='COLOR:blue'>請選擇</option>");
-	                    }
-	                    $.each(JSONdata, function (i, item) {
-	                        //處理value
-	                        var val = settings.valueFormat;
-	                        Object.keys(item).forEach(function (key) {
-	                            var re = new RegExp("{" + key + "}", "ig");
-	                            val = val.replace(re, item[key]);
-	                        });
-
-	                        //處理text
-	                        var txt = settings.textFormat;
-	                        Object.keys(item).forEach(function (key) {
-	                            var re = new RegExp("{" + key + "}", "ig");
-	                            txt = txt.replace(re, item[key]);
-	                        });
-
-	                        //處理attribute
-	                        var attr = settings.attrFormat;
-	                        Object.keys(item).forEach(function (key) {
-	                            var re = new RegExp("{" + key + "}", "ig");
-	                            attr = attr.replace(re, item[key]);
-	                        });
-	                        obj.append("<option value='" + val + "' " + attr + ">" + txt + "</option>");
-	                    });
-	                    obj.val(settings.setValue);
-	                },
-	                beforeSend: function (jqXHR, settings) {
-	                    jqXHR.url = settings.url;
-	                    //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
-	                },
-	                error: function (jqXHR, textStatus, errorThrown) {
+	            if (settings.dataList == null) {
+	                $.ajax({
+	                    async: false,
+	                    cache: false,
+	                    type: "get",
+	                    data: settings.data,
+	                    url: settings.url,
+	                    success: function (json) {
+	                        settings.dataList = $.parseJSON(json);
+	                    },
+	                    beforeSend: function (jqXHR, settings) {
+	                        jqXHR.url = settings.url;
+	                        //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
+	                    },
+	                    error: function (jqXHR, textStatus, errorThrown) {
 	                        //window.open(debugurl);
-	                    //alert("載入查詢清單發生錯誤!!");
-	                    toastr.error("<a href='" + jqXHR.url + "' target='_new'>載入查詢清單發生錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-	                }
+	                        //alert("載入查詢清單發生錯誤!!");
+	                        toastr.error("<a href='" + jqXHR.url + "' target='_new'>載入查詢清單發生錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+	                    }
+	                });
+	            }
+
+	            if (settings.firstOpt != "") {
+	                obj.append(settings.firstOpt);
+	            }
+	            if (settings.showEmpty) {
+	                obj.append("<option value='' style='COLOR:blue'>請選擇</option>");
+	            }
+	            $.each(settings.dataList, function (i, item) {
+	                //處理value
+	                var val = settings.valueFormat;
+	                Object.keys(item).forEach(function (key) {
+	                    var re = new RegExp("{" + key + "}", "ig");
+	                    val = val.replace(re, item[key]);
+	                });
+
+	                //處理text
+	                var txt = settings.textFormat;
+	                Object.keys(item).forEach(function (key) {
+	                    var re = new RegExp("{" + key + "}", "ig");
+	                    txt = txt.replace(re, item[key]);
+	                });
+
+	                //處理attribute
+	                var attr = settings.attrFormat;
+	                Object.keys(item).forEach(function (key) {
+	                    var re = new RegExp("{" + key + "}", "ig");
+	                    attr = attr.replace(re, item[key]);
+	                });
+	                obj.append("<option value='" + val + "' " + attr + ">" + txt + "</option>");
 	            });
+	            obj.val(settings.setValue);
+
+
 	        });
 	    }
 	});

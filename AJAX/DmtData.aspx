@@ -13,25 +13,65 @@
     protected string SQL = "";
     protected string strConnB = "";
 
+    protected string branch = "";
+    protected string opt_sqlno = "";
+    protected string cust_area = "";
+    protected string cust_seq = "";
+    protected string att_sql = "";
+    protected string arcase_type = "";
+    protected string case_no = "";
+
+
+    //http://web08/nOpt/AJAX/DmtData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
+
     protected void Page_Load(object sender, EventArgs e) {
         if (Request["branch"] == "N") strConnB = Conn.OptBN;
         if (Request["branch"] == "C") strConnB = Conn.OptBC;
         if (Request["branch"] == "S") strConnB = Conn.OptBS;
         if (Request["branch"] == "K") strConnB = Conn.OptBK;
 
-        string branch = "";
-        string opt_sqlno = "";
-        string cust_area = "";
-        string cust_seq = "";
-        string att_sql = "";
-        string arcase_type = "";
-        string case_no = "";
-        
-        DataTable dt = new DataTable();
+        branch = Request["branch"];
+        opt_sqlno = Request["opt_sqlno"];
+
+        DataTable dt_opt = GetBROpt(branch, opt_sqlno);//案件資料
+        DataTable dt_cust = GetBRCust(cust_area, cust_seq);//客戶
+        DataTable dt_attList = GetBRAtt(cust_area, cust_seq);//聯絡人清單
+        DataTable dt_ap = GetBRAP(case_no);//申請人
+        DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);//交辦費用
+        DataTable dt_arcase = GetArcase(arcase_type);//案性
+        DataTable dt_arcaseItem = GetArcaseItem();//其他費用案性
+        DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
+        DataTable dt_casegood = GetCaseGood(opt_sqlno, case_no, branch);//商品
+
+        var settings = new JsonSerializerSettings() {
+            Formatting = Formatting.Indented,
+            ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
+            Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+        };
+
+        Response.Write("{");
+        Response.Write("\"opt\":" + JsonConvert.SerializeObject(dt_opt, settings).ToUnicode() + "\n");
+        Response.Write(",\"cust\":" + JsonConvert.SerializeObject(dt_cust, settings).ToUnicode() + "\n");
+        Response.Write(",\"att_list\":" + JsonConvert.SerializeObject(dt_attList, settings).ToUnicode() + "\n");
+        Response.Write(",\"caseap\":" + JsonConvert.SerializeObject(dt_ap, settings).ToUnicode() + "\n");
+        Response.Write(",\"casefee\":" + JsonConvert.SerializeObject(dt_casefee, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcase\":" + JsonConvert.SerializeObject(dt_arcase, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcase_item\":" + JsonConvert.SerializeObject(dt_arcaseItem, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcase_other\":" + JsonConvert.SerializeObject(dt_arcaseOther, settings).ToUnicode() + "\n");
+        Response.Write(",\"casegood\":" + JsonConvert.SerializeObject(dt_casegood, settings).ToUnicode() + "\n");
+        Response.Write("}");
+
+        //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
+    }
+
+    #region GetBROpt 案件資料
+    private DataTable GetBROpt(string pBranch,string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             //抓區所商標圖server主機名稱(iis)
             string uploadserver_name="";
-            SQL = "Select code_name,form_name from cust_code where code_type='OSerName' and cust_code='" + Request["branch"] + "'";
+            SQL = "Select code_name,form_name from cust_code where code_type='OSerName' and cust_code='" + pBranch + "'";
+            DataTable dt = new DataTable();
+
             using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                 if (dr.Read()) {
                     uploadserver_name = dr.SafeRead("form_name", "");
@@ -42,8 +82,8 @@
                     else uploadserver_name = Sys.Host;
                 }
             }
-            
-            SQL = "Select *,''fseq,''drfile from vbr_opt where opt_sqlno='" + Request["opt_sqlno"] + "' ";
+
+            SQL = "Select *,''fseq,''drfile from vbr_opt where opt_sqlno='" + pOptSqlno + "' ";
             conn.DataTable(SQL, dt);
             if (dt.Rows.Count>0) {
                 branch = dt.Rows[0].SafeRead("branch", "");
@@ -54,7 +94,7 @@
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
                 dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
-                
+
                 string drawFile = dt.Rows[0].SafeRead("draw_file", "");
                 if (drawFile.IndexOf("\\") > -1) {//絕對路徑
                     string a = drawFile.Replace("\\", "/").ToLower();//斜線改方向
@@ -63,50 +103,11 @@
                     dt.Rows[0]["drfile"] = "http://" + uploadserver_name + drawFile;
                 }
             }
-        }
 
-        DataTable rtnStr = null;
-        if (Request["type"] == "brcust"){//客戶資料
-            rtnStr = GetBRCust(cust_area,cust_seq);
+            return dt;
         }
-
-        if (Request["type"] == "brattlist") {//聯絡人清單
-            rtnStr = GetBRAtt(cust_area,cust_seq);
-        }
-        if (Request["type"] == "bratt") {//指定聯絡人
-            rtnStr = GetBRAtt(cust_area,cust_seq,att_sql);
-        }
-        
-        if (Request["type"] == "braplist") {//案件申請人
-            rtnStr = GetBRAP(case_no);
-        }
-
-        if (Request["type"] == "brcase") {//案件資料
-            rtnStr = dt;
-        }
-        if (Request["type"] == "brcasefees") {//案件費用
-            rtnStr = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);
-        }
-        if (Request["type"] == "arcaselist") {//案性
-            rtnStr = GetArcase(arcase_type);
-        }
-        if (Request["type"] == "arcaseItemList") {//其他費用案性
-            rtnStr = GetArcaseItem();
-        }
-        if (Request["type"] == "arcaseOtherList") {//轉帳費用案性
-            rtnStr = GetArcaseOther(arcase_type);
-        }
-
-        var settings = new JsonSerializerSettings()
-        {
-            Formatting = Formatting.Indented,
-            ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
-            Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
-        };
-        Response.Write(JsonConvert.SerializeObject(rtnStr, settings).ToUnicode());
-
-        //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
     }
+    #endregion
 
     #region GetBRCust 案件客戶
     private DataTable GetBRCust(string pCustArea,string pCustSeq) {
@@ -174,12 +175,6 @@
             return dt;
         }
     }
-
-    private DataTable GetBRAtt(string pCustArea, string pCustSeq, string pAttSql) {
-        DataTable oTable = GetBRAtt(pCustArea, pCustSeq);
-        DataTable nTable = oTable.Select("att_sql='" + pAttSql + "'").CopyToDataTable();
-        return nTable;
-    }
     #endregion
 
     #region GetBRAP 案件申請人
@@ -215,7 +210,7 @@
                     dt.Rows[i]["ap_eaddr4"] = dt.Rows[i].SafeRead("dmt_ap_eaddr4", "");
                 }
             }
-            
+
             return dt;
         }
     }
@@ -274,7 +269,7 @@
             SQL = "SELECT rs_code,prt_code,rs_detail ";
             SQL += "FROM code_br ";
             SQL += "WHERE cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' and mark='M' ";
-			SQL += "and getdate() >= beg_date and end_date is null ";
+            SQL += "and getdate() >= beg_date and end_date is null ";
             SQL += "ORDER BY rs_code";
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);
@@ -283,4 +278,17 @@
         }
     }
     #endregion
+
+    #region GetArcaseOther 轉帳費用案性
+    private DataTable GetCaseGood(string pOptSqlno,string pCaseNo,string pBranch) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select * from  caseopt_good  where opt_sqlno='" + pOptSqlno + "' and case_no= '" + pCaseNo + "' and branch='" + pBranch + "'";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
 </script>

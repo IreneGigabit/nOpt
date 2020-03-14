@@ -185,59 +185,44 @@
             textFormat: "{cust_code}---{code_name}"
         });
 
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?type=brcust&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無客戶資料可載入！");
-                    return false;
-                }
-                var j = JSONdata[0];
-                $("#F_cust_area").val(j.cust_area);
-                $("#F_cust_seq").val(j.cust_seq);
-                $("#F_ap_country").val(j.ap_country);
-                $("#F_apclass").val(j.apclass + " " + j.apclassnm);
-                $("#F_ref_seq").val(j.ref_seq + " " + j.ref_seqnm);
-                $("#F_id_no").val(j.apcust_no);
-                $("#F_ap_cname1").val(j.ap_cname1);
-                $("#F_ap_cname2").val(j.ap_cname2);
-                $("#F_ap_ename1").val(j.ap_ename1);
-                $("#F_ap_ename2").val(j.ap_ename2);
-                $("#F_ap_crep").val(j.ap_crep);
-                $("#F_ap_erep").val(j.ap_erep);
-                $("#F_ap_zip").val(j.ap_zip);
-                $("#F_ap_addr1").val(j.ap_addr1);
-                $("#F_ap_addr2").val(j.ap_addr2);
-                $("#F_ap_eaddr1").val(j.ap_eaddr1);
-                $("#F_ap_eaddr2").val(j.ap_eaddr2);
-                $("#F_ap_eaddr3").val(j.ap_eaddr3);
-                $("#F_ap_eaddr4").val(j.ap_eaddr4);
-                $("#F_www").val(j.www);
-                $("#F_email").val(j.email);
-                $("#F_acc_zip").val(j.acc_zip);
-                $("#F_acc_addr1").val(j.acc_addr1);
-                $("#F_acc_addr2").val(j.acc_addr2);
-                $("#F_acc_tel0").val(j.acc_tel0);
-                $("#F_acc_tel").val(j.acc_tel);
-                $("#F_acc_tel1").val(j.acc_tel1);
-                $("#F_acc_fax").val(j.acc_fax);
-                $("#F_mag").val(j.magnm);
-                $("#F_con_code").val(j.con_code);
-                $("#F_con_term").val(dateReviver(j.con_term, "yyyy/M/d"));
-                $("#F_plevel").val(j.plevel);
-                $("#F_tlevel").val(j.tlevel);
-                $("#F_pdis_type").val(j.pdis_type);
-                $("#F_tdis_type").val(j.tdis_type);
-                $("#F_ppay_type").val(j.ppay_type);
-                $("#F_tpay_type").val(j.tpay_type);
-                $("#F_mark").val(j.cust_remark);
-
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>客戶資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-        });
-    };
+        var jCust = br_opt.cust[0];
+        $("#F_cust_area").val(jCust.cust_area);
+        $("#F_cust_seq").val(jCust.cust_seq);
+        $("#F_ap_country").val(jCust.ap_country);
+        $("#F_apclass").val(jCust.apclass + " " + jCust.apclassnm);
+        $("#F_ref_seq").val(jCust.ref_seq + " " + jCust.ref_seqnm);
+        $("#F_id_no").val(jCust.apcust_no);
+        $("#F_ap_cname1").val(jCust.ap_cname1);
+        $("#F_ap_cname2").val(jCust.ap_cname2);
+        $("#F_ap_ename1").val(jCust.ap_ename1);
+        $("#F_ap_ename2").val(jCust.ap_ename2);
+        $("#F_ap_crep").val(jCust.ap_crep);
+        $("#F_ap_erep").val(jCust.ap_erep);
+        $("#F_ap_zip").val(jCust.ap_zip);
+        $("#F_ap_addr1").val(jCust.ap_addr1);
+        $("#F_ap_addr2").val(jCust.ap_addr2);
+        $("#F_ap_eaddr1").val(jCust.ap_eaddr1);
+        $("#F_ap_eaddr2").val(jCust.ap_eaddr2);
+        $("#F_ap_eaddr3").val(jCust.ap_eaddr3);
+        $("#F_ap_eaddr4").val(jCust.ap_eaddr4);
+        $("#F_www").val(jCust.www);
+        $("#F_email").val(jCust.email);
+        $("#F_acc_zip").val(jCust.acc_zip);
+        $("#F_acc_addr1").val(jCust.acc_addr1);
+        $("#F_acc_addr2").val(jCust.acc_addr2);
+        $("#F_acc_tel0").val(jCust.acc_tel0);
+        $("#F_acc_tel").val(jCust.acc_tel);
+        $("#F_acc_tel1").val(jCust.acc_tel1);
+        $("#F_acc_fax").val(jCust.acc_fax);
+        $("#F_mag").val(jCust.magnm);
+        $("#F_con_code").val(jCust.con_code);
+        $("#F_con_term").val(dateReviver(jCust.con_term, "yyyy/M/d"));
+        $("#F_plevel").val(jCust.plevel);
+        $("#F_tlevel").val(jCust.tlevel);
+        $("#F_pdis_type").val(jCust.pdis_type);
+        $("#F_tdis_type").val(jCust.tdis_type);
+        $("#F_ppay_type").val(jCust.ppay_type);
+        $("#F_tpay_type").val(jCust.tpay_type);
+        $("#F_mark").val(jCust.cust_remark);
+    }
 </script>

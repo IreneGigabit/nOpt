@@ -128,27 +128,30 @@ $(function () {
     this_init();
 });
 
+var br_opt = {};
 //初始化
 function this_init() {
     settab("#cust");
-    //案號
+
+    //取得案件資料
     $.ajax({
         type: "get",
-        url: getRootPath() + "/AJAX/DmtData.aspx?type=brcase&branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+        url: getRootPath() + "/AJAX/DmtData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
         async: false,
         cache: false,
         success: function (json) {
+            //toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             var JSONdata = $.parseJSON(json);
             if (JSONdata.length == 0) {
                 toastr.warning("無案件資料可載入！");
                 return false;
             }
-            var j = JSONdata[0];
-            $("#fseq").html(j.fseq);
+            br_opt = JSONdata;
         },
         error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
     });
 
+    $("#fseq").html(br_opt.opt[0].fseq);
     cust.init();
     attent.init();
     apcust_re.init();
@@ -156,7 +159,7 @@ function this_init() {
     dmt.init();
 
     //欄位開關
-    $(".Lock").lock();
+    //$(".Lock").lock();
 }
 
 // 切換頁籤

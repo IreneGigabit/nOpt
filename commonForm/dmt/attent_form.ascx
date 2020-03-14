@@ -69,43 +69,32 @@
 <script language="javascript" type="text/javascript">
     var attent = {};
     attent.init = function () {
-        $("#tfy_att_sql").getOption({//聯絡人
-            url: getRootPath() + "/AJAX/DmtData.aspx",
-            data: { type: "brattlist", branch: "<%#branch%>", opt_sqlno: "<%#opt_sqlno%>" },
+        var jAttList = br_opt.att_list;
+        $("#tfy_att_sql").getOption({//聯絡人清單
+            dataList: jAttList,
             valueFormat: "{att_sql}",
             textFormat: "{att_sql}---{attention}"
         });
 
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?type=bratt&branch=<%#branch%>&opt_sqlno=<%#opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無聯絡人資料可載入！");
-                    return false;
-                }
-                var j = JSONdata[0];
-                $("#tfy_cust_area").val(j.cust_area);
-                $("#tfy_cust_seq").val(j.cust_seq);
-                $("#tfy_att_sql").val(j.att_sql);
-                $("#dept").val(j.deptnm);
-                $("#att_title").val(j.att_title);
-                $("#att_dept").val(j.att_dept);
-                $("#att_tel0").val(j.att_tel0);
-                $("#att_tel").val(j.att_tel);
-                $("#att_tel1").val(j.att_tel1);
-                $("#att_mobile").val(j.att_mobile);
-                $("#att_fax").val(j.att_fax);
-                $("#att_zip").val(j.att_zip);
-                $("#att_addr1").val(j.att_addr1);
-                $("#att_addr2").val(j.att_addr2);
-                $("#Att_email").val(j.att_email);
-                $("#att_mag").val(j.magnm);
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>聯絡人資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        $.each(jAttList, function (idx, obj) {
+            if (obj.att_sql == br_opt.opt[0].att_sql) {
+                $("#tfy_cust_area").val(obj.cust_area);
+                $("#tfy_cust_seq").val(obj.cust_seq);
+                $("#tfy_att_sql").val(obj.att_sql);
+                $("#dept").val(obj.deptnm);
+                $("#att_title").val(obj.att_title);
+                $("#att_dept").val(obj.att_dept);
+                $("#att_tel0").val(obj.att_tel0);
+                $("#att_tel").val(obj.att_tel);
+                $("#att_tel1").val(obj.att_tel1);
+                $("#att_mobile").val(obj.att_mobile);
+                $("#att_fax").val(obj.att_fax);
+                $("#att_zip").val(obj.att_zip);
+                $("#att_addr1").val(obj.att_addr1);
+                $("#att_addr2").val(obj.att_addr2);
+                $("#Att_email").val(obj.att_email);
+                $("#att_mag").val(obj.magnm);
+            }
         });
-    };
+    }
 </script>
