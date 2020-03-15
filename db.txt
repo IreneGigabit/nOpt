@@ -113,3 +113,31 @@ D:\Data\Document\NT\temp\20100428013.jpg
 select stat_code,* from br_opt 
 --update br_opt set stat_code=null--YS
 where opt_sqlno in(2400,2453)
+
+
+-----------------------------------------------------------------------------------------
+select arcase,opt_sqlno,* from vbr_opt where arcase in('DE2','AD8','DE1','AD7')
+
+select arcase,opt_sqlno,issue_no,appl_name,other_item,other_item1,other_item2,tran_remark1,remark3,detail_mark,s_mark,* 
+from vbr_opt where Bstat_code is null and Bmark='N' and opt_sqlno in(2453,2587)
+
+select arcase,* from case_opt 
+--update case_opt set arcase='DE2'--,other_item='陳某某',other_item2='123456',remark3='DR1'
+where opt_sqlno in(2453,2587)
+
+select arcase,* from case_opt 
+--update case_opt set arcase='DO1'--,other_item='',other_item2='',remark3=null
+where opt_sqlno in(2453)
+
+select arcase,* from case_opt 
+--update case_opt set arcase='DO1'--,other_item=null,other_item2=null,remark3='ERGO'
+where opt_sqlno in(2587)
+
+
+-----------------------------------------------------------------------------------------
+
+select stat_code, * from br_opt 
+--update br_opt set stat_code=null--'NN'
+where opt_sqlno=2582
+
+-----------------------------------------------------------------------------------------

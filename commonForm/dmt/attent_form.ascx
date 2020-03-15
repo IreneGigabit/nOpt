@@ -15,7 +15,7 @@
     }
 </script>
 
-<table border="0" class="bluetable" cellspacing="1" cellpadding="2" style="font-size: 9pt" width="100%">
+<table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<TR>
 		<td class="lightbluetable" align="right">客戶編號：</td>
 		<td class="whitetablebg" colspan=3>
@@ -67,8 +67,8 @@
 	</TR>		
 </table>
 <script language="javascript" type="text/javascript">
-    var attent = {};
-    attent.init = function () {
+    var attent_form = {};
+    attent_form.init = function () {
         var jAttList = br_opt.att_list;
         $("#tfy_att_sql").getOption({//聯絡人清單
             dataList: jAttList,

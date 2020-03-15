@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
-<%@Import Namespace = "System.Text"%>
-<%@Import Namespace = "System.Data.SqlClient"%>
+<%@ Import Namespace = "System.Text"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.IO"%>
 <%@ Import Namespace = "System.Linq"%>
 <%@ Import Namespace = "System.Collections.Generic"%>

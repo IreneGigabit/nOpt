@@ -17,7 +17,7 @@
 
 
 <input type=hidden id=apnum name=apnum value=0><!--筆數-->
-<table border="0" id=tabap_re class="bluetable" cellspacing="1" cellpadding="2" style="font-size: 9pt" width="100%">
+<table border="0" id=tabap_re class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<TFOOT>
 	<TR style="display:none">
 		<TD class="bluetable sfont9" style="border-color:red" colspan=4 align=right>
@@ -33,7 +33,7 @@
 			</TD>
 			<TD class=sfont9>
 				<select id="apclass_##" name="apclass_##" class="Lock"></select>
-                <input type="checkbox" id="ap_hserver_flag_##" name="ap_hserver_flag_##" value="Y" onclick="apserver_flag('##')" class="Lock">註記此申請人為應受送達人
+                <input type="checkbox" id="ap_hserver_flag_##" name="ap_hserver_flag_##" value="Y" onclick="apcust_re_form.apserver_flag('##')" class="Lock">註記此申請人為應受送達人
                 <input type="hidden" id="ap_server_flag_##" name="ap_server_flag_##" value="N">
 			</TD>
 			<TD class=lightbluetable align=right title="輸入編號並點選確定，即顯示申請人資料；若無資料，請直接輸入申請人資料。">
@@ -141,8 +141,8 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    var apcust_re={};
-    apcust_re.init = function () {
+    var apcust_re_form={};
+    apcust_re_form.init = function () {
         $("select[id='apclass_##']").getOption({//申請人種類
             url: "../ajax/AjaxGetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld" },
@@ -193,7 +193,7 @@
             } else {
                 $("#ap_hserver_flag_" + nRow).attr("checked", false);
             }
-            apserver_flag(nRow);
+            apcust_re_form.apserver_flag(nRow);
             $("#ap_fcname_" + nRow).val(item.ap_fcname);
             $("#ap_lcname_" + nRow).val(item.ap_lcname);
             $("#ap_fename_" + nRow).val(item.ap_fename);
@@ -207,8 +207,8 @@
     }
     
     //增加一筆申請人
-    $("#AP_Add_button").click(function () { apcust_re.appendAP(); });
-    apcust_re.appendAP = function () {
+    $("#AP_Add_button").click(function () { apcust_re_form.appendAP(); });
+    apcust_re_form.appendAP = function () {
         var nRow = parseInt($("#apnum").val(), 10) + 1;
         //複製樣板
         var copyStr = "";
@@ -216,22 +216,22 @@
             copyStr += "<tr>" + $(this).html().replace(/##/g, nRow) + "</tr>"
         });
         $("#tabap_re>tbody").append("<tr id='tr_ap_" + nRow + "' class='sfont9'><td><table border='0' class='bluetable' cellspacing='1' cellpadding='2' width='100%'>" + copyStr + "</table></tr></td>");
-        $("#apnum").val(nRow)
+        $("#apnum").val(nRow);
     }
 
     //減少一筆申請人
-    $("#AP_Del_button").click(function () { apcust_re.deleteAP(); });
-    apcust_re.deleteAP = function () {
+    $("#AP_Del_button").click(function () { apcust_re_form.deleteAP(); });
+    apcust_re_form.deleteAP = function () {
         var nRow = parseInt($("#apnum").val(), 10);
         $('#tr_ap_'+nRow).remove();
-        $("#apnum").val(nRow-1)
+        $("#apnum").val(Math.max(0, nRow - 1));
     }
 
     //應受送達人給值
-    function apserver_flag(papnum){
-        if ($("#ap_hserver_flag_"+papnum).attr("checked"))
-            $("#ap_server_flag_"+papnum).val("Y")
+    apcust_re_form.apserver_flag = function (papnum) {
+        if ($("#ap_hserver_flag_" + papnum).attr("checked"))
+            $("#ap_server_flag_" + papnum).val("Y");
         else
-            $("#ap_server_flag_"+papnum).val("N")
+            $("#ap_server_flag_" + papnum).val("N");
     }
 </script>

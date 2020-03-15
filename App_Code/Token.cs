@@ -55,7 +55,7 @@ public class Token
      }
 
     public int CheckMe() {
-        return CheckMe(1, true, false);
+        return CheckMe(1, false, false);
     }
 
     public int CheckMe(bool chkRef) {

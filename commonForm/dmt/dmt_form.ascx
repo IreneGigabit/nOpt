@@ -15,7 +15,7 @@
     }
 </script>
 
-<table border="0" class="bluetable" cellspacing="1" cellpadding="2" style="font-size: 9pt" width="100%">
+<table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr id=tr_opt_show style="display:none">			
 		<td class=lightbluetable align=right >爭救案案件編號：</td>
 		<td class=whitetablebg align=left colspan=7>
@@ -173,7 +173,7 @@
 	                <tr>
 		                <td class=lightbluetable align=right>類別：</td>		
 		                <td class=whitetablebg colspan=7>
-                            共<input type="text" class="Lock" id=tfzr_class_count name=tfzr_class_count size=2 onchange="add_button(this.value)">類
+                            共<input type="text" class="Lock" id=tfzr_class_count name=tfzr_class_count size=2 onchange="dmt_form.Add_button(this.value)">類
                             <input type="text" id=tfzr_class name=tfzr_class class="Lock">
 		                </td>
 	                </tr>
@@ -209,8 +209,8 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    var dmt = {};
-    dmt.init = function () {
+    var dmt_form = {};
+    dmt_form.init = function () {
         $("#tfzy_Zname_type").getOption({//語文別
             url: "../ajax/AjaxGetSqlDataCnn.aspx",
             data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
@@ -230,54 +230,53 @@
             textFormat: "{chrelname}"
         });
 
-        var jCase = br_opt.opt[0];
-        $("#opt_no").val(jCase.opt_no);
-        $("#Branch").val(jCase.branch);
-        $("#Bseq").val(jCase.bseq);
-        $("#Bseq1").val(jCase.bseq1);
-        $("#tfzd_ref_no").val(jCase.ref_no);
-        $("#tfzd_ref_no1").val(jCase.ref_no1);
-        $("input[name='tfzy_S_Mark'][value='" + jCase.s_mark + "']").attr("checked", true);
-        $("#tfzd_S_Mark").val(jCase.s_mark);
-        $("#tfzy_Pul").val(jCase.pul);
-        $("#tfzy_Zname_type").val(jCase.zname_type);
-        $("#tfzd_Zname_type").val(jCase.zname_type);
-        $("input[name='tfzy_color'][value='" + jCase.color + "']").attr("checked", true);
-        $("#tfzy_prior_country").val(jCase.prior_country);
-        $("#tfzy_end_code").val(jCase.end_code);
+        var jOpt = br_opt.opt[0];
+        $("#opt_no").val(jOpt.opt_no);
+        $("#Branch").val(jOpt.branch);
+        $("#Bseq").val(jOpt.bseq);
+        $("#Bseq1").val(jOpt.bseq1);
+        $("#tfzd_ref_no").val(jOpt.ref_no);
+        $("#tfzd_ref_no1").val(jOpt.ref_no1);
+        $("input[name='tfzy_S_Mark'][value='" + jOpt.s_mark + "']").attr("checked", true);
+        $("#tfzd_S_Mark").val(jOpt.s_mark);
+        $("#tfzy_Pul").val(jOpt.pul);
+        $("#tfzy_Zname_type").val(jOpt.zname_type);
+        $("#tfzd_Zname_type").val(jOpt.zname_type);
+        $("input[name='tfzy_color'][value='" + jOpt.color + "']").attr("checked", true);
+        $("#tfzy_prior_country").val(jOpt.prior_country);
+        $("#tfzy_end_code").val(jOpt.end_code);
 
-        $("#tfzd_apply_no").val(jCase.apply_no);
-        $("#tfzd_issue_no").val(jCase.issue_no);
-        $("#tfzd_Appl_name").val(jCase.appl_name);
-        $("#draw_icon").attr("href", jCase.drfile);
-        if (jCase.draw_file != "") $("#draw_icon").show();
-        $("#file").val(jCase.draw_file);
-        $("#tfz1_Draw_file").val(jCase.draw_file);
-        $("#tfzd_Oappl_name").val(jCase.oappl_name);
-        $("#tfzd_Cappl_name").val(jCase.cappl_name);
-        $("#tfzd_Eappl_name").val(jCase.eappl_name);
-        $("#tfzd_eappl_name1").val(jCase.eappl_name1);
-        $("#tfzd_eappl_name2").val(jCase.eappl_name2);
-        $("#tfzd_Zname_type").val(jCase.zname_type);
-        $("#tfzd_Draw").val(jCase.draw);
-        $("#tfzd_Symbol").val(jCase.symbol);
-        $("#pfzd_prior_date").val(dateReviver(jCase.prior_date, "yyyy/M/d"));
-        $("#tfzd_prior_no").val(jCase.prior_no);
-        $("#tfzd_apply_date").val(dateReviver(jCase.apply_date, "yyyy/M/d"));
-        $("#tfzd_issue_date").val(dateReviver(jCase.issue_date, "yyyy/M/d"));
-        $("#tfzd_open_date").val(dateReviver(jCase.open_date, "yyyy/M/d"));
-        $("#tfzd_rej_no").val(jCase.rej_no);
-        $("#tfzd_end_date").val(dateReviver(jCase.end_date, "yyyy/M/d"));
-        $("#tfzd_dmt_term1").val(jCase.dmt_term1);
-        $("#tfzd_dmt_term2").val(jCase.dmt_term2);
-        $("#tfzd_renewal").val(jCase.renewal);
+        $("#tfzd_apply_no").val(jOpt.apply_no);
+        $("#tfzd_issue_no").val(jOpt.issue_no);
+        $("#tfzd_Appl_name").val(jOpt.appl_name);
+        if (jOpt.draw_file != "") $("#draw_icon").attr("href", jOpt.drfile).show();
+        $("#file").val(jOpt.draw_file);
+        $("#tfz1_Draw_file").val(jOpt.draw_file);
+        $("#tfzd_Oappl_name").val(jOpt.oappl_name);
+        $("#tfzd_Cappl_name").val(jOpt.cappl_name);
+        $("#tfzd_Eappl_name").val(jOpt.eappl_name);
+        $("#tfzd_eappl_name1").val(jOpt.eappl_name1);
+        $("#tfzd_eappl_name2").val(jOpt.eappl_name2);
+        $("#tfzd_Zname_type").val(jOpt.zname_type);
+        $("#tfzd_Draw").val(jOpt.draw);
+        $("#tfzd_Symbol").val(jOpt.symbol);
+        $("#pfzd_prior_date").val(dateReviver(jOpt.prior_date, "yyyy/M/d"));
+        $("#tfzd_prior_no").val(jOpt.prior_no);
+        $("#tfzd_apply_date").val(dateReviver(jOpt.apply_date, "yyyy/M/d"));
+        $("#tfzd_issue_date").val(dateReviver(jOpt.issue_date, "yyyy/M/d"));
+        $("#tfzd_open_date").val(dateReviver(jOpt.open_date, "yyyy/M/d"));
+        $("#tfzd_rej_no").val(jOpt.rej_no);
+        $("#tfzd_end_date").val(dateReviver(jOpt.end_date, "yyyy/M/d"));
+        $("#tfzd_dmt_term1").val(jOpt.dmt_term1);
+        $("#tfzd_dmt_term2").val(jOpt.dmt_term2);
+        $("#tfzd_renewal").val(jOpt.renewal);
 
         //商品
         var good = br_opt.casegood;
         var classCount = good.length;
         if (classCount == 0) classCount = 1;//至少有1筆
         $("#tfzr_class_count").val(good.length == 0 ? "" : classCount);//共N類
-        Add_button(classCount);//產生類別清單
+        dmt_form.Add_button(classCount);//產生類別清單
 
         if (good.length!=0){
             $.each(good, function (i, item) {
@@ -292,7 +291,7 @@
         $("#tfzr_class").val($("#goodllist>tbody input[id^='class1_']").map(function () { return $(this).val(); }).get().join(','));
     }
     
-    function Add_button(classCount) {
+    dmt_form.Add_button = function (classCount) {
         for (var nRow = 1; nRow <= classCount; nRow++) {
             //複製一筆
             $("#goodllist>tfoot").each(function (i) {

@@ -1,8 +1,7 @@
 ﻿<%@Page Language="C#" CodePage="65001"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
-    protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = HttpContext.Current.Server.UrlDecode(HttpContext.Current.Request["prgname"]);//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
@@ -14,6 +13,8 @@
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        HTProgCap = Server.UrlDecode(Request["prgname"]);//功能名稱
 
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
@@ -85,7 +86,7 @@
 
 
     <div id="divPaging" style="display:none">
-    <TABLE border=0 cellspacing=1 cellpadding=0 width="85%" align="center">
+    <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
 		    <td colspan=2 align=center class=whitetablebg>
 			    <font size="2" color="#3f8eba">
@@ -136,7 +137,7 @@
 		<td nowrap>{{arcase_name}}</td>
 		<td align="center">{{last_date}}</td>
 		<td align="center">
-            <a href="opt11Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[確認]</a>
+            <a href="opt11Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[確認]</a>
 		</td>
 	</tr>
 	</tfoot>
@@ -237,7 +238,7 @@
                         strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
                         strLine1 = strLine1.replace(/{{Case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);
-                        //alert(strLine1); // DEBUG AJAX 
+                        strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
 
                         $("#dataList>tbody").append(strLine1);
                     });
@@ -286,6 +287,6 @@
         } else {
             window.close();
         }
-    }).click();
+    });
     //////////////////////
 </script>

@@ -12,31 +12,35 @@
 	//#endregion
 
 	//#region lock 指定唯讀模式
-	$.fn.lock = function () {
-		return this.each(function () {
-			if ($(this).hasClass("dateField")) {
-				$(this).datepick("option", "showOnFocus", false).next(".datepick-trigger:first").hide();
-				//xx$(this).next(".datepick-trigger:first").prop('disabled', true);
-				//$(this).datepick("disable");
-			}
-			if (this.type == "text" || this.type=="textarea") {
-				$(this).prop('readonly', true).addClass('SEdit');
-			} else {
-				$(this).prop('disabled', true);
-			}
+	$.fn.lock = function (cond) {
+	    return this.each(function () {
+	        if (typeof cond === "undefined" || cond) {//符合條件 或 沒給條件
+	            if ($(this).hasClass("dateField")) {
+	                $(this).datepick("option", "showOnFocus", false).next(".datepick-trigger:first").hide();
+	                //xx$(this).next(".datepick-trigger:first").prop('disabled', true);
+	                //$(this).datepick("disable");
+	            }
+	            if (this.type == "text" || this.type == "textarea") {
+	                $(this).prop('readonly', true).addClass('SEdit');
+	            } else {
+	                $(this).prop('disabled', true);
+	            }
+	        }
 		});
 	}
 	//#endregion
 
     //#region unlock 指定解鎖模式
-	$.fn.unlock = function () {
+	$.fn.unlock = function (cond) {
 		return this.each(function () {
-			if ($(this).hasClass("dateField")) {
-				$(this).datepick("option", "showOnFocus", true).next(".datepick-trigger:first").show();
-				//xx$(this).next(".datepick-trigger:first").prop('disabled', false);
-				//$(this).datepick("enable");
-			}
-			$(this).prop('readonly', false).removeClass('SEdit').prop('disabled', false);
+		    if (typeof cond === "undefined" || cond ) {//符合條件 或 沒給條件
+		        if ($(this).hasClass("dateField")) {
+		            $(this).datepick("option", "showOnFocus", true).next(".datepick-trigger:first").show();
+		            //xx$(this).next(".datepick-trigger:first").prop('disabled', false);
+		            //$(this).datepick("enable");
+		        }
+		        $(this).prop('readonly', false).removeClass('SEdit').prop('disabled', false);
+		    }
 		});
 	}
 	//#endregion

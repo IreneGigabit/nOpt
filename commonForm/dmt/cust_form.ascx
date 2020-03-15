@@ -15,7 +15,7 @@
     }
 </script>
 
-<table border="0" class=bluetable cellspacing="1" cellpadding="2" style="font-size: 9pt">
+<table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 <TR>
 	<TD class=lightbluetable align="right">客戶編號：</TD>
 	<TD class=whitetablebg>
@@ -158,8 +158,8 @@
 </TR>		        
 </table>
 <script language="javascript" type="text/javascript">
-    var cust={};
-    cust.init = function () {
+    var cust_form={};
+    cust_form.init = function () {
         $("#F_ap_country").getOption({//客戶國籍
             url: "../ajax/AjaxGetSqlDataCnn.aspx",
             data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },

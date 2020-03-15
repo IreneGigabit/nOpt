@@ -6,9 +6,7 @@
 <%@ Register Src="~/commonForm/dmt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
 <%@ Register Src="~/commonForm/dmt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
-
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -34,10 +32,24 @@
             QueryPageLayout();
             this.DataBind();
         }
+
+        //交辦內容欄位畫面
+        if (Request["arcase"] == "DO1") {
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DO1_form.ascx"));//申請異議
+        } else if (Request["arcase"] == "DI1") {
+            //<!--include file="./optform/DI1form.asp"-->//申請評定
+        } else if (Request["arcase"] == "DR1") {
+            //<!--include file="./optform/DR1form.asp"-->//申請廢止
+        } else if (Request["arcase"] == "DE1" || Request["arcase"] == "AD7") {
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BC1_form.ascx"));//申請聽證(爭議案)
+        } else if (Request["arcase"] == "DE2" || Request["arcase"] == "AD8") {
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BC2_form.ascx"));//出席聽證(爭議案)
+        } else {
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BZZ1_form.ascx"));//無申請書之交辦內容案
+        }
     }
     
     private void QueryPageLayout() {
-
         //if ((HTProgRight & 2) > 0) {
             StrQueryLink = "<input type=\"image\" id=\"imgSrch\" src=\"../icon/inquire_in.png\" title=\"查詢\" />&nbsp;";
             StrQueryBtn = "<input type=\"button\" id=\"btnSrch\" value =\"查詢\" class=\"cbutton\" />";
@@ -45,6 +57,7 @@
     }
 
 </script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -67,7 +80,7 @@
             <font color="blue">區所案件編號：<span id="fseq"></span></font>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>&nbsp;        
+            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
     <tr>
@@ -85,7 +98,7 @@
             <td class="tab" href="#apcust_re">申請人</td>
             <td class="tab" href="#case">收費與接洽事項</td>
             <td class="tab" href="#dmt">案件主檔</td>
-            <td class="tab" href="#case_form">交辦內容</td>
+            <td class="tab" href="#tran">交辦內容</td>
         </tr>
     </table>
     </td></tr></table>
@@ -112,73 +125,81 @@
                     <uc1:dmt_form runat="server" ID="dmt_form" />
                     <!--include file="../commonForm/dmt/dmt_form.ascx"--><!--案件主檔-->
                 </div>
-                <div class="tabCont" id="#case_form">
-                    <!--include file="../commonForm/dmt/case_form.ascx"--><!--交辦內容欄位畫面-->
+                <div class="tabCont" id="#tran">
+                    <asp:PlaceHolder ID="tranHolder" runat="server"></asp:PlaceHolder><!--交辦內容欄位畫面-->
                 </div>
             </td>
         </tr>
     </table>
 </form>
 
-<script>
-$(function () {
-    if (!(window.parent.tt === undefined)) {
-        window.parent.tt.rows = "20%,80%";
-    }
-    this_init();
-});
+</body>
+</html>
 
-var br_opt = {};
-//初始化
-function this_init() {
-    settab("#cust");
-
-    //取得案件資料
-    $.ajax({
-        type: "get",
-        url: getRootPath() + "/AJAX/DmtData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
-        async: false,
-        cache: false,
-        success: function (json) {
-            //toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-            var JSONdata = $.parseJSON(json);
-            if (JSONdata.length == 0) {
-                toastr.warning("無案件資料可載入！");
-                return false;
-            }
-            br_opt = JSONdata;
-        },
-        error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+<script language="javascript" type="text/javascript">
+    $(function () {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "20%,80%";
+        }
+        this_init();
     });
 
-    $("#fseq").html(br_opt.opt[0].fseq);
-    cust.init();
-    attent.init();
-    apcust_re.init();
-    case_form.init();
-    dmt.init();
+    var br_opt = {};
+    //初始化
+    function this_init() {
+        settab("#tran");
 
-    //欄位開關
-    //$(".Lock").lock();
-}
+        //取得案件資料
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/AJAX/DmtData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            async: false,
+            cache: false,
+            success: function (json) {
+                toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                var JSONdata = $.parseJSON(json);
+                if (JSONdata.length == 0) {
+                    toastr.warning("無案件資料可載入！");
+                    return false;
+                }
+                br_opt = JSONdata;
+            },
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        });
 
-// 切換頁籤
-$("#CTab td.tab").click(function (e) {
-    settab($(this).attr('href'));
-});
-function settab(k) {
-    $("#CTab td.tab").removeClass("seltab").addClass("notab");
-    $("#CTab td.tab[href='" + k + "']").addClass("seltab").removeClass("notab");
-    $("div.tabCont").hide();
-    $("div.tabCont[id='" + k + "']").show();
-}
+        $("#fseq").html(br_opt.opt[0].fseq);
+        cust_form.init();
+        attent_form.init();
+        apcust_re_form.init();
+        case_form.init();
+        dmt_form.init();
+        tran_form.init();
 
-//關閉視窗
-$(".imgCls").click(function (e) {
-    if (!(window.parent.tt === undefined)) {
-        window.parent.tt.rows = "100%,0%";
-    } else {
-        window.close();
+        $("input.dateField").datepick();
+
+        //欄位開關
+        $(".Lock").lock();
+        //$("#F_cust_area").unlock();
+        $("#F_cust_area").unlock((<%#HTProgRight%> & 2));
     }
-}).click();
+
+    // 切換頁籤
+    $("#CTab td.tab").click(function (e) {
+        settab($(this).attr('href'));
+    });
+    function settab(k) {
+        $("#CTab td.tab").removeClass("seltab").addClass("notab");
+        $("#CTab td.tab[href='" + k + "']").addClass("seltab").removeClass("notab");
+        $("div.tabCont").hide();
+        $("div.tabCont[id='" + k + "']").show();
+    }
+
+    //關閉視窗
+    $(".imgCls").click(function (e) {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        } else {
+            window.close();
+        }
+    })
 </script>

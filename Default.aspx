@@ -169,8 +169,8 @@
     </table>
     <table cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr style="background-color:#5a63bd">
-            <td width="30">
-                <img id="imgSide" style="cursor:pointer;" src="images/x-2.gif" />&nbsp;&nbsp;
+            <td width="30" id="imgSide" style="cursor:pointer;background-image:url(images/x-1.gif);background-size: contain;background-repeat:no-repeat;">
+                <%--<img id="imgSide" style="cursor:pointer;" src="images/x-1.gif" />&nbsp;&nbsp;--%>
             </td>
             <td height="20">
                 <%#StrMenus%>
@@ -206,10 +206,12 @@
             var ifrm = $("#workfram").contents();
             if ($(ifrm).find("#f").attr("cols") == "0,*") {
                 $(ifrm).find("#f").attr("cols", "200,*");
-                $(this).attr("src", "images/x-2.gif");
+                //$(this).attr("src", "images/x-2.gif");
+                $(this).css("background-image","url(images/x-2.gif)"); 
             } else {
                 $(ifrm).find("#f").attr("cols", "0,*");
-                $(this).attr("src", "images/x-1.gif");
+                //$(this).attr("src", "images/x-1.gif");
+                $(this).css("background-image","url(images/x-1.gif)"); 
             }
         });
         $(document).click(function (e) { $("#oPopBody").hide(); });
