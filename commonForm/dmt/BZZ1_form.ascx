@@ -31,8 +31,8 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    var dmt = {};
-    dmt.init = function () {
+    var tran_form = {};
+    tran_form.init = function () {
         $("#Pagt_no").getOption({//代理人
             url: "../ajax/AgtData.aspx",
             data: { branch: "<%#branch%>" },
