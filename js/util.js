@@ -1,22 +1,3 @@
-//彈跳訊息選項
-toastr.options = {
-    "closeButton": true,//是否顯示關閉按鈕
-    //"debug": false,//是否使用debug模式
-    //"newestOnTop": false,//最新一筆顯示在最上面
-    "progressBar": true,//是否訊息下方顯示進度條
-    "positionClass": "toast-top-center",//彈出窗的位置
-    "preventDuplicates": true,//是否啟用避免重複顯示
-    //"onclick": null,//Click event
-    //"showDuration": 300,//顯示的動畫時間
-    //"hideDuration": 1000,//消失的動畫時間
-    timeOut: 0,//展現時間(progressBar),0=不自動消失
-    //"extendedTimeOut": "1000",//加長展示時間
-    //"showEasing": "swing",//顯示時的動畫緩衝方式
-    //"hideEasing": "linear",/消失時的動畫緩衝方式
-    //"showMethod": "fadeIn",//顯示時的動畫方式
-    //"hideMethod": "fadeOut"//消失時的動畫方式
-}
-
 //獲取web ap根路徑 ex:http://web02/nOpt
 function getRootPath() {
     var strFullPath = window.document.location.href;
