@@ -152,4 +152,8 @@ select stat_code,* from br_opt
 --update br_opt set stat_code=null--'YS'
 where opt_sqlno='2044'
 
+select stat_code,* from br_opt 
+--update br_opt set stat_code=null--'YS'
+where opt_sqlno='668'
+
 -----------------------------------------------------------------------------------------
