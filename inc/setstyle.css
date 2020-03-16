@@ -817,6 +817,7 @@ TEXTAREA
 {
 	font-size: 10pt;
 	font-family: Verdana, Arial;
+	white-space: pre-wrap;
 }
 .numeric
 {
