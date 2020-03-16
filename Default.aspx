@@ -134,12 +134,12 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="x-ua-compatible" content="IE=9">
+    <meta http-equiv="x-ua-compatible" content="IE=10">
     <title></title>
     <link href="inc/setstyle.css" rel="stylesheet" />
     <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
     <%--<script type="text/javascript"  src="js/json2.js"></script>--%>
-    <script type="text/javascript" src="js/toastr.js"></script>
+    <script type="text/javascript" src="js/toastr.min.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
 </head>
 <body style="margin:0px 0px 0px 0px;overflow:hidden;background:url('images/top/back5.gif');background-repeat: no-repeat;">
@@ -169,7 +169,7 @@
     </table>
     <table cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr style="background-color:#5a63bd">
-            <td width="30" id="imgSide" style="cursor:pointer;background-image:url(images/x-1.gif);background-size: contain;background-repeat:no-repeat;">
+            <td width="30" id="imgSide" style="cursor:pointer;background-image:url(images/x-1.gif);background-size:60% 95%;background-repeat:no-repeat;">
                 <%--<img id="imgSide" style="cursor:pointer;" src="images/x-1.gif" />&nbsp;&nbsp;--%>
             </td>
             <td height="20">
