@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="dr1_form" %>
+﻿<%@ Control Language="C#" ClassName="dr1_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -35,7 +35,7 @@
 		</td>
 	</tr>	
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" width="20%" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(O1Appl_name)">
+		<td class="lightbluetable" colspan="8" valign="top" width="20%" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Appl_name)">
             <strong>壹、<u>廢止標的（你要廢止的標章）</u></strong>
 		</td>
 	</tr>
@@ -111,23 +111,23 @@
 		                    <input type=text name='DR1_apnum_##' class="Lock" style='color:black;' size=2 value='##.'>名稱或姓名：
 			            </TD>
 			            <TD class=sfont9>
-		                    <input TYPE=text ID="ttg3_mod_ap_ncname1_##" NAME="ttg3_mod_ap_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+		                    <input TYPE=text ID="ttg1_mod_ap_ncname1_##" NAME="ttg1_mod_ap_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
                             <br />
-                            <input TYPE=text id="ttg3_mod_ap_ncname2_##" NAME="ttg3_mod_ap_ncname2_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+                            <input TYPE=text id="ttg1_mod_ap_ncname2_##" NAME="ttg1_mod_ap_ncname2_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
 			            </TD>
 		            </TR>
 		            <TR>
 			            <TD class=lightbluetable align=right>地　　　址：</TD>
 			            <TD class=sfont9>
-			            	<input TYPE=text id="ttg3_mod_ap_nzip_##" NAME="ttg3_mod_ap_nzip_##" SIZE=5 MAXLENGTH=5 class="Lock" />
-		                    <input TYPE=text id="ttg3_mod_ap_naddr1_##" NAME="ttg3_mod_ap_naddr1_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
-		                    <input TYPE=text id="ttg3_mod_ap_naddr2_##" NAME="ttg3_mod_ap_naddr2_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+			            	<input TYPE=text id="ttg1_mod_ap_nzip_##" NAME="ttg1_mod_ap_nzip_##" SIZE=5 MAXLENGTH=5 class="Lock" />
+		                    <input TYPE=text id="ttg1_mod_ap_naddr1_##" NAME="ttg1_mod_ap_naddr1_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+		                    <input TYPE=text id="ttg1_mod_ap_naddr2_##" NAME="ttg1_mod_ap_naddr2_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
                        </TD>
 		            </TR>
 		            <TR>
 			            <TD class=lightbluetable align=right>代理人姓名：</TD>
 			            <TD class=sfont9>
-                            <input TYPE=text id="ttg3_mod_ap_ncrep_##" NAME="ttg3_mod_ap_ncrep_##" SIZE=20 MAXLENGTH=20 alt='『註冊人代理人』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+                            <input TYPE=text id="ttg1_mod_ap_ncrep_##" NAME="ttg1_mod_ap_ncrep_##" SIZE=20 MAXLENGTH=20 alt='『註冊人代理人』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
                         </TD>
 		            </TR>
 	            </TFOOT>
@@ -137,105 +137,59 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(I1New_no)"><strong>伍、<u>評定聲明：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1New_no)"><strong>伍、<u>廢止聲明：</u></strong></td>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right valign=top></td>
 		<td class=whitetablebg colspan=7>第<INPUT TYPE=text NAME=P1mod_pul_new_no id=P1mod_pul_new_no SIZE=10 MAXLENGTH=10 class="Lock">號「<INPUT TYPE=text NAME=P1mod_pul_ncname1 id=P1mod_pul_ncname1 SIZE=30 MAXLENGTH=50 class="Lock">」<input type="radio" name="P1mod_pul_mod_type" value="Tmark" class="Lock">商標<input type="radio" name="P1mod_pul_mod_type" value="Lmark" class="Lock">標章</td>
 	</tr>
 	<tr>
-		<td class=lightbluetable align=right valign=top><input type="checkbox" id=P2mod_pul_mod_type name=P2mod_pul_mod_type value="I1" class="Lock"></td>
-		<td class=whitetablebg colspan=7>註冊應予撤銷。</td>
+		<td class=lightbluetable align=right valign=top><input type="checkbox" id=P2mod_pul_mod_type name=P2mod_pul_mod_type value="R1" class="Lock"></td>
+		<td class=whitetablebg colspan=7>之商標權，應予廢止。</td>
 	</tr>
 	<tr>
-		<td class=lightbluetable align=right valign=top><input type="checkbox" id=P3mod_pul_mod_type name=P3mod_pul_mod_type value="I2" class="Lock"></td>
-		<td class=whitetablebg colspan=7>指定使用於商標法施行細則第<INPUT TYPE=text NAME=P3mod_pul_new_no id=P3mod_pul_new_no SIZE=3 MAXLENGTH=10 class="Lock">條第<INPUT TYPE=text NAME=P3mod_pul_mod_dclass id=P3mod_pul_mod_dclass SIZE=20 MAXLENGTH=20 class="Lock">類商品／服務之註冊應予撤銷。</td>
+		<td class=lightbluetable align=right valign=top><input type="checkbox" id=P3mod_pul_mod_type name=P3mod_pul_mod_type value="R2" class="Lock"></td>
+		<td class=whitetablebg colspan=7>指定使用於商標法施行細則第<INPUT TYPE=text NAME=P3mod_pul_new_no id=P3mod_pul_new_no SIZE=3 MAXLENGTH=10 class="Lock">條第<INPUT TYPE=text NAME=P3mod_pul_mod_dclass id=P3mod_pul_mod_dclass SIZE=20 MAXLENGTH=20 class="Lock">類商品／服務之商標權應予廢止。</td>
 	</tr>
 	<tr>
-		<td class=lightbluetable align=right valign=top><input type="checkbox" id=P4mod_pul_mod_type name=P4mod_pul_mod_type value="I3" class="Lock"></td>
-		<td class=whitetablebg colspan=7>指定使用於商標法施行細則第<INPUT TYPE=text NAME=P4mod_pul_new_no id=P4mod_pul_new_no SIZE=3 MAXLENGTH=10 class="Lock">條第<INPUT TYPE=text NAME=P4mod_pul_mod_dclass id=P4mod_pul_mod_dclass SIZE=3 MAXLENGTH=3 class="Lock">類<br><INPUT TYPE=text NAME=P4mod_pul_ncname1 id=P4mod_pul_ncname1 SIZE=30 MAXLENGTH=50 class="Lock"><br>商品／服務之註冊應予撤銷。</td>
+		<td class=lightbluetable align=right valign=top><input type="checkbox" id=P4mod_pul_mod_type name=P4mod_pul_mod_type value="R3" class="Lock"></td>
+		<td class=whitetablebg colspan=7>指定使用於商標法施行細則第<INPUT TYPE=text NAME=P4mod_pul_new_no id=P4mod_pul_new_no SIZE=3 MAXLENGTH=10 class="Lock">條第<INPUT TYPE=text NAME=P4mod_pul_mod_dclass id=P4mod_pul_mod_dclass SIZE=3 MAXLENGTH=3 class="Lock">類<INPUT TYPE=text NAME=P4mod_pul_ncname1 id=P4mod_pul_ncname1 SIZE=30 MAXLENGTH=50 class="Lock">商品／服務之商標權應予廢止。</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(I1Other_item1)"><strong>陸、<u>主張法條及據以評定商標/標章：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Other_item1)"><strong>陸、<u>主張法條及據以廢止商標／標章：</u></strong></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" valign="top" rowspan=2>一、主張法條：</td>
+		<td class="lightbluetable" valign="top">一、主張條款：</td>
 		<td class=whitetablebg colspan="7" valign="top">
-            <input type="checkbox" name="Pother_item1_1" value="I" class="Lock">註冊
-            <input type="checkbox" name="Pother_item1_1" value="R" class="Lock">延展註冊時 商標法
-            <input TYPE=text NAME=Pother_item1_2 id=Pother_item1_2 SIZE=30 MAXLENGTH=50 class="Lock">
+            商標法<input TYPE=text NAME=Pother_item1 id=Pother_item1 SIZE=30 MAXLENGTH=50 alt="『主張條款』" class="Lock">。
 		</td>
 	</tr>
 	<tr>
-		<td class=whitetablebg colspan="7" valign="top">
-            <input type="checkbox" name="Pother_item1_1" value="O" class="Lock">商標法
-            <input TYPE=text NAME=Pother_item1_2t id=Pother_item1_2t SIZE=30 MAXLENGTH=50 class="Lock">
+		<TD class=lightbluetable align=left width="22%">二、據以廢止商標／標章：</TD>
+		<TD class=whitetablebg colspan=7>
+            <input TYPE=text NAME=Pmod_claim1_ncname1 id=Pmod_claim1_ncname1 SIZE=30 MAXLENGTH=50 alt="『據以廢止商標／標章』" class="Lock">
 		</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" valign="top" colspan="8" >
-			<strong>二、據以評定商標/標章：</strong>（你認為被評定商標/標章和那些商標/標章相衝突，請按照主張條款分別詳細列出，有號數者請務必依序填寫，以免延宕本案之審理）
-		</td>
-	</tr>
-	<tr class='sfont9'>
-	    <td colspan=8>
-	        <TABLE id=DR1_tabapre border=0 class="bluetable"  cellspacing=1 cellpadding=2 width="100%">
-                <thead>
-    		        <tr>	
-			            <td class="lightbluetable" align="right" width="18%">條款項目：</td>
-			            <td class="whitetablebg" colspan="7" >
-                            共<input type="text" id=Pmod_aprep_mod_count name=Pmod_aprep_mod_count size=2 class="Lock">項
-                            <input type=hidden id=DR1_aprenum name=DR1_aprenum value=0>
-			            </td>
-		            </tr>
-                </thead>
-                <tfoot style="display:none">
-		            <tr>	
-			            <td class="lightbluetable" align="right">主張條款##：</td>
-			            <td class="whitetablebg" colspan="7" >
-                            <input type="text" id="Pmod_aprep_ncname1_##" name="Pmod_aprep_ncname1_##" size=30  maxlength=20 class="Lock">
-			            </td>
-		            </tr>
-		            <tr>	
-			            <td class="lightbluetable" align="right">據以評定商標號數##：</td>
-			            <td class="whitetablebg" colspan="7">
-                            <input type="text" id="Pmod_aprep_new_no_##" name="Pmod_aprep_new_no_##" size=60 class="Lock" maxlength=80>
-			            </td>
-		            </tr>
-                </tfoot>
-                <tbody></tbody>
-	        </table>
-	    </td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Tran_remark1)"><strong>柒、<u>事實及理由：</u></strong></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(I1Tran_remark1)"><strong>柒、<u>事實及理由：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=100 id=Ptran_remark1 name=Ptran_remark1 class="Lock"></textarea></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top">一、申請評定人具利害關係人身分之事實及理由</td>
+		<td class="lightbluetable" colspan="8" valign="top" >【主張法條為商標法第63條第1項第1款且據以廢止商標註冊已滿3年者，<u>請具體說明據以廢止商標使用情形</u>】</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=90 id=Ptran_remark3 name=Ptran_remark3 class="Lock"></textarea></td>
-	</tr>
-	<tr>
-		<td class="lightbluetable" colspan="8" valign="top">二、本案事實及理由</td>
-	</tr>
-	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><TEXTAREA rows=9 cols=90 id=Ptran_remark1 name=Ptran_remark1 class="Lock"></TEXTAREA></td>
-	</tr>
-	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" >【主張法條為商標法第30條第1項第10款且據以評定商標註冊已滿3年者，<u>請具體說明據以評定商標使用情形</u>】</td>
-	</tr>
-	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><TEXTAREA rows=9 cols=100 id=Ptran_remark4 name=Ptran_remark4 class="Lock"></TEXTAREA></td>
+		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=100 id=Ptran_remark4 name=Ptran_remark4 class="Lock"></textarea></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(ZAttechD)"><strong>捌、<u>證據(附件)內容：</u></strong></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=90 id=Ptran_remark2 name=Ptran_remark2 class="Lock"></textarea></td>
+		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=100 id=Ptran_remark2 name=Ptran_remark2 class="Lock"></textarea></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(I1Other_item)"><strong>玖、<u>相關聯案件：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Other_item)"><strong>玖、<u>相關聯案件：</u></strong></td>
 	</tr>
 	<TR>
 		<TD class=lightbluetable align=right></TD>
@@ -246,38 +200,64 @@
 		</TD>
 	</TR>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><strong>※評定商標及據以評定商標圖樣：</strong></td>
+		<td class="lightbluetable" colspan="8" valign="top"><strong>※廢止商標及據以廢止商標圖樣：</strong></td>
 	</tr>
 	<TR>
-		<TD class=lightbluetable>一、評定標的圖樣：</TD>
+		<TD class=lightbluetable>一、廢止標的圖樣：</TD>
 		<TD class=whitetablebg colspan=7>
 		    <input TYPE=text NAME=Pdraw_file id=Pdraw_file SIZE=50 MAXLENGTH=50 class="Lock">
 			 <a id="Pdraw_icon" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a>
 		</TD>
 	</TR>	
 	<TR>
-		<TD class=lightbluetable align=right>二、據以評定商標圖樣：</TD>
+		<TD class=lightbluetable align=right>二、變換加附記使用後之商標/標章圖樣：</TD>
 		<TD class=whitetablebg colspan=7>
-		<input TYPE=text NAME=Pmod_dmt_ncname1 id=Pmod_dmt_ncname1 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_ncname1_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		<input TYPE=text NAME=Pmod_dmt_ncname2 id=Pmod_dmt_ncname2 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_ncname2_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		<input TYPE=text NAME=Pmod_dmt_nename1 id=Pmod_dmt_nename1 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_nename1_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		<input TYPE=text NAME=Pmod_dmt_nename2 id=Pmod_dmt_nename2 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_nename2_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		<input TYPE=text NAME=Pmod_dmt_ncrep id=Pmod_dmt_ncrep SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_ncrep_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		<span id="Pmod_dmt_nerep_icon" style="display:none">
-		    <input TYPE=text NAME="Pmod_dmt_nerep" id="Pmod_dmt_nerep" SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		</span>
-		<span id="Pmod_dmt_neaddr1_icon" style="display:none">
-		    <input TYPE=text NAME=Pmod_dmt_neaddr1 id=Pmod_dmt_neaddr1 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		</span>
-		<span id="Pmod_dmt_neaddr2_icon" style="display:none">
-		    <input TYPE=text NAME=Pmod_dmt_neaddr2 id=Pmod_dmt_neaddr2 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		</span>
-		<span id="Pmod_dmt_neaddr3_icon" style="display:none">
-		    <input TYPE=text NAME=Pmod_dmt_neaddr3 id=Pmod_dmt_neaddr3 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		</span>
-		<span id="Pmod_dmt_neaddr4_icon" style="display:none">
-		    <input TYPE=text NAME=Pmod_dmt_neaddr4 id=Pmod_dmt_neaddr4 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
-		</span>
+		    <input TYPE=text NAME=Pmod_class_ncname1 id=Pmod_class_ncname1 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_class_ncname1_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_class_ncname2 id=Pmod_class_ncname2 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_class_ncname2_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_class_nename1 id=Pmod_class_nename1 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_class_nename1_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_class_nename2 id=Pmod_class_nename2 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_class_nename2_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_class_ncrep id=Pmod_class_ncrep SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_class_ncrep_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+
+            <span id="Pmod_class_nerep_icon" style="display:none">
+		        <input TYPE=text NAME="Pmod_class_nerep" id="Pmod_class_nerep" SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_class_neaddr1_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_class_neaddr1 id=Pmod_class_neaddr1 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_class_neaddr2_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_class_neaddr2 id=Pmod_class_neaddr2 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_class_neaddr3_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_class_neaddr3 id=Pmod_class_neaddr3 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_class_neaddr4_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_class_neaddr4 id=Pmod_class_neaddr4 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		</TD>
+	</TR>	
+	<TR>
+		<TD class=lightbluetable align=right>三、據以廢止商標／標章圖樣：</TD>
+		<TD class=whitetablebg colspan=7>
+		    <input TYPE=text NAME=Pmod_dmt_ncname1 id=Pmod_dmt_ncname1 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_ncname1_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_dmt_ncname2 id=Pmod_dmt_ncname2 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_ncname2_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_dmt_nename1 id=Pmod_dmt_nename1 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_nename1_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_dmt_nename2 id=Pmod_dmt_nename2 SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_nename2_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <input TYPE=text NAME=Pmod_dmt_ncrep id=Pmod_dmt_ncrep SIZE=50 MAXLENGTH=50 class="Lock"><a id="Pmod_dmt_ncrep_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    <span id="Pmod_dmt_nerep_icon" style="display:none">
+		        <input TYPE=text NAME="Pmod_dmt_nerep" id="Pmod_dmt_nerep" SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_dmt_neaddr1_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_dmt_neaddr1 id=Pmod_dmt_neaddr1 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_dmt_neaddr2_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_dmt_neaddr2 id=Pmod_dmt_neaddr2 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_dmt_neaddr3_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_dmt_neaddr3 id=Pmod_dmt_neaddr3 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
+		    <span id="Pmod_dmt_neaddr4_icon" style="display:none">
+		        <input TYPE=text NAME=Pmod_dmt_neaddr4 id=Pmod_dmt_neaddr4 SIZE=50 MAXLENGTH=50 class="Lock"><a target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a><br>
+		    </span>
 		</TD>
 	</TR>
 </table>	
@@ -299,7 +279,7 @@
         $("#PBseq1").val(jOpt.bseq1);
         $("#Pagt_no").val(jOpt.agt_no);
 
-        //評定標的
+        //廢止標的
         $("input[name='PS_Mark'][value='" + jOpt.s_mark + "']").attr("checked", true);
         $("#Pissue_no").val(jOpt.issue_no);
         $("#PAppl_name").val(jOpt.appl_name);
@@ -321,18 +301,18 @@
                 tran_form.appendModAp()
                 //填資料
                 var nRow = $("#apnum").val();
-                $("#ttg3_mod_ap_ncname1_" + nRow).val(item.ncname1);
-                $("#ttg3_mod_ap_ncname2_" + nRow).val(item.ncname2);
-                $("#ttg3_mod_ap_nzip_" + nRow).val(item.nzip);
-                $("#ttg3_mod_ap_naddr1_" + nRow).val(item.naddr1);
-                $("#ttg3_mod_ap_naddr2_" + nRow).val(item.naddr2);
-                $("#ttg3_mod_ap_ncrep_" + nRow).val(item.ncrep);
+                $("#ttg1_mod_ap_ncname1_" + nRow).val(item.ncname1);
+                $("#ttg1_mod_ap_ncname2_" + nRow).val(item.ncname2);
+                $("#ttg1_mod_ap_nzip_" + nRow).val(item.nzip);
+                $("#ttg1_mod_ap_naddr1_" + nRow).val(item.naddr1);
+                $("#ttg1_mod_ap_naddr2_" + nRow).val(item.naddr2);
+                $("#ttg1_mod_ap_ncrep_" + nRow).val(item.ncrep);
             });
         } else {
-            alert("查無此交辦案件之對造當事人資料!!");
+            alert("查無此交辦案件之註冊人資料!!");
         }
 
-        //評定聲明
+        //廢止聲明
         if (jOpt.mod_pul == "Y") {
             $.each(br_opt.tran_mod_pul, function (i, item) {
                 switch (item.mod_type) {
@@ -342,15 +322,15 @@
                         $("#P1mod_pul_new_no").val(item.new_no);
                         $("#P1mod_pul_ncname1").val(item.ncname1);
                         break;
-                    case "I1":
+                    case "R1":
                         $("#P2mod_pul_mod_type").attr("checked", true);
                         break;
-                    case "I2":
+                    case "R2":
                         $("#P3mod_pul_mod_type").attr("checked", true);
                         $("#P3mod_pul_new_no").val(item.new_no);
                         $("#P3mod_pul_mod_dclass").val(item.mod_dclass);
                         break;
-                    case "I3":
+                    case "R3":
                         $("#P4mod_pul_mod_type").attr("checked", true);
                         $("#P4mod_pul_new_no").val(item.new_no);
                         $("#P4mod_pul_mod_dclass").val(item.mod_dclass);
@@ -359,38 +339,14 @@
                 }
             });
         }
-        //主張法條
-        if (jOpt.other_item1 != "") {
-            var pitem = jOpt.other_item1.split(';');
-            if (pitem.length >= 1) {
-                var I_item1 = pitem[0].split('|');
-                $.each(I_item1, function (index, value) {
-                    $("input[name='Pother_item1_1'][value='" + value + "']").attr("checked", true);
-                });
-            }
-            if (pitem.length >= 2) {
-                var I_item2 = pitem[1].split('|');
-                if (I_item2.length >= 2) {
-                    $("#Pother_item1_2").val(I_item2[0]);
-                    $("#Pother_item1_2t").val(I_item2[1]);
-                } else {
-                    if ($("input[name='Pother_item1_1'][value='O']").attr("checked") == true) {
-                        $("#Pother_item1_2t").val(pitem[1]);
-                    } else {
-                        $("#Pother_item1_2").val(pitem[1]);
-                    }
-                }
-            }
+        //主張條款
+        $("#Pother_item1").val(jOpt.other_item1);
+
+        //據以廢止商標/標章
+        if (jOpt.mod_claim1 == "Y") {
+            if (br_opt.tran_mod_claim1.length > 0)
+                $("#Pmod_claim1_ncname1").val(br_opt.tran_mod_claim1[0].ncname1);
         }
-        //據以評定商標/標章
-        if (jOpt.mod_aprep == "Y") {
-            $.each(br_opt.tran_mod_aprep, function (i, item) {
-                $("#Pmod_aprep_mod_count").val(item.mod_count).trigger("change");
-                //填資料
-                $("#Pmod_aprep_ncname1_" + (i + 1)).val(item.ncname1);
-                $("#Pmod_aprep_new_no_" + (i + 1)).val(item.new_no);
-            });
-		}
 
         //事實及理由
         $("#Ptran_remark1").val(jOpt.tran_remark1);
@@ -406,10 +362,36 @@
             $("#Pitem2").val(pitem[1]);
             $("#Pitem3").val(pitem[2]);
         }
-
-        //評定商標
+        //廢止標的圖樣
         $("#Pdraw_file").val(jOpt.draw_file);
         if (jOpt.draw_file != "") $("#Pdraw_icon").attr("href", jOpt.drfile).show();
+
+        //變換加附記使用後之商標
+        if (jOpt.mod_class == "Y") {
+            var jModClass = br_opt.tran_mod_class[0];
+            $("#Pmod_class_ncname1").val(jModClass.ncname1);
+            $("#Pmod_class_ncname2").val(jModClass.ncname2);
+            $("#Pmod_class_nename1").val(jModClass.nename1);
+            $("#Pmod_class_nename2").val(jModClass.nename2);
+            $("#Pmod_class_ncrep").val(jModClass.ncrep);
+            $("#Pmod_class_nerep").val(jModClass.nerep);
+            $("#Pmod_class_neaddr1").val(jModClass.neaddr1);
+            $("#Pmod_class_neaddr2").val(jModClass.neaddr2);
+            $("#Pmod_class_neaddr3").val(jModClass.neaddr3);
+            $("#Pmod_class_neaddr4").val(jModClass.neaddr4);
+            if (jModClass.ncname1 != "") $("#Pmod_class_ncname1_icon").attr("href", jModClass.mod_class_ncname1).show();
+            if (jModClass.ncname2 != "") $("#Pmod_class_ncname2_icon").attr("href", jModClass.mod_class_ncname2).show();
+            if (jModClass.nename1 != "") $("#Pmod_class_nename1_icon").attr("href", jModClass.mod_class_nename1).show();
+            if (jModClass.nename2 != "") $("#Pmod_class_nename2_icon").attr("href", jModClass.mod_class_nename2).show();
+            if (jModClass.ncrep != "") $("#Pmod_class_ncrep_icon").attr("href", jModClass.mod_class_ncrep).show();
+            if (jModClass.nerep != "") $("#Pmod_class_nerep_icon").show().attr("href", jModClass.mod_class_nerep);
+            if (jModClass.neaddr1 != "") $("#Pmod_class_neaddr1_icon").show().find("a").attr("href", jModClass.mod_class_neaddr1);
+            if (jModClass.neaddr2 != "") $("#Pmod_class_neaddr1_icon").show().find("a").attr("href", jModClass.mod_class_neaddr2);
+            if (jModClass.neaddr3 != "") $("#Pmod_class_neaddr1_icon").show().find("a").attr("href", jModClass.mod_class_neaddr3);
+            if (jModClass.neaddr4 != "") $("#Pmod_class_neaddr1_icon").show().find("a").attr("href", jModClass.mod_class_neaddr4);
+        }
+
+        //據以廢止商標
         if (jOpt.mod_dmt == "Y") {
             var jModDmt = br_opt.tran_mod_dmt[0];
             $("#Pmod_dmt_ncname1").val(jModDmt.ncname1);
@@ -432,27 +414,6 @@
             if (jModDmt.neaddr2 != "") $("#Pmod_dmt_neaddr1_icon").show().find("a").attr("href", jModDmt.mod_dmt_neaddr2);
             if (jModDmt.neaddr3 != "") $("#Pmod_dmt_neaddr1_icon").show().find("a").attr("href", jModDmt.mod_dmt_neaddr3);
             if (jModDmt.neaddr4 != "") $("#Pmod_dmt_neaddr1_icon").show().find("a").attr("href", jModDmt.mod_dmt_neaddr4);
-        }
-    }
-
-    //據以評定商標/標章
-    $("#Pmod_aprep_mod_count").change(function () { tran_form.appendModApRe(this.value); });
-    tran_form.appendModApRe = function (totRow) {
-        var nRow = parseInt($("#DR1_aprenum").val(), 10);
-        while (nRow < totRow) {//增加
-            nRow += 1;
-            //複製樣板
-            var copyStr = "";
-            $("#DR1_tabapre>tfoot tr").each(function (i) {
-                copyStr += "<tr name='tr_apre_" + nRow + "'>" + $(this).html().replace(/##/g, nRow) + "</tr>"
-            });
-            $("#DR1_tabapre>tbody").append(copyStr);
-            $("#DR1_aprenum").val(nRow)
-        }
-        while (nRow > totRow) {//減少
-            $("tr[name='tr_apre_" + nRow + "']").remove();
-            nRow -= 1;
-            $("#DR1_aprenum").val(Math.max(0, nRow));
         }
     }
 

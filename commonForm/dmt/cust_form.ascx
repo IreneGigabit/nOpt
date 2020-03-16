@@ -185,6 +185,10 @@
             textFormat: "{cust_code}---{code_name}"
         });
 
+        //if (br_opt.cust.length == 0) {
+        //    toastr.error("客戶資料載入失敗！<BR>請聯繫資訊人員！");
+        //    return false;
+        //}
         var jCust = br_opt.cust[0];
         $("#F_cust_area").val(jCust.cust_area);
         $("#F_cust_seq").val(jCust.cust_seq);

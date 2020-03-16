@@ -48,6 +48,8 @@
         DataTable dt_tran_mod_pul = GetTranModPul(case_no, opt_sqlno);
         DataTable dt_tran_mod_ap = GetTranModAp(case_no, opt_sqlno);
         DataTable dt_tran_mod_aprep = GetTranModAprep(case_no, opt_sqlno);
+        DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
+        DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
 
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
@@ -71,6 +73,8 @@
         Response.Write(",\"tran_mod_pul\":" + JsonConvert.SerializeObject(dt_tran_mod_pul, settings).ToUnicode() + "\n");
         Response.Write(",\"tran_mod_ap\":" + JsonConvert.SerializeObject(dt_tran_mod_ap, settings).ToUnicode() + "\n");
         Response.Write(",\"tran_mod_aprep\":" + JsonConvert.SerializeObject(dt_tran_mod_aprep, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
@@ -399,6 +403,47 @@
             SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_aprep'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region GetTranModClaim1
+    private DataTable GetTranModClaim1(string pCaseNo, string pOptSqlno) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select * ";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_claim1'";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region GetTranModClass
+    private DataTable GetTranModClass(string pCaseNo, string pOptSqlno) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select *,''mod_class_ncname1,''mod_class_ncname2,''mod_class_nename1,''mod_class_nename2 ";
+            SQL += ",''mod_class_ncrep,''mod_class_nerep ";
+            SQL += ",''mod_class_neaddr1,''mod_class_neaddr2,''mod_class_neaddr3,''mod_class_neaddr4 ";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_class'";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                dt.Rows[i]["mod_class_ncname1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncname1", ""));
+                dt.Rows[i]["mod_class_ncname2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncname2", ""));
+                dt.Rows[i]["mod_class_nename1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nename1", ""));
+                dt.Rows[i]["mod_class_nename2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nename2", ""));
+                dt.Rows[i]["mod_class_ncrep"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncrep", ""));
+                dt.Rows[i]["mod_class_nerep"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nerep", ""));
+                dt.Rows[i]["mod_class_neaddr1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr1", ""));
+                dt.Rows[i]["mod_class_neaddr2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr2", ""));
+                dt.Rows[i]["mod_class_neaddr3"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr3", ""));
+                dt.Rows[i]["mod_class_neaddr4"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr4", ""));
+            }
 
             return dt;
         }

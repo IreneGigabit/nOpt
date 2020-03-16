@@ -1,4 +1,4 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -168,15 +168,14 @@
         });
 
         $("#fseq").html(br_opt.opt[0].fseq);
-        cust_form.init();
-        attent_form.init();
-        apcust_re_form.init();
-        case_form.init();
-        dmt_form.init();
-        tran_form.init();
+        try { cust_form.init(); } catch (e) { toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！"); throw e;}
+        try { attent_form.init(); } catch (e) { toastr.error("「案件聯絡人」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
+        try { apcust_re_form.init(); } catch (e) { toastr.error("「申請人」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
+        try { case_form.init(); } catch (e) { toastr.error("「收費與接洽事項」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
+        try { dmt_form.init(); } catch (e) { toastr.error("「案件主檔」資料載入失敗！<BR>請聯繫資訊人員！"); throw e; }
+        try { tran_form.init(); } catch (e) { toastr.error("「交辦內容」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
 
         $("input.dateField").datepick();
-
         //欄位開關
         $(".Lock").lock();
         //$("#F_cust_area").unlock();

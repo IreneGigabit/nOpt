@@ -45,6 +45,42 @@
 	}
 	//#endregion
 
+    //#region hideFor 指定隱藏模式
+	$.fn.hideFor = function (cond) {
+	    return this.each(function () {
+	        if (typeof cond === "undefined" || cond) {//符合條件 或 沒給條件
+	            if ($(this).hasClass("dateField")) {
+	                $(this).datepick("option", "showOnFocus", false).next(".datepick-trigger:first").hide();
+	            }
+	            $(this).hide();
+	        } else {
+	            if ($(this).hasClass("dateField")) {
+	                $(this).datepick("option", "showOnFocus", true).next(".datepick-trigger:first").show();
+	            }
+	            $(this).show();
+	        }
+	    });
+	}
+    //#endregion
+
+    //#region showFor 指定顯示模式
+	$.fn.showFor = function (cond) {
+	    return this.each(function () {
+	        if (typeof cond === "undefined" || cond) {//符合條件 或 沒給條件
+	            if ($(this).hasClass("dateField")) {
+	                $(this).datepick("option", "showOnFocus", true).next(".datepick-trigger:first").show();
+	            }
+	            $(this).show();
+	        } else {
+	            if ($(this).hasClass("dateField")) {
+	                $(this).datepick("option", "showOnFocus", false).next(".datepick-trigger:first").hide();
+	            }
+	            $(this).hide();
+	        }
+	    });
+	}
+    //#endregion
+
 	//#region chkRequire
 	$.fn.extend({
 		chkRequire: function (option) {
