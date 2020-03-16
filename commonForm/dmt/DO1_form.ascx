@@ -19,7 +19,7 @@
 	<tr id="tr_Popt_show1" style="display:none">
 		<td class="lightbluetable" valign="top"  align="right"><strong>案件編號：</strong></td>
 		<td class="whitetablebg" colspan="7" valign="top">
-			<input type="text" size="12" id="Popt_no" name="Popt_no" class="Lock">
+			<input type="text" size="12" id="Popt_no" name="Popt_no" class="Lock unlockC">
 		</td>
 	</tr>
 	<tr id="showPseq">
@@ -72,7 +72,7 @@
 		</TD>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" width="20%">　　<strong>你認為商標/標章圖樣那一部份違法請打勾並填寫：</strong></td>
+		<td class="lightbluetable" colspan="8" width="20%">　　<strong>你認為商標/標章圖樣那一部份違法請打勾並填寫：</strong></td>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right width="20%"></td>
@@ -203,13 +203,13 @@
 		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(O1Tran_remark1)"><strong>柒、<u>事實及理由：</u></strong></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><TEXTAREA rows=9 cols=90 id=Ptran_remark1 name=Ptran_remark1 class="Lock" wrap="Virtual"></TEXTAREA></td>
+		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=90 id=Ptran_remark1 name=Ptran_remark1 class="Lock"></textarea></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(ZAttechD)"><strong>捌、<u>證據(附件)內容：</u></strong></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top"><TEXTAREA rows=9 cols=90 id=Ptran_remark2 name=Ptran_remark2 class="Lock"></TEXTAREA></td>
+		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=90 id=Ptran_remark2 name=Ptran_remark2 class="Lock"></textarea></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(O1Other_item)"><strong>玖、<u>相關聯案件：</u></strong></td>
@@ -282,7 +282,7 @@
         $("input[name='Pclass_type'][value='" + jOpt.class_type + "']").attr("checked", true);
         $("#Pclass").val(jOpt.class);
         $("#Pclass_count").val(jOpt.class_count);
-        $("input[name='Peappl_name'][value='" + jOpt.cappl_name + "']").attr("checked", true);
+        $("input[name='Pcappl_name'][value='" + jOpt.cappl_name + "']").attr("checked", true);
         $("input[name='Peappl_name'][value='" + jOpt.eappl_name + "']").attr("checked", true);
         $("input[name='Pjappl_name'][value='" + jOpt.jappl_name + "']").attr("checked", true);
         $("input[name='Pdraw'][value='" + jOpt.draw + "']").attr("checked", true);
