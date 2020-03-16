@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -37,9 +37,9 @@
         if (Request["arcase"] == "DO1") {
             tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DO1_form.ascx"));//申請異議
         } else if (Request["arcase"] == "DI1") {
-            //<!--include file="./optform/DI1form.asp"-->//申請評定
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DI1_form.ascx"));//申請評定
         } else if (Request["arcase"] == "DR1") {
-            //<!--include file="./optform/DR1form.asp"-->//申請廢止
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DR1_form.ascx"));//申請廢止
         } else if (Request["arcase"] == "DE1" || Request["arcase"] == "AD7") {
             tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BC1_form.ascx"));//申請聽證(爭議案)
         } else if (Request["arcase"] == "DE2" || Request["arcase"] == "AD8") {
@@ -57,7 +57,6 @@
     }
 
 </script>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -68,13 +67,13 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery-1.12.4.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.datepick.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.datepick-zh-TW.js")%>"></script>
-<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/toastr.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 </head>
 
 <body>
-<table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
+<table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
             <font color="blue">區所案件編號：<span id="fseq"></span></font>
@@ -87,49 +86,50 @@
         <td colspan="2"><hr /></td>
     </tr>
 </table>
-
+<br>
 <form id="reg" name="reg" method="post" action="<%=HTProgPrefix%>Update.aspx">
-    <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
-    <tr><td>
-    <table border="0" cellspacing="0" cellpadding="0">
-        <tr id="CTab">
-            <td class="tab" href="#cust">案件客戶</td>
-            <td class="tab" href="#attent">案件聯絡人</td>
-            <td class="tab" href="#apcust_re">申請人</td>
-            <td class="tab" href="#case">收費與接洽事項</td>
-            <td class="tab" href="#dmt">案件主檔</td>
-            <td class="tab" href="#tran">交辦內容</td>
-        </tr>
-    </table>
-    </td></tr></table>
-    <table border="0" width="98%" cellspacing="0" cellpadding="0" align="center">
-        <tr>
-            <td>
-                <div class="tabCont" id="#cust">
-                    <uc1:cust_form runat="server" ID="cust_form" />
-                    <!--include file="../commonForm/dmt/cust_form.ascx"--><!--案件客戶-->
-                </div>
-                <div class="tabCont" id="#attent">
-                    <uc1:attent_form runat="server" ID="attent_form" />
-                    <!--include file="../commonForm/dmt/attent_form.ascx"--><!--案件聯絡人-->
-                </div>
-                <div class="tabCont" id="#apcust_re">
-                    <uc1:apcust_re_form runat="server" id="apcust_re_form" />
-                    <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人-->
-                </div>
-                <div class="tabCont" id="#case">
-                    <uc1:case_form runat="server" ID="case_form" />
-                    <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
-                </div>
-                <div class="tabCont" id="#dmt">
-                    <uc1:dmt_form runat="server" ID="dmt_form" />
-                    <!--include file="../commonForm/dmt/dmt_form.ascx"--><!--案件主檔-->
-                </div>
-                <div class="tabCont" id="#tran">
-                    <asp:PlaceHolder ID="tranHolder" runat="server"></asp:PlaceHolder><!--交辦內容欄位畫面-->
-                </div>
-            </td>
-        </tr>
+    <table cellspacing="1" cellpadding="0" width="98%" border="0">
+    <tr>
+        <td>
+        <table border="0" cellspacing="0" cellpadding="0">
+            <tr id="CTab">
+                <td class="tab" href="#cust">案件客戶</td>
+                <td class="tab" href="#attent">案件聯絡人</td>
+                <td class="tab" href="#apcust_re">申請人</td>
+                <td class="tab" href="#case">收費與接洽事項</td>
+                <td class="tab" href="#dmt">案件主檔</td>
+                <td class="tab" href="#tran">交辦內容</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="tabCont" id="#cust">
+                <uc1:cust_form runat="server" ID="cust_form" />
+                <!--include file="../commonForm/dmt/cust_form.ascx"--><!--案件客戶-->
+            </div>
+            <div class="tabCont" id="#attent">
+                <uc1:attent_form runat="server" ID="attent_form" />
+                <!--include file="../commonForm/dmt/attent_form.ascx"--><!--案件聯絡人-->
+            </div>
+            <div class="tabCont" id="#apcust_re">
+                <uc1:apcust_re_form runat="server" id="apcust_re_form" />
+                <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人-->
+            </div>
+            <div class="tabCont" id="#case">
+                <uc1:case_form runat="server" ID="case_form" />
+                <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
+            </div>
+            <div class="tabCont" id="#dmt">
+                <uc1:dmt_form runat="server" ID="dmt_form" />
+                <!--include file="../commonForm/dmt/dmt_form.ascx"--><!--案件主檔-->
+            </div>
+            <div class="tabCont" id="#tran">
+                <asp:PlaceHolder ID="tranHolder" runat="server"></asp:PlaceHolder><!--交辦內容欄位畫面-->
+            </div>
+        </td>
+    </tr>
     </table>
 </form>
 
@@ -180,7 +180,7 @@
         //欄位開關
         $(".Lock").lock();
         //$("#F_cust_area").unlock();
-        $("#F_cust_area").unlock((<%#HTProgRight%> & 2));
+        //$("#PBranch,#PBseq,#PBseq1").unlock((<%#HTProgRight%> & 256));
     }
 
     // 切換頁籤
