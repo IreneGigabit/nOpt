@@ -50,6 +50,7 @@
         DataTable dt_tran_mod_aprep = GetTranModAprep(case_no, opt_sqlno);
         DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
         DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
+        DataTable dt_brdmt_attach = GetBRDmtAttach(case_no);
 
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
@@ -75,12 +76,13 @@
         Response.Write(",\"tran_mod_aprep\":" + JsonConvert.SerializeObject(dt_tran_mod_aprep, settings).ToUnicode() + "\n");
         Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
         Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
+        Response.Write(",\"brdmt_attach\":" + JsonConvert.SerializeObject(dt_brdmt_attach, settings).ToUnicode() + "\n");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
     }
 
-    private string showFile(string pBranch, string pFile) {
+    private string showDRFile(string pBranch, string pFile) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             //抓區所商標圖server主機名稱(iis)
             string uploadserver_name = "";
@@ -111,7 +113,26 @@
         }
     }
 
-        
+    private string showBRDmtFile(string pBranch, string pFile, string tname) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            string servername = "";
+            if (pBranch == "N") servername = Sys.webservernameN;
+            if (pBranch == "C") servername = Sys.webservernameC;
+            if (pBranch == "S") servername = Sys.webservernameS;
+            if (pBranch == "K") servername = Sys.webservernameK;
+
+            string rtnStr = "";
+
+            if (pFile.IndexOf(".") > -1) {//路徑包含檔案
+                rtnStr = "http://" + servername + pFile;
+            } else {
+                rtnStr = "http://" + servername + pFile + "/" + tname;
+            }
+
+            return rtnStr;
+        }
+    }
+
     #region GetBROpt 案件資料
     private DataTable GetBROpt(string pBranch,string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
@@ -126,9 +147,9 @@
                 att_sql = dt.Rows[0].SafeRead("att_sql", "");
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
-                
+
                 dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
-                dt.Rows[0]["drfile"] = showFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
+                dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
             }
 
             return dt;
@@ -353,18 +374,18 @@
             conn.DataTable(SQL, dt);
 
             for (int i = 0; i < dt.Rows.Count; i++) {
-                dt.Rows[i]["mod_dmt_ncname1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncname1", ""));
-                dt.Rows[i]["mod_dmt_ncname2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncname2", ""));
-                dt.Rows[i]["mod_dmt_nename1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nename1", ""));
-                dt.Rows[i]["mod_dmt_nename2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nename2", ""));
-                dt.Rows[i]["mod_dmt_ncrep"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncrep", ""));
-                dt.Rows[i]["mod_dmt_nerep"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nerep", ""));
-                dt.Rows[i]["mod_dmt_neaddr1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr1", ""));
-                dt.Rows[i]["mod_dmt_neaddr2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr2", ""));
-                dt.Rows[i]["mod_dmt_neaddr3"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr3", ""));
-                dt.Rows[i]["mod_dmt_neaddr4"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr4", ""));
+                dt.Rows[i]["mod_dmt_ncname1"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("ncname1", ""));
+                dt.Rows[i]["mod_dmt_ncname2"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("ncname2", ""));
+                dt.Rows[i]["mod_dmt_nename1"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("nename1", ""));
+                dt.Rows[i]["mod_dmt_nename2"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("nename2", ""));
+                dt.Rows[i]["mod_dmt_ncrep"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("ncrep", ""));
+                dt.Rows[i]["mod_dmt_nerep"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("nerep", ""));
+                dt.Rows[i]["mod_dmt_neaddr1"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr1", ""));
+                dt.Rows[i]["mod_dmt_neaddr2"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr2", ""));
+                dt.Rows[i]["mod_dmt_neaddr3"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr3", ""));
+                dt.Rows[i]["mod_dmt_neaddr4"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr4", ""));
             }
-                
+
             return dt;
         }
     }
@@ -433,16 +454,16 @@
             conn.DataTable(SQL, dt);
 
             for (int i = 0; i < dt.Rows.Count; i++) {
-                dt.Rows[i]["mod_class_ncname1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncname1", ""));
-                dt.Rows[i]["mod_class_ncname2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncname2", ""));
-                dt.Rows[i]["mod_class_nename1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nename1", ""));
-                dt.Rows[i]["mod_class_nename2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nename2", ""));
-                dt.Rows[i]["mod_class_ncrep"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("ncrep", ""));
-                dt.Rows[i]["mod_class_nerep"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("nerep", ""));
-                dt.Rows[i]["mod_class_neaddr1"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr1", ""));
-                dt.Rows[i]["mod_class_neaddr2"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr2", ""));
-                dt.Rows[i]["mod_class_neaddr3"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr3", ""));
-                dt.Rows[i]["mod_class_neaddr4"] = showFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[0].SafeRead("neaddr4", ""));
+                dt.Rows[i]["mod_class_ncname1"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("ncname1", ""));
+                dt.Rows[i]["mod_class_ncname2"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("ncname2", ""));
+                dt.Rows[i]["mod_class_nename1"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("nename1", ""));
+                dt.Rows[i]["mod_class_nename2"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("nename2", ""));
+                dt.Rows[i]["mod_class_ncrep"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("ncrep", ""));
+                dt.Rows[i]["mod_class_nerep"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("nerep", ""));
+                dt.Rows[i]["mod_class_neaddr1"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr1", ""));
+                dt.Rows[i]["mod_class_neaddr2"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr2", ""));
+                dt.Rows[i]["mod_class_neaddr3"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr3", ""));
+                dt.Rows[i]["mod_class_neaddr4"] = showDRFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("neaddr4", ""));
             }
 
             return dt;
@@ -450,4 +471,22 @@
     }
     #endregion
 
+    #region GetBRDmtAttach
+    private DataTable GetBRDmtAttach(string pCaseNo) {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
+            SQL = "select *,''preview_path ";
+            SQL += "from dmt_attach ";
+            SQL += "where case_no='" +pCaseNo+ "' and source='case' and attach_flag<>'D' and attach_branch='B' ";
+            SQL += " order by attach_sqlno ";
+
+            DataTable dt = new DataTable();
+            connB.DataTable(SQL,dt);
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                dt.Rows[i]["preview_file"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
+            }
+
+            return dt;
+        }
+    }
+    #endregion
 </script>

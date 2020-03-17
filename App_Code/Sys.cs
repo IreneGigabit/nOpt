@@ -104,21 +104,125 @@ public class Sys
 	}
 
 	/// <summary>
-	/// 案件資料庫名稱
+	/// 案件資料庫名稱(抓共用設定用.ex:code_br,case_fee)
 	/// </summary>
 	public static string tdbname {
 		get {
 			switch (Host) {
-				case "SIK10": return "sikdbs";//正式環境
+				case "sik10": return "sikdbs";//正式環境
 				default: return "sindbs";//開發環境
 			}
 		}
 	}
 
-	/// <summary>  
-	/// 組本所編號
-	/// </summary>  
-	public static string formatSeq(string seq, string seq1, string country, string branch, string dept) {
+    /// <summary>
+    /// 區所上傳檔案檢視主機(北)
+    /// </summary>
+    public static string webservernameN {
+		get {
+			switch (Host) {
+				case "sik10": return "sinn03";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+			}
+		}
+	}
+
+    /// <summary>
+    /// 區所上傳檔案檢視主機(中)
+    /// </summary>
+    public static string webservernameC {
+        get {
+            switch (Host) {
+                case "sik10": return "sic09";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>
+    /// 區所上傳檔案檢視主機(南)
+    /// </summary>
+    public static string webservernameS {
+        get {
+            switch (Host) {
+                case "SIK10": return "sinn03";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>
+    /// 區所上傳檔案檢視主機(雄)
+    /// </summary>
+    public static string webservernameK {
+        get {
+            switch (Host) {
+                case "SIK10": return "sik09";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>
+    /// 區所上傳檔案copy主機(北)
+    /// </summary>
+    public static string uploadservernameN {
+        get {
+            switch (Host) {
+                case "sik10": return "sinn11";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>
+    /// 區所上傳檔案copy主機(中)
+    /// </summary>
+    public static string uploadservernameC {
+        get {
+            switch (Host) {
+                case "sik10": return "sic11";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>
+    /// 區所上傳檔案copy主機(南)
+    /// </summary>
+    public static string uploadservernameS {
+        get {
+            switch (Host) {
+                case "SIK10": return "sis11";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>
+    /// 區所上傳檔案copy主機(雄)
+    /// </summary>
+    public static string uploadservernameK {
+        get {
+            switch (Host) {
+                case "SIK10": return "sik08";//正式環境
+                case "web10": return "web01";//測試環境
+                default: return "web02";//開發環境
+            }
+        }
+    }
+
+    /// <summary>  
+    /// 組本所編號
+    /// </summary>  
+    public static string formatSeq(string seq, string seq1, string country, string branch, string dept) {
 		string lseq = branch + dept + "-" + seq;
 		lseq += (seq1 != "_" ? ("-" + seq1) : "");
 		lseq += (country != "" ? (" " + country.ToUpper()) : "");

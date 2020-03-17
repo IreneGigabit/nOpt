@@ -5,6 +5,9 @@
 <%@ Register Src="~/commonForm/dmt/apcust_re_form.ascx" TagPrefix="uc1" TagName="apcust_re_form" %>
 <%@ Register Src="~/commonForm/dmt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
 <%@ Register Src="~/commonForm/dmt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
+<%@ Register Src="~/commonForm/dmt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
+
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -127,6 +130,7 @@
             </div>
             <div class="tabCont" id="#tran">
                 <asp:PlaceHolder ID="tranHolder" runat="server"></asp:PlaceHolder><!--交辦內容欄位畫面-->
+                <uc1:brdmt_upload_Form runat="server" ID="brdmt_upload_Form" />
             </div>
         </td>
     </tr>
@@ -168,12 +172,13 @@
         });
 
         $("#fseq").html(br_opt.opt[0].fseq);
-        try { cust_form.init(); } catch (e) { toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！"); throw e;}
-        try { attent_form.init(); } catch (e) { toastr.error("「案件聯絡人」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
-        try { apcust_re_form.init(); } catch (e) { toastr.error("「申請人」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
-        try { case_form.init(); } catch (e) { toastr.error("「收費與接洽事項」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
-        try { dmt_form.init(); } catch (e) { toastr.error("「案件主檔」資料載入失敗！<BR>請聯繫資訊人員！"); throw e; }
-        try { tran_form.init(); } catch (e) { toastr.error("「交辦內容」載入失敗！<BR>請聯繫資訊人員！"); throw e; }
+        cust_form.init();//toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！");
+        attent_form.init();//toastr.error("「案件聯絡人」載入失敗！<BR>請聯繫資訊人員！");
+        apcust_re_form.init();//toastr.error("「申請人」載入失敗！<BR>請聯繫資訊人員！");
+        case_form.init();//toastr.error("「收費與接洽事項」載入失敗！<BR>請聯繫資訊人員！");
+        dmt_form.init();//toastr.error("「案件主檔」資料載入失敗！<BR>請聯繫資訊人員！");
+        tran_form.init();//toastr.error("「交辦內容」載入失敗！<BR>請聯繫資訊人員！");
+        brupload_form.init();//toastr.error("「區所上傳文件」載入失敗！<BR>請聯繫資訊人員！");
 
         $("input.dateField").datepick();
         //欄位開關

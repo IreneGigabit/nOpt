@@ -298,7 +298,7 @@
         if (jMod.length > 0) {
             $.each(jMod, function (i, item) {
                 //增加一筆
-                tran_form.appendModAp()
+                tran_form.appendModAp();
                 //填資料
                 var nRow = $("#apnum").val();
                 $("#ttg1_mod_ap_ncname1_" + nRow).val(item.ncname1);
