@@ -25,7 +25,14 @@
 	            } else {
 	                $(this).prop('disabled', true);
 	            }
-	        }
+	        }else{
+		        if ($(this).hasClass("dateField")) {
+		            $(this).datepick("option", "showOnFocus", true).next(".datepick-trigger:first").show();
+		            //xx$(this).next(".datepick-trigger:first").prop('disabled', false);
+		            //$(this).datepick("enable");
+		        }
+		        $(this).prop('readonly', false).removeClass('SEdit').prop('disabled', false);
+			}
 		});
 	}
 	//#endregion
@@ -40,7 +47,18 @@
 		            //$(this).datepick("enable");
 		        }
 		        $(this).prop('readonly', false).removeClass('SEdit').prop('disabled', false);
-		    }
+		    }else{
+	            if ($(this).hasClass("dateField")) {
+	                $(this).datepick("option", "showOnFocus", false).next(".datepick-trigger:first").hide();
+	                //xx$(this).next(".datepick-trigger:first").prop('disabled', true);
+	                //$(this).datepick("disable");
+	            }
+	            if (this.type == "text" || this.type == "textarea") {
+	                $(this).prop('readonly', true).addClass('SEdit');
+	            } else {
+	                $(this).prop('disabled', true);
+	            }
+			}
 		});
 	}
 	//#endregion
