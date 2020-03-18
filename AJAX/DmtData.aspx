@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -25,10 +25,7 @@
     //http://web08/nOpt/AJAX/DmtData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
 
     protected void Page_Load(object sender, EventArgs e) {
-        if (Request["branch"] == "N") strConnB = Conn.OptBN;
-        if (Request["branch"] == "C") strConnB = Conn.OptBC;
-        if (Request["branch"] == "S") strConnB = Conn.OptBS;
-        if (Request["branch"] == "K") strConnB = Conn.OptBK;
+        strConnB = Conn.OptB(Request["branch"]);
 
         branch = Request["branch"];
         opt_sqlno = Request["opt_sqlno"];
@@ -114,22 +111,12 @@
     }
 
     private string showBRDmtFile(string pBranch, string pFile, string tname) {
-        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            string servername = "";
-            if (pBranch == "N") servername = Sys.webservernameN;
-            if (pBranch == "C") servername = Sys.webservernameC;
-            if (pBranch == "S") servername = Sys.webservernameS;
-            if (pBranch == "K") servername = Sys.webservernameK;
+        string servername = Sys.webservername(pBranch);
 
-            string rtnStr = "";
-
-            if (pFile.IndexOf(".") > -1) {//路徑包含檔案
-                rtnStr = "http://" + servername + pFile;
-            } else {
-                rtnStr = "http://" + servername + pFile + "/" + tname;
-            }
-
-            return rtnStr;
+        if (pFile.IndexOf(".") > -1) {//路徑包含檔案
+            return "http://" + servername + pFile;
+        } else {
+            return "http://" + servername + pFile + "/" + tname;
         }
     }
 
@@ -163,6 +150,7 @@
             SQL = "Select *,''apclassnm,''ref_seqnm,''magnm ";
             SQL += "from vcustlist ";
             SQL += "where cust_area='" + pCustArea + "' and  cust_seq='" + pCustSeq + "' ";
+            //Select * from vcustlist where cust_area='K' and cust_seq='6168'
             DataTable dt = new DataTable();
             connB.DataTable(SQL,dt);
 
@@ -482,7 +470,7 @@
             DataTable dt = new DataTable();
             connB.DataTable(SQL,dt);
             for (int i = 0; i < dt.Rows.Count; i++) {
-                dt.Rows[i]["preview_file"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
+                dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
             }
 
             return dt;
