@@ -198,7 +198,6 @@
 		                <td class="lightbluetable" align="right">商品群組代碼##：</td>
 		                <td class="whitetablebg" colspan="7">
                             <textarea id=grp_code1_## name=grp_code1_## ROWS="1" COLS="50" class="Lock"></textarea>(跨群組請以全形「、」作分隔)
-		                    <input type="text" id="color_##" name="color_##" value="">
                         </td>
 	                </tr>
                 </tfoot>
