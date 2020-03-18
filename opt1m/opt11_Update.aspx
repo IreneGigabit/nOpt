@@ -1,5 +1,8 @@
-<%@Page Language="C#" CodePage="65001"%>
-<%@Import Namespace = "System.Data.SqlClient"%>
+﻿<%@Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
+<%@ Import Namespace = "System.Collections.Generic "%>
+<%@ Import Namespace="System.Net.Mail" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
     protected string HTProgCap = "區所交辦收件確認-入檔";//功能名稱
@@ -99,10 +102,122 @@
     }
 
     private void doReturn() {
+        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+        DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(Request["chkTest"] == "TEST");
+        try {
+            SQL = "update br_opt set mark='B' ";
+            SQL += " where opt_sqlno='" + opt_sqlno + "' ";
+            conn.ExecuteNonQuery(SQL);
+
+            SQL = "update step_dmt set opt_sqlno=null ";
+            SQL += ",opt_branch=null ";
+            SQL += ",opt_stat='N' ";
+            SQL += " where opt_sqlno='" + opt_sqlno + "' ";
+            SQL += " and case_no='" + case_no + "' ";
+            connB.ExecuteNonQuery(SQL);
+
+            //2010/8/4因承辦交辦發文增加todo_dmt
+            SQL = "insert into todo_dmt(pre_sqlno,syscode,apcode,from_flag,branch,seq,seq1,step_grade,case_in_scode,in_no,case_no,in_scode,in_date";
+            SQL += ",dowhat,job_scode,job_team,job_status) ";
+            SQL += "select sqlno,syscode,'" + prgid + "','CGRS','" + branch + "','" + Request["bseq"] + "','" + Request["bseq1"] + "' ";
+            SQL += ",step_grade,case_in_scode,in_no,'" + case_no + "','" + Session["scode"] + "' ";
+            SQL += ",getdate(),'DP_GS',job_scode,job_team,'NN' ";
+            SQL += "from todo_dmt where temp_rs_sqlno='" + opt_sqlno + "' and case_no='" + case_no + "' and dowhat='DP_GS' ";
+            connB.ExecuteNonQuery(SQL);
+
+            //抓前一todo的流水號
+            string pre_sqlno = "",todo_scode="";
+            SQL = "Select max(sqlno) as maxsqlno,in_scode from todo_opt ";
+            SQL += "where syscode='" + branch + "TBRT' ";
+            SQL += "and apcode='brt18' and opt_sqlno='" + opt_sqlno + "' ";
+            SQL += "and dowhat='RE' group by in_scode ";
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    pre_sqlno = dr.SafeRead("maxsqlno", "");
+                    todo_scode = dr.SafeRead("in_scode", "");
+                }
+            }
+
+            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "' ";
+            SQL += ",approve_desc='" + Request["Preject_reason"].ToBig5() + "' ";
+            SQL += ",resp_date=getdate() ";
+            SQL += ",job_status='XX' ";
+            SQL += " where apcode='brt18' and opt_sqlno='" + opt_sqlno + "' ";
+            SQL += " and dowhat='RE' and syscode='" + branch + "TBRT' ";
+            SQL += " and sqlno=" + pre_sqlno;
+            conn.ExecuteNonQuery(SQL);
+
+            CreateMail(conn,pre_sqlno,todo_scode);
+            
+            //conn.Commit();
+            //connB.Commit();
+            conn.RollBack();
+            connB.RollBack();
+            msg = "退回成功";
+        }
+        catch (Exception ex) {
+            conn.RollBack();
+            connB.RollBack();
+            Sys.errorLog(ex, conn.exeSQL, prgid);
+            msg = "退回失敗";
+        }
+        finally {
+            conn.Dispose();
+            connB.Dispose();
+        }
+    }
+    
+    private void CreateMail(DBHelper conn,string pre_sqlno,string todo_scode){
+        string fseq="",in_scode="",in_scode_name="",cust_area="",cust_seq="";
+        string ap_cname="",appl_name="",arcase_name="",last_date="";
+        SQL = "select Bseq,Bseq1,branch,in_scode,scode_name,cust_area,cust_seq ";
+        SQL += ",appl_name,arcase_name,Last_date,ap_cname ";
+        SQL+="from vbr_opt where case_no='" + case_no + "' and branch='" + branch + "'";
+        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+            if (dr.Read()) {
+		        fseq=Sys.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
+		        in_scode=dr.SafeRead("in_scode", "");
+		        in_scode_name=dr.SafeRead("scode_name", "");
+		        cust_area=dr.SafeRead("cust_area", "");
+		        cust_seq=dr.SafeRead("cust_seq", "");
+		        ap_cname=dr.SafeRead("ap_cname", "");
+		        appl_name=dr.SafeRead("appl_name", "");
+		        arcase_name =dr.SafeRead("arcase_name", "");
+		        last_date=dr.SafeRead("last_date", "");
+            }
+        }
         
+	    string Subject = "專案室爭救案件退件通知";
+        string strFrom = Sys.GetSession("scode");
+        List<string> strTo = new List<string>(); List<string> strCC = new List<string>(); List<string> strBCC = new List<string>();
+        switch (Sys.Host) {
+            case "web08":
+                strTo.Add("m1583@saint-island.com.tw");
+                strCC.Add("m1583@saint-island.com.tw");
+                Subject = "(web08)" + Subject;
+                break;
+            case "web10":
+                strTo.Add(Session["scode"] + "@saint-island.com.tw");
+                strCC.Add(Session["scode"] + "@saint-island.com.tw");
+                Subject = "(web10)" + Subject;
+                break;
+            default:
+                strTo.Add(todo_scode + "@saint-island.com.tw");
+                strCC.Add(in_scode + "@saint-island.com.tw");
+                break;
+        }
+
+        string body="【區所案件編號】 : <B>" + fseq + "</B><br>"+
+            "【營洽】 : <B>" + in_scode+"-"+in_scode_name+ "</B><br>"+
+            "【申請人】 : <B>"+ ap_cname + "</B><br>"+
+            "【案件名稱】 : <B>" + appl_name + "</B><br>"+
+            "【案性】 : <B>" + arcase_name  + "</B><br>"+
+            "【退件理由】 : <br>　　"+Request["Preject_reason"]+"<Br><Br><p>"+
+            "◎請至承辦作業－＞國內案承辦交辦發文作業，重新交辦。 ";
+
+        Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, null);
     }
 </script>
-
 
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");

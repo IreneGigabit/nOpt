@@ -3,7 +3,7 @@
 <script runat="server">
 
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "opt11";//程式檔名前綴
+    protected string HTProgPrefix = "opt21";//程式檔名前綴
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
@@ -22,7 +22,6 @@
     
     private void QueryPageLayout() {
     }
-
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -42,8 +41,9 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">清單</b>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">未分案清單</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+		    <a href="opt21EditA.asp?submitTask=ADD&prgid=<%=prgid%>">[新增分案]</a>
             <!--<a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;-->
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
@@ -63,6 +63,10 @@
 		        ◎區所案件編號:
 			        <Select id="qryBranch" name="qryBranch"></Select>
 			        <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
+	        </td>
+	        <td class="text9">
+		        ◎案件編號:
+			        <input type="text" name="qryopt_no" id="qryopt_no" size="10" maxLength="10">
 	        </td>
 	        <td class="text9">
 		        ◎交辦日期:
@@ -111,25 +115,29 @@
 <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	<thead>
       <Tr>
+	    <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="Opt_no">案件編號</u></td>
 	    <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="bseq,bseq1">區所案件編號</u></td>
-	    <td class="lightbluetable" nowrap align="center">營洽</td>
-	    <td class="lightbluetable" nowrap align="center">申請人</td>
 	    <td class="lightbluetable" nowrap align="center">案件名稱</td> 
 	    <td class="lightbluetable" nowrap align="center">案性</td> 
+	    <td class="lightbluetable" nowrap align="center">收文日期</td>
 	    <td class="lightbluetable" nowrap align="center">法定期限</td>
 	    <td class="lightbluetable" nowrap align="center">作業</td>
       </tr>
 	</thead>
 	<tfoot style="display:none">
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
+		<td align="center">{{opt_no}}</td>
 		<td align="center">{{fseq}}</td>
-		<td align="center">{{scode_name}}</td>
-		<td align=left>{{ap_cname}}</td>
 		<td nowrap>{{appl_name}}</td>
 		<td nowrap>{{arcase_name}}</td>
+		<td align="center">{{confirm_date}}</td>
 		<td align="center">{{last_date}}</td>
 		<td align="center">
-            <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[確認]</a>
+			<%IF Case_no<>empty then%>
+				<a href="<%#HTProgPrefix%>Edit.asp?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
+			<%Else%>
+				<a href="<%#HTProgPrefix%>EditA.asp?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
+			<%End IF%>
 		</td>
 	</tr>
 	</tfoot>
@@ -221,11 +229,11 @@
                         strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
                         strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
 
-                        strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq );
-                        strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
-                        strLine1 = strLine1.replace(/{{ap_cname}}/g, item.ap_cname);
+                        strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
+                        strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
+                        strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date,"yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
                         strLine1 = strLine1.replace(/{{Case_no}}/g, item.case_no);

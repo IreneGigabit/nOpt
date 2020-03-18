@@ -1,8 +1,11 @@
-using System;
+﻿using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Net.Mail;
+using System.Text;
+
 public class Sys
 {
 	public static string Host = HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString().ToLower();
@@ -158,6 +161,61 @@ public class Sys
 		}
 		return rtnStr;
 	}
+
+    /// <summary>
+    /// 發送郵件
+    /// </summary>
+    public static void DoSendMail(string Subject, string Msg, string SendFrom, List<string> SendTo, List<string> SendCC, List<string> SendBCC) {
+        MailMessage MailMsg = new MailMessage();
+        MailMsg.From = new MailAddress(SendFrom);//寄件者
+        foreach (string to in SendTo)//收件者
+		{
+            if (!string.IsNullOrEmpty(to)) {
+                MailMsg.To.Add(new MailAddress(to));
+            }
+        }
+        foreach (string cc in SendCC)//副本
+		{
+            if (!string.IsNullOrEmpty(cc)) {
+                MailMsg.CC.Add(new MailAddress(cc));
+            }
+        }
+        foreach (string bcc in SendBCC)//密件副本
+		{
+            if (!string.IsNullOrEmpty(bcc)) {
+                MailMsg.Bcc.Add(new MailAddress(bcc));
+            }
+        }
+
+        MailMsg.Subject = Subject;//主旨
+        MailMsg.SubjectEncoding = Encoding.UTF8;
+        MailMsg.Body = Msg;//內文
+        MailMsg.BodyEncoding = Encoding.UTF8;
+        MailMsg.IsBodyHtml = true;//郵件格式為HTML
+
+        SmtpClient client = new SmtpClient(Sys.getAppSetting("SMTP"));
+        try {
+            client.ServicePoint.MaxIdleTime = 2;//連線可閒置時間(毫秒)
+            client.ServicePoint.ConnectionLimit = 1;//允許最大連線數
+            client.Credentials = new System.Net.NetworkCredential(Sys.getAppSetting("SMTPUserName"), Sys.getAppSetting("SMTPPassword"));
+            client.Send(MailMsg);//發送郵件
+        }
+        catch {
+            throw;
+        }
+        finally {
+	    	client.ServicePoint.CloseConnectionGroup(client.ServicePoint.ConnectionName);//關閉SMTP連線
+        }
+
+        //釋放每個附件，才不會Lock住
+        if (MailMsg.Attachments != null && MailMsg.Attachments.Count > 0) {
+            for (int i = 0; i < MailMsg.Attachments.Count; i++) {
+                MailMsg.Attachments[i].Dispose();
+            }
+        }
+        MailMsg.Dispose();//釋放訊息
+    }
+
 
     /// <summary>  
     /// 組本所編號

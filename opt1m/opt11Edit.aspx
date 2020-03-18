@@ -1,4 +1,4 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -152,7 +152,7 @@
 		    </TD>
 	    </tr>
     </table>
-    <label id="labTest" style="display:none"><input type="checkbox" name="chkTest" value="TEST" />測試</label>
+    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
@@ -188,6 +188,7 @@
     //初始化
     function this_init() {
         settab("#tran");
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);//☑測試
 
         //取得案件資料
         $.ajax({
@@ -196,7 +197,7 @@
             async: false,
             cache: false,
             success: function (json) {
-                toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                if($("#chkTest").attr("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 var JSONdata = $.parseJSON(json);
                 if (JSONdata.length == 0) {
                     toastr.warning("無案件資料可載入！");
@@ -221,7 +222,6 @@
         //欄位控制
         $(".Lock").lock();
         $("#CTab td.tab[href='#dmt']").hideFor(("<%#dmt_hide_flag%>" == "Y"));
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);
     }
 
     // 切換頁籤
