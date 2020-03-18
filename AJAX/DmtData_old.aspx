@@ -14,10 +14,7 @@
     protected string strConnB = "";
 
     protected void Page_Load(object sender, EventArgs e) {
-        if (Request["branch"] == "N") strConnB = Conn.OptBN;
-        if (Request["branch"] == "C") strConnB = Conn.OptBC;
-        if (Request["branch"] == "S") strConnB = Conn.OptBS;
-        if (Request["branch"] == "K") strConnB = Conn.OptBK;
+        strConnB = Conn.OptB(Request["branch"]);
 
         string branch = "";
         string opt_sqlno = "";
