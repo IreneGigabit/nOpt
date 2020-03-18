@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -7,19 +7,17 @@
 <%@ Register Src="~/commonForm/dmt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
 <%@ Register Src="~/commonForm/dmt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
 
-
-
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
-    protected string StrQueryLink = "";
-    protected string StrQueryBtn = "";
-
     protected string branch = "";
     protected string opt_sqlno = "";
+    protected string case_no = "";
+    
+    protected string dmt_hide_flag = "N";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -28,12 +26,21 @@
 
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
+        case_no = Request["case_no"] ?? "";
 
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             QueryPageLayout();
             this.DataBind();
+        }
+    }
+    
+    
+    private void QueryPageLayout() {
+        //決定要不要隱藏案件主檔畫面
+        if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
+            dmt_hide_flag = "Y";
         }
 
         //交辦內容欄位畫面
@@ -50,13 +57,6 @@
         } else {
             tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BZZ1_form.ascx"));//無申請書之交辦內容案
         }
-    }
-    
-    private void QueryPageLayout() {
-        //if ((HTProgRight & 2) > 0) {
-            StrQueryLink = "<input type=\"image\" id=\"imgSrch\" src=\"../icon/inquire_in.png\" title=\"查詢\" />&nbsp;";
-            StrQueryBtn = "<input type=\"button\" id=\"btnSrch\" value =\"查詢\" class=\"cbutton\" />";
-        //}
     }
 
 </script>
@@ -90,7 +90,12 @@
     </tr>
 </table>
 <br>
-<form id="reg" name="reg" method="post" action="<%=HTProgPrefix%>Update.aspx">
+<form id="reg" name="reg" method="post">
+    <input type="hidden" name="case_no" value="<%=case_no%>">
+	<input type="hidden" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" name="submittask">
+	<input type="hidden" name="prgid" value="<%=prgid%>">
+
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td>
@@ -135,12 +140,43 @@
         </td>
     </tr>
     </table>
+    <br />
+    <table id=tabreject class="bluetable" border="0" cellspacing="1" cellpadding="2" width="98%" style="display:none">
+	    <Tr align="center">
+	        <TD align="center" colspan="3" class=lightbluetable><font color=red>退&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;處&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;理</font></TD>
+	    </tr>
+	    <Tr>
+		    <TD align=center class=lightbluetable width="18%"><font color="red">退回原因</font></TD>
+		    <TD class=lightbluetable>
+			    <textarea ROWS="5" COLS="82%" align="left" id=Preject_reason name=Preject_reason ></textarea>
+		    </TD>
+	    </tr>
+    </table>
+    <label id="labTest" style="display:none"><input type="checkbox" name="chkTest" value="TEST" />測試</label>
 </form>
+
+<table border="0" width="98%" cellspacing="0" cellpadding="0" >
+<tr id="tr_button1">
+    <td align="center">
+        <input type=button value ="收件確認" class="cbutton" id="btnsearchSubmit">
+        <input type=button value ="退回區所" class="redbutton" id="btnback1Submit">
+    </td>
+</tr>
+<tr id="tr_button2" style="display:none">
+    <td align="center">
+        <input type=button value ="退回" class="redbutton" id="btnbackSubmit">
+        <input type=button value ="取消" class="c1button" id="btnresetSubmit">
+    </td>
+</tr>
+</table>
 
 </body>
 </html>
 
 <script language="javascript" type="text/javascript">
+    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
+    $(document).ajaxStop(function () { $.maskStop(); });
+
     $(function () {
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "20%,80%";
@@ -172,19 +208,20 @@
         });
 
         $("#fseq").html(br_opt.opt[0].fseq);
-        cust_form.init();//toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！");
-        attent_form.init();//toastr.error("「案件聯絡人」載入失敗！<BR>請聯繫資訊人員！");
-        apcust_re_form.init();//toastr.error("「申請人」載入失敗！<BR>請聯繫資訊人員！");
-        case_form.init();//toastr.error("「收費與接洽事項」載入失敗！<BR>請聯繫資訊人員！");
-        dmt_form.init();//toastr.error("「案件主檔」資料載入失敗！<BR>請聯繫資訊人員！");
-        tran_form.init();//toastr.error("「交辦內容」載入失敗！<BR>請聯繫資訊人員！");
-        brupload_form.init();//toastr.error("「區所上傳文件」載入失敗！<BR>請聯繫資訊人員！");
+        cust_form.init();
+        attent_form.init();
+        apcust_re_form.init();
+        case_form.init();
+        dmt_form.init();
+        tran_form.init();
+        brupload_form.init();
 
         $("input.dateField").datepick();
-        //欄位開關
+
+        //欄位控制
         $(".Lock").lock();
-        //$("#F_cust_area").unlock();
-        //$("#PBranch,#PBseq,#PBseq1").unlock((<%#HTProgRight%> & 256));
+        $("#CTab td.tab[href='#dmt']").hideFor(("<%#dmt_hide_flag%>" == "Y"));
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);
     }
 
     // 切換頁籤
@@ -206,4 +243,44 @@
             window.close();
         }
     })
+
+    //收件確認
+    $("#btnsearchSubmit").click(function () {
+        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+        reg.submittask.value = "U";
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.submit();
+    });
+
+    //退回區所(1)
+    $("#btnback1Submit").click(function () {
+        if (confirm("是否確定退回區所重新交辦？？")) {
+            $("#tr_button1").hide();
+            $("#tr_button2,#tabreject").show();
+        }else{
+            $("#tr_button1").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+    });
+
+    //退回(2)
+    $("#btnbackSubmit").click(function () {
+        if ($("#Preject_reason").val() == "") {
+            alert("請輸入退回原因！");
+            $("#Preject_reason").focus();
+            return false;
+        }
+        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+
+        reg.submittask.value = "B";
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.submit();
+    });
+
+    //取消
+    $("#btnresetSubmit").click(function () {
+        $("#tr_button1").show();
+        $("#tr_button2,#tabreject").hide();
+        $("#btnsearchSubmit").unlock();
+    });
 </script>
