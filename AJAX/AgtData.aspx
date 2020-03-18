@@ -14,11 +14,7 @@
     protected string strConnB = "";
 
     protected void Page_Load(object sender, EventArgs e) {
-        if (Request["branch"] == "N") strConnB = Conn.OptBN;
-        if (Request["branch"] == "C") strConnB = Conn.OptBC;
-        if (Request["branch"] == "S") strConnB = Conn.OptBS;
-        if (Request["branch"] == "K") strConnB = Conn.OptBK;
-
+        strConnB = Conn.OptB(Request["branch"]);
         using (DBHelper conn = new DBHelper(strConnB, false)) {
             SQL = "SELECT agt_no,''agt_name,''strcomp_name,agt_name1,agt_name2,agt_name3,treceipt ";
             SQL += ",(select form_name from cust_code where code_type='company' and cust_code=agt.treceipt) as comp_name ";
