@@ -15,11 +15,7 @@
     
     protected void Page_Load(object sender, EventArgs e)
     {
-        string branch = Request["branch"] ?? "";
-        if (branch == "N") strConnB = Conn.OptBN;
-        if (branch == "C") strConnB = Conn.OptBC;
-        if (branch == "S") strConnB = Conn.OptBS;
-        if (branch == "K") strConnB = Conn.OptBK;
+        strConnB = Conn.OptB(Request["branch"]);
 
         using (DBHelper conn = new DBHelper(strConnB).Debug(false))
         {
