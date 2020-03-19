@@ -231,7 +231,7 @@ legend
 <form id="form1" runat="server">
 <div>
 <asp:Label id="lblType" CssClass="errType" runat="server" />
-<hr />
+<hr class="style-one"/>
 <fieldset><legend>錯誤描述</legend>
 <asp:Label id="lblMessage" CssClass="errorMessage" runat="server" />
 </fieldset><br />
