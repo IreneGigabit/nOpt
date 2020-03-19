@@ -1,5 +1,6 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <script runat="server">
     private void Page_Load(Object sender, EventArgs e) {
         //Session["Password"] = false;

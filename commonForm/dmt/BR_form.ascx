@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="br_form" %>
+﻿<%@ Control Language="C#" ClassName="br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -49,23 +49,32 @@
 <script language="javascript" type="text/javascript">
     var br_form = {};
     br_form.init = function () {
+        $("#pr_branch").getOption({//承辦區所別
+            url: "../ajax/AjaxGetSqlData.aspx",
+            data: { sql: "select cust_code,code_name from cust_code where code_type='OBranch'" },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}",
+            showEmpty: false
+        });
         $("#pr_scode").getOption({//爭議組承辦人員
             url: "../ajax/ScodeData.aspx?type=GetPrScode",
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}"
         });
-        $("#pr_branch").getOption({//承辦區所別
-            url: "../ajax/AjaxGetSqlData.aspx",
-            data: { sql: "select cust_code,code_name from cust_code where code_type='OBranch'" },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}"
-        });
 
         var jOpt = br_opt.opt[0];
+        $("#pr_branch").val(jOpt.pr_branch||"B");
         $("#pr_scode").val(jOpt.pr_scode);
-        $("#pr_branch").val(jOpt.pr_branch);
         $("#ctrl_date").val(jOpt.ctrl_date);
         $("#span_last_date").html(dateReviver(jOpt.last_date, "yyyy/M/d"));
         $("#span_last_date0").showFor(jOpt.last_date != "");
+
+        if (jOpt.ctrl_date == "") {
+            var Adate = dateConvert(jOpt.last_date).addDays(-1);
+            if (Adate<(new Date()))
+                $("#ctrl_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
+            else
+                $("#ctrl_date").val(Adate);
+        }
     }
 </script>

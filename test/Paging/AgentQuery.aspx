@@ -1,7 +1,7 @@
-﻿<%@Page Language="C#"%>
+﻿<%@ Page Language="C#"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<script runat="server">
 
+<script runat="server">
     protected string HTProgCap = "代理人維護";
     private string HTProgCode = "opt11";
     protected string HTProgPrefix = "Agent";

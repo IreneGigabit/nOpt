@@ -118,7 +118,7 @@
 					$(this).parents("td:first").append("<span class='errlog'></span>");
 				}
 
-				//$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).nextAll(".errlog:eq(0)").html("");
 				//$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
 
 				if (settings.depend != null && settings.depend != undefined && settings.depend != "") {
@@ -168,9 +168,10 @@
 					$(this).addClass("chkError");
 					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
 				} else {
-					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
-						$(this).removeClass("chkError");
-					}
+				    //if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+				    $(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
+					$(this).removeClass("chkError");
+					//}
 				}
 			});
 			return errflag;
@@ -197,6 +198,9 @@
 				if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
 					$(this).parents("td:first").append("<span class='errlog'></span>");
 				}
+
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
 
 				if (this.type == "text") {
 					if (settings.require && $(this).val() == "") {
@@ -242,27 +246,35 @@
 				if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
 					$(this).parents("td:first").append("<span class='errlog'></span>");
 				}
+
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
+				console.log("111");
+
 				if (this.type == "text") {
-					if ($(this).val() != "") {
-						if (!$.isDate($(this).val())) {
+				    if ($(this).val() != "") {
+				        if (!$.isDate($(this).val())) {
 							errmsg = settings.msg || "日期格式錯誤，請重新輸入!!! 日期格式:YYYY/MM/DD";
 							errflag = true;
 						}
-					} else {
-						if (settings.require) {
+				    } else {
+				        if (settings.require) {
 							errmsg = settings.msg || "日期格式錯誤，請重新輸入!!! 日期格式:YYYY/MM/DD";
 							errflag = true;
 						}
 					}
 				}
-
+				console.log($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length);
+				$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
+				$(this).removeClass("chkError");
 				if (errmsg != "") {
 					$(this).addClass("chkError");
 					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
 				} else {
-					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
-						$(this).removeClass("chkError");
-					}
+					//if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+				    //$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
+				    //$(this).removeClass("chkError");
+					//}
 				}
 			});
 			return errflag;
@@ -347,6 +359,9 @@
 				if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
 					$(this).parents("td:first").append("<span class='errlog'></span>");
 				}
+
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
 
 				if ($.BLen($(this).val()) > settings.max) {
 					errmsg = settings.msg || "長度過長，請檢查！";

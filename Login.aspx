@@ -1,5 +1,5 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
-<%@Import Namespace = "System.Data.SqlClient"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 
 <!DOCTYPE html>
 <script runat="server">

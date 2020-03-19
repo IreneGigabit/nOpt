@@ -61,7 +61,33 @@ function decodeStr(encodedString) {
     return textArea.value;
 }
 
-//#region dateReviver // json日期格式轉js日期格式
+//#region dateReviver
+//json日期格式返回new Date格式
+//dateConvert(jOpt.last_date);
+var dateConvert = function (value) {
+    var a;
+    var b;
+    //a→2018-12-26T10:47:00
+    //a1→2020-01-21T15:18:49.26
+    if (typeof value === 'string') {
+        //a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/.exec(value);
+        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)$/.exec(value);
+        if (a) {
+            b = new Date(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
+        }
+    }
+    if (b != null) {
+        return b;
+    }
+    else {
+        return "";
+    }
+};
+//end region
+
+//#region dateReviver
+//json日期格式轉指定格式
+//dateReviver(jOpt.last_date, "yyyy/M/d");
 var dateReviver = function (value, pstr) {
     var a;
     var b;
@@ -80,11 +106,11 @@ var dateReviver = function (value, pstr) {
     else {
         return "";
     }
-
 };
 //end region
 
-//#region Date.prototype.format // js日期格式fotmat轉換
+//#region Date.prototype.format
+//js日期格式fotmat轉換
 //("yyyy-MM-dd")
 //("yyyy-MM-dd hh:mm:ss")
 Date.prototype.format = function (fmt) {
@@ -106,6 +132,16 @@ Date.prototype.format = function (fmt) {
         }
     }
     return fmt;
+}
+//#end region
+
+//#region Date.prototype.addDays
+//js日期加上 X 天
+//var today = new Date();
+//today.addDays(7);
+Date.prototype.addDays = function (days) {
+    this.setDate(this.getDate() + days);
+    return this;
 }
 //#end region
 

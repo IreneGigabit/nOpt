@@ -1,6 +1,6 @@
 ﻿<%@ Application Language="C#" %>
-<%@Import Namespace = "System.Data"%>
-<%@Import Namespace = "System.Data.SqlClient"%>
+<%@ Import Namespace = "System.Data"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 
 <script runat="server">
     void Application_Start(object sender, EventArgs e) 

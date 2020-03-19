@@ -1,4 +1,4 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -193,7 +193,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/AJAX/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

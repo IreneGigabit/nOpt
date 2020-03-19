@@ -1,0 +1,187 @@
+﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
+<%@ Import Namespace = "System.Collections.Generic"%>
+<%@ Import Namespace = "System.Net.Mail"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<script runat="server">
+    protected string HTProgCap = "主管分案作業‧-入檔";//功能名稱
+    protected string HTProgPrefix = "opt21";//程式檔名前綴
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected int HTProgRight = 0;
+
+    protected string SQL = "";
+    protected string strConnB = "";
+    protected string msg = "";
+
+    protected string case_no = "";
+    protected string branch = "";
+    protected string opt_sqlno = "";
+    protected string submitTask = "";
+
+    private void Page_Load(System.Object sender, System.EventArgs e) {
+        Response.CacheControl = "no-cache";
+        Response.AddHeader("Pragma", "no-cache");
+        Response.Expires = -1;
+
+        strConnB = Conn.OptB(Request["branch"]);
+
+        case_no = Request["case_no"];
+        branch = Request["branch"];
+        opt_sqlno = Request["opt_sqlno"];
+        submitTask = Request["submitTask"];
+        
+        Token myToken = new Token(prgid);
+        HTProgRight = myToken.CheckMe();
+        if (HTProgRight >= 0) {
+            if (submitTask == "U") {
+                doConfirm();//分案確認
+            } else if (submitTask == "ADD") {//新增分案主檔
+                doAdd();
+            }
+            
+            this.DataBind();
+        }
+    }
+
+    private void doConfirm() {
+        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+        try {
+            //抓前一todo的流水號
+            string pre_sqlno = "";
+            SQL = "Select max(sqlno) as maxsqlno,in_scode from todo_opt ";
+            SQL += "where syscode='" +Session["Syscode"] + "' ";
+            SQL += "and apcode='opt11' and opt_sqlno='" + opt_sqlno + "' ";
+            SQL += "and dowhat='BR' group by in_scode ";
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    pre_sqlno = dr.SafeRead("maxsqlno", "");
+                }
+            }
+
+            SQL = "update br_opt set in_scode='" + Session["scode"] + "'";
+            SQL += ",in_date='" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
+            SQL += ",last_date='" + Request["dfy_last_date"] + "'";
+            SQL += ",ctrl_date='" + Request["ctrl_date"] + "'";
+            SQL += ",pr_branch='" + Request["pr_branch"] + "'";
+            SQL += ",pr_scode='" + Request["pr_scode"] + "'";
+            SQL += ",br_remark='" + Request["Preject_reason"].ToBig5() + "'";
+            SQL += ",stat_code='NN'";
+            SQL += " where opt_sqlno='" + opt_sqlno + "'";
+            conn.ExecuteNonQuery(SQL);
+
+            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "'";
+            SQL += ",resp_date=getdate()";
+            SQL += ",job_status='YY'";
+            SQL += " where apcode='opt11' and opt_sqlno='" + opt_sqlno + "'";
+            SQL += " and dowhat='BR' and syscode='" + Session["Syscode"] + "' ";
+            SQL += " and sqlno=" + pre_sqlno;
+            conn.ExecuteNonQuery(SQL);
+    
+            //入流程控制檔
+            SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no ";
+            SQL += ",in_scode,in_date,dowhat,job_status) values ( ";
+            SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
+            SQL += ",'" + Session["scode"] + "',getdate(),'PR','NN')";
+            conn.ExecuteNonQuery(SQL);
+            
+            //conn.Commit();
+            conn.RollBack();
+            msg = "分案成功";
+        }
+        catch (Exception ex) {
+            conn.RollBack();
+            Sys.errorLog(ex, conn.exeSQL, prgid);
+            msg = "分案失敗";
+        }
+        finally {
+            conn.Dispose();
+        }
+    }
+
+    private void doAdd() {
+        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+        DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(Request["chkTest"] == "TEST");
+        try {
+            //產生案件編號
+            SQL = "select max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
+            object objResult = conn.ExecuteScalar(SQL);
+            string opt_no = (objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
+            
+            //新增分案主檔
+	        SQL = "insert into br_opt(opt_no,branch,Bseq,Bseq1,Bcase_date,Last_date";
+	        SQL += ",in_scode,in_date,ctrl_date,pr_branch,pr_scode,br_remark,stat_code,mark,br_source,confirm_date) values (";
+	        SQL += "'"+opt_no+"','"+trim(Request["branch"])+"',"+trim(Request["Bseq"])+",'"+trim(Request["Bseq1"])+"'";
+	        SQL += ",'"+date+"',"+chknull(Request["dfy_last_date"])+",'"+session("scode"]+"','"+date+"'";
+	        SQL += ","+chknull(Request["ctrl_date"])+",'"+trim(Request["pr_branch"])+"','"+trim(Request["pr_scode"])+"'";
+	        SQL += ","+chkempty(Request["br_remark"])+",'NN','N','opt','" + date + "')";
+            conn.ExecuteNonQuery(SQL);
+	
+            //抓流水號
+	        SQL = "select max(opt_sqlno) from br_opt "
+	        RSreg.Open sql,conn,1,1
+	        IF not RSreg.EOF then
+		        opt_sqlno=RSreg(0)
+	        End IF
+	        rsreg.Close
+	
+	        //新增接洽記錄檔
+	        SQL = " insert into case_opt(opt_sqlno,branch,in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type,arcase_class,arcase"
+	        SQL += ",service,fees,tot_num,ar_mark,remark,mark,new"
+	        SQL += "] values ('"+opt_sqlno+"','"+trim(Request["branch"])+"','"+trim(Request["in_scode"])+"','"+trim(Request["Bseq"])+"','"+trim(Request["Bseq1"])+"'"
+	        SQL += ",'"+trim(Request["cust_area"])+"','"+trim(Request["cust_seq"])+"','"+trim(Request["att_sql"])+"','"+trim(Request["arcase_type"])+"'"
+	        SQL += ",'"+trim(Request["arcase_class"])+"','"+trim(Request["arcase"])+"',0,0,1,'N',"+chkempty(Request["remark"])+",'N','N')"
+            conn.ExecuteNonQuery(SQL);
+	
+	        //新增接洽記錄暫存檔
+	        SQL = " insert into opt_detail(opt_sqlno,branch,seq,seq1,in_date,apsqlno,ap_cname,ap_ename,apply_date,apply_no,issue_date,issue_no"
+	        SQL += ",appl_name,agt_no,open_date,rej_no,dmt_term1,dmt_term2"
+	        SQL += ") values ('"+opt_sqlno+"','"+trim(Request["branch"])+"','"+trim(Request["Bseq"])+"','"+trim(Request["Bseq1"])+"','"+date+"','"+trim(Request["apsqlno"])+"'"
+	        SQL += ",'"+trim(Request["ap_cname"])+"','"+trim(Request["ap_ename"])+"',"+chknull(Request["apply_date"])+",'"+trim(Request["apply_no"])+"'"
+	        SQL += ","+chknull(Request["issue_date"])+",'"+trim(Request["issue_no"])+"',"+chknull(Request["appl_name"])+",'"+trim(Request["agt_no"])+"'"
+	        SQL += ","+chknull(Request["open_date"])+",'"+trim(Request["rej_no"])+"',"+chknull(Request["dmt_term1"])+""
+	        SQL += ","+chknull(Request["dmt_term2"])+")"
+            conn.ExecuteNonQuery(SQL);
+	
+	        //新增接洽案件申請人檔
+	        for apnum=1 to Request["br_apnum"]
+		        SQL = " insert into caseopt_ap(opt_sqlno,branch,apsqlno,server_flag,apcust_no,ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,tran_date,tran_scode) values "
+		        SQL+= "('" + opt_sqlno + "','" + trim(Request["branch"]) + "','" + trim(Request["apsqlno" + apnum)) + "','" + trim(Request["server_flag"+apnum)) + "','" + Request["apcust_no"+apnum) + "',"
+		        SQL+= "'" + trim(Request["ap_cname"+apnum)) + "','" + trim(Request["ap_cname1_"+apnum)) + "','" + trim(Request["ap_cname2_"+apnum)) + "','" + trim(Request["ap_ename"+apnum)) + "',"
+		        SQL+= "'" + trim(Request["ap_ename1_"+apnum)) + "','" + trim(Request["ap_ename2_"+apnum)) + "',getdate(),'" + session("se_scode"] + "')"
+                conn.ExecuteNonQuery(SQL);
+	        next
+	
+	        //入流程控制檔
+	        SQL = " insert into todo_opt(syscode,apcode,opt_sqlno,Branch,in_scode,in_date"
+	        SQL+=",dowhat,job_status) values ("
+	        SQL+="'"+session("syscode")+"','"+ prgid +"',"+opt_sqlno+",'"+Branch+"'"
+	        SQL+=",'"+session("se_scode")+"',getdate(),'PR','NN')" 
+            conn.ExecuteNonQuery(SQL);
+           
+            //conn.Commit();
+            //connB.Commit();
+            conn.RollBack();
+            connB.RollBack();
+            msg = "新增分案成功";
+        }
+        catch (Exception ex) {
+            conn.RollBack();
+            connB.RollBack();
+            Sys.errorLog(ex, conn.exeSQL, prgid);
+            msg = "新增分案失敗";
+            throw;
+        }
+        finally {
+            conn.Dispose();
+            connB.Dispose();
+        }
+    }
+</script>
+
+<script language="javascript" type="text/javascript">
+    alert("<%#msg%>");
+    if ("<%#Request["chkTest"]%>" != "TEST") {
+        window.parent.Etop.goSearch();
+    }
+</script>

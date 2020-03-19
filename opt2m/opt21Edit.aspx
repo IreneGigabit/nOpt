@@ -1,4 +1,4 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -7,7 +7,6 @@
 <%@ Register Src="~/commonForm/dmt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
 <%@ Register Src="~/commonForm/dmt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
 <%@ Register Src="~/commonForm/dmt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
-
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -74,6 +73,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.datepick-zh-TW.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 </head>
 
@@ -183,7 +183,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/DmtData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/AJAX/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {
@@ -212,9 +212,10 @@
         $("input.dateField").datepick();
 
         //欄位控制
-        $(".Lock").lock();
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#tr_opt_show,#tr_Popt_show1").show();//分案作業要顯示 爭救案件編號
+        $(".Lock").lock();
+        $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
     }
 
     // 切換頁籤
@@ -239,9 +240,20 @@
 
     //分　　案
     $("#btnsearchSubmit").click(function () {
-        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+        var errFlag = false;
+
+        errFlag = $("#ctrl_date").chkDate({ br:true,require: true, msg: "預計完成日期格式錯誤(yyyy/mm/dd)或未輸入！" }) || errFlag;
+        errFlag = $("#pr_scode").chkRequire({ msg: "請輸入承辦人員！！" }) || errFlag;
+
+        if (errFlag) {
+		    alert("輸入的資料有誤,請檢查!!");
+		    return false;
+		}
+
+        $(".Lock").unlock();
+        $("#btnsearchSubmit").lock();
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
-        reg.submit();
+        //reg.submit();
     });
 </script>

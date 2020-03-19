@@ -1,9 +1,9 @@
-<%@Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
-<%@ Import Namespace = "System.Collections.Generic "%>
-<%@ Import Namespace="System.Net.Mail" %>
-
+<%@ Import Namespace = "System.Collections.Generic"%>
+<%@ Import Namespace = "System.Net.Mail"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <script runat="server">
     protected string HTProgCap = "區所交辦收件確認-入檔";//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴

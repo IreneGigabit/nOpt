@@ -413,7 +413,7 @@ td
 	color:white;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 2px 4px 2px 4px;
+    padding: 3px 4px 3px 4px;
 	background-color:#9966cc;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -422,7 +422,7 @@ input.cbutton {
 	color:#fff;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 2px 4px 2px 4px;
+    padding: 3px 4px 3px 4px;
 	background-color:#005599;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -443,7 +443,7 @@ input.ybutton {
 	color:#fff;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 2px 4px 2px 4px;
+    padding: 3px 4px 3px 4px;
 	background-color:#d80;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -454,7 +454,7 @@ input.rbutton {
 	color:#fff;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 2px 4px 2px 4px;
+    padding: 3px 4px 3px 4px;
 	background-color:#d20;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -466,7 +466,7 @@ input.redbutton
 	color:white;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 2px 4px 2px 4px;
+    padding: 3px 4px 3px 4px;
 	background-color:#d00;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -944,3 +944,26 @@ input.btn5 {}
 .vGrp7 {}
 .vGrp8 {}
 .vGrp9 {}
+
+
+
+input[type=button]:disabled,input[type=button][disabled] {
+    color: #666 !important;
+    background: #cccccc !important;
+}
+
+.errlog {
+	/*color:#ff0000;*/
+	color:MEDIUMVIOLETRED;
+	font-size: 10pt;
+}
+
+.enter
+{
+    background-color: #ffff99;
+}
+
+.chkError {
+	border:2px solid #ff0000;
+	background-color: #FC7E7E;
+}
