@@ -49,7 +49,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2"><hr /></td>
+        <td colspan="2"><hr class="style-one"/></td>
     </tr>
 </table>
 
