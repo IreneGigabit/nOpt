@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script runat="server">
 
@@ -49,7 +49,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2"><hr /></td>
+        <td colspan="2"><hr class="style-one"/></td>
     </tr>
 </table>
 
@@ -126,18 +126,21 @@
 	</thead>
 	<tfoot style="display:none">
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-		<td align="center">{{opt_no}}</td>
+		<td align="center">
+            <span id="todoBack_{{nRow}}">
+                <a href="../opt3m/opt31todo.aspx?Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&opt_sqlno={{opt_sqlno}}&fseq={{fseq}}&scode_name={{scode_name}}" title="查詢退回紀錄" target="Eblank">
+                    <img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle" border="0">
+                </a>
+            </span>{{opt_no}}
+		</td>
 		<td align="center">{{fseq}}</td>
 		<td nowrap>{{appl_name}}</td>
 		<td nowrap>{{arcase_name}}</td>
 		<td align="center">{{confirm_date}}</td>
 		<td align="center">{{last_date}}</td>
 		<td align="center">
-			<%IF Case_no<>empty then%>
-				<a href="<%#HTProgPrefix%>Edit.asp?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
-			<%Else%>
-				<a href="<%#HTProgPrefix%>EditA.asp?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
-			<%End IF%>
+			<a id="tr_edit_{{nRow}}" href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
+			<a id="tr_editA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
 		</td>
 	</tr>
 	</tfoot>
@@ -239,8 +242,12 @@
                         strLine1 = strLine1.replace(/{{Case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
+                        strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
 
                         $("#dataList>tbody").append(strLine1);
+                        $("#todoBack_" + nRow).showFor(item.bstat_code.Right(1) == "X");
+                        $("#tr_edit_"+nRow).showFor(item.case_no!="");
+                        $("#tr_editA_" + nRow).showFor(item.case_no == "");
                     });
                 });
             },
