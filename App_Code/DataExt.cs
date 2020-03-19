@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Data;
@@ -24,76 +24,6 @@ namespace System.Runtime.CompilerServices
 public static class DataExt
 {
     static string debugStr = "";
-
-    #region 分頁擴展
-    /// <summary>
-    /// 分頁控制項
-    /// </summary>
-    /// <param name="conn">連線物件</param> 
-    /// <param name="dt">回傳DataTable</param> 
-    /// <param name="totRow">總筆數</param> 
-    /// <param name="strFields">T-SQL欄位</param> 
-    /// <param name="strFrom">T-SQL table+join+where</param> 
-    /// <param name="strOrderBy">排序欄位(不含別名)</param> 
-    /// <param name="nowPage">目前頁數</param> 
-    /// <param name="perPageSize">每頁N筆</param> 
-    public static string Paging(DBHelper conn, DataTable dt, out int totRow, string strFields, string strFrom, string strOrderBy, int nowPage, int perPageSize) {
-        int[] arrPerPage = new int[] { 10, 20, 30, 40, 50 };
-        return Paging(conn, dt, out totRow, strFields, strFrom, strOrderBy, nowPage, perPageSize, arrPerPage);
-    }
-
-    /// <summary>
-    /// 分頁控制項
-    /// </summary>
-    /// <param name="conn">連線物件</param> 
-    /// <param name="dt">回傳DataTable</param> 
-    /// <param name="totRow">總筆數</param> 
-    /// <param name="strFields">T-SQL欄位</param> 
-    /// <param name="strFrom">T-SQL table+join+where</param> 
-    /// <param name="strOrderBy">排序欄位(不含別名)</param> 
-    /// <param name="nowPage">目前頁數</param> 
-    /// <param name="perPageSize">每頁N筆</param> 
-    /// <param name="arrPerPage">每頁N筆選項</param> 
-    public static string Paging(DBHelper conn, DataTable dt, out int totRow, string strFields, string strFrom, string strOrderBy, int nowPage, int perPageSize, int[] arrPerPage) {
-        string sqlCount = "SELECT COUNT(*) " + strFrom;
-        totRow = Convert.ToInt32(conn.ExecuteScalar(sqlCount));
-        int totPage = (int)Math.Ceiling((decimal)totRow / perPageSize);
-        nowPage = Math.Min(nowPage, totPage);
-
-        int StartRow = (nowPage - 1) * perPageSize;
-        int EndRow = nowPage * perPageSize;
-
-        string SQL = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY {2}) AS RowNum,* from ( SELECT {0} {1} )z )NewTable WHERE RowNum > {3} AND RowNum <= {4}";
-        SQL = string.Format(SQL, strFields, strFrom, strOrderBy, StartRow, EndRow);
-        conn.DataTable(SQL, dt);
-
-        //第N頁
-        string StrPgSel = "<select id=\"GoPage\" name=\"GoPage\" style=\"color:red\">\n";
-        for (int i = 1; i <= totPage; i++) {
-            StrPgSel += "<option value=\"" + i + "\" " + (i == nowPage ? "selected=\"selected\"" : "") + ">" + i + "</option>\n";
-        }
-        StrPgSel += "</select>\n";
-
-        //上一頁/下一頁
-        string StrNxtPrv = "";
-        if (nowPage > 1) {
-            StrNxtPrv += " | <u class=\"pgGo\" v1=\"" + (nowPage - 1) + "\">上一頁</u>\n";
-        }
-        if (nowPage < totPage) {
-            StrNxtPrv += " | <u class=\"pgGo\" v1=\"" + (nowPage + 1) + "\">下一頁</u>\n";
-        }
-
-        //每頁N筆
-        string StrPgSz = "<select id=\"PerPage\" name=\"PerPage\" style=\"color:red\">\n";
-        foreach (int p in arrPerPage) {
-            StrPgSz += String.Format("<option value=\"{0}\" {1}>{0}</option>\n", p, (p == perPageSize ? " selected=\"selected\"" : ""));
-        }
-        StrPgSz += "</select>\n";
-
-        return String.Format("第<font color=\"red\">{0}/{1}</font>頁 | 共<font color=\"red\">{2}</font>筆 | 跳至第{3}頁{4} | 每頁筆數:{5}\n"
-            , nowPage, totPage, totRow, StrPgSel, StrNxtPrv, StrPgSz);
-    }
-    #endregion
 
     #region DataTable 擴展
     /// <summary>
@@ -159,7 +89,6 @@ public static class DataExt
         return table.Select().Select(x => x.ItemArray.Select((a, i) => new { Name = table.Columns[i].ColumnName, Value = a })
                         .ToDictionary(a => a.Name, a => a.Value));
     }
-
     /*
     public static void ToDictionary(this DataTable table,Dictionary<string, object> RtnVal) {
 		table.ToDictionary(RtnVal, false);
@@ -203,49 +132,6 @@ public static class DataExt
 			HttpContext.Current.Response.Write(debugStr);
 
 		}
-	}*/
-
-    /*
-	public static ArrayList ToList(this DataTable table) {
-		return table.ToList(false);
-	}
-
-	public static ArrayList ToList(this DataTable table, bool debug) {
-		ArrayList rtnArry = new ArrayList();
-
-		if (table.Rows.Count > 0) {
-			foreach (DataRow row in table.Rows) {
-				Dictionary<string, object> RtnVal = new Dictionary<string, object>();
-				foreach (DataColumn column in table.Columns) {
-					object colValue;
-					column.MappingType(row[column.ColumnName], false, out colValue);
-					RtnVal.Add(column.ColumnName, colValue);
-				}
-				rtnArry.Add(RtnVal);
-			}
-		}
-
-		if (debug) {
-			debugStr = "";
-			debugStr += String.Format("筆數:{0}<BR>", table.Rows.Count);
-			debugStr += "<table border=1>";
-			debugStr += "<tr>";
-			foreach (var entry in (Dictionary<string, object>)rtnArry[0]) {
-				debugStr += "<td>" + entry.Key + "(" + (entry.Value ?? "").GetType() + ")</td>";
-			}
-			debugStr += "</tr>";
-			foreach (Dictionary<string, object> item in rtnArry) {
-				debugStr += "<tr>";
-				foreach (var entry in item) {
-					debugStr += "<td>" + entry.Value + "</td>";
-				}
-				debugStr += "</tr>";
-			}
-			debugStr += "</table>";
-			HttpContext.Current.Response.Write(debugStr);
-		}
-
-		return rtnArry;
 	}*/
     #endregion
 
