@@ -65,10 +65,12 @@ function decodeStr(encodedString) {
 var dateReviver = function (value, pstr) {
     var a;
     var b;
-    //2018-12-26T10:47:00
+    //a→2018-12-26T10:47:00
+    //a1→2020-01-21T15:18:49.26
     if (typeof value === 'string') {
-        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/.exec(value);
-        if (a) {
+        //a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/.exec(value);
+        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)$/.exec(value);
+       if (a) {
             b = new Date(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]);
         }
     }
