@@ -19,7 +19,7 @@
 	<tr id="tr_Popt_show1" style="display:none">
 		<td class="lightbluetable" valign="top"  align="right"><strong>案件編號：</strong></td>
 		<td class="whitetablebg" colspan="7" valign="top">
-			<input type="text" size="12" id="Popt_no" name="Popt_no" class="Lock unlockC">
+			<input type="text" size="12" id="Popt_no" name="Popt_no" class="Lock">
 		</td>
 	</tr>
 	<tr id="showPseq">
