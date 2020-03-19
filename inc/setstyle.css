@@ -620,13 +620,13 @@ td.seltab1
 }
 .bluetable1
 {
-    BORDER-RIGHT: lightsteelblue;
-    BORDER-TOP: lightsteelblue;
-    PADDING-BOTTOM: 10pt;
-    BORDER-LEFT: lightsteelblue;
-    PADDING-TOP: 10pt;
-    BORDER-BOTTOM: lightsteelblue;
-    BACKGROUND-COLOR: lightskyblue
+    BORDER-RIGHT: lightsteelblue double;
+    BORDER-TOP: lightsteelblue double;
+    FONT-SIZE: 10pt;
+    PADDING-BOTTOM: 5px;
+    BORDER-LEFT: lightsteelblue double;
+    PADDING-TOP: 5px;
+    BORDER-BOTTOM: lightsteelblue double;
 }
 .data15
 {
@@ -850,6 +850,12 @@ td.hrline
 {
 	height:2px;
 	padding:0px 0px 0px 0px;
+}
+hr.style-one {
+    border: 0;
+    height: 1px;
+    background: #000080;
+	margin:5px 0px 5px 0px;
 }
 input.dateField {}
 input.dateField1 {}
