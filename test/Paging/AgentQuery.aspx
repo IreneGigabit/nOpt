@@ -63,7 +63,7 @@
         </td>
     </tr>
     <tr>
-        <td width="100%" colspan="2"><hr /></td>
+        <td width="100%" colspan="2"><hr class="style-one"/></td>
     </tr>
 </table>
         <form id="reg" name="reg" method="post" action="<%#HTProgPrefix%>List.aspx">
