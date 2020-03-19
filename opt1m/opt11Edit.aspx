@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -16,8 +16,8 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
-    
-    protected string dmt_hide_flag = "N";
+
+    protected string dmt_show_flag = "Y";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -38,9 +38,9 @@
     
     
     private void QueryPageLayout() {
-        //決定要不要隱藏案件主檔畫面
+        //決定要不要顯示案件主檔畫面
         if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
-            dmt_hide_flag = "Y";
+            dmt_show_flag = "N";
         }
 
         //交辦內容欄位畫面
@@ -79,14 +79,14 @@
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
-            <font color="blue">區所案件編號：<span id="fseq"></span></font>
+            <font color="blue">區所案件編號：<span id="sseq"></span></font>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
     <tr>
-        <td colspan="2"><hr /></td>
+        <td colspan="2"><hr class="style-one"/></td>
     </tr>
 </table>
 <br>
@@ -174,10 +174,10 @@
 </html>
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
     $(function () {
+        $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
+        $(document).ajaxStop(function () { $.maskStop(); });
+
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "20%,80%";
         }
@@ -208,7 +208,7 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-        $("#fseq").html(br_opt.opt[0].fseq);
+        $("#sseq").html(br_opt.opt[0].fseq);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();
@@ -221,7 +221,7 @@
 
         //欄位控制
         $(".Lock").lock();
-        $("#CTab td.tab[href='#dmt']").hideFor(("<%#dmt_hide_flag%>" == "Y"));
+        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
     }
 
     // 切換頁籤
