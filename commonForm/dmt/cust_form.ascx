@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="cust_form" %>
+<%@ Control Language="C#" ClassName="cust_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -31,7 +31,7 @@
 	<TD class=lightbluetable align=right width=16%>客戶種類：</TD>
 	<TD class=whitetablebg><input type=text id="F_apclass" name="F_apclass" size="30" class="Lock"></TD>
 	<TD class=lightbluetable align="right" width="15%">客戶群組：</TD>
-	<TD class=whitetablebg><INPUT TYPE=text id=F_ref_seq name=F_ref_seq class="Lock"</TD>
+	<TD class=whitetablebg><input TYPE=text id=F_ref_seq name=F_ref_seq class="Lock" /></TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>統一編號：</TD>
@@ -185,48 +185,50 @@
             textFormat: "{cust_code}---{code_name}"
         });
 
-        if (br_opt.cust.length == 0) {
-            toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！");
-            return false;
-        }
+        //if (br_opt.cust.length == 0) {
+        //    toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！");
+        //    return false;
+        //}
         var jCust = br_opt.cust[0];
-        $("#F_cust_area").val(jCust.cust_area);
-        $("#F_cust_seq").val(jCust.cust_seq);
-        $("#F_ap_country").val(jCust.ap_country);
-        $("#F_apclass").val(jCust.apclass + " " + jCust.apclassnm);
-        $("#F_ref_seq").val(jCust.ref_seq + " " + jCust.ref_seqnm);
-        $("#F_id_no").val(jCust.apcust_no);
-        $("#F_ap_cname1").val(jCust.ap_cname1);
-        $("#F_ap_cname2").val(jCust.ap_cname2);
-        $("#F_ap_ename1").val(jCust.ap_ename1);
-        $("#F_ap_ename2").val(jCust.ap_ename2);
-        $("#F_ap_crep").val(jCust.ap_crep);
-        $("#F_ap_erep").val(jCust.ap_erep);
-        $("#F_ap_zip").val(jCust.ap_zip);
-        $("#F_ap_addr1").val(jCust.ap_addr1);
-        $("#F_ap_addr2").val(jCust.ap_addr2);
-        $("#F_ap_eaddr1").val(jCust.ap_eaddr1);
-        $("#F_ap_eaddr2").val(jCust.ap_eaddr2);
-        $("#F_ap_eaddr3").val(jCust.ap_eaddr3);
-        $("#F_ap_eaddr4").val(jCust.ap_eaddr4);
-        $("#F_www").val(jCust.www);
-        $("#F_email").val(jCust.email);
-        $("#F_acc_zip").val(jCust.acc_zip);
-        $("#F_acc_addr1").val(jCust.acc_addr1);
-        $("#F_acc_addr2").val(jCust.acc_addr2);
-        $("#F_acc_tel0").val(jCust.acc_tel0);
-        $("#F_acc_tel").val(jCust.acc_tel);
-        $("#F_acc_tel1").val(jCust.acc_tel1);
-        $("#F_acc_fax").val(jCust.acc_fax);
-        $("#F_mag").val(jCust.magnm);
-        $("#F_con_code").val(jCust.con_code);
-        $("#F_con_term").val(dateReviver(jCust.con_term, "yyyy/M/d"));
-        $("#F_plevel").val(jCust.plevel);
-        $("#F_tlevel").val(jCust.tlevel);
-        $("#F_pdis_type").val(jCust.pdis_type);
-        $("#F_tdis_type").val(jCust.tdis_type);
-        $("#F_ppay_type").val(jCust.ppay_type);
-        $("#F_tpay_type").val(jCust.tpay_type);
-        $("#F_mark").val(jCust.cust_remark);
+        if (br_opt.cust.length > 0) {
+            $("#F_cust_area").val(jCust.cust_area);
+            $("#F_cust_seq").val(jCust.cust_seq);
+            $("#F_ap_country").val(jCust.ap_country);
+            $("#F_apclass").val(jCust.apclass + " " + jCust.apclassnm);
+            $("#F_ref_seq").val(jCust.ref_seq + " " + jCust.ref_seqnm);
+            $("#F_id_no").val(jCust.apcust_no);
+            $("#F_ap_cname1").val(jCust.ap_cname1);
+            $("#F_ap_cname2").val(jCust.ap_cname2);
+            $("#F_ap_ename1").val(jCust.ap_ename1);
+            $("#F_ap_ename2").val(jCust.ap_ename2);
+            $("#F_ap_crep").val(jCust.ap_crep);
+            $("#F_ap_erep").val(jCust.ap_erep);
+            $("#F_ap_zip").val(jCust.ap_zip);
+            $("#F_ap_addr1").val(jCust.ap_addr1);
+            $("#F_ap_addr2").val(jCust.ap_addr2);
+            $("#F_ap_eaddr1").val(jCust.ap_eaddr1);
+            $("#F_ap_eaddr2").val(jCust.ap_eaddr2);
+            $("#F_ap_eaddr3").val(jCust.ap_eaddr3);
+            $("#F_ap_eaddr4").val(jCust.ap_eaddr4);
+            $("#F_www").val(jCust.www);
+            $("#F_email").val(jCust.email);
+            $("#F_acc_zip").val(jCust.acc_zip);
+            $("#F_acc_addr1").val(jCust.acc_addr1);
+            $("#F_acc_addr2").val(jCust.acc_addr2);
+            $("#F_acc_tel0").val(jCust.acc_tel0);
+            $("#F_acc_tel").val(jCust.acc_tel);
+            $("#F_acc_tel1").val(jCust.acc_tel1);
+            $("#F_acc_fax").val(jCust.acc_fax);
+            $("#F_mag").val(jCust.magnm);
+            $("#F_con_code").val(jCust.con_code);
+            $("#F_con_term").val(dateReviver(jCust.con_term, "yyyy/M/d"));
+            $("#F_plevel").val(jCust.plevel);
+            $("#F_tlevel").val(jCust.tlevel);
+            $("#F_pdis_type").val(jCust.pdis_type);
+            $("#F_tdis_type").val(jCust.tdis_type);
+            $("#F_ppay_type").val(jCust.ppay_type);
+            $("#F_tpay_type").val(jCust.tpay_type);
+            $("#F_mark").val(jCust.cust_remark);
+        }
     }
 </script>
