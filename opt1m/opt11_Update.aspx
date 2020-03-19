@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic "%>
 <%@ Import Namespace="System.Net.Mail" %>
@@ -160,6 +160,7 @@
             connB.RollBack();
             Sys.errorLog(ex, conn.exeSQL, prgid);
             msg = "退回失敗";
+            throw;
         }
         finally {
             conn.Dispose();
@@ -188,12 +189,14 @@
         }
         
 	    string Subject = "專案室爭救案件退件通知";
-        string strFrom = Sys.GetSession("scode");
-        List<string> strTo = new List<string>(); List<string> strCC = new List<string>(); List<string> strBCC = new List<string>();
+        string strFrom = Session["scode"] + "@saint-island.com.tw";
+        List<string> strTo = new List<string>();
+        List<string> strCC = new List<string>();
+        List<string> strBCC = new List<string>();
         switch (Sys.Host) {
             case "web08":
-                strTo.Add("m1583@saint-island.com.tw");
-                strCC.Add("m1583@saint-island.com.tw");
+                strTo.Add(Session["scode"] + "@saint-island.com.tw");
+                strCC.Add(Session["scode"] + "@saint-island.com.tw");
                 Subject = "(web08)" + Subject;
                 break;
             case "web10":
@@ -215,7 +218,7 @@
             "【退件理由】 : <br>　　"+Request["Preject_reason"]+"<Br><Br><p>"+
             "◎請至承辦作業－＞國內案承辦交辦發文作業，重新交辦。 ";
 
-        Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, null);
+        Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
     }
 </script>
 
