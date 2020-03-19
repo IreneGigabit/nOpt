@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -193,11 +193,13 @@ public class Sys
         MailMsg.BodyEncoding = Encoding.UTF8;
         MailMsg.IsBodyHtml = true;//郵件格式為HTML
 
-        SmtpClient client = new SmtpClient(Sys.getAppSetting("SMTP"));
+		SmtpClient client = new SmtpClient("192.192.10.30");
+		//SmtpClient client = new SmtpClient("sin22.saint-island.com.tw");
         try {
-            client.ServicePoint.MaxIdleTime = 2;//連線可閒置時間(毫秒)
-            client.ServicePoint.ConnectionLimit = 1;//允許最大連線數
-            client.Credentials = new System.Net.NetworkCredential(Sys.getAppSetting("SMTPUserName"), Sys.getAppSetting("SMTPPassword"));
+            //client.ServicePoint.MaxIdleTime = 2;//連線可閒置時間(毫秒)
+            //client.ServicePoint.ConnectionLimit = 1;//允許最大連線數
+			//client.Credentials = new System.Net.NetworkCredential("siiplo", "Jean212");
+			//client.Credentials = new System.Net.NetworkCredential("m1570", "mkfpk");
             client.Send(MailMsg);//發送郵件
         }
         catch {
@@ -205,15 +207,14 @@ public class Sys
         }
         finally {
 	    	client.ServicePoint.CloseConnectionGroup(client.ServicePoint.ConnectionName);//關閉SMTP連線
+			//釋放每個附件，才不會Lock住
+			if (MailMsg.Attachments != null && MailMsg.Attachments.Count > 0) {
+				for (int i = 0; i < MailMsg.Attachments.Count; i++) {
+					MailMsg.Attachments[i].Dispose();
+				}
+			}
+			MailMsg.Dispose();//釋放訊息
         }
-
-        //釋放每個附件，才不會Lock住
-        if (MailMsg.Attachments != null && MailMsg.Attachments.Count > 0) {
-            for (int i = 0; i < MailMsg.Attachments.Count; i++) {
-                MailMsg.Attachments[i].Dispose();
-            }
-        }
-        MailMsg.Dispose();//釋放訊息
     }
 
 
