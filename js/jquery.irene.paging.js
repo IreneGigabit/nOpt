@@ -15,7 +15,7 @@
 	<tr>\
 		<td valign="top" align="right" nowrap="nowrap">\
 			<a id="imgRefresh" href="javascript:void(0);" >[重新整理]</a>\
-			<HR color=#000080 SIZE=1 noShade>\
+			<HR class="style-one">\
 		</td>\
 	</tr>\
 	<tr>\
