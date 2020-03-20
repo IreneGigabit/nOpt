@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_form" %>
+<%@ Control Language="C#" ClassName="br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -21,7 +21,7 @@
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>預計完成日期 :</td>
-		<td class="whitetablebg"  align="left" colspan=3 >
+		<td class="whitetablebg" colspan=3 >
 			<input type="text" id="ctrl_date" name="ctrl_date" SIZE=10 class="dateField Lock BRClass">
 			<span id="span_last_date0">
 			    <font color="blue">區所指定法定期限：</font><font color="red"><span id="span_last_date"></span></font>
@@ -30,17 +30,17 @@
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">承辦區所別 :</td>
-		<td class="whitetablebg"  align="left">
+		<td class="whitetablebg">
 			<Select id="pr_branch" name="pr_branch" class="Lock"></Select>
 		</td>
 		<td class="lightbluetable"  align="right">承辦人員 :</td>
-		<td class="whitetablebg"  align="left">
+		<td class="whitetablebg">
 			<Select id="pr_scode" name="pr_scode" class="Lock BRClass"></Select>
 		</td>
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right">分案說明 :</td>
-		<TD class=lightbluetable colspan=3 align="center">
+		<TD class=lightbluetable colspan=3>
 			<textarea ROWS="6" style="width:90%" id=Br_remark name="Br_remark" class="Lock BRClass"></textarea>
 		</TD>
 	</tr>
