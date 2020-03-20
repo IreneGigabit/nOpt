@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -254,6 +254,6 @@
         $("#btnsearchSubmit").lock();
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
-        //reg.submit();
+        reg.submit();
     });
 </script>
