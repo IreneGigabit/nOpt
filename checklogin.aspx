@@ -1,8 +1,7 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
-<%@ Import Namespace = "System.Text"%>
-<%@ Import Namespace = "System.Data.SqlClient"%>
+<%@Page Language="C#" CodePage="65001"%>
+<%@Import Namespace = "System.Text"%>
+<%@Import Namespace = "System.Data.SqlClient"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 <script runat="server">
 
     protected string ScriptString = "";
@@ -61,7 +60,7 @@
                     Session["SeSysPwd"] = dr["sys_pwd"].ToString();
                     Session["SeBranch"] = dr["DataBranch"].ToString();
                     Session["Dept"] = dr["Dept"].ToString();
-                    Session["Syscode"] = dr["Syscode"].ToString();
+                    Session["Syscode"] = Sys.getAppSetting("syscode");// dr["Syscode"].ToString();//因有新舊資料問題,改用舊系統的syscode
                     Session["LoginGrp"] = dr["LoginGrp"].ToString();
                     Session["GrpName"] = dr["GrpName"].ToString();
                     dr.Close();
