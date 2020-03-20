@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -211,6 +211,8 @@ public static class Util
 		StringBuilder sb = new StringBuilder();
 		Encoding big5 = Encoding.GetEncoding("big5");
 		Encoding utf32 = Encoding.UTF32;
+
+		if (str == null) return str;
 
 		//有包含用到第二輔助平面的unicode要特別處理
 		if (str.Len() != str.Length) {
