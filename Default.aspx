@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="PageBase" %>
+<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Data"  %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -52,7 +52,8 @@
                      " INNER JOIN LoginAP AS b ON a.APcode = b.APcode AND a.SYScode = b.SYScode" +
                      " INNER JOIN APcat AS c ON a.APcat = c.APcatID AND a.SYScode = c.SYScode " +
                      " WHERE b.LoginGrp = '" + Session["LoginGrp"] + "'" +
-                     " AND b.SYScode = '" + Session["Syscode"] + "'" +
+                     //" AND b.SYScode = '" + Session["Syscode"] + "'" +//新舊系統用同一個syscode,但menu要分開
+                     " AND b.SYScode = '" + Sys.getAppSetting("Sysmenu") + "'" +
                      " AND (b.Rights & 1) > 0 " +
                      " ORDER BY c.APseq, a.APorder, a.APcode";
                 DataTable dt = new DataTable();
@@ -118,7 +119,8 @@
                 SQL += " FROM sysctrl AS b";
                 SQL += " INNER JOIN SYScode AS a ON b.syscode=a.syscode";
                 SQL += " WHERE b.scode='" + Session["scode"] + "'";
-                SQL += " AND a.syscode<>'" + Session["syscode"] + "'";
+                //SQL += " AND a.syscode<>'" + Session["syscode"] + "'";//新舊系統用同一個syscode,但menu要分開
+                SQL += " AND a.syscode<>'" + Sys.getAppSetting("Sysmenu") + "'";
                 
                 DataTable dt_1 = new DataTable();
                 cnn.DataTable(SQL, dt_1);
