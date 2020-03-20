@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -28,6 +28,7 @@
 
         DataTable dt_dmt = GetDmt(seq, seq1);//主檔
         DataTable dt_dmt_ap = GetDmtAp(seq, seq1);//申請人
+        DataTable dt_arcaselist = GetArcaseList();//交辦案性清單
 
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
@@ -38,6 +39,7 @@
         Response.Write("{");
         Response.Write("\"dmt\":" + JsonConvert.SerializeObject(dt_dmt, settings).ToUnicode() + "\n");
         Response.Write(",\"dmt_ap\":" + JsonConvert.SerializeObject(dt_dmt_ap, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcaselist\":" + JsonConvert.SerializeObject(dt_arcaselist, settings).ToUnicode() + "\n");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
@@ -46,7 +48,7 @@
     #region GetDmt 案件資料
     private DataTable GetDmt(string pSeq, string pSeq1) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
-            SQL = "select d.*,''custname,''apcust_no,''ap_cname,''now_arcasenm ";
+            SQL = "select d.*,''custname,''apcust_no,''ap_cname,''now_arcasenm,''now_rsclass ";
             SQL += ",(select agt_name from agt a where a.agt_no=d.agt_no) agtname ";
             SQL += ",(select sc_name from sysctrl.dbo.scode s where s.scode=.scode) scodename ";
             SQL += ",(select code_name from cust_code c where code_type='tcase_stat' and c.cust_code=d.now_stat) now_statnm ";
@@ -76,29 +78,27 @@
                     }
                 }
                 
-                
-    if rs("now_grade") <> "" then
-        SQL="select cg,rs from step_dmt where seq=" & seq & " and seq1='" & seq1 & "' " & _
-        " and step_grade = " & rs("now_grade")
-        rs1.Open SQL,conn1,1,1
-        if not rs1.EOF then
-            lf = rs1("cg") & rs1("rs")
-        else
-            lf = "cr"
-        end if
-        rs1.Close
-    else
-        lf = "cr"			
-    end if
-        
-    SQL="select rs_class,rs_detail from code_br where " & lf & "='Y' and dept='" & ucase(session("dept")) & "' " & _
-    " and rs_type = '" & rs("now_arcase_type") & "' and rs_code='"&rs("now_arcase")&"'"
-    rs2.Open SQL,conn1,1,1
-    if not rs2.EOF then
-        lrs_class = rs2("rs_class")
-        %>
-        <now_arcasenm><%=rs2("rs_detail")%></now_arcasenm>	<%'29%>
-    <%end if
+                string lf="cr";
+                SQL = "select cg,rs from step_dmt ";
+                SQL += "where seq='" + pSeq + "' ";
+                SQL += "and seq1='" + pSeq1 + "' ";
+                SQL += "and step_grade ='" + dt.Rows[0].SafeRead("now_grade", "") + "' ";
+                using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
+                    if (dr.Read()) {
+                        lf=dr.SafeRead("cg", "").Trim()+dr.SafeRead("rs", "").Trim();
+                    }
+                }
+
+                SQL = "select rs_class,rs_detail from code_br ";
+                SQL += "where "+lf+"='Y' and dept='" + Session["dept"]+ "' ";
+                SQL += "where rs_type='" + dt.Rows[0].SafeRead("now_arcase_type", "") + "' ";
+                SQL += "and rs_code='" + dt.Rows[0].SafeRead("now_arcase", "") + "' ";
+                using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
+                    if (dr.Read()) {
+                        dt.Rows[0]["now_arcasenm"] = dr.SafeRead("rs_detail", "").Trim();
+                        dt.Rows[0]["now_rsclass"] = dr.SafeRead("rs_class", "").Trim();
+                    }
+                }
             }
 
             return dt;
@@ -112,6 +112,25 @@
             SQL = "Select a.*,b.ap_cname1,b.ap_cname2,b.ap_ename1,b.ap_ename2 ";
             SQL += "from dmt_ap a,apcust b ";
             SQL += "where a.apsqlno=b.apsqlno and seq='" + pSeq + "' and seq1='" + pSeq1 + "' ";
+
+            DataTable dt = new DataTable();
+            connB.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+    
+    #region GetArcaseList 交辦案性清單
+    private DataTable GetArcaseList() {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
+			SQL = "SELECT a.rs_code,a.prt_code,a.rs_detail,a.remark ";
+			SQL += " ,(select code_name from cust_code where code_type=a.rs_type and cust_code=a.rs_class) as rs_codenm ";
+			SQL += " FROM code_br a ";
+			SQL += " join code_act as b on a.sqlno = b.sqlno ";
+			SQL += " WHERE b.spe_ctrl like '%,OPT,%' ";
+			SQL += " and getdate() >= beg_date ";
+			SQL += " ORDER BY rs_code ";
 
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);
