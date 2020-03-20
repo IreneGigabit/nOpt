@@ -168,10 +168,9 @@
 					$(this).addClass("chkError");
 					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
 				} else {
-				    //if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
-				    $(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
+					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
 					$(this).removeClass("chkError");
-					//}
+					}
 				}
 			});
 			return errflag;
@@ -249,7 +248,6 @@
 
 			    //$(this).nextAll(".errlog:eq(0)").html("");
 			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
-				console.log("111");
 
 				if (this.type == "text") {
 				    if ($(this).val() != "") {
@@ -264,17 +262,14 @@
 						}
 					}
 				}
-				console.log($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length);
-				$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
-				$(this).removeClass("chkError");
+
 				if (errmsg != "") {
 					$(this).addClass("chkError");
 					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
 				} else {
-					//if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
-				    //$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
-				    //$(this).removeClass("chkError");
-					//}
+					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+						$(this).removeClass("chkError");
+					}
 				}
 			});
 			return errflag;
