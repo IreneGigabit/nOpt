@@ -1,7 +1,7 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
-<%@ Register Src="~/commonForm/dmt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
-<%@ Register Src="~/commonForm/dmt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
+<%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+<%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 
 
 <script runat="server">
@@ -10,6 +10,7 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
+    protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
@@ -24,6 +25,7 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
+        submitTask = Request["submitTask"] ?? "";
 
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
@@ -70,18 +72,18 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="hidden" name="case_no" value="<%=case_no%>">
-	<input type="hidden" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="hidden" name="submittask">
-	<input type="hidden" name="prgid" value="<%=prgid%>">
+    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td>
             <uc1:BR_formA runat="server" ID="BR_formA" />
-            <!--include file="../commonForm/dmt/BR_formA.ascx"--><!--承辦內容-->
+            <!--include file="../commonForm/opt/BR_formA.ascx"--><!--承辦內容-->
             <uc1:BR_form runat="server" ID="BR_form" />
-            <!--include file="../commonForm/dmt/BR_form.ascx"--><!--承辦內容-->
+            <!--include file="../commonForm/opt/BR_form.ascx"--><!--承辦內容-->
         </td>
     </tr>
     </table>
@@ -103,9 +105,6 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-        $(document).ajaxStop(function () { $.maskStop(); });
-
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "20%,80%";
         }
@@ -132,26 +131,23 @@
                     return false;
                 }
                 br_opt = JSONdata;
+                if(br_opt.opt.length>0){
+                    $("#sopt_no").html(br_opt.opt[0].opt_no);
+                    $("#sseq").html(br_opt.opt[0].fseq);
+                }
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-        $("#sopt_no").html(br_opt.opt[0].opt_no);
-        $("#sseq").html(br_opt.opt[0].fseq);
-        cust_form.init();
-        attent_form.init();
-        apcust_re_form.init();
-        case_form.init();
-        dmt_form.init();
-        tran_form.init();
-        brupload_form.init();
+
+        br_formA.init();
         br_form.init();
 
         $("input.dateField").datepick();
 
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $("#tr_opt_show,#tr_Popt_show1").show();//分案作業要顯示 爭救案件編號
+        $("#tr_opt_show").show();//分案作業要顯示 爭救案件編號
         $(".Lock").lock();
         $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
     }

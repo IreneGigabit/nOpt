@@ -12,9 +12,19 @@
 <script runat="server">
     protected string SQL = "";
     protected string strConnB = "";
+    protected string type = "";
 
     protected void Page_Load(object sender, EventArgs e) {
         strConnB = Conn.OptB(Request["branch"]);
+        type = (Request["type"] ?? "").ToString().ToLower();
+
+        //抓取代理人清單
+        if (type == "getagtdata") GetAgtData();
+        if (type == "getarcasedata") GetArcaseList();
+
+    }
+
+    protected void GetAgtData() {
         using (DBHelper conn = new DBHelper(strConnB, false)) {
             SQL = "SELECT agt_no,''agt_name,''strcomp_name,agt_name1,agt_name2,agt_name3,treceipt ";
             SQL += ",(select form_name from cust_code where code_type='company' and cust_code=agt.treceipt) as comp_name ";
@@ -40,4 +50,27 @@
             Response.Write(JsonConvert.SerializeObject(dt, settings).ToUnicode());
         }
     }
+
+    protected void GetArcaseList() {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
+			SQL = "SELECT a.rs_type,a.rs_class,a.rs_code,a.prt_code,a.rs_detail,a.remark ";
+			SQL += " ,(select code_name from cust_code where code_type=a.rs_type and cust_code=a.rs_class) as rs_codenm ";
+			SQL += " FROM code_br a ";
+			SQL += " join code_act as b on a.sqlno = b.sqlno ";
+			SQL += " WHERE b.spe_ctrl like '%,OPT,%' ";
+			SQL += " and getdate() >= beg_date ";
+			SQL += " ORDER BY rs_code ";
+
+            DataTable dt = new DataTable();
+            connB.DataTable(SQL, dt);
+
+            var settings = new JsonSerializerSettings() {
+                Formatting = Formatting.Indented,
+                ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
+                Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+            };
+            Response.Write(JsonConvert.SerializeObject(dt, settings).ToUnicode());
+        }
+    }
+
 </script>

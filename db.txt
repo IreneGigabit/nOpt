@@ -162,3 +162,17 @@ select * from dmt_attach where source='case' and attach_flag<>'D' and attach_bra
 
 -----------------------------------------------------------------------------------------
 
+insert into ap
+select 'nOPT',apcode,apnameE,apnameC,apcat,'localhost'
+,replace(appath,'OPT/','nOPT/'),aporder,apgrpclass,end_level,remark
+,beg_date,end_date,tran_date,tran_scode,apremark
+from ap where syscode='opt' and apcode<>'opt11' and apcat<>'apgroup'
+
+-----------------------------------------------------------------------------------------
+
+
+select stat_code,* from br_opt 
+--update br_opt set stat_code='RX'--XX
+where stat_code like '%X'
+
+-----------------------------------------------------------------------------------------

@@ -11,7 +11,6 @@
 
 <script runat="server">
     protected string SQL = "";
-    protected string strConnB = "";
     protected string submitTask = "";
     protected string type = "";
 
@@ -24,7 +23,7 @@
     }
 
     protected void GetPrTermALL() {
-        using (DBHelper conn = new DBHelper(Conn.Sysctrl, false)) {
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false)) {
             SQL = "select c.scode,c.sc_name from grpid as a ";
             SQL += " inner join scode_group as b on a.grpclass=b.grpclass and a.grpid=b.grpid ";
             SQL += " inner join scode as c on b.scode=c.scode ";
@@ -33,7 +32,7 @@
                 SQL += "and (c.end_date is null or c.end_date>=getdate()) ";
             }
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+            cnn.DataTable(SQL, dt);
 
             var settings = new JsonSerializerSettings()
             {

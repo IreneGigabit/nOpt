@@ -43,7 +43,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">未分案清單</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-		    <a href="opt21EditA.asp?submitTask=ADD&prgid=<%=prgid%>">[新增分案]</a>
+		    <a href="opt21EditA.aspx?submitTask=ADD&prgid=<%=prgid%>" target="Eblank">[新增分案]</a>
             <!--<a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;-->
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
@@ -147,6 +147,9 @@
 	<tbody>
 	</tbody>
 </TABLE>
+<br>
+備註:<br>
+1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">承辦退回</font>狀態，可按下該圖示查詢相關退回紀錄
 
 </body>
 </html>

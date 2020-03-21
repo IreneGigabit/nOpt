@@ -342,7 +342,7 @@
     #region GetTranModClient 異動關係人
     private DataTable GetTranModClient(string pCaseNo,string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select * from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_client'";
+            SQL = "select * from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_client'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -357,7 +357,7 @@
             SQL = "select *,''mod_dmt_ncname1,''mod_dmt_ncname2,''mod_dmt_nename1,''mod_dmt_nename2 ";
             SQL += ",''mod_dmt_ncrep,''mod_dmt_nerep ";
             SQL += ",''mod_dmt_neaddr1,''mod_dmt_neaddr2,''mod_dmt_neaddr3,''mod_dmt_neaddr4 ";
-            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_dmt'";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_dmt'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -383,7 +383,7 @@
     private DataTable GetTranModPul(string pCaseNo, string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select * ";
-            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_pul'";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_pul'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -396,7 +396,7 @@
     private DataTable GetTranModAp(string pCaseNo, string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select * ";
-            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_ap'";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_ap'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -409,7 +409,7 @@
     private DataTable GetTranModAprep(string pCaseNo, string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select * ";
-            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_aprep'";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_aprep'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -422,7 +422,7 @@
     private DataTable GetTranModClaim1(string pCaseNo, string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select * ";
-            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_claim1'";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_claim1'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -437,7 +437,7 @@
             SQL = "select *,''mod_class_ncname1,''mod_class_ncname2,''mod_class_nename1,''mod_class_nename2 ";
             SQL += ",''mod_class_ncrep,''mod_class_nerep ";
             SQL += ",''mod_class_neaddr1,''mod_class_neaddr2,''mod_class_neaddr3,''mod_class_neaddr4 ";
-            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno=" + pOptSqlno + " and mod_field='mod_class'";
+            SQL += "from opt_tranlist where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' and mod_field='mod_class'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 

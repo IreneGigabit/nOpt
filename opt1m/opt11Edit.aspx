@@ -1,11 +1,11 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 
-<%@ Register Src="~/commonForm/dmt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
-<%@ Register Src="~/commonForm/dmt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
-<%@ Register Src="~/commonForm/dmt/apcust_re_form.ascx" TagPrefix="uc1" TagName="apcust_re_form" %>
-<%@ Register Src="~/commonForm/dmt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
-<%@ Register Src="~/commonForm/dmt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
-<%@ Register Src="~/commonForm/dmt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
+<%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
+<%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
+<%@ Register Src="~/commonForm/opt/apcust_re_form.ascx" TagPrefix="uc1" TagName="apcust_re_form" %>
+<%@ Register Src="~/commonForm/opt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
+<%@ Register Src="~/commonForm/opt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
+<%@ Register Src="~/commonForm/opt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -45,17 +45,17 @@
 
         //交辦內容欄位畫面
         if (Request["arcase"] == "DO1") {
-            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DO1_form.ascx"));//申請異議
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/DO1_form.ascx"));//申請異議
         } else if (Request["arcase"] == "DI1") {
-            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DI1_form.ascx"));//申請評定
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/DI1_form.ascx"));//申請評定
         } else if (Request["arcase"] == "DR1") {
-            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/DR1_form.ascx"));//申請廢止
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/DR1_form.ascx"));//申請廢止
         } else if (Request["arcase"] == "DE1" || Request["arcase"] == "AD7") {
-            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BC1_form.ascx"));//申請聽證(爭議案)
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/BC1_form.ascx"));//申請聽證(爭議案)
         } else if (Request["arcase"] == "DE2" || Request["arcase"] == "AD8") {
-            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BC2_form.ascx"));//出席聽證(爭議案)
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/BC2_form.ascx"));//出席聽證(爭議案)
         } else {
-            tranHolder.Controls.Add(LoadControl("~/CommonForm/dmt/BZZ1_form.ascx"));//無申請書之交辦內容案
+            tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/BZZ1_form.ascx"));//無申請書之交辦內容案
         }
     }
 
@@ -115,23 +115,23 @@
         <td>
             <div class="tabCont" id="#cust">
                 <uc1:cust_form runat="server" ID="cust_form" />
-                <!--include file="../commonForm/dmt/cust_form.ascx"--><!--案件客戶-->
+                <!--include file="../commonForm/opt/cust_form.ascx"--><!--案件客戶-->
             </div>
             <div class="tabCont" id="#attent">
                 <uc1:attent_form runat="server" ID="attent_form" />
-                <!--include file="../commonForm/dmt/attent_form.ascx"--><!--案件聯絡人-->
+                <!--include file="../commonForm/opt/attent_form.ascx"--><!--案件聯絡人-->
             </div>
             <div class="tabCont" id="#apcust_re">
                 <uc1:apcust_re_form runat="server" id="apcust_re_form" />
-                <!--include file="../commonForm/dmt/apcust_re_form.ascx"--><!--案件申請人-->
+                <!--include file="../commonForm/opt/apcust_re_form.ascx"--><!--案件申請人-->
             </div>
             <div class="tabCont" id="#case">
                 <uc1:case_form runat="server" ID="case_form" />
-                <!--include file="../commonForm/dmt/case_form.ascx"--><!--收費與接洽事項-->
+                <!--include file="../commonForm/opt/case_form.ascx"--><!--收費與接洽事項-->
             </div>
             <div class="tabCont" id="#dmt">
                 <uc1:dmt_form runat="server" ID="dmt_form" />
-                <!--include file="../commonForm/dmt/dmt_form.ascx"--><!--案件主檔-->
+                <!--include file="../commonForm/opt/dmt_form.ascx"--><!--案件主檔-->
             </div>
             <div class="tabCont" id="#tran">
                 <asp:PlaceHolder ID="tranHolder" runat="server"></asp:PlaceHolder><!--交辦內容欄位畫面-->
