@@ -6,7 +6,7 @@
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "opt21";//程式檔名前綴
+    protected string HTProgPrefix = "opt31";//程式檔名前綴
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 

@@ -208,27 +208,27 @@
 </table>
 
 <script language="javascript" type="text/javascript">
+    $("#tfzy_Zname_type").getOption({//語文別
+        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
+        valueFormat: "{coun_code}",
+        textFormat: "{coun_code}-{coun_c}"
+    });
+    $("#tfzy_prior_country").getOption({//優先權首次申請國家
+        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
+        valueFormat: "{coun_code}",
+        textFormat: "{coun_code}-{coun_c}"
+    });
+    $("#tfzy_end_code").getOption({//結案代碼
+        url: "../ajax/AjaxGetSqlDataBranch.aspx",
+        data: { branch: "<%#branch%>", sql: "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld" },
+        valueFormat: "{chrelno}",
+        textFormat: "{chrelname}"
+    });
+
     var dmt_form = {};
     dmt_form.init = function () {
-        $("#tfzy_Zname_type").getOption({//語文別
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
-            data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
-            valueFormat: "{coun_code}",
-            textFormat: "{coun_code}-{coun_c}"
-        });
-        $("#tfzy_prior_country").getOption({//優先權首次申請國家
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
-            data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
-            valueFormat: "{coun_code}",
-            textFormat: "{coun_code}-{coun_c}"
-        });
-        $("#tfzy_end_code").getOption({//結案代碼
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
-            data: { branch: "<%#branch%>", sql: "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld" },
-            valueFormat: "{chrelno}",
-            textFormat: "{chrelname}"
-        });
-
         var jOpt = br_opt.opt[0];
         $("#opt_no").val(jOpt.opt_no);
         $("#Branch").val(jOpt.branch);
@@ -288,6 +288,8 @@
         }
         //類別串接
         $("#tfzr_class").val($("#goodllist>tbody input[id^='class1_']").map(function () { return $(this).val(); }).get().join(','));
+
+        $("#tr_opt_show").showFor("<%#prgid%>" == "opt21");//分案作業要顯示 爭救案件編號
     }
     
     dmt_form.Add_button = function (classCount) {

@@ -3,10 +3,12 @@
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "opt21";//程式檔名前綴
+    protected string HTProgPrefix = "opt31";//程式檔名前綴
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
+    protected string qryPr_scode = "";
+    
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
@@ -21,6 +23,11 @@
     }
     
     private void QueryPageLayout() {
+        if((HTProgRight & 128)!=0){
+            qryPr_scode="";
+        } else{
+            qryPr_scode = Sys.GetSession("scode");
+        }
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -41,9 +48,8 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">未分案清單</b>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>‧<b style="color:Red">尚未結辦清單</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-		    <a href="opt21EditA.aspx?submitTask=ADD&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[新增分案]</a>
             <!--<a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;-->
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
@@ -60,18 +66,26 @@
         <table border="0" cellspacing="1" cellpadding="2" width="98%" align="center">
         <tr>
 	        <td class="text9">
-		        ◎區所案件編號:
-			        <Select id="qryBranch" name="qryBranch"></Select>
-			        <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
+		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode"></Select>	
 	        </td>
 	        <td class="text9">
 		        ◎案件編號:
 			        <input type="text" name="qryopt_no" id="qryopt_no" size="10" maxLength="10">
 	        </td>
 	        <td class="text9">
-		        ◎交辦日期:
-                <input type="text" name="qryBCaseDateS" id="qryBCaseDateS" class="dateField" value="" size="10" /> ~
-                <input type="text" name="qryBCaseDateE" id="qryBCaseDateE"  class="dateField" value="" size="10" />
+		        ◎區所案件編號:
+			    <Select id="qryBranch" name="qryBranch"></Select>
+			    <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
+	        </td>
+	        <td class="text9">
+		        ◎排序: <select id="qryOrder" name="qryOrder">
+			            <option value="">請選擇</option>
+			            <option value="confirm_date" selected>收文日期</option>
+			            <option value="in_date desc">分案日期</option>
+			            <option value="ctrl_date">承辦期限</option>
+			            <option value="last_date">法定期限</option>
+			            <option value="opt_no">案件編號</option>
+			        </select>
 	        </td>
 	        <td class="text9">
 		        <input type="button" id="btnSrch" value ="查詢" class="cbutton" />
@@ -79,7 +93,7 @@
         </tr>	
         </table>
     </div>
-
+    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 
     <div id="divPaging" style="display:none">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
@@ -115,14 +129,18 @@
 <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	<thead>
       <Tr>
-	    <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="Opt_no">案件編號</u></td>
-	    <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="bseq,bseq1">區所案件編號</u></td>
+	    <td class="lightbluetable" nowrap align="center">案件編號</td>
+	    <td class="lightbluetable" nowrap align="center">區所案件編號</td>
+	    <td class="lightbluetable" nowrap align="center">申請人</td> 
 	    <td class="lightbluetable" nowrap align="center">案件名稱</td> 
 	    <td class="lightbluetable" nowrap align="center">案性</td> 
+	    <td class="lightbluetable" nowrap align="center">分案日期</td> 
+	    <td class="lightbluetable" nowrap align="center">承辦人</td> 
 	    <td class="lightbluetable" nowrap align="center">收文日期</td>
+	    <td class="lightbluetable" nowrap align="center">承辦期限</td> 
 	    <td class="lightbluetable" nowrap align="center">法定期限</td>
 	    <td class="lightbluetable" nowrap align="center">作業</td>
-      </tr>
+     </tr>
 	</thead>
 	<tfoot style="display:none">
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
@@ -134,13 +152,25 @@
             </span>{{opt_no}}
 		</td>
 		<td align="center">{{fseq}}</td>
-		<td nowrap>{{appl_name}}</td>
+		<td>{{ap_cname}}</td>
+		<td>{{appl_name}}</td>
 		<td nowrap>{{arcase_name}}</td>
+		<td align="center">{{opt_in_date}}</td>
+		<td align="center">{{pr_scode_name}}</td>
 		<td align="center">{{confirm_date}}</td>
+		<td align="center">{{ctrl_date}}</td>
 		<td align="center">{{last_date}}</td>
 		<td align="center">
-			<a id="tr_edit_{{nRow}}" href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
-			<a id="tr_editA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
+            <span id="tr_edit_{{nRow}}">
+			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31" target="Eblank">[承辦]</a><br>
+			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31_1" target="Eblank">[結辦]</a><br>
+			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31&Back_flag=B" target="Eblank">[退回]</a>
+            </span>
+            <span id="tr_editA_{{nRow}}">
+			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31" target="Eblank">[承辦]</a><br>
+			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31_1" target="Eblank">[結辦]</a><br>
+			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31&Back_flag=B" target="Eblank">[退回]</a>
+            </span>
 		</td>
 	</tr>
 	</tfoot>
@@ -149,7 +179,7 @@
 </TABLE>
 <br>
 備註:<br>
-1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">承辦退回</font>狀態，可按下該圖示查詢相關退回紀錄
+1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">退回</font>狀態，可按下該圖示查詢相關退回紀錄
 
 </body>
 </html>
@@ -159,15 +189,23 @@
     $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
     $(document).ajaxStop(function () { $.maskStop(); });
 
+    $("#qryPr_scode").getOption({//爭議組承辦人員
+        url: "../ajax/LookupDataCnn.aspx?type=GetPrScode",
+        valueFormat: "{scode}",
+        textFormat: "{scode}_{sc_name}"
+    })
+
+    $("#qryBranch").getOption({//區所別
+        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
+        valueFormat: "{branch}",
+        textFormat: "{branch}_{branchname}"
+    });
+
     $(function () {
         $("input.dateField").datepick();
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
-        $("#qryBranch").getOption({
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
-            data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
-            valueFormat: "{branch}",
-            textFormat: "{branch}_{branchname}"
-        });
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);//☑測試
 
         $("#btnSrch").click();
     });
@@ -199,6 +237,7 @@
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }
+                if($("#chkTest").attr("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 //////更新分頁變數
                 var totRow = parseInt(JSONdata.totrow, 10);
                 if (totRow > 0) {
@@ -237,10 +276,14 @@
 
                         strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
                         strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
+                        strLine1 = strLine1.replace(/{{ap_cname}}/g, item.optap_cname);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
+                        strLine1 = strLine1.replace(/{{opt_in_date}}/g, dateReviver(item.opt_in_date, "yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
                         strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date,"yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{ctrl_date}}/g, dateReviver(item.ctrl_date, "yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
                         strLine1 = strLine1.replace(/{{Case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);

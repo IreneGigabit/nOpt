@@ -169,7 +169,7 @@
         $(document).ajaxStop(function () { $.maskStop(); });
 
         if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "20%,80%";
+            window.parent.tt.rows = "0%,100%";
         }
         this_init();
     });
@@ -213,7 +213,6 @@
 
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $("#tr_opt_show,#tr_Popt_show1").show();//分案作業要顯示 爭救案件編號
         $(".Lock").lock();
         $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
     }
@@ -250,7 +249,7 @@
 		    return false;
 		}
 
-        $(".Lock").unlock();
+        $("select,textarea,input").unlock();
         $("#btnsearchSubmit").lock();
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";

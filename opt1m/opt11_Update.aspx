@@ -95,6 +95,7 @@
             conn.RollBack();
             Sys.errorLog(ex, conn.exeSQL, prgid);
             msg = "收件失敗";
+            throw new Exception(msg, ex);
         }
         finally {
             conn.Dispose();
@@ -160,7 +161,7 @@
             connB.RollBack();
             Sys.errorLog(ex, conn.exeSQL, prgid);
             msg = "退回失敗";
-            throw;
+            throw new Exception(msg, ex);
         }
         finally {
             conn.Dispose();

@@ -17,18 +17,18 @@
     }
 </script>
 
-<input type="text" id="apply_no" name="apply_no">
-<input type="text" id="apply_date" name="apply_date">
-<input type="text" id="issue_no" name="issue_no">
-<input type="text" id="issue_date" name="issue_date">
-<input type="text" id="rej_no" name="rej_no">
-<input type="text" id="open_date" name="open_date">
-<input type="text" id="dmt_term1" name="dmt_term1">
-<input type="text" id="dmt_term2" name="dmt_term2">
-<input type="text" id="apsqlno" name="apsqlno">
-<input type="text" id="cust_name" name="cust_name">
-<input type="text" id="ap_ename" name="ap_ename">
-<input type="text" id="br_apnum" name="br_apnum" value=0><!--進度筆數-->
+<input type="hidden" id="apply_no" name="apply_no">
+<input type="hidden" id="apply_date" name="apply_date">
+<input type="hidden" id="issue_no" name="issue_no">
+<input type="hidden" id="issue_date" name="issue_date">
+<input type="hidden" id="rej_no" name="rej_no">
+<input type="hidden" id="open_date" name="open_date">
+<input type="hidden" id="dmt_term1" name="dmt_term1">
+<input type="hidden" id="dmt_term2" name="dmt_term2">
+<input type="hidden" id="apsqlno" name="apsqlno">
+<input type="hidden" id="cust_name" name="cust_name">
+<input type="hidden" id="ap_ename" name="ap_ename">
+<input type="hidden" id="br_apnum" name="br_apnum" value=0><!--進度筆數-->
 <table id=br_tab border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
 		<TD align=center colspan=4 class=lightbluetable1><font color="white">工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font></TD>
@@ -46,44 +46,44 @@
 			<input type="text" id="Bseq" name="Bseq" SIZE=5 class="unlockADD" maxLength="5">-
 			<input type="text" id="Bseq1" name="Bseq1" SIZE=1 class="unlockADD" maxLength="1">
 			<input type="button" value="確定" class="cbutton showADD" id="btnBseq" name="btnBseq">
-			<input type="text" id="keyBseq" name="keyBseq" class="Hide" value="N">
-			<input type="text" id="oldBranch" name="oldBranch">
-			<input type="text" id="oldBseq" name="oldBseq">
-			<input type="text" id="oldBseq1" name="oldBseq1">
+			<input type="hidden" id="keyBseq" name="keyBseq" class="Hide" value="N">
+			<input type="hidden" id="oldBranch" name="oldBranch">
+			<input type="hidden" id="oldBseq" name="oldBseq">
+			<input type="hidden" id="oldBseq1" name="oldBseq1">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">營洽 :</td>
 		<td class="whitetablebg"  align="left">
-			<input type="text" id="in_scode" name="in_scode" SIZE=5 >
-			<input type="text" id="scode_name" name="scode_name" SIZE=10 >
+			<input type="text" id="in_scode" name="in_scode" class="Lock" SIZE=5 >
+			<input type="text" id="scode_name" name="scode_name" class="Lock" SIZE=10 >
 		</td>
 		<td class="lightbluetable"  align="right">出名代理人 :</td>
 		<td class="whitetablebg"  align="left">
-			<select id=agt_no name=agt_no SIZE=1 ></select>
+			<select id=agt_no name=agt_no class="Lock" SIZE=1 ></select>
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">案件名稱 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="appl_name" name="appl_name" SIZE=90 maxlength=100 >
+			<input type="text" id="appl_name" name="appl_name" class="Lock" SIZE=90 maxlength=100 >
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">申請人 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="ap_cname" name="ap_cname" SIZE=60 maxlength=60 >
-		    <input type="text" id="cust_seq" name="cust_seq">
-		    <input type="text" id="cust_area" name="cust_area">
-		    <input type="text" id="att_sql" name="att_sql">
+			<input type="text" id="ap_cname" name="ap_cname" class="Lock" SIZE=60 maxlength=60 >
+		    <input type="hidden" id="cust_seq" name="cust_seq">
+		    <input type="hidden" id="cust_area" name="cust_area">
+		    <input type="hidden" id="att_sql" name="att_sql">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">交辦案性 :</td>
 		  <td class="whitetablebg"  align="left" colspan=3>
 			 	案性：<select id=Arcase NAME=Arcase SIZE=1 class="unlockADD">	</SELECT>
-				<input type="text" id="arcase_type" name="arcase_type">
-				<input type="text" id="arcase_class" name="arcase_class">
+				<input type="hidden" id="arcase_type" name="arcase_type">
+				<input type="hidden" id="arcase_class" name="arcase_class">
 		</td>
 	</TR>
 	<TR>
@@ -102,28 +102,28 @@
 
 
 <script language="javascript" type="text/javascript">
+    $("#Branch").getOption({//區所別
+        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        data: { sql: "select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort" },
+        valueFormat: "{branch}",
+        textFormat: "{branch}_{branchname}"
+    });
+    $("#agt_no").getOption({//出名代理人
+        url: "../ajax/LookupDataBranch.aspx",
+        data: { type: "getagtdata", branch: "<%#branch%>" },
+        valueFormat: "{agt_no}",
+        textFormat: "{strcomp_name}{agt_name}"
+    });
+    $("#Arcase").getOption({//交辦案性
+        url: "../ajax/LookupDataBranch.aspx",
+        data: { type: "getarcasedata", branch: "<%#branch%>" },
+        valueFormat: "{rs_code}",
+        textFormat: "{rs_codenm}---{rs_detail}",
+        attrFormat: "val1='{rs_type}' val2='{rs_class}'"
+    });
+
     var br_formA = {};
     br_formA.init = function () {
-        $("#Branch").getOption({//區所別
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
-            data: { sql: "select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort" },
-            valueFormat: "{branch}",
-            textFormat: "{branch}_{branchname}"
-        });
-        $("#agt_no").getOption({//出名代理人
-            url: "../ajax/LookupDataBranch.aspx",
-            data: { type: "getagtdata", branch: "<%#branch%>" },
-            valueFormat: "{agt_no}",
-            textFormat: "{strcomp_name}{agt_name}"
-        });
-        $("#Arcase").getOption({//交辦案性
-            url: "../ajax/LookupDataBranch.aspx",
-            data: { type: "getarcasedata", branch: "<%#branch%>" },
-            valueFormat: "{rs_code}",
-            textFormat: "{rs_codenm}---{rs_detail}",
-            attrFormat: "val1='{rs_type}' val2='{rs_class}'"
-        });
-
         $("#Branch").val("<%#branch%>");
 
        if ("<%#submitTask%>" != "ADD") {
@@ -145,13 +145,6 @@
         if (jOpt!=null) {
             $("#Branch,#oldBranch").val(jOpt.branch);
             $("#ctrl_date").val(dateReviver(jOpt.ctrl_date, "yyyy/M/d"));
-            if (jOpt.dfy_last_date == "") {
-                var Adate = dateConvert(jOpt.dfy_last_date).addDays(-5);
-                if (Adate < (new Date()))
-                    $("#ctrl_date").val(dateReviver(jOpt.dfy_last_date, "yyyy/M/d"));
-                else
-                    $("#ctrl_date").val(Adate);
-            }
             $("#Opt_no").val(jOpt.opt_no);
             $("#Bseq,#oldBseq").val(jOpt.bseq);
             $("#Bseq1,#oldBseq1").val(jOpt.bseq1);
@@ -175,6 +168,9 @@
             $("#dmt_term2").val(jOpt.dmt_term2);
             $("#apsqlno").val(jOpt.apsqlno);
             $("#ap_ename").val(jOpt.ap_ename);
+            if($("#ctrl_date").val()==""){
+                $("#dfy_last_date").blur();
+            }
         }
     };
 
@@ -228,6 +224,23 @@
 		            $("#oldBseq1").val($("#Bseq1").val());
                     $("#keyBseq").val("Y"); //有按確定給Y
                 }
+
+                var jAp = JSONdata.dmt_ap;
+                $.each(jAp, function (i, item) {
+                    var nRow = i + 1;
+                    var trHTML = "";
+                    trHTML += "<input type=hidden id='apsqlno_" + nRow + "' name='apsqlno_" + nRow + "' value='"+item.apsqlno+"'>";
+                    trHTML += "<input type=hidden id='server_flag_" + nRow + "' name='server_flag_" + nRow + "' value='"+item.server_flag+"'>";
+                    trHTML += "<input type=hidden id='apcust_no_" + nRow + "' name='apcust_no_" + nRow + "' value='"+item.apcust_no+"'>";
+                    trHTML += "<input type=hidden id='ap_cname_" + nRow + "' name='ap_cname_" + nRow + "' value='"+item.ap_cname+"'>";
+                    trHTML += "<input type=hidden id='ap_cname1_" + nRow + "' name='ap_cname1_" + nRow + "' value='"+item.ap_cname1+"'>";
+                    trHTML += "<input type=hidden id='ap_cname2_" + nRow + "' name='ap_cname2_" + nRow + "' value='"+item.ap_cname2+"'>";
+                    trHTML += "<input type=hidden id='ap_ename_" + nRow + "' name='ap_ename_" + nRow + "' value='"+item.ap_ename+"'>";
+                    trHTML += "<input type=hidden id='ap_ename1_" + nRow + "' name='ap_ename1_" + nRow + "' value='"+item.ap_ename1+"'>";
+                    trHTML += "<input type=hidden id='ap_ename2_" + nRow + "' name='ap_ename2_" + nRow + "' value='"+item.ap_ename2+"'>";
+                    $("#reg").append(trHTML);
+                });
+
                 $("#btnBseq").attr("disabled",true);
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
@@ -242,4 +255,15 @@
         $("#arcase_type").val($(":selected",obj).attr("val1"));
         $("#arcase_class").val($(":selected",obj).attr("val2"));
     };
+
+    $("#dfy_last_date").blur(function (e) {
+        if ($("#dfy_last_date").val() != "") {
+            var Adate = (new Date($("#dfy_last_date").val())).addDays(-5);
+            if (Adate < (new Date())){
+                $("#ctrl_date").val($("#dfy_last_date").val());
+            }else{
+                $("#ctrl_date").val(Adate);
+            }
+        }
+    });
 </script>

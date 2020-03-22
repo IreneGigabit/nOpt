@@ -161,16 +161,15 @@
 				//console.log($(this).index());
 				//console.log($(this).parents("td:first").find(".errlog").index());
 				//console.log($(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").length+",errmsg="+errmsg);
-
+				//$(this).tooltipster({ trigger: 'custom', position: 'right', content: errmsg, multiple: true, theme: 'tooltipster-light' });
 				if (errmsg != "") {
-					//$(this).parents("td:first").find(".errlog").html(errmsg);
-					//$(this).nextAll(".errlog:eq(0)").html(errmsg);
 					$(this).addClass("chkError");
-					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
+				    $(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
+					//$(this).tooltipster('show');
 				} else {
-					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
-					$(this).removeClass("chkError");
-					}
+				    $(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
+				    $(this).removeClass("chkError");
+				    //$(this).tooltipster('hide');
 				}
 			});
 			return errflag;

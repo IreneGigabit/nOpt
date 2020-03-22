@@ -263,15 +263,15 @@
 </table>	
 
 <script language="javascript" type="text/javascript">
+    $("#Pagt_no").getOption({//代理人
+        url: "../ajax/LookupDataBranch.aspx",
+        data: { type: "getagtdata", branch: "<%#branch%>" },
+        valueFormat: "{agt_no}",
+        textFormat: "{strcomp_name}{agt_name}"
+    });
+
     var tran_form = {};
     tran_form.init = function () {
-        $("#Pagt_no").getOption({//代理人
-            url: "../ajax/LookupDataBranch.aspx",
-            data: { type: "getagtdata", branch: "<%#branch%>" },
-            valueFormat: "{agt_no}",
-            textFormat: "{strcomp_name}{agt_name}"
-        });
-
         var jOpt = br_opt.opt[0];
         $("#Popt_no").val(jOpt.opt_no);
         $("#PBranch").val(jOpt.branch);
@@ -415,6 +415,8 @@
             if (jModDmt.neaddr3 != "") $("#Pmod_dmt_neaddr1_icon").show().find("a").attr("href", jModDmt.mod_dmt_neaddr3);
             if (jModDmt.neaddr4 != "") $("#Pmod_dmt_neaddr1_icon").show().find("a").attr("href", jModDmt.mod_dmt_neaddr4);
         }
+
+        $("#tr_opt_show").showFor("<%#prgid%>" == "opt21");//分案作業要顯示 爭救案件編號
     }
 
     //增加一筆註冊人

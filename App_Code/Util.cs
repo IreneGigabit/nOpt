@@ -143,7 +143,10 @@ public static class Util
     #endregion
 
 	#region CutData
-	public static string CutData(this string s, int n) {
+    /// <summary>
+    /// 擷取指定長度
+    /// </summary>
+    public static string CutData(this string s, int n) {
 		if (n <= 0) return "";
 		else if (n > System.Text.Encoding.Default.GetBytes(s).Length) return s;
 		else {
