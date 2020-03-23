@@ -30,7 +30,7 @@
             ProjectName = Sys.getAppSetting("Project");
             LoginGrp = Sys.GetSession("LoginGrp");
             StrUser = Sys.GetSession("sc_name");
-            if (LoginGrp.ToUpper().IndexOf("ADMIN")>-1){
+            if (Sys.IsAdmin()){
                 Eblank = "<span id='btnEblank' style='cursor:pointer;color:brown;' v1='65%,*' v2='100%,*'>[Eblank frame]</span>&nbsp;";
             }
             
