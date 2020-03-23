@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -160,15 +160,15 @@
 		<td align="center">{{confirm_date}}</td>
 		<td align="center">{{ctrl_date}}</td>
 		<td align="center">{{last_date}}</td>
-		<td align="center">
+		<td align="center" nowrap>
             <span id="tr_edit_{{nRow}}">
 			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31" target="Eblank">[承辦]</a><br>
-			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31_1" target="Eblank">[結辦]</a><br>
+			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31_1&End_flag=Y" target="Eblank">[結辦]</a><br>
 			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid=opt31&Back_flag=B" target="Eblank">[退回]</a>
             </span>
             <span id="tr_editA_{{nRow}}">
 			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31" target="Eblank">[承辦]</a><br>
-			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31_1" target="Eblank">[結辦]</a><br>
+			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31_1&End_flag=Y" target="Eblank">[結辦]</a><br>
 			    <a href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&prgid=opt31&Back_flag=B" target="Eblank">[退回]</a>
             </span>
 		</td>
@@ -205,7 +205,7 @@
     $(function () {
         $("input.dateField").datepick();
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
 
         $("#btnSrch").click();
     });
@@ -237,7 +237,7 @@
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }
-                if($("#chkTest").attr("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 //////更新分頁變數
                 var totRow = parseInt(JSONdata.totrow, 10);
                 if (totRow > 0) {
