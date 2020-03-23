@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="case_form" %>
+<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-
     protected string branch = "";
     protected string opt_sqlno = "";
 
@@ -15,6 +14,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <TABLE border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%">
 <TR>
 	<td class="lightbluetable" align=right>洽案營洽 :</td>
@@ -181,10 +181,10 @@
         $("#tfy_oth_code").val(jCase.oth_code);
         $("#tfy_oth_arcase").val(jCase.oth_arcase);
         $("#tfy_Ar_mark").val(jCase.ar_mark);
-        $("#tfy_discount_chk").attr("checked", jCase.discount_chk == "Y");
+        $("#tfy_discount_chk").prop("checked", jCase.discount_chk == "Y");
         $("#tfy_source").val(jCase.source);
         if (jCase.contract_type != "") {
-            $("input[name='Contract_no_Type'][value='" + jCase.contract_type + "']").attr("checked", true);
+            $("input[name='Contract_no_Type'][value='" + jCase.contract_type + "']").prop("checked", true);
             if (jCase.contract_type == "M") {
                 $("#span_btn_contract").show();
                 $("#Mcontract_no").val(jCase.contract_no);
