@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="pr_form" %>
+﻿<%@ Control Language="C#" ClassName="pr_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -47,7 +47,7 @@
 
 <script language="javascript" type="text/javascript">
     $("#pr_per").getOption({//承辦完成百分比
-        url: "../ajax/AjaxGetSqlData.aspx",
+        url: "../ajax/_GetSqlData.aspx",
         data: { sql: "Select cust_code,code_name from cust_code where code_type='Opr_per' order by sortfld" },
         valueFormat: "{cust_code}",
         textFormat: "{code_name}",

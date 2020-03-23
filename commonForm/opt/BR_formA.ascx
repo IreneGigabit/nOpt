@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="br_formA" %>
+﻿<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -103,7 +103,7 @@
 
 <script language="javascript" type="text/javascript">
     $("#Branch").getOption({//區所別
-        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        url: "../ajax/_GetSqlDataCnn.aspx",
         data: { sql: "select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort" },
         valueFormat: "{branch}",
         textFormat: "{branch}_{branchname}"

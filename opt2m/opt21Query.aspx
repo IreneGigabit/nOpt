@@ -163,7 +163,7 @@
         $("input.dateField").datepick();
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
         $("#qryBranch").getOption({
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
+            url: "../ajax/_GetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"

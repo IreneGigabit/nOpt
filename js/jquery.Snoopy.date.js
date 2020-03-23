@@ -1,4 +1,4 @@
-/*!
+﻿/*!
 * jQuery Snoopy Date Library v1.0.0
 *
 * Date: 2010-08-24 21:29

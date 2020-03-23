@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="case_form" %>
+﻿<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -135,7 +135,7 @@
     var case_form = {};
     case_form.init = function () {
         $("#F_tscode").getOption({//洽案營洽
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select distinct scode,sc_name,scode1 from sysctrl.dbo.vscode_roles where branch='<%#branch%>' and dept='T' and syscode='<%#branch%>Tbrt' and roles='sales' order by scode1" },
             valueFormat: "{scode}",
             textFormat: "{sc_name}"
@@ -156,19 +156,19 @@
             textFormat: "{rs_code}---{rs_detail}"
         });
         $("#tfy_oth_code").getOption({//轉帳單位
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
+            url: "../ajax/_GetSqlDataCnn.aspx",
             data: { sql: "SELECT branch,branchname FROM sysctrl.dbo.branch_code WHERE class = 'branch'" },
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"
         });
         $("#tfy_Ar_mark").getOption({//請款註記
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='ar_mark' and (mark1 like '%<%#Session["SeBranch"]%><%#Session["Dept"]%>%' or mark1 is null)" },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}"
         });
         $("#tfy_source").getOption({//案源代碼
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code" },
             valueFormat: "{cust_code}",
             textFormat: "({cust_code}---{code_name})"

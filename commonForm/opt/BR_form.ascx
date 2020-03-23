@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="br_form" %>
+﻿<%@ Control Language="C#" ClassName="br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -52,7 +52,7 @@
 
 <script language="javascript" type="text/javascript">
     $("#pr_branch").getOption({//承辦區所別
-        url: "../ajax/AjaxGetSqlData.aspx",
+        url: "../ajax/_GetSqlData.aspx",
         data: { sql: "select cust_code,code_name from cust_code where code_type='OBranch'" },
         valueFormat: "{cust_code}",
         textFormat: "{code_name}",

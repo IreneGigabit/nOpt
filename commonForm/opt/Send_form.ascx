@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="send_form" %>
+﻿<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -24,32 +24,32 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文單位 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="radio" name="send_dept" <%=Sdisabled%> value="B">自行發文
-			<input type="radio" name="send_dept" <%=Sdisabled%> value="L">轉法律處發文
+			<input type="radio" name="send_dept" class="SClass" value="B">自行發文
+			<input type="radio" name="send_dept" class="SClass" value="L">轉法律處發文
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>預計發文日期 :</td>
 		<td class="whitetablebg"  align="left">
-			 	<input type="text" name="GS_date" SIZE=10  maxlength="10" <%=SClass%> value="<%=gs_date%>" class="dateField">
+			 	<input type="text" name="GS_date" SIZE=10  maxlength="10" class="SClass" value="<%=gs_date%>" class="dateField">
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>總收發文日期 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" name="mp_date" SIZE=10  maxlength="10" <%=SClass%> value="<%=mp_date%>" class="dateField">
+			<input type="text" name="mp_date" SIZE=10  maxlength="10" class="SClass" value="<%=mp_date%>" class="dateField">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文對象 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl name=send_cl value="<%=send_cl%>" <%=Sdisabled%>></SELECT>
+			<SELECT id=send_cl name=send_cl value="<%=send_cl%>" class="SClass"></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>單位副本 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl1 name=send_cl1 value="<%=send_cl1%>" <%=Sdisabled%>></SELECT>
+			<SELECT id=send_cl1 name=send_cl1 value="<%=send_cl1%>" class="SClass"></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>官方號碼 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_sel name=send_sel value="<%=send_sel%>" <%=Sdisabled%>></SELECT>
+			<SELECT id=send_sel name=send_sel value="<%=send_sel%>" class="SClass"></SELECT>
 		</td>
 	</TR>
 	<TR>
@@ -58,16 +58,16 @@
 			結構分類：
 			<input type="text" name="rs_type" id="rs_type">
 			<span id=span_rs_class>
-				<select id="rs_class" name="rs_class" <%=SEdisabled%>></select>
+				<select id="rs_class" name="rs_class" class="SEClass"></select>
 			</span>
 			案性：
 			<span id=span_rs_code>
-				<select id="rs_code" name="rs_code" onchange='rs_code_onchange1()' <%=SEdisabled%>></select>
+				<select id="rs_code" name="rs_code" onchange='rs_code_onchange1()' class="SEClass"></select>
 			</span><br>
 			處理事項：
 			<input type="hidden" id="act_sqlno" name="act_sqlno" value="<%=act_sqlno%>">
 			<span id=span_act_code>
-				<select id="act_code" name="act_code" <%=Sdisabled%> ></select>
+				<select id="act_code" name="act_code" class="SClass" ></select>
 			</span>	
 		</td>
 		<input type="hidden" name="code_br_agt_no">
@@ -77,34 +77,34 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文內容 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="text" name="rs_detail" SIZE=60  maxlength="60" <%=SClass%> value="<%=rs_detail%>">
+			<input type="text" name="rs_detail" SIZE=60  maxlength="60" class="SClass" value="<%=rs_detail%>">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>規費支出 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="text" name="Send_Fees" SIZE=10  maxlength="10" <%=SEClass%> value="<%=send_Fees%>">
-			<input type="hidden" name="old_Send_Fees" SIZE=10  maxlength="10" <%=SEClass%> value="<%=send_Fees%>">
+			<input type="text" name="Send_Fees" SIZE=10  maxlength="10" class="SEClass" value="<%=send_Fees%>">
+			<input type="hidden" name="old_Send_Fees" SIZE=10  maxlength="10" class="SEClass" value="<%=send_Fees%>">
 		</td>
 	</TR>
-	<TR id="tr_score_flag" <%IF left(prgid,5)="opt31" then%> style="display:none" <%End IF%>>
+	<TR id="tr_score_flag">
 		<td class="lightbluetable"  align="right" nowrap>是否輸入評分 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="radio" name="score_flag" <%=Sdisabled%> value="Y" onclick="Score_flag_onclick()" <%IF score_flag="Y" then%> checked <%End IF%>>是
-			<input type="radio" name="score_flag" <%=Sdisabled%> value="N" onclick="Score_flag_onclick()" <%IF score_flag="N" then%> checked <%End IF%>>否
+			<input type="radio" name="score_flag" class="SClass" value="Y">是
+			<input type="radio" name="score_flag" class="SClass" value="N">>否
 		</td>
 	</TR>
 </table>
 
 <script language="javascript" type="text/javascript">
     $("#send_cl,#send_cl1").getOption({//發文對象/單位副本
-        url: "../ajax/AjaxGetSqlDataBranch.aspx",
+        url: "../ajax/_GetSqlDataBranch.aspx",
         data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_CL'" },
         valueFormat: "{cust_code}",
         textFormat: "{code_name}",
     });
     $("#send_sel").getOption({//官方號碼
-        url: "../ajax/AjaxGetSqlDataBranch.aspx",
+        url: "../ajax/_GetSqlDataBranch.aspx",
         data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_SEL'" },
         valueFormat: "{cust_code}",
         textFormat: "{code_name}",
@@ -123,7 +123,7 @@
         if($("#rs_type").val()=="")$("#rs_type").val(jOpt.arcase_type);
 
         $("#rs_class").getOption({//結構分類
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>"
                 , sql: "select cust_code,code_name from cust_code where code_type='"+$("#rs_type").val()+"' and mark is null and mark1='B' "+
 				      " and cust_code in (select rs_class from vcode_act where cg ='G' and rs = 'S' and rs_type='" +$("#rs_type").val()+ "') order by cust_code"
@@ -132,17 +132,9 @@
             textFormat: "{code_name}",
         });
 
-        $("#Pr_hour").val(jOpt.pr_hour);
-        $("#pr_per").val(jOpt.pr_per);
-        $("#Pr_remark").val(jOpt.pr_remark);
+        $("input[name='score_flag'][value='" + jOpt.score_flag + "']").prop("checked", true);
+        $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1);//承辦結辦作業不顯示
 
-        if ($("#End_flag").val() == "Y") {//結辦
-            $("#pr_date").val((new Date()).format("yyyy/M/d"));
-        } else {
-            $("#pr_date").val(dateReviver(jOpt.bpr_date, "yyyy/M/d"));
-        }
-
-        $("#tr_pr_date").showFor($("#End_flag").val() == "Y");
     }
 
     //依結構分類帶案性代碼
@@ -171,5 +163,12 @@
             valueFormat: "{cust_code}",
             textFormat: "{code_name}",
         });
+    }
+
+
+    //是否輸入評分
+    $("input[name='score_flag']").click(function () { send_form.setTabQu(); });
+    send_form.setTabQu = function () {
+        $("#tabQu").showFor$("input[name='score_flag']:checked").val()=="Y"();
     }
 </script>

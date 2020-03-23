@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="apcust_re_form" %>
+﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -144,13 +144,13 @@
     var apcust_re_form={};
     apcust_re_form.init = function () {
         $("select[id='apclass_##']").getOption({//申請人種類
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld" },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}"
         });
         $("select[id='ap_country_##']").getOption({//申請人國籍
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
+            url: "../ajax/_GetSqlDataCnn.aspx",
             data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
             valueFormat: "{coun_code}",
             textFormat: "{coun_c}"

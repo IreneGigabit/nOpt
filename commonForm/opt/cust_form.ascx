@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="cust_form" %>
+﻿<%@ Control Language="C#" ClassName="cust_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -161,25 +161,25 @@
     var cust_form={};
     cust_form.init = function () {
         $("#F_ap_country").getOption({//客戶國籍
-            url: "../ajax/AjaxGetSqlDataCnn.aspx",
+            url: "../ajax/_GetSqlDataCnn.aspx",
             data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
             valueFormat: "{coun_code}",
             textFormat: "{coun_code}-{coun_c}"
         });
         $("#F_con_code").getOption({//顧問種類
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='H' order by cust_code" },
             valueFormat: "{cust_code}",
             textFormat: "{cust_code}---{code_name}"
         });
         $("#F_pdis_type,#F_tdis_type").getOption({//專利/商標折扣代碼
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='Discount' order by cust_code" },
             valueFormat: "{cust_code}",
             textFormat: "{cust_code}---{code_name}"
         });
         $("#F_ppay_type,#F_tpay_type").getOption({//專利/商標付款條件
-            url: "../ajax/AjaxGetSqlDataBranch.aspx",
+            url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='Payment' order by cust_code" },
             valueFormat: "{cust_code}",
             textFormat: "{cust_code}---{code_name}"

@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="dmt_form" %>
+﻿<%@ Control Language="C#" ClassName="dmt_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -209,19 +209,19 @@
 
 <script language="javascript" type="text/javascript">
     $("#tfzy_Zname_type").getOption({//語文別
-        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        url: "../ajax/_GetSqlDataCnn.aspx",
         data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
         valueFormat: "{coun_code}",
         textFormat: "{coun_code}-{coun_c}"
     });
     $("#tfzy_prior_country").getOption({//優先權首次申請國家
-        url: "../ajax/AjaxGetSqlDataCnn.aspx",
+        url: "../ajax/_GetSqlDataCnn.aspx",
         data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
         valueFormat: "{coun_code}",
         textFormat: "{coun_code}-{coun_c}"
     });
     $("#tfzy_end_code").getOption({//結案代碼
-        url: "../ajax/AjaxGetSqlDataBranch.aspx",
+        url: "../ajax/_GetSqlDataBranch.aspx",
         data: { branch: "<%#branch%>", sql: "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld" },
         valueFormat: "{chrelno}",
         textFormat: "{chrelname}"

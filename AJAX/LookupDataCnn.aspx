@@ -17,12 +17,20 @@
     protected void Page_Load(object sender, EventArgs e) {
         submitTask = Request["submitTask"] ?? "A";
         type = (Request["type"] ?? "").ToString().ToLower();
+        DataTable rtn = new DataTable();
 
         //抓取爭議組承辦人員
-        if (type == "getprscode") GetPrTermALL();
+        if (type == "getprscode") rtn = GetPrTermALL();
+
+        var settings = new JsonSerializerSettings() {
+            Formatting = Formatting.Indented,
+            ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
+            Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+        };
+        Response.Write(JsonConvert.SerializeObject(rtn, settings).ToUnicode());
     }
 
-    protected void GetPrTermALL() {
+    protected DataTable GetPrTermALL() {
         using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false)) {
             SQL = "select c.scode,c.sc_name from grpid as a ";
             SQL += " inner join scode_group as b on a.grpclass=b.grpclass and a.grpid=b.grpid ";
@@ -34,13 +42,7 @@
             DataTable dt = new DataTable();
             cnn.DataTable(SQL, dt);
 
-            var settings = new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
-                Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
-            };
-            Response.Write(JsonConvert.SerializeObject(dt, settings).ToUnicode());
+            return dt;
         }
     }
 </script>

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -241,7 +241,9 @@
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $(".Lock").lock();
-        
+        $(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() == "B");//承辦結辦
+        $(".SEClass").unlock((<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦結辦
+
         if($("#Back_flag").val() == "B"){
             settab("#br");
             $("#tabreject").show();//退回視窗
