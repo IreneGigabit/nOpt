@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -7,6 +7,10 @@
 <%@ Register Src="~/commonForm/opt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
 <%@ Register Src="~/commonForm/opt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+<%@ Register Src="~/commonForm/opt/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+<%@ Register Src="~/commonForm/opt/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
+
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -14,9 +18,12 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
+    protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
+    protected string Back_flag = "";//退回flag
+    protected string End_flag = "";//結辦flag
     
     protected string dmt_show_flag = "Y";
 
@@ -24,11 +31,24 @@
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
-
+        
+        submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
+        Back_flag = Request["Back_flag"] ?? "N";//退回flag
+        End_flag = Request["End_flag"] ?? "";//結辦flag(B)
 
+        if (prgid == "opt31") {
+            HTProgCap = "爭救案承辦內容維護";
+        } else if (prgid == "opt31_1") {
+            HTProgCap = "爭救案結辦作業";
+        } else {
+            HTProgCap = "爭救案承辦內容查詢";
+            submitTask = "Q";
+        }
+
+        
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -82,7 +102,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
-            <font color="blue">區所案件編號：<span id="sseq"></span></font>
+            <input type=button value ="區所交辦資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
@@ -94,10 +114,12 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="hidden" name="case_no" value="<%=case_no%>">
-	<input type="hidden" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="hidden" name="submittask">
-	<input type="hidden" name="prgid" value="<%=prgid%>">
+    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+    <input type="text" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
+    <input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
+	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -143,7 +165,11 @@
             </div>
             <div class="tabCont" id="#br">
                 <uc1:BR_form runat="server" ID="BR_form" />
-                <!--include file="../commonForm/opt/BR_form.ascx"--><!--承辦內容-->
+                <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案內容-->
+                <uc1:Back_form runat="server" ID="Back_form" />
+                <!--include file="../commonForm/opt/Back_form.ascx"--><!--退回處理-->
+                <uc1:PR_form runat="server" ID="PR_form" />
+                <!--include file="../commonForm/opt/PR_form.ascx"--><!--承辦內容-->
             </div>
         </td>
     </tr>
@@ -177,8 +203,8 @@
     var br_opt = {};
     //初始化
     function this_init() {
-        settab("#br");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);//☑測試
+        settab("#tran");
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
 
         //取得案件資料
         $.ajax({
@@ -187,7 +213,7 @@
             async: false,
             cache: false,
             success: function (json) {
-                if($("#chkTest").attr("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 var JSONdata = $.parseJSON(json);
                 if (JSONdata.length == 0) {
                     toastr.warning("無案件資料可載入！");
@@ -199,7 +225,6 @@
         });
 
         $("#sopt_no").html(br_opt.opt[0].opt_no);
-        $("#sseq").html(br_opt.opt[0].fseq);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();
@@ -208,13 +233,24 @@
         tran_form.init();
         brupload_form.init();
         br_form.init();
+        back_form.init();
+        pr_form.init();
 
         $("input.dateField").datepick();
 
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $(".Lock").lock();
-        $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
+        
+        if($("#Back_flag").val() == "B"){
+            settab("#br");
+            $("#tabreject").show();//退回視窗
+            $("#tabPR,#tabSend").hide();//承辦內容/發文視窗
+        }else{
+            $("#tabreject").hide();//退回視窗
+            $("#tabPR,#tabSend").show();//承辦內容/發文視窗
+        }
+        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
     }
 
     // 切換頁籤
