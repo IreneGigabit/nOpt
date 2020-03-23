@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -137,6 +137,7 @@
 
                 dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
                 dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
+                dt.Rows[0]["send_dept"] = dt.Rows[0].SafeRead("send_dept", "B");
             }
 
             return dt;
