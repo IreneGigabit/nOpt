@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -40,6 +40,18 @@ public class Sys
 	/// <returns>應用程式根路徑</returns>  
 	public static string GetRootDir() {
 		return HttpContext.Current.Request.ApplicationPath;
+	}
+
+	/// <summary>  
+	/// 取得ASCX在伺服器上的目錄
+	/// </summary>  
+	public static string GetAscxPath(object page, string dir) {
+		if (IsAdmin()) {
+			return string.Format("<hr class='style-one'/>\\{0}\\{1}.ascx", dir, page.GetType().ToString().Replace("ASP.", ""))
+				.Replace(HttpContext.Current.Server.MapPath("/"), "");
+		} else {
+			return "";
+		}
 	}
 
 	public static bool IsAdmin() {
