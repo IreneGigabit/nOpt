@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="do1_form" %>
+<%@ Control Language="C#" ClassName="do1_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string opt_sqlno = "";
     
@@ -15,6 +14,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr id="tr_Popt_show1" style="display:none">
 		<td class="lightbluetable" valign="top"  align="right"><strong>案件編號：</strong></td>
@@ -277,17 +277,17 @@
         $("#Pagt_no").val(jOpt.agt_no);
 
         //異議標的
-        $("input[name='PS_Mark'][value='" + jOpt.s_mark + "']").attr("checked", true);
+        $("input[name='PS_Mark'][value='" + jOpt.s_mark + "']").prop("checked", true);
         $("#Pissue_no").val(jOpt.issue_no);
         $("#PAppl_name").val(jOpt.appl_name);
-        $("input[name='Pclass_type'][value='" + jOpt.class_type + "']").attr("checked", true);
+        $("input[name='Pclass_type'][value='" + jOpt.class_type + "']").prop("checked", true);
         $("#Pclass").val(jOpt.class);
         $("#Pclass_count").val(jOpt.class_count);
-        $("input[name='Pcappl_name'][value='" + jOpt.cappl_name + "']").attr("checked", true);
-        $("input[name='Peappl_name'][value='" + jOpt.eappl_name + "']").attr("checked", true);
-        $("input[name='Pjappl_name'][value='" + jOpt.jappl_name + "']").attr("checked", true);
-        $("input[name='Pdraw'][value='" + jOpt.draw + "']").attr("checked", true);
-        $("input[name='Pzappl_name1'][value='" + jOpt.zappl_name1 + "']").attr("checked", true);
+        $("input[name='Pcappl_name'][value='" + jOpt.cappl_name + "']").prop("checked", true);
+        $("input[name='Peappl_name'][value='" + jOpt.eappl_name + "']").prop("checked", true);
+        $("input[name='Pjappl_name'][value='" + jOpt.jappl_name + "']").prop("checked", true);
+        $("input[name='Pdraw'][value='" + jOpt.draw + "']").prop("checked", true);
+        $("input[name='Pzappl_name1'][value='" + jOpt.zappl_name1 + "']").prop("checked", true);
         $("#Premark3").val(jOpt.remark3);
 
         //被異議人
@@ -315,20 +315,20 @@
                 switch (item.mod_type) {
                     case "Tmark":
                     case "Lmark":
-                        $("input[name='P1mod_pul_mod_type'][value='" + item.mod_type + "']").attr("checked", true);
+                        $("input[name='P1mod_pul_mod_type'][value='" + item.mod_type + "']").prop("checked", true);
                         $("#P1mod_pul_new_no").val(item.new_no);
                         $("#P1mod_pul_ncname1").val(item.ncname1);
                         break;
                     case "O1":
-                        $("#P2mod_pul_mod_type").attr("checked", true);
+                        $("#P2mod_pul_mod_type").prop("checked", true);
                         break;
                     case "O2":
-                        $("#P3mod_pul_mod_type").attr("checked", true);
+                        $("#P3mod_pul_mod_type").prop("checked", true);
                         $("#P3mod_pul_new_no").val(item.new_no);
                         $("#P3mod_pul_mod_dclass").val(item.mod_dclass);
                         break;
                     case "O3":
-                        $("#P4mod_pul_mod_type").attr("checked", true);
+                        $("#P4mod_pul_mod_type").prop("checked", true);
                         $("#P4mod_pul_new_no").val(item.new_no);
                         $("#P4mod_pul_mod_dclass").val(item.mod_dclass);
                         $("#P4mod_pul_ncname1").val(item.ncname1);
