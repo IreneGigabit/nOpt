@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="bc2_form" %>
+<%@ Control Language="C#" ClassName="bc2_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string opt_sqlno = "";
     
@@ -15,6 +14,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
 		<td class="lightbluetable" valign="top"><strong>※、代理人</strong></td>
@@ -114,8 +114,8 @@
         $("#Pother_item1").val(jOpt.other_item1);
         $("#Pother_item2").val(jOpt.other_item2);
         $("#Ptran_remark1").val(jOpt.tran_remark1);
-        $("input[name='PS_Mark'][value='" + jOpt.s_mark + "']").attr("checked", true);
-        $("input[name='Premark3'][value='" + jOpt.remark3 + "']").attr("checked", true);
-        $("input[name='Pmark'][value='" + jOpt.detail_mark + "']").attr("checked", true);
+        $("input[name='PS_Mark'][value='" + jOpt.s_mark + "']").prop("checked", true);
+        $("input[name='Premark3'][value='" + jOpt.remark3 + "']").prop("checked", true);
+        $("input[name='Pmark'][value='" + jOpt.detail_mark + "']").prop("checked", true);
     }
 </script>
