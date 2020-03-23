@@ -1,4 +1,4 @@
-﻿/*!
+/*!
 * jQuery Snoopy Date Library v1.0.0
 *
 * Date: 2010-08-24 21:29
@@ -134,11 +134,11 @@
 	}
 
 	$.radioValue = function(x, v) {
-		//if (v != null && v != undefined) $("input:radio[name='" + x + "'][value='" + v + "']").attr("checked", true);
+	    //if (v != null && v != undefined) $("input:radio[name='" + x + "'][value='" + v + "']").prop("checked", true);
 		//return $("input:radio[name='" + x + "']:checked").val();
 		var sObj = $("input:radio[name='" + x + "']");
 		if (sObj == null) return "";
-		if (v != null && v != undefined) $(sObj).filter("[value='" + v + "']").attr("checked", true);
+		if (v != null && v != undefined) $(sObj).filter("[value='" + v + "']").prop("checked", true);
 		return $(sObj).filter(":checked").val();
 	}
 
