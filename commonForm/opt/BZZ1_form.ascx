@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="bzz1_form" %>
+<%@ Control Language="C#" ClassName="bzz1_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string opt_sqlno = "";
     
@@ -15,6 +14,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
 		<td class="lightbluetable" valign="top" width="20%"><strong>壹、代理人(代碼)</strong></td>
