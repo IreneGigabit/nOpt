@@ -50,7 +50,7 @@
             //產生案件編號
             SQL="select max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
             object objResult = conn.ExecuteScalar(SQL);
-            string opt_no = (objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
+            string opt_no = (objResult == DBNull.Value || objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
 
             //抓前一todo的流水號
             string pre_sqlno = "";
