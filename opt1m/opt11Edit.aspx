@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -189,7 +189,7 @@
     //初始化
     function this_init() {
         settab("#tran");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").attr("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
 
         //取得案件資料
         $.ajax({
@@ -198,7 +198,7 @@
             async: false,
             cache: false,
             success: function (json) {
-                if($("#chkTest").attr("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 var JSONdata = $.parseJSON(json);
                 if (JSONdata.length == 0) {
                     toastr.warning("無案件資料可載入！");
