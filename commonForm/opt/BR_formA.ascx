@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="br_formA" %>
+<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string submitTask = "";
@@ -17,6 +16,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <input type="hidden" id="apply_no" name="apply_no">
 <input type="hidden" id="apply_date" name="apply_date">
 <input type="hidden" id="issue_no" name="issue_no">
@@ -190,7 +190,7 @@
             async: false,
             cache: false,
             success: function (json) {
-                if ($("#chkTest").attr("checked")) toastr.info("<a href='" + this.url + "' target='_new'>DmtData Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                if ($("#chkTest").prop("checked")) toastr.info("<a href='" + this.url + "' target='_new'>DmtData Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 var JSONdata = $.parseJSON(json);
                 if (JSONdata.dmt.length == 0) {
                     alert($("#Bseq").val()+"-"+$("#Bseq1").val()+"不存在於案件主檔內，請重新輸入!!!");
@@ -241,7 +241,7 @@
                     $("#reg").append(trHTML);
                 });
 
-                $("#btnBseq").attr("disabled",true);
+                $("#btnBseq").prop("disabled", true);
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
