@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="dmt_form" %>
+<%@ Control Language="C#" ClassName="dmt_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string opt_sqlno = "";
     
@@ -15,6 +14,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr id=tr_opt_show style="display:none">			
 		<td class=lightbluetable align=right >爭救案案件編號：</td>
@@ -236,12 +236,12 @@
         $("#Bseq1").val(jOpt.bseq1);
         $("#tfzd_ref_no").val(jOpt.ref_no);
         $("#tfzd_ref_no1").val(jOpt.ref_no1);
-        $("input[name='tfzy_S_Mark'][value='" + jOpt.s_mark + "']").attr("checked", true);
+        $("input[name='tfzy_S_Mark'][value='" + jOpt.s_mark + "']").prop("checked", true);
         $("#tfzd_S_Mark").val(jOpt.s_mark);
         $("#tfzy_Pul").val(jOpt.pul);
         $("#tfzy_Zname_type").val(jOpt.zname_type);
         $("#tfzd_Zname_type").val(jOpt.zname_type);
-        $("input[name='tfzy_color'][value='" + jOpt.color + "']").attr("checked", true);
+        $("input[name='tfzy_color'][value='" + jOpt.color + "']").prop("checked", true);
         $("#tfzy_prior_country").val(jOpt.prior_country);
         $("#tfzy_end_code").val(jOpt.end_code);
 
@@ -289,7 +289,7 @@
         //類別串接
         $("#tfzr_class").val($("#goodllist>tbody input[id^='class1_']").map(function () { return $(this).val(); }).get().join(','));
 
-        $("#tr_opt_show").showFor("<%#prgid%>" == "opt21");//分案作業要顯示 爭救案件編號
+        $("#tr_opt_show").showFor("<%#prgid%>" == "opt31" || "<%#prgid%>" == "opt31_1");//承辦/結辦作業要顯示 爭救案件編號
     }
     
     dmt_form.Add_button = function (classCount) {
