@@ -1,10 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="br_form" %>
+<%@ Control Language="C#" ClassName="br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
-
     protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
@@ -20,6 +18,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">		
 	<Tr>
 		<TD align=center colspan=4 class=lightbluetable1><font color="white">分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;案&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;設&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</font></TD>
