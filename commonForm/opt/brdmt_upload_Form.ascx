@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="brdmt_upload_form" %>
+<%@ Control Language="C#" ClassName="brdmt_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string case_no = "";
 
@@ -21,6 +20,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <TABLE id='tabfile' border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
     <thead>
 	    <TR>
@@ -85,7 +85,7 @@
             $("#source_name_" + nRow).val(item.source_name);
             $("#attach_no_" + nRow).val(item.attach_no);
             $("#attach_flag_" + nRow).val("U");//維護時判斷是否要更名，即A表示新上傳的文件
-            $("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").attr("checked", true);
+            $("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
             $("#open_path_" + nRow).val(item.preview_path);
 
             if (i == 0) {
