@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
+<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -15,7 +15,7 @@
     }
 </script>
 
-
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <input type=hidden id=apnum name=apnum value=0><!--筆數-->
 <table border="0" id=tabap_re class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<TFOOT>
@@ -189,9 +189,9 @@
             $("#apatt_tel1_" + nRow).val(item.apatt_tel1);
             $("#apatt_fax_" + nRow).val(item.apatt_fax);
             if (item.Server_flag == "Y") {
-                $("#ap_hserver_flag_" + nRow).attr("checked", true);
+                $("#ap_hserver_flag_" + nRow).prop("checked", true);
             } else {
-                $("#ap_hserver_flag_" + nRow).attr("checked", false);
+                $("#ap_hserver_flag_" + nRow).prop("checked", false);
             }
             apcust_re_form.apserver_flag(nRow);
             $("#ap_fcname_" + nRow).val(item.ap_fcname);
@@ -229,7 +229,7 @@
 
     //應受送達人給值
     apcust_re_form.apserver_flag = function (papnum) {
-        if ($("#ap_hserver_flag_" + papnum).attr("checked"))
+        if ($("#ap_hserver_flag_" + papnum).prop("checked"))
             $("#ap_server_flag_" + papnum).val("Y");
         else
             $("#ap_server_flag_" + papnum).val("N");
