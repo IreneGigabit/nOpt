@@ -1,9 +1,8 @@
-﻿<%@ Control Language="C#" ClassName="cust_form" %>
+<%@ Control Language="C#" ClassName="cust_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string SQL = "";
-    //<%=MapPathSecure(TemplateSourceDirectory)%>\<%=this.GetType().ToString().Replace("ASP.","")%>.ascx
     protected string branch = "";
     protected string opt_sqlno = "";
     
@@ -15,6 +14,7 @@
     }
 </script>
 
+<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 <TR>
 	<TD class=lightbluetable align="right">客戶編號：</TD>
