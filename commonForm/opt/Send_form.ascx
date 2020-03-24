@@ -31,11 +31,11 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>預計發文日期 :</td>
 		<td class="whitetablebg"  align="left">
-			 	<input type="text" name="GS_date" SIZE=10  maxlength="10" class="SClass" value="<%=gs_date%>" class="dateField">
+			 	<input type="text" id="GS_date" name="GS_date" SIZE=10  maxlength="10" class="SClass" class="dateField">
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>總收發文日期 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" name="mp_date" SIZE=10  maxlength="10" class="SClass" value="<%=mp_date%>" class="dateField">
+			<input type="text" id="mp_date" name="mp_date" SIZE=10  maxlength="10" class="SClass" class="dateField">
 		</td>
 	</TR>
 	<TR>
@@ -131,6 +131,38 @@
             valueFormat: "{cust_code}",
             textFormat: "{code_name}",
         });
+
+        //預計發文日期
+        $("#GS_date").val(jOpt.gs_date);
+        if($("#GS_date").val()==""&&$("#prgid").val=="opt31_1"){//結辦
+            $("#GS_date").val((new Date().format("yyyy/M/d")));
+        }
+
+        //總收發文日期,若無值,預設為發文日期後一天
+        $("#mp_date").val(jOpt.mp_date);
+        if ($("#mp_date").val() == "" && $("#prgid").val == "opt31_1") {//結辦
+            switch ((new Date($("#mp_date").val())).getDay()) {
+                case 5:
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(3));//星期五加三天
+                    break;
+                case 6:
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(2));//星期六加兩天
+                    break;
+                case 0:
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(1));//星期日加一天
+                    break;
+                default:
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(1));//加一天
+                    break;
+            }
+        }
+        //發文單位
+        if (jOpt.send_dept=="")
+            $("input[name='send_dept'][value='B']").prop("checked", true);
+        else
+            $("input[name='send_dept'][value='" + jOpt.send_dept + "']").prop("checked", true);
+
+
 
         $("input[name='score_flag'][value='" + jOpt.score_flag + "']").prop("checked", true);
         $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1);//承辦結辦作業不顯示

@@ -9,6 +9,8 @@
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
 <%@ Register Src="~/commonForm/opt/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
+<%@ Register Src="~/commonForm/opt/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
+
 
 
 
@@ -170,6 +172,8 @@
                 <!--include file="../commonForm/opt/Back_form.ascx"--><!--退回處理-->
                 <uc1:PR_form runat="server" ID="PR_form" />
                 <!--include file="../commonForm/opt/PR_form.ascx"--><!--承辦內容-->
+                <uc1:Send_form runat="server" id="Send_form" />
+                <!--include file="../commonForm/opt/Send_form.ascx"--><!--發文資料-->
             </div>
         </td>
     </tr>
