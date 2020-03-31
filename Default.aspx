@@ -10,7 +10,7 @@
     protected string Eblank = "";
 	//protected string StrBkClr = "bgcolor=\"#5a63bd\"";
 	//protected string StrDisp = " style=\"display:none\"";
-	protected string theTop = "44px";
+	//protected string theTop = "44px";
 	protected string StrMenus = "";
 	protected string scriptString = "";
 	//protected string gcTestDisp = " style=\"display:none\"";
@@ -179,7 +179,7 @@
             </td>
         </tr>
     </table>
-    <iframe id="workfram" src="mainFrame.aspx" style="z-index: 1; position:absolute; width: 99.8%; height: 800px; top: <%#theTop%>; left: 0px;"></iframe>
+    <iframe id="workfram" src="mainFrame.aspx" style="z-index: 1; position:absolute; width: 99.8%; height: 800px; left: 0px;"></iframe>
     <div id="oPopBody" style="position:absolute; display:none;z-index: 10; width:250px"></div>
     <form method="post" id="reg" name="reg" target="_top">
         <input type="hidden" name="syscode" value="">
@@ -269,7 +269,7 @@
         mLeft = pos.left + 1 + menuWidth;
 
         $("#oPopBody").css("margin", "0px 0px 0px 0px");
-        $("#oPopBody").css("padding", "3px 5px 3px 15px");
+        $("#oPopBody").css("padding", "2px 4px 2px 10px");
         $("#oPopBody").css("background-color", "#f0f0f0");
         $("#oPopBody").css("font-size", "10pt");
         $("#oPopBody").css("font-family", "微軟正黑體, Verdana, Arial");
@@ -279,7 +279,8 @@
         $("#oPopBody").css("border-right", "solid 2px #979797");
         $("#oPopBody").html(menuHtm);
         $("#oPopBody").css("left", (pos.left + 1).toString() + "px");
-        $("#oPopBody").css("top", "46px");
+        //$("#oPopBody").css("top", "46px");
+        $("#oPopBody").css("top", Math.ceil($("#workfram").offset().top) + "px");
         $("#oPopBody").css("width", menuWidth + "px");
         $("#oPopBody").css("heigth", menuHeight + "px");
 
