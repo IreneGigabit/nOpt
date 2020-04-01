@@ -32,7 +32,7 @@
 				<input type=text id="apnum_##" name="apnum_##" value="##." class="Lock" size=2>申請人種類：
 			</TD>
 			<TD class=sfont9>
-				<select id="apclass_##" name="apclass_##" class="Lock"></select>
+				<select id="apclass_##" name="apclass_##" class="MLock"></select>
                 <input type="checkbox" id="ap_hserver_flag_##" name="ap_hserver_flag_##" value="Y" onclick="apcust_re_form.apserver_flag('##')" class="Lock">註記此申請人為應受送達人
                 <input type="hidden" id="ap_server_flag_##" name="ap_server_flag_##" value="N">
 			</TD>
@@ -40,13 +40,13 @@
 				<span id="span_Apcust_no_##" style="cursor:pointer;color:blue">申請人編號<br>(統一編號/身份證字號)：</span>
 			</TD>
 			<TD class=sfont9>
-				<input type=text id="Apcust_no_##" name="Apcust_no_##" size=11 maxlength=10 onblur="chkapcust_no('##')" class="Lock">
+				<input type=text id="Apcust_no_##" name="Apcust_no_##" size=11 maxlength=10 onblur="chkapcust_no('##')" class="MLock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>申請人國籍：</TD>
 			<TD class=sfont9 colspan=3>
-                <select id="ap_country_##" name="ap_country_##" class="Lock"></select>
+                <select id="ap_country_##" name="ap_country_##" class="MLock"></select>
 			</TD>
 		</TR>
 		<TR>
@@ -54,8 +54,8 @@
 			<TD class=sfont9 colspan=3>
                 <input type=hidden id="ap_cname_##" name="ap_cname_##">
 		        <input type=hidden id="apsqlno_##" name="apsqlno_##">
-		        <INPUT TYPE=text id="ap_cname1_##" name="ap_cname1_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock"><br>
-		        <INPUT TYPE=text id="ap_cname2_##" name="ap_cname2_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock">
+		        <INPUT TYPE=text id="ap_cname1_##" name="ap_cname1_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock"><br>
+		        <INPUT TYPE=text id="ap_cname2_##" name="ap_cname2_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock">
 			</TD>
 		</TR>
 		<TR>
@@ -75,8 +75,8 @@
 			<TD class=lightbluetable align=right>申請人名稱(英)：</TD>
 			<TD class=sfont9 colspan=3>
                 <input type=hidden id="ap_ename_##" name="ap_ename_##">
-		        <INPUT TYPE=text id="ap_ename1_##" name="ap_ename1_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock"><br>
-		        <INPUT TYPE=text id="ap_ename2_##" name="ap_ename2_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="Lock">
+		        <INPUT TYPE=text id="ap_ename1_##" name="ap_ename1_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock"><br>
+		        <INPUT TYPE=text id="ap_ename2_##" name="ap_ename2_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock">
 			</TD>
 		</TR>
 		<TR>
@@ -89,50 +89,50 @@
 		<TR>
 			<TD class=lightbluetable align=right>代表人名稱(中)：</TD>
 			<TD class=sfont9 colspan=3>
-		        <INPUT TYPE=text id="ap_crep_##" name="ap_crep_##" SIZE=40 MAXLENGTH=40 class="Lock">
+		        <INPUT TYPE=text id="ap_crep_##" name="ap_crep_##" SIZE=40 MAXLENGTH=40 class="MLock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>代表人名稱(英)：</TD>
 			<TD class=sfont9 colspan=3>
-		        <INPUT TYPE=text id="ap_erep_##" name="ap_erep_##" SIZE=80 MAXLENGTH=80 class="Lock">
+		        <INPUT TYPE=text id="ap_erep_##" name="ap_erep_##" SIZE=80 MAXLENGTH=80 class="MLock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>證照地址(中)：</TD>
 			<TD class=sfont9 colspan=3>
-		        <INPUT TYPE=text id="ap_zip_##" name="ap_zip_##" SIZE=8 MAXLENGTH=8 class="Lock">
-		        <INPUT TYPE=text id="ap_addr1_##" name="ap_addr1_##" SIZE=103 MAXLENGTH=120 class="Lock"><br>
-		        <INPUT TYPE=text id="ap_addr2_##" name="ap_addr2_##" SIZE=103 MAXLENGTH=120 class="Lock">
+		        <INPUT TYPE=text id="ap_zip_##" name="ap_zip_##" SIZE=8 MAXLENGTH=8 class="MLock">
+		        <INPUT TYPE=text id="ap_addr1_##" name="ap_addr1_##" SIZE=103 MAXLENGTH=120 class="MLock"><br>
+		        <INPUT TYPE=text id="ap_addr2_##" name="ap_addr2_##" SIZE=103 MAXLENGTH=120 class="MLock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>證照地址(英)：</TD>
 			<TD class=sfont9 colspan=3>
-		        <INPUT TYPE=text id="ap_eaddr1_##" name="ap_eaddr1_##" SIZE=103 MAXLENGTH=120 class="Lock"><br>
-		        <INPUT TYPE=text id="ap_eaddr2_##" name="ap_eaddr2_##" SIZE=103 MAXLENGTH=120 class="Lock"><br>
-		        <INPUT TYPE=text id="ap_eaddr3_##" name="ap_eaddr3_##" SIZE=103 MAXLENGTH=120 class="Lock"><br>
-		        <INPUT TYPE=text id="ap_eaddr4_##" name="ap_eaddr4_##" SIZE=103 MAXLENGTH=120 class="Lock">
+		        <INPUT TYPE=text id="ap_eaddr1_##" name="ap_eaddr1_##" SIZE=103 MAXLENGTH=120 class="MLock"><br>
+		        <INPUT TYPE=text id="ap_eaddr2_##" name="ap_eaddr2_##" SIZE=103 MAXLENGTH=120 class="MLock"><br>
+		        <INPUT TYPE=text id="ap_eaddr3_##" name="ap_eaddr3_##" SIZE=103 MAXLENGTH=120 class="MLock"><br>
+		        <INPUT TYPE=text id="ap_eaddr4_##" name="ap_eaddr4_##" SIZE=103 MAXLENGTH=120 class="MLock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>聯絡地址：</TD>
 			<TD class=sfont9 colspan=3>
-		        <INPUT TYPE=text id="apatt_zip_##" name="apatt_zip_##" SIZE=5 MAXLENGTH=5 class="Lock">
-		        <INPUT TYPE=text id="apatt_addr1_##" name="apatt_addr1_##" SIZE=30 MAXLENGTH=60 class="Lock">
-		        <INPUT TYPE=text id="apatt_addr2_##" name="apatt_addr2_##" SIZE=30 MAXLENGTH=60 class="Lock">
+		        <INPUT TYPE=text id="apatt_zip_##" name="apatt_zip_##" SIZE=5 MAXLENGTH=5 class="MLock">
+		        <INPUT TYPE=text id="apatt_addr1_##" name="apatt_addr1_##" SIZE=30 MAXLENGTH=60 class="MLock">
+		        <INPUT TYPE=text id="apatt_addr2_##" name="apatt_addr2_##" SIZE=30 MAXLENGTH=60 class="MLock">
 			</TD>
 		</TR>
 		<TR>
 			<TD class=lightbluetable align=right>電話：</TD>
 			<TD class=sfont9>
-                <INPUT TYPE=text id="apatt_tel0_##" name="apatt_tel0_##" SIZE=4 MAXLENGTH=4 class="Lock">
-                <INPUT TYPE=text id="apatt_tel_##" name="apatt_tel_##" SIZE=15 MAXLENGTH=15 class="Lock">
-                <INPUT TYPE=text id="apatt_tel1_##" name="apatt_tel1_##" SIZE=10 MAXLENGTH=10 class="Lock">
+                <INPUT TYPE=text id="apatt_tel0_##" name="apatt_tel0_##" SIZE=4 MAXLENGTH=4 class="MLock">
+                <INPUT TYPE=text id="apatt_tel_##" name="apatt_tel_##" SIZE=15 MAXLENGTH=15 class="MLock">
+                <INPUT TYPE=text id="apatt_tel1_##" name="apatt_tel1_##" SIZE=10 MAXLENGTH=10 class="MLock">
 			</TD>
 			<TD class=lightbluetable align=right>傳真：</TD>
 			<TD class=sfont9>
-				<INPUT TYPE=text id="apatt_fax_##" name="apatt_fax_##" SIZE=20 MAXLENGTH=20 class="Lock">
+				<INPUT TYPE=text id="apatt_fax_##" name="apatt_fax_##" SIZE=20 MAXLENGTH=20 class="MLock">
 			</TD>
 		</TR>
 	</THEAD>

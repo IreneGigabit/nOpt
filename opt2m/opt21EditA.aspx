@@ -14,8 +14,12 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
-    
-    protected string dmt_show_flag = "Y";
+
+    protected string QLock = "true";//工作資料的控制
+    protected string QHide = "true";
+    protected string RLock = "true";//承辦內容的控制
+    protected string CLock = "true";
+    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -27,18 +31,23 @@
         case_no = Request["case_no"] ?? "";
         submitTask = Request["submitTask"] ?? "";
 
-        if (submitTask == "ADD") HTProgCap += "‧<b style='color:Red'>新增</b>";
-        
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            QueryPageLayout();
+            PageLayout();
             this.DataBind();
         }
     }
-    
-    
-    private void QueryPageLayout() {
+
+    private void PageLayout() {
+        if (submitTask == "ADD") {
+            HTProgCap += "‧<b style='color:Red'>新增</b>";
+            RLock = "false";
+            QLock = "false";
+        } else if (submitTask == "U") {
+            RLock = "false";
+        }
+
     }
 
 </script>
@@ -118,6 +127,17 @@
     function this_init() {
         settab("#br");
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("input.dateField").datepick();
+        //欄位控制
+        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $("#span_sopt_no").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
+        $("#btnsearchSubmit1").showFor($("#submittask").val()=="ADD");//新增分案時顯示[新增分案]
+        $("#btnsearchSubmit2").showFor($("#submittask").val()!="ADD");//分案時顯示[分　　案]
+        $(".Lock").lock();
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").lock(<%#QHide%>);
+        $(".RLock").lock(<%#RLock%>);
+        $(".CLock").lock(<%#CLock%>);
 
         //取得案件資料
         $.ajax({
@@ -144,16 +164,6 @@
 
         br_formA.init();
         br_form.init();
-
-        $("input.dateField").datepick();
-
-        //欄位控制
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $("#span_sopt_no").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
-        $("#btnsearchSubmit1").showFor($("#submittask").val()=="ADD");//新增分案時顯示[新增分案]
-        $("#btnsearchSubmit2").showFor($("#submittask").val()!="ADD");//分案時顯示[分　　案]
-        $(".Lock").lock();
-        $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
     }
 
     // 切換頁籤

@@ -24,23 +24,23 @@
 	<TR id="tr_pr_date">
 		<td class="lightbluetable"  align="right" nowrap>承辦完成日期 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="pr_date" name="pr_date" SIZE=10 maxlength="10" class="Lock">
+			<input type="text" id="pr_date" name="pr_date" SIZE=10 maxlength="10" class="QLock">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>承辦時數 :</td>
 		<td class="whitetablebg"  align="left" >
-			<input type="text" id="Pr_hour" name="Pr_hour" SIZE=2 maxlength="3" class="LockB">
+			<input type="text" id="Pr_hour" name="Pr_hour" SIZE=2 maxlength="3" class="BLock">
 		</td>
 		<td class="lightbluetable" width="10%" align="right" nowrap>承辦完成百分比 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT name="pr_per" id="pr_per" class="LockB"></SELECT>
+			<SELECT name="pr_per" id="pr_per" class="BLock"></SELECT>
 		</td>
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right">承辦說明 :</td>
 		<TD class=lightbluetable colspan=3>
-			<textarea ROWS="6" style="width:90%" id=Pr_remark name="Pr_remark" class="LockB"></textarea>
+			<textarea ROWS="6" style="width:90%" id=Pr_remark name="Pr_remark" class="BLock"></textarea>
 		</TD>
 	</tr>
 </table>
@@ -57,7 +57,7 @@
     var pr_form = {};
     pr_form.init = function () {
         pr_form.loadOpt();
-        $(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
+        //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
     }
 
     pr_form.loadOpt = function () {

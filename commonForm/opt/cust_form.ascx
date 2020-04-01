@@ -19,102 +19,102 @@
 <TR>
 	<TD class=lightbluetable align="right">客戶編號：</TD>
 	<TD class=whitetablebg>
-	<input TYPE="text" id="F_cust_area" name="F_cust_area" SIZE="1" class="Lock">-
-	<input TYPE="text" id="F_cust_seq" name="F_cust_seq" size="6"  class="Lock">
+	<input TYPE="text" id="F_cust_area" name="F_cust_area" SIZE="1" class="MLock">-
+	<input TYPE="text" id="F_cust_seq" name="F_cust_seq" size="6"  class="MLock">
 	</TD>
 	<TD class=lightbluetable  align="right">客戶國籍：</TD>
 	<TD class=whitetablebg>
-        <Select id="F_ap_country" name="F_ap_country" class="Lock"></SELECT>
+        <Select id="F_ap_country" name="F_ap_country" class="MLock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right width=16%>客戶種類：</TD>
-	<TD class=whitetablebg><input type=text id="F_apclass" name="F_apclass" size="30" class="Lock"></TD>
+	<TD class=whitetablebg><input type=text id="F_apclass" name="F_apclass" size="30" class="MLock"></TD>
 	<TD class=lightbluetable align="right" width="15%">客戶群組：</TD>
-	<TD class=whitetablebg><input TYPE=text id=F_ref_seq name=F_ref_seq class="Lock" /></TD>
+	<TD class=whitetablebg><input TYPE=text id=F_ref_seq name=F_ref_seq class="MLock" /></TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>統一編號：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_id_no" name="F_id_no" SIZE=12 MAXLENGTH=10 class="Lock"></TD>					
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_id_no" name="F_id_no" SIZE=12 MAXLENGTH=10 class="MLock"></TD>					
 </TR>
 <TR>		
 	<TD class=lightbluetable align=right>客戶名稱：</TD>
 	<TD class=whitetablebg colspan=3>
-        <INPUT TYPE=text id="F_ap_cname1" name="F_ap_cname1" size=44 maxlength=60 class="Lock">
-	    <INPUT TYPE=text id="F_ap_cname2" name="F_ap_cname2" size=44 maxlength=60 class="Lock" >
+        <INPUT TYPE=text id="F_ap_cname1" name="F_ap_cname1" size=44 maxlength=60 class="MLock">
+	    <INPUT TYPE=text id="F_ap_cname2" name="F_ap_cname2" size=44 maxlength=60 class="MLock" >
 	</TD>
 </TR>
 <TR>	
 	<TD class=lightbluetable align=right>英文名稱：</TD>
 	<TD class=whitetablebg colspan=3>
-        <INPUT TYPE=text id="F_ap_ename1" name="F_ap_ename1" size=60 maxlength=100 class="Lock">
-	    <INPUT TYPE=text id="F_ap_ename2" name="F_ap_ename2" size=60 maxlength=100 class="Lock">
+        <INPUT TYPE=text id="F_ap_ename1" name="F_ap_ename1" size=60 maxlength=100 class="MLock">
+	    <INPUT TYPE=text id="F_ap_ename2" name="F_ap_ename2" size=60 maxlength=100 class="MLock">
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>代表人(中)：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_crep" name="F_ap_crep" SIZE=20 MAXLENGTH=20 class="Lock"></TD>					
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_crep" name="F_ap_crep" SIZE=20 MAXLENGTH=20 class="MLock"></TD>					
 </TR>
 <TR>
 	<TD class=lightbluetable  align=right>代表人(英)：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_erep" name="F_ap_erep" size=40 maxlength=40 class="Lock"></TD>
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id="F_ap_erep" name="F_ap_erep" size=40 maxlength=40 class="MLock"></TD>
 </TR>
 <TR>	
 	<TD class=lightbluetable align=right>証照地址(中)：</TD>
-	<TD class=whitetablebg colspan=3>(<INPUT TYPE=text id=F_ap_zip name=F_ap_zip size=8 maxlength=8 class="Lock">)
-	<INPUT TYPE=text id=F_ap_addr1 name=F_ap_addr1 size=103 maxlength=120 class="Lock">
-	<INPUT TYPE=text id=F_ap_addr2 name=F_ap_addr2 size=103 maxlength=120 class="Lock"></TD>
+	<TD class=whitetablebg colspan=3>(<INPUT TYPE=text id=F_ap_zip name=F_ap_zip size=8 maxlength=8 class="MLock">)
+	<INPUT TYPE=text id=F_ap_addr1 name=F_ap_addr1 size=103 maxlength=120 class="MLock">
+	<INPUT TYPE=text id=F_ap_addr2 name=F_ap_addr2 size=103 maxlength=120 class="MLock"></TD>
 </TR>		
 <TR>	
 	<TD class=lightbluetable align=right>登記地址(英)：</TD>
 	<TD class=whitetablebg colspan=3>
-        <INPUT TYPE=text id=F_ap_eaddr1 size=103 maxlength=120 class="Lock"><br>
-	    <INPUT TYPE=text id=F_ap_eaddr2 size=103 maxlength=120 class="Lock"><br>
-	    <INPUT TYPE=text id=F_ap_eaddr3 size=103 maxlength=120 class="Lock"><br>
-	    <INPUT TYPE=text id=F_ap_eaddr4 size=103 maxlength=120 class="Lock">
+        <INPUT TYPE=text id=F_ap_eaddr1 size=103 maxlength=120 class="MLock"><br>
+	    <INPUT TYPE=text id=F_ap_eaddr2 size=103 maxlength=120 class="MLock"><br>
+	    <INPUT TYPE=text id=F_ap_eaddr3 size=103 maxlength=120 class="MLock"><br>
+	    <INPUT TYPE=text id=F_ap_eaddr4 size=103 maxlength=120 class="MLock">
 	</TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align="right">公司網址：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_www SIZE=40 MAXLENGTH=40 class="Lock"></TD>
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_www SIZE=40 MAXLENGTH=40 class="MLock"></TD>
 </TR>
 <TR>  
 	<TD class=lightbluetable align="right">公司電子郵件：</TD>		  
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_email SIZE=40 MAXLENGTH=40 class="Lock"></TD>		  
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_email SIZE=40 MAXLENGTH=40 class="MLock"></TD>		  
 </TR>
 <TR>		  
 	<TD class=lightbluetable align="right">對帳地址：</TD>
 	<TD class=whitetablebg colspan=3>
-        (<INPUT TYPE=text id=F_acc_zip size=8 maxlength=8 class="Lock">)
-	    <input type="text" id="F_acc_addr1" size="47" maxlength="60" class="Lock">
-	    <input type="text" id="F_acc_addr2" size="47" maxlength="60" class="Lock">
+        (<INPUT TYPE=text id=F_acc_zip size=8 maxlength=8 class="MLock">)
+	    <input type="text" id="F_acc_addr1" size="47" maxlength="60" class="MLock">
+	    <input type="text" id="F_acc_addr2" size="47" maxlength="60" class="MLock">
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align="right">會計電話：</TD>
 	<TD class=whitetablebg>
-        (<INPUT TYPE=text id=F_acc_tel0 size=4 maxlength=4 class="Lock">)
-	    <INPUT TYPE=text id=F_acc_tel size=10 maxlength=10 class="Lock">-
-	    <INPUT TYPE=text id=F_acc_tel1 size=5 maxlength=5 class="Lock">
+        (<INPUT TYPE=text id=F_acc_tel0 size=4 maxlength=4 class="MLock">)
+	    <INPUT TYPE=text id=F_acc_tel size=10 maxlength=10 class="MLock">-
+	    <INPUT TYPE=text id=F_acc_tel1 size=5 maxlength=5 class="MLock">
 	</TD>
 	<TD class=lightbluetable align="right">會計傳真：</TD>
-	<TD class=whitetablebg><INPUT TYPE=text id=F_acc_fax size=15 maxlength=15 class="Lock"></TD>
+	<TD class=whitetablebg><INPUT TYPE=text id=F_acc_fax size=15 maxlength=15 class="MLock"></TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align="right">郵寄雜誌：</TD>
-	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_mag size=10 maxlength=15 class="Lock"></TD>
+	<TD class=whitetablebg colspan=3><INPUT TYPE=text id=F_mag size=10 maxlength=15 class="MLock"></TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align="right">顧問種類：</TD>
 	<TD class=whitetablebg>
-        <select id=F_con_code class="Lock"></SELECT>
+        <select id=F_con_code class="MLock"></SELECT>
 	</TD>
 	<TD class=lightbluetable align="right">顧問迄日：</TD>
-	<TD class=whitetablebg><INPUT TYPE=text id=F_con_term SIZE=10 class="Lock"></TD>
+	<TD class=whitetablebg><INPUT TYPE=text id=F_con_term SIZE=10 class="MLock"></TD>
 </TR>
 <TR>		  
 	<TD class=lightbluetable align=right>專利客戶等級：</TD>
-	<TD class=whitetablebg ><select id=F_plevel class="Lock">
+	<TD class=whitetablebg ><select id=F_plevel class="MLock">
 		<option value="" style="color:blue">請選擇</option>
 		<option value="A">大客戶</option>
 		<option value="B">中客戶</option>
@@ -123,7 +123,7 @@
 		<option value="O">結束客戶</option>
 	</SELECT></TD>
 	<TD class=lightbluetable align=right>商標客戶等級：</TD>
-	<TD class=whitetablebg><select id=F_tlevel class="Lock">
+	<TD class=whitetablebg><select id=F_tlevel class="MLock">
 		<option value="" style="color:blue">請選擇</option>
 		<option value="A">大客戶</option>
 		<option value="B">中客戶</option>
@@ -135,26 +135,26 @@
 <TR>
 	<TD class=lightbluetable align=right>專利折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_pdis_type class="Lock"></SELECT>
+        <Select id=F_pdis_type class="MLock"></SELECT>
 	</TD>
 <TD class=lightbluetable align=right>商標折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tdis_type class="Lock"></SELECT>
+        <Select id=F_tdis_type class="MLock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>專利付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_ppay_type class="Lock"></SELECT>
+        <Select id=F_ppay_type class="MLock"></SELECT>
 	</TD>
 	<TD class=lightbluetable align=right>商標付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tpay_type class="Lock"></SELECT>
+        <Select id=F_tpay_type class="MLock"></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>備註說明：</td>
-	<TD class=whitetablebg colspan=3><textarea rows=5 cols=80 id=F_mark class="Lock"></textarea>
+	<TD class=whitetablebg colspan=3><textarea rows=5 cols=80 id=F_mark class="MLock"></textarea>
 </TR>		        
 </table>
 <script language="javascript" type="text/javascript">

@@ -17,8 +17,16 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
-    
-    protected string dmt_show_flag = "Y";
+
+    protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
+    protected string QLock = "true";//收費與接洽事項的控制
+    protected string QHide = "true";
+    protected string PLock = "true";//交辦內容的控制
+    protected string RLock = "true";//承辦內容_分案的控制
+    protected string BLock = "true";//承辦內容_承辦的控制
+    protected string ALock = "true";//承辦內容_判行的控制
+    protected string P1Lock = "true";//控制show圖檔
+    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -32,16 +40,20 @@
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            QueryPageLayout();
+            PageLayout();
             this.DataBind();
         }
     }
-    
-    
-    private void QueryPageLayout() {
+
+
+    private void PageLayout() {
         //決定要不要隱藏案件主檔畫面
         if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
             dmt_show_flag = "N";
+        }
+
+        if (prgid == "opt21") {
+            RLock = "false";
         }
 
         //交辦內容欄位畫面
@@ -179,6 +191,16 @@
     function this_init() {
         settab("#br");
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("input.dateField").datepick();
+        //欄位控制
+        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $(".Lock").lock();
+        $(".MLock").lock(<%#MLock%>);
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").lock(<%#QHide%>);
+        $(".PLock").lock(<%#PLock%>);
+        $(".RLock").lock(<%#RLock%>);
+        $(".P1Lock").lock(<%#P1Lock%>);
 
         //取得案件資料
         $.ajax({
@@ -208,13 +230,6 @@
         tran_form.init();
         brupload_form.init();
         br_form.init();
-
-        $("input.dateField").datepick();
-
-        //欄位控制
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $(".Lock").lock();
-        $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
     }
 
     // 切換頁籤

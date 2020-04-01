@@ -30,7 +30,7 @@
             ProjectName = Sys.getAppSetting("Project");
             LoginGrp = Sys.GetSession("LoginGrp");
             StrUser = Sys.GetSession("sc_name");
-            if (Sys.IsAdmin()){
+            if (Sys.IsDebug()){
                 Eblank = "<span id='btnEblank' style='cursor:pointer;color:brown;' v1='65%,*' v2='100%,*'>[Eblank frame]</span>&nbsp;";
             }
             
@@ -251,7 +251,8 @@
         for (i = 0 ; i < zmenu.length ; i++) {
             if (zmenu[i].mIdx == mi) {
                 if (zmenu[i].Bar == "Y" && i0 > 0) {
-                    menuHtm += "<hr style=\"height: 1px; color: #a0a0a0; background-color: #a0a0a0\" />";
+                    //menuHtm += "<hr style=\"height: 1px; color: #a0a0a0; background-color: #a0a0a0\" />";
+                    menuHtm += "<hr class=\"style-one\"/>";
                     menuHeight += 15;
                 }
                 //if (zmenu[i].Name.CodeLength() > maxLen) maxLen = zmenu[i].Name.CodeLength();

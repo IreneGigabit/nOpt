@@ -258,8 +258,8 @@
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select a.item_sql,a.item_arcase,a.item_count,a.item_service,a.item_fees,b.prt_code,c.service,c.fees,c.others,c.oth_code,c.oth_code1 ";
             SQL += "from caseitem_opt a ";
-            SQL += "inner join "+Sys.tdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
-            SQL += "left outer join "+Sys.tdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
+            SQL += "inner join "+Sys.kdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
+            SQL += "left outer join "+Sys.kdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
             SQL += "where a.opt_sqlno='" + pOptSqlno + "' and a.Case_no= '" + pCaseNo + "' and a.Branch='" + pBranch + "' ";
             SQL += "order by a.item_sql";
             DataTable dt = new DataTable();

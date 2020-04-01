@@ -19,7 +19,7 @@
 	<tr>
 		<td class="lightbluetable" valign="top"><strong>※、代理人</strong></td>
 		<td class="whitetablebg" colspan="3" valign="top">
-		    <select id=Pagt_no NAME=Pagt_no class="Lock"></select>
+		    <select id=Pagt_no NAME=Pagt_no class="QLock"></select>
 		</td>
 	</tr>	
 	<tr>
@@ -29,29 +29,29 @@
 	<tr>
 		<td class=lightbluetable align=right>商標種類：</td>
 		<td class=whitetablebg colspan="3" >
-			<input type=radio name=PS_Mark value="" class="Lock">商標
-			<input type=radio name=PS_Mark value="S" class="Lock">92年修正前服務標章
-			<input type=radio name=PS_Mark value="N" class="Lock">團體商標
-			<input type=radio name=PS_Mark value="M" class="Lock">團體標章
-			<input type=radio name=PS_Mark value="L" class="Lock">證明標章
+			<input type=radio name=PS_Mark value="" class="QLock">商標
+			<input type=radio name=PS_Mark value="S" class="QLock">92年修正前服務標章
+			<input type=radio name=PS_Mark value="N" class="QLock">團體商標
+			<input type=radio name=PS_Mark value="M" class="QLock">團體標章
+			<input type=radio name=PS_Mark value="L" class="QLock">證明標章
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right width="20%">註冊號數：</td>
 		<td class=whitetablebg width="30%">
-			<input type="text" id="Pissue_no" name="Pissue_no" size="20" maxlength="20" class="Lock">
+			<input type="text" id="Pissue_no" name="Pissue_no" size="20" maxlength="20" class="QLock">
 		</TD>
 		<td class=lightbluetable align=right width="20%">商標/標章名稱：</td>
 		<td class=whitetablebg width="30%">
-			<input type="text" id="PAppl_name" name="PAppl_name" size="40" maxlength="100" class="Lock">
+			<input type="text" id="PAppl_name" name="PAppl_name" size="40" maxlength="100" class="QLock">
 		</TD>
 	</tr>
 	<tr id="tr_remark3">
 		<td class=lightbluetable align=right >案件種類：</td>
 		<td class=whitetablebg colspan="3">
-			<input type=radio name=Premark3 value="DI1" class="Lock">評定案件
-			<input type=radio name=Premark3 value="DO1" class="Lock">異議案件
-			<input type=radio name=Premark3 value="DR1" class="Lock">廢止案件
+			<input type=radio name=Premark3 value="DI1" class="PLock">評定案件
+			<input type=radio name=Premark3 value="DO1" class="PLock">異議案件
+			<input type=radio name=Premark3 value="DR1" class="PLock">廢止案件
 		</TD>
 	</tr>
 	<tr>
@@ -60,7 +60,7 @@
 	<tr>
 		<td class=lightbluetable align=right >種　　類：</td>
 		<td class=whitetablebg colspan="3">
-			評定案件或異議案件或廢止案件之<input type=radio name=PMark value='A' class="Lock">申請人<input type=radio name=PMark value='I' class="Lock">註冊人
+			評定案件或異議案件或廢止案件之<input type=radio name=PMark value='A' class="PLock">申請人<input type=radio name=PMark value='I' class="PLock">註冊人
 		</TD>
 	</tr>
 		
@@ -70,14 +70,14 @@
 	<tr>
 		<td class=lightbluetable align=right >種　　類：</td>
 		<td class=whitetablebg colspan="3">評定案件或異議案件或廢止案件之
-			<input type=radio name=Ptran_mark value="I" class="Lock">註冊人
-			<input type=radio name=Ptran_mark value="A" class="Lock">申請人
+			<input type=radio name=Ptran_mark value="I" class="PLock">註冊人
+			<input type=radio name=Ptran_mark value="A" class="PLock">申請人
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>代 理 人 ：</td>
 		<td class=whitetablebg colspan="3">
-			<input type=text id=Pother_item2 name=Pother_item2 size="33" maxlength="30" class="Lock">
+			<input type=text id=Pother_item2 name=Pother_item2 size="33" maxlength="30" class="PLock">
 		</TD>
 	</tr>
 	<!--DE1 or AD7申請聽證之對造當事人 start-->
@@ -88,8 +88,8 @@
 		            <TR>
 			            <TD class=whitetablebg colspan=2 align=right>
                             <input type=hidden id=DE1_apnum name=DE1_apnum value=0><!--進度筆數-->
-				            <input type=button value ="增加一筆對造當事人" class="cbutton Lock" id=DE1_AP_Add_button name="DE1_AP_Add_button">
-				            <input type=button value ="減少一筆對造當事人" class="cbutton Lock" id=DE1_AP_Del_button name="DE1_AP_Del_button">
+				            <input type=button value ="增加一筆對造當事人" class="cbutton PLock" id=DE1_AP_Add_button name="DE1_AP_Add_button">
+				            <input type=button value ="減少一筆對造當事人" class="cbutton PLock" id=DE1_AP_Del_button name="DE1_AP_Del_button">
 			            </TD>
 		            </TR>
 	            </THEAD>
@@ -99,13 +99,13 @@
 		                    <input type=text name='DE1_apnum_##' class="Lock" style='color:black;' size=2 value='##.'>名稱：
 			            </TD>
 			            <TD class=sfont9>
-		                    <input TYPE=text ID="tfr4_ncname1_##" NAME="tfr4_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+		                    <input TYPE=text ID="tfr4_ncname1_##" NAME="tfr4_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
 			            </TD>
 		            </TR>
 		            <TR>
 			            <TD class=lightbluetable align=right>地址：</TD>
 			            <TD class=sfont9>
-		                    <INPUT TYPE=text id="tfr4_naddr1_##" name="tfr4_naddr1_##" SIZE=60 MAXLENGTH=60 alt='『地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="Lock">
+		                    <INPUT TYPE=text id="tfr4_naddr1_##" name="tfr4_naddr1_##" SIZE=60 MAXLENGTH=60 alt='『地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
 			            </TD>
 		            </TR>
 	            </TFOOT>
@@ -121,7 +121,7 @@
 	</tr>
 	<TR>
 		<TD class=whitetablebg colspan="4">
-		<TEXTAREA id=Ptran_remark1 name=Ptran_remark1 ROWS=6 COLS=100 class="Lock"></TEXTAREA>
+		<TEXTAREA id=Ptran_remark1 name=Ptran_remark1 ROWS=6 COLS=100 class="PLock"></TEXTAREA>
 		</TD>
 	</TR>	
 </table>	

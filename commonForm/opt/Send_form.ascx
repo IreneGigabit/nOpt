@@ -24,32 +24,32 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文單位 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="radio" name="send_dept" class="SClass" value="B">自行發文
-			<input type="radio" name="send_dept" class="SClass" value="L">轉法律處發文
+			<input type="radio" name="send_dept" class="SLock" value="B">自行發文
+			<input type="radio" name="send_dept" class="SLock" value="L">轉法律處發文
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>預計發文日期 :</td>
 		<td class="whitetablebg"  align="left">
-			 	<input type="text" id="GS_date" name="GS_date" SIZE=10  maxlength="10" class="SClass dateField">
+			 	<input type="text" id="GS_date" name="GS_date" SIZE=10  maxlength="10" class="SLock dateField">
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>總收發文日期 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="mp_date" name="mp_date" SIZE=10  maxlength="10" class="SClass dateField">
+			<input type="text" id="mp_date" name="mp_date" SIZE=10  maxlength="10" class="SLock dateField">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文對象 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl name=send_cl class="SClass"></SELECT>
+			<SELECT id=send_cl name=send_cl class="SLock"></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>單位副本 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl1 name=send_cl1  class="SClass"></SELECT>
+			<SELECT id=send_cl1 name=send_cl1  class="SLock"></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>官方號碼 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_sel name=send_sel class="SClass"></SELECT>
+			<SELECT id=send_sel name=send_sel class="SLock"></SELECT>
 		</td>
 	</TR>
 	<TR>
@@ -58,16 +58,16 @@
 			結構分類：
 			<input type="text" name="rs_type" id="rs_type">
 			<span id=span_rs_class>
-				<select id="rs_class" name="rs_class" class="SEClass"></select>
+				<select id="rs_class" name="rs_class" class="SELock"></select>
 			</span>
 			案性：
 			<span id=span_rs_code>
-				<select id="rs_code" name="rs_code" class="SEClass"></select>
+				<select id="rs_code" name="rs_code" class="SELock"></select>
 			</span><br>
 			處理事項：
 			<input type="hidden" id="act_sqlno" name="act_sqlno">
 			<span id=span_act_code>
-				<select id="act_code" name="act_code" class="SClass" ></select>
+				<select id="act_code" name="act_code" class="SLock" ></select>
 			</span>	
 		</td>
 		<input type="hidden" name="code_br_agt_no">
@@ -77,21 +77,21 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文內容 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="text" id="rs_detail" name="rs_detail" SIZE=60  maxlength="60" class="SClass">
+			<input type="text" id="rs_detail" name="rs_detail" SIZE=60  maxlength="60" class="SLock">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>規費支出 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="text" id="Send_Fees" name="Send_Fees" SIZE=10  maxlength="10" class="SEClass">
-			<input type="hidden" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SEClass">
+			<input type="text" id="Send_Fees" name="Send_Fees" SIZE=10  maxlength="10" class="SELock">
+			<input type="hidden" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SELock">
 		</td>
 	</TR>
 	<TR id="tr_score_flag">
 		<td class="lightbluetable"  align="right" nowrap>是否輸入評分 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="radio" name="score_flag" class="SClass" value="Y">是
-			<input type="radio" name="score_flag" class="SClass" value="N">否
+			<input type="radio" name="score_flag" class="SLock" value="Y">是
+			<input type="radio" name="score_flag" class="SLock" value="N">否
 		</td>
 	</TR>
 </table>
@@ -113,7 +113,7 @@
     var send_form = {};
     send_form.init = function () {
         send_form.loadOpt();
-        $(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
+        //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
     }
 
     send_form.loadOpt = function () {
@@ -216,8 +216,9 @@
         $("#rs_code").getOption({//案性代碼
             url: "../ajax/RsCode.aspx",
             data: { branch: "<%#branch%>", cgrs: "GR", rs_class: $("#rs_class").val() },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}",
+            valueFormat: "{rscode}",
+            textFormat: "{rs_detail}",
+            attrFormat: "value1='{rsclass}'"
         });
     }
 

@@ -46,7 +46,7 @@ public class Sys
 	/// 取得ASCX在伺服器上的目錄
 	/// </summary>  
 	public static string GetAscxPath(object page, string dir) {
-		if (IsAdmin()) {
+		if (IsDebug()) {
 			return string.Format("<hr class='style-one'/>\\{0}\\{1}.ascx", dir, page.GetType().ToString().Replace("ASP.", ""))
 				.Replace(HttpContext.Current.Server.MapPath("/"), "");
 		} else {
@@ -55,7 +55,12 @@ public class Sys
 	}
 
 	public static bool IsAdmin() {
-		bool b = (GetSession("scode") == "admin" || GetSession("LoginGrp").ToLower().IndexOf("admin") > -1);
+		bool b = (GetSession("scode").ToLower() == "admin" || GetSession("LoginGrp").ToLower().IndexOf("admin") > -1);
+		return b;
+	}
+
+	public static bool IsDebug() {
+		bool b = (Sys.getAppSetting("DebugScode").ToLower().IndexOf(GetSession("scode").ToLower()) >-1);
 		return b;
 	}
 
@@ -118,10 +123,29 @@ public class Sys
 		}
 	}
 
-	/// <summary>
-	/// 案件資料庫名稱(抓共用設定用.ex:code_br,case_fee)
-	/// </summary>
-	public static string tdbname {
+    /// <summary>
+    /// 區所案件資料庫名稱
+    /// </summary>
+    public static string tdbname(string pBranch) {
+        string rtnStr = "";
+        switch (Host) {
+            case "sik10": //正式環境
+                if (pBranch.ToUpper() == "N") rtnStr = "sinn05.sindbs.dbo.";
+                if (pBranch.ToUpper() == "C") rtnStr = "sic10.sicdbs.dbo.";
+                if (pBranch.ToUpper() == "S") rtnStr = "sis10.sisdbs.dbo.";
+                if (pBranch.ToUpper() == "K") rtnStr = "sik10.sikdbs.dbo.";
+                break;
+            default:
+                rtnStr = "sindbs.dbo.";//開發環境
+                break;
+        }
+        return rtnStr;
+    }
+
+    /// <summary>
+    /// 案件資料庫名稱(抓共用設定用.ex:code_br,case_fee)(爭救案所在區所)
+    /// </summary>
+    public static string kdbname {
 		get {
 			switch (Host) {
 				case "sik10": return "sikdbs";//正式環境

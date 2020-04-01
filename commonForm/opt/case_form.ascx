@@ -19,7 +19,7 @@
 <TR>
 	<td class="lightbluetable" align=right>洽案營洽 :</td>
 	<td class="whitetablebg" align="left" colspan=3>
-		<select id="F_tscode" name="F_tscode" class="Lock"></SELECT>
+		<select id="F_tscode" name="F_tscode" class="QLock"></SELECT>
 	</td>
 </TR>
 <TR>
@@ -30,53 +30,53 @@
 	    <TABLE border=0 class=bluetable cellspacing=1 cellpadding=2 >
 		    <TR>
 		        <TD class=lightbluetable align=right width="4%">案&nbsp;&nbsp;&nbsp;&nbsp;性：</TD>
-		        <TD class=whitetablebg width=10%><select id=tfy_Arcase NAME=tfy_Arcase class="Lock"></SELECT></TD>
+		        <TD class=whitetablebg width=10%><select id=tfy_Arcase NAME=tfy_Arcase class="QLock"></SELECT></TD>
 		        <TD class=lightbluetable align=right width=4%>服務費：</TD>
 		        <TD class=whitetablebg  align="left">
-                    <INPUT TYPE=text id=nfyi_Service name=nfyi_Service class="Lock" SIZE=8 maxlength=8 style="text-align:right;" >
+                    <INPUT TYPE=text id=nfyi_Service name=nfyi_Service class="QLock" SIZE=8 maxlength=8 style="text-align:right;" >
                     <INPUT TYPE=hidden id=Service name=Service>
 		        </TD>
 		        <TD class=lightbluetable align=right width=4%>規費：</TD>
-		        <TD class=whitetablebg align="left"><INPUT TYPE=text id=nfyi_Fees name=nfyi_Fees class="Lock" size=8 maxlength=8 style="text-align:right;" ><INPUT TYPE=hidden id=Fees name=Fees></TD>
+		        <TD class=whitetablebg align="left"><INPUT TYPE=text id=nfyi_Fees name=nfyi_Fees class="QLock" size=8 maxlength=8 style="text-align:right;" ><INPUT TYPE=hidden id=Fees name=Fees></TD>
 		    </TR>
 		    <tr id=ta_## style="display:none">
 			    <td class=lightbluetable align=right width="4%">##.其他費用：</td>
 			    <td class=whitetablebg align=left width="10%">
-			    <select id="nfyi_item_Arcase_##" name="nfyi_item_Arcase_##" class="Lock"></select> x <input type=text id="nfyi_item_count_##" name="nfyi_item_count_##" size=2 maxlength=2 value="" class="Lock">項</td>
+			    <select id="nfyi_item_Arcase_##" name="nfyi_item_Arcase_##" class="Lock"></select> x <input type=text id="nfyi_item_count_##" name="nfyi_item_count_##" size=2 maxlength=2 value="" class="QLock">項</td>
 			    <td class=lightbluetable align=right width=4%>服務費：</td>
 			    <td class=whitetablebg align=left width=5%>
-			    <INPUT TYPE=text id=nfyi_Service_## name=nfyi_Service_## SIZE=8 maxlength=8 style="text-align:right;" class="Lock">
+			    <INPUT TYPE=text id=nfyi_Service_## name=nfyi_Service_## SIZE=8 maxlength=8 style="text-align:right;" class="QLock">
 			    <input type=hidden id=nfzi_Service_## name=nfzi_Service_## SIZE=5>
 			    </td>
 			    <td class=lightbluetable align=right width=4%>規費：</td>
 			    <td class=whitetablebg align=left width=5%>
-			    <INPUT TYPE=text id=nfyi_fees_## name=nfyi_fees_## SIZE=8 maxlength=8 style="text-align:right;" class="Lock">
+			    <INPUT TYPE=text id=nfyi_fees_## name=nfyi_fees_## SIZE=8 maxlength=8 style="text-align:right;" class="QLock">
 			    <input type=hidden id=nfzi_fees_## name=nfzi_fees_## SIZE=5>
 			    </td>
 		    </tr>
 		    <TR>
 			    <td class=lightbluetable align=right colspan=2>小計：</td>
 			    <td class=lightbluetable align=right>服務費：</td>
-			    <td class=whitetablebg align=left><INPUT TYPE=text id=nfy_service NAME=nfy_service SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+			    <td class=whitetablebg align=left><INPUT TYPE=text id=nfy_service NAME=nfy_service SIZE=8 maxlength=8 style="text-align:right;" class="QLock"></td>
 			    <td class=lightbluetable align=right>規費：</td>
-			    <td class=whitetablebg align=left><INPUT TYPE=text id=nfy_fees NAME=nfy_fees SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+			    <td class=whitetablebg align=left><INPUT TYPE=text id=nfy_fees NAME=nfy_fees SIZE=8 maxlength=8 style="text-align:right;" class="QLock"></td>
 		    </TR>
 		    <TR>
 			    <TD class=lightbluetable align=right width="4%">轉帳費用：</TD>
 			    <TD class=whitetablebg width="11%">
-                    <select id=tfy_oth_arcase NAME=tfy_oth_arcase class="Lock"></SELECT>
+                    <select id=tfy_oth_arcase NAME=tfy_oth_arcase class="QLock"></SELECT>
 			    </TD>
 			    <TD class=lightbluetable align=right width=4%>轉帳金額：</TD>
-			    <TD class=whitetablebg width=5%><input type="text" id="nfy_oth_money" name="nfy_oth_money" size="8" style="text-align:right;" class="Lock"></TD>
+			    <TD class=whitetablebg width=5%><input type="text" id="nfy_oth_money" name="nfy_oth_money" size="8" style="text-align:right;" class="QLock"></TD>
 			    <TD class=lightbluetable align=right width=4%>轉帳單位：</TD>
 			    <TD class=whitetablebg width=5%>
-			    <select id=tfy_oth_code NAME=tfy_oth_code class="Lock"></SELECT>
+			    <select id=tfy_oth_code NAME=tfy_oth_code class="QLock"></SELECT>
 			    </TD>
 		    </TR>
 		    <TR>
 			    <TD class=lightbluetable align=right colspan=2>合計：</TD>
 			    <TD class=whitetablebg colspan=4>
-                    <INPUT TYPE=text id=OthSum NAME=OthSum SIZE=7 class="Lock">
+                    <INPUT TYPE=text id=OthSum NAME=OthSum SIZE=7 class="QLock">
 			    </TD>
 		    </TR>
 	    </TABLE>
@@ -85,33 +85,33 @@
 <TR>
 	<TD class=lightbluetable align=right>請款註記：</TD>
 	<TD class=whitetablebg>
-        <Select id=tfy_Ar_mark name=tfy_Ar_mark class="Lock"></Select>
+        <Select id=tfy_Ar_mark name=tfy_Ar_mark class="QLock"></Select>
 	</TD>
 	<TD class=lightbluetable align=right>折扣率：</TD>
 	<TD class="whitetablebg">
         <input TYPE="hidden" id="nfy_Discount" name="nfy_Discount">
-        <input TYPE=text id="Discount" name="Discount" class="Lock">
-	    <INPUT TYPE=checkbox id=tfy_discount_chk name=tfy_discount_chk value="Y"  class="Lock" >折扣請核單
+        <input TYPE=text id="Discount" name="Discount" class="QLock">
+	    <INPUT TYPE=checkbox id=tfy_discount_chk name=tfy_discount_chk value="Y" class="QLock" >折扣請核單
 	</td>
 </TR>		
 <TR>
 	<TD class=lightbluetable align=right>案源代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=tfy_source name=tfy_source class="Lock"></Select>
+        <Select id=tfy_source name=tfy_source class="QLock"></Select>
 	</TD>
 	<TD class=lightbluetable align=right>契約號碼：</TD>
 	<TD class=whitetablebg>
-        <input type="radio" id="Contract_no_Type_N" name="Contract_no_Type" value="N" class="Lock">
-        <INPUT TYPE=text id=tfy_Contract_no name=tfy_Contract_no SIZE=10 MAXLENGTH=10  class="Lock">
-		<input type="radio" id="Contract_no_Type_A" name="Contract_no_Type" value="A" class="Lock">後續案無契約書
+        <input type="radio" id="Contract_no_Type_N" name="Contract_no_Type" value="N" class="QLock">
+        <INPUT TYPE=text id=tfy_Contract_no name=tfy_Contract_no SIZE=10 MAXLENGTH=10  class="QLock">
+		<input type="radio" id="Contract_no_Type_A" name="Contract_no_Type" value="A" class="QLock">後續案無契約書
 	    <span style="display:none"><!--2015/12/29修改，併入C不顯示-->
-		<input type="radio" id="Contract_no_Type_B" name="Contract_no_Type" value="B" class="Lock">特案簽報
+		<input type="radio" id="Contract_no_Type_B" name="Contract_no_Type" value="B" class="QLock">特案簽報
 	    </span>	
-	    <input type="radio" id="Contract_no_Type_C" name="Contract_no_Type" value="C" class="Lock">其他契約書無編號/特案簽報
-	    <input type="radio" id="Contract_no_Type_M" name="Contract_no_Type" value="M" class="Lock">總契約書
+	    <input type="radio" id="Contract_no_Type_C" name="Contract_no_Type" value="C" class="QLock">其他契約書無編號/特案簽報
+	    <input type="radio" id="Contract_no_Type_M" name="Contract_no_Type" value="M" class="QLock">總契約書
 	    <span id="span_btn_contract" style="display:none">
 		    <INPUT TYPE=text id=Mcontract_no name=Mcontract_no SIZE=10 MAXLENGTH=10 class="Lock">
-		    <input type=button class="sgreenbutton Lock" name="btn_contract" value="查詢總契約書">
+		    <input type=button class="sgreenbutton QLock" name="btn_contract" value="查詢總契約書">
 		    +客戶案件委辦書
 	    </span>
 	    <br>
@@ -120,12 +120,12 @@
 <TR>
 	<TD class=lightbluetable align=right>法定期限：</TD>
 	<TD class=whitetablebg align=left colspan=3>
-        <INPUT type=text id=dfy_last_date name=dfy_last_date SIZE=10 class="dateField Lock">
+        <INPUT type=text id=dfy_last_date name=dfy_last_date SIZE=10 class="dateField QLock">
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>其他接洽：<BR>事項記錄：</TD>
-	<TD class=whitetablebg colspan=3><TEXTAREA id=tfy_Remark name=tfy_Remark ROWS=6 COLS=70 class="Lock"></TEXTAREA>
+	<TD class=whitetablebg colspan=3><TEXTAREA id=tfy_Remark name=tfy_Remark ROWS=6 COLS=70 class="QLock"></TEXTAREA>
 	</TD>
 </TR>
 </TABLE>

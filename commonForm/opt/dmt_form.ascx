@@ -29,24 +29,24 @@
 		</td>
 		<td class=lightbluetable align=right>母案本所編號：</td>
 		<td class=whitetablebg colspan=3 >
-			<INPUT TYPE=text id="tfzd_ref_no" NAME="tfzd_ref_no" class="Lock" SIZE=5 MAXLENGTH=5>-<INPUT TYPE=text id="tfzd_ref_no1" NAME="tfzd_ref_no1" value="_" SIZE=1 MAXLENGTH=1 class="Lock">
+			<INPUT TYPE=text id="tfzd_ref_no" NAME="tfzd_ref_no" class="QLock" SIZE=5 MAXLENGTH=5>-<INPUT TYPE=text id="tfzd_ref_no1" NAME="tfzd_ref_no1" value="_" SIZE=1 MAXLENGTH=1 class="QLock">
 		</td>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>商標種類：</td>
 		<td class=whitetablebg colspan=7>
-			<input type=radio name=tfzy_S_Mark value="" class="Lock" checked>商標
-            <input type=radio name=tfzy_S_Mark value="S" class="Lock">92年修正前服務標章
-            <input type=radio name=tfzy_S_Mark value="N" class="Lock">團體商標
-            <input type=radio name=tfzy_S_Mark value="M" class="Lock">團體標章
-            <input type=radio name=tfzy_S_Mark value="L" class="Lock">證明標章
+			<input type=radio name=tfzy_S_Mark value="" class="QLock" checked>商標
+            <input type=radio name=tfzy_S_Mark value="S" class="QLock">92年修正前服務標章
+            <input type=radio name=tfzy_S_Mark value="N" class="QLock">團體商標
+            <input type=radio name=tfzy_S_Mark value="M" class="QLock">團體標章
+            <input type=radio name=tfzy_S_Mark value="L" class="QLock">證明標章
 			<input type="hidden" id="tfzd_S_Mark" name="tfzd_S_Mark">
 		</TD>
 	</tr>		
 	<tr>
 		<td class=lightbluetable align=right>正聯防：</td>
 		<td class=whitetablebg colspan=7>
-            <SELECT id=tfzy_Pul name=tfzy_Pul class="Lock">
+            <SELECT id=tfzy_Pul name=tfzy_Pul class="QLock">
 				<option value="">正商標</option>
 				<option value="1">聯合商標</option>
 				<option value="2">防護商標</option>
@@ -56,16 +56,16 @@
 	</tr>		
 	<tr style="display:none" id="tfzd_Smark">
 		<td class=lightbluetable align=right>正商標號數：</td>
-		<td class=whitetablebg colspan=3><INPUT TYPE=text NAME=tfzd_Tcn_ref class="Lock" SIZE=7 alt="『正商標號數』"  MAXLENGTH="7" ></TD>
+		<td class=whitetablebg colspan=3><INPUT TYPE=text NAME=tfzd_Tcn_ref class="QLock" SIZE=7 alt="『正商標號數』"  MAXLENGTH="7" ></TD>
 		<td class=lightbluetable align=right>正商標類別：</td>
-		<td class=whitetablebg colspan=3><input TYPE=text NAME=tfzd_Tcn_Class class="Lock" SIZE=20 alt="『正商標類別』"  MAXLENGTH="20" ></td>
+		<td class=whitetablebg colspan=3><input TYPE=text NAME=tfzd_Tcn_Class class="QLock" SIZE=20 alt="『正商標類別』"  MAXLENGTH="20" ></td>
 	</tr>
 	<tr style="display:none" id="tfzd_Smark1">
 		<td class=lightbluetable align=right>正商標名稱：</td>
-		<td class=whitetablebg colspan=3><INPUT TYPE=text NAME=tfzd_Tcn_name class="Lock" alt="『正商標名稱』" SIZE="20" MAXLENGTH="100" ></TD>
+		<td class=whitetablebg colspan=3><INPUT TYPE=text NAME=tfzd_Tcn_name class="QLock" alt="『正商標名稱』" SIZE="20" MAXLENGTH="100" ></TD>
 		<td class=lightbluetable align=right>正商標種類：</td>
 		<td class=whitetablebg colspan=3>
-            <select NAME=tfzd_Tcn_mark id=tfzd_Tcn_mark class="Lock">
+            <select NAME=tfzd_Tcn_mark id=tfzd_Tcn_mark class="QLock">
 			    <option>請選擇</option>
 			    <option value="T">商標</option>
 			    <option value="S">標章</option>
@@ -74,97 +74,97 @@
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>申請號數：</td>
-		<td class=whitetablebg colspan=3><INPUT TYPE=text id=tfzd_apply_no NAME=tfzd_apply_no class="Lock" SIZE=20 alt="『申請號數』" MAXLENGTH="20"></TD>
+		<td class=whitetablebg colspan=3><INPUT TYPE=text id=tfzd_apply_no NAME=tfzd_apply_no class="QLock" SIZE=20 alt="『申請號數』" MAXLENGTH="20"></TD>
 		<td class=lightbluetable align=right>註冊號數：</td>
-		<td class=whitetablebg colspan=3><input TYPE=text id=tfzd_issue_no NAME=tfzd_issue_no class="Lock" SIZE=20 alt="『註冊號數』" MAXLENGTH="20"></td>
+		<td class=whitetablebg colspan=3><input TYPE=text id=tfzd_issue_no NAME=tfzd_issue_no class="QLock" SIZE=20 alt="『註冊號數』" MAXLENGTH="20"></td>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>商標名稱：</td>
-		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Appl_name NAME=tfzd_Appl_name class="Lock" alt="『商標名稱』" SIZE="60" MAXLENGTH="100"></TD>
+		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Appl_name NAME=tfzd_Appl_name class="QLock" alt="『商標名稱』" SIZE="60" MAXLENGTH="100"></TD>
 	</tr>
 	<tr style="display:" id=fileupload>
 		<td class=lightbluetable align=right>商標圖樣：</td>	
 		<td class=whitetablebg colspan=7>	
 			 <a id="draw_icon" style="display:none" target="_blank"><img border="0" src="../images/annex.gif" WIDTH="18" HEIGHT="18"></a>
 			<input TYPE="hidden" id="file" name="file">
-			<input TYPE="text" name="Draw_file" id="tfz1_Draw_file" SIZE="50" maxlength="50" class="Lock">
+			<input TYPE="text" name="Draw_file" id="tfz1_Draw_file" SIZE="50" maxlength="50" class="QLock">
 		</TD>
 	</tr>	
 	<tr>
 		<td class=lightbluetable align=right>聲明不專用：</td>
-		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Oappl_name NAME=tfzd_Oappl_name class="Lock" alt="『不單獨主張專用』" SIZE="60" MAXLENGTH="100"></TD>
+		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Oappl_name NAME=tfzd_Oappl_name class="QLock" alt="『不單獨主張專用』" SIZE="60" MAXLENGTH="100"></TD>
 	</tr>			
 	<tr>
 		<td class=lightbluetable align=right>圖樣中文部份：</td>
-		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Cappl_name NAME=tfzd_Cappl_name class="Lock" alt="『圖樣中文』" SIZE="60" MAXLENGTH="100"></TD>
+		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Cappl_name NAME=tfzd_Cappl_name class="QLock" alt="『圖樣中文』" SIZE="60" MAXLENGTH="100"></TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>圖樣外文部份：</td>
 		<td class=whitetablebg colspan=7>
-		外文：<INPUT TYPE=text NAME=tfzd_Eappl_name id=tfzd_Eappl_name class="Lock" alt="『圖樣外文』" SIZE="60" MAXLENGTH="100" ><br>
-		中文字義：<input type=text name=tfzd_eappl_name1 id=tfzd_eappl_name1 class="Lock" alt="『中文字義』" SIZE="60" MAXLENGTH="100"  ><br>
-		讀音：<input type=text name=tfzd_eappl_name2 id=tfzd_eappl_name2 class="Lock" alt="『讀音』" SIZE="30" MAXLENGTH="100"  >　
-		語文別：<select NAME="tfzy_Zname_type" id="tfzy_Zname_type" class="Lock"></select>
+		外文：<INPUT TYPE=text NAME=tfzd_Eappl_name id=tfzd_Eappl_name class="QLock" alt="『圖樣外文』" SIZE="60" MAXLENGTH="100" ><br>
+		中文字義：<input type=text name=tfzd_eappl_name1 id=tfzd_eappl_name1 class="QLock" alt="『中文字義』" SIZE="60" MAXLENGTH="100"  ><br>
+		讀音：<input type=text name=tfzd_eappl_name2 id=tfzd_eappl_name2 class="QLock" alt="『讀音』" SIZE="30" MAXLENGTH="100"  >　
+		語文別：<select NAME="tfzy_Zname_type" id="tfzy_Zname_type" class="QLock"></select>
 		<input type="hidden" name="tfzd_Zname_type" id="tfzd_Zname_type">
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>圖形描述：</td>
-		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Draw NAME=tfzd_Draw class="Lock" alt="『圖形描述』" SIZE="50" MAXLENGTH="50"  ></TD>
+		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Draw NAME=tfzd_Draw class="QLock" alt="『圖形描述』" SIZE="50" MAXLENGTH="50"  ></TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>記號說明：</td>
-		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Symbol NAME=tfzd_Symbol class="Lock" alt="『記號說明』" SIZE="50" MAXLENGTH="50"  ></TD>
+		<td class=whitetablebg colspan=7><INPUT TYPE=text id=tfzd_Symbol NAME=tfzd_Symbol class="QLock" alt="『記號說明』" SIZE="50" MAXLENGTH="50"  ></TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>圖樣顏色：</td>
 		<td class=whitetablebg colspan=7>
-            <INPUT TYPE=radio NAME=tfzy_color class="Lock" value="B">墨色
-            <INPUT TYPE=radio NAME=tfzy_color class="Lock" value="C">彩色
-            <INPUT TYPE=radio NAME=tfzy_color class="Lock" value="">無
+            <INPUT TYPE=radio NAME=tfzy_color class="QLock" value="B">墨色
+            <INPUT TYPE=radio NAME=tfzy_color class="QLock" value="C">彩色
+            <INPUT TYPE=radio NAME=tfzy_color class="QLock" value="">無
 		    <input type="hidden" name="tfzd_color">
 		</td>
 	</tr>
 
 	<tr>
 		<td class="lightbluetable" align="right">優先權申請日：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="pfzd_prior_date" NAME="pfzd_prior_date" class="Lock" SIZE="10"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="pfzd_prior_date" NAME="pfzd_prior_date" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">優先權首次申請國家：</td>
 		<td class="whitetablebg" colspan="3">
-            <select NAME="tfzy_prior_country" id="tfzy_prior_country" class="Lock"></select>
+            <select NAME="tfzy_prior_country" id="tfzy_prior_country" class="QLock"></select>
 		    <input type="hidden" name="tfzd_prior_country">
 		</td>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>優先權申請案號：</td>
-		<td class=whitetablebg colspan=7><INPUT TYPE=text NAME=tfzd_prior_no ID=tfzd_prior_no size="10" maxlength="20" class="Lock"></td>
+		<td class=whitetablebg colspan=7><INPUT TYPE=text NAME=tfzd_prior_no ID=tfzd_prior_no size="10" maxlength="20" class="QLock"></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">申請日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_apply_date" NAME="tfzd_apply_date" class="Lock" SIZE="10"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_apply_date" NAME="tfzd_apply_date" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">註冊日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_issue_date" NAME="tfzd_issue_date" class="Lock" SIZE="10"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_issue_date" NAME="tfzd_issue_date" class="QLock" SIZE="10"></TD>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">公告日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_open_date" NAME="tfzd_open_date" class="Lock" SIZE="10"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_open_date" NAME="tfzd_open_date" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">核駁號：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_rej_no" NAME="tfzd_rej_no" class="Lock" SIZE="10" alt="『核駁號』"  MAXLENGTH="20" ></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_rej_no" NAME="tfzd_rej_no" class="QLock" SIZE="10" alt="『核駁號』"  MAXLENGTH="20" ></TD>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">結案日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_end_date" NAME="tfzd_end_date" class="Lock" SIZE="10"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_end_date" NAME="tfzd_end_date" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">結案代碼：</td>
 		<td class="whitetablebg" colspan="3">
-            <select id="tfzy_end_code" NAME="tfzy_end_code" class="Lock"></select>
+            <select id="tfzy_end_code" NAME="tfzy_end_code" class="QLock"></select>
 		    <input type="hidden" name="tfzd_End_Code">
 		</TD>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">專用期限：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_dmt_term1" NAME="tfzd_dmt_term1" class="Lock" SIZE="10">～<input TYPE="text" id="tfzd_dmt_term2" NAME="tfzd_dmt_term2" class="Lock" SIZE="10"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_dmt_term1" NAME="tfzd_dmt_term1" class="QLock" SIZE="10">～<input TYPE="text" id="tfzd_dmt_term2" NAME="tfzd_dmt_term2" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">延展次數：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_renewal" NAME="tfzd_renewal" class="Lock" SIZE="2"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_renewal" NAME="tfzd_renewal" class="QLock" SIZE="2"></TD>
 	</tr>
     <tr>
 	    <td class=whitetablebg colspan=8>
@@ -173,8 +173,8 @@
 	                <tr>
 		                <td class=lightbluetable align=right>類別：</td>		
 		                <td class=whitetablebg colspan=7>
-                            共<input type="text" class="Lock" id=tfzr_class_count name=tfzr_class_count size=2 onchange="dmt_form.Add_button(this.value)">類
-                            <input type="text" id=tfzr_class name=tfzr_class class="Lock">
+                            共<input type="text" class="QLock" id=tfzr_class_count name=tfzr_class_count size=2 onchange="dmt_form.Add_button(this.value)">類
+                            <input type="text" id=tfzr_class name=tfzr_class class="QLock">
 		                </td>
 	                </tr>
                 </thead>
@@ -184,20 +184,20 @@
                             類別##：
 		                </td>
 		                <td class="whitetablebg" colspan="7"><!--2013/1/22玉雀告知不顯示商標法施行細則第13條-->
-                            第<INPUT type="text" class="Lock" id=class1_## name=class1_## size=2 maxlength=2 onchange="count_kind(this.value,1)">類
+                            第<INPUT type="text" class="QLock" id=class1_## name=class1_## size=2 maxlength=2 onchange="count_kind(this.value,1)">類
 		                </td>
 	                </tr>
 	                <tr>
 		                <td class="lightbluetable" align="right" width="18%">商品名稱##：</td>
 		                <td class="whitetablebg" colspan="7">
-                            <textarea id="good_name1_##" name="good_name1_##" ROWS="10" COLS="75" class="Lock"></textarea><br>
-                            共<input type="text" id=good_count1_## name=good_count1_## size=2 class="Lock">項
+                            <textarea id="good_name1_##" name="good_name1_##" ROWS="10" COLS="75" class="QLock"></textarea><br>
+                            共<input type="text" id=good_count1_## name=good_count1_## size=2 class="QLock">項
 		                </td>
 	                </tr>
 	                <tr>
 		                <td class="lightbluetable" align="right">商品群組代碼##：</td>
 		                <td class="whitetablebg" colspan="7">
-                            <textarea id=grp_code1_## name=grp_code1_## ROWS="1" COLS="50" class="Lock"></textarea>(跨群組請以全形「、」作分隔)
+                            <textarea id=grp_code1_## name=grp_code1_## ROWS="1" COLS="50" class="QLock"></textarea>(跨群組請以全形「、」作分隔)
                         </td>
 	                </tr>
                 </tfoot>

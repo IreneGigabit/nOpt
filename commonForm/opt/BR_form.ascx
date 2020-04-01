@@ -26,7 +26,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>預計完成日期 :</td>
 		<td class="whitetablebg" colspan=3 >
-			<input type="text" id="ctrl_date" name="ctrl_date" SIZE=10 class="dateField Lock BRClass">
+			<input type="text" id="ctrl_date" name="ctrl_date" SIZE=10 class="dateField RLock">
 			<span id="span_last_date0">
 			    <font color="blue">區所指定法定期限：</font><font color="red"><span id="span_last_date"></span></font>
 			</span>
@@ -39,13 +39,13 @@
 		</td>
 		<td class="lightbluetable"  align="right">承辦人員 :</td>
 		<td class="whitetablebg">
-			<Select id="pr_scode" name="pr_scode" class="Lock BRClass"></Select>
+			<Select id="pr_scode" name="pr_scode" class="RLock"></Select>
 		</td>
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right">分案說明 :</td>
 		<TD class=lightbluetable colspan=3>
-			<textarea ROWS="6" style="width:90%" id=Br_remark name="Br_remark" class="Lock BRClass"></textarea>
+			<textarea ROWS="6" style="width:90%" id=Br_remark name="Br_remark" class="RLock"></textarea>
 		</TD>
 	</tr>
 </table>

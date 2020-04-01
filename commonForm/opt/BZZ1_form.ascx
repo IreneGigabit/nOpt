@@ -19,13 +19,13 @@
 	<tr>
 		<td class="lightbluetable" valign="top" width="20%"><strong>壹、代理人(代碼)</strong></td>
 		<td class="whitetablebg" colspan="7" valign="top">
-		<select id=Pagt_no name=Pagt_no class="Lock"></select>
+		<select id=Pagt_no name=Pagt_no class="QLock"></select>
 		</td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">承辦內容說明</td>
 		<td class="whitetablebg" colspan="7">
-            <TEXTAREA rows=15 cols=80 id=Ptran_remark1 name=Ptran_remark1 class="Lock"></TEXTAREA>
+            <TEXTAREA rows=15 cols=80 id=Ptran_remark1 name=Ptran_remark1 class="PLock"></TEXTAREA>
 		</td>
 	</tr>
 </table>

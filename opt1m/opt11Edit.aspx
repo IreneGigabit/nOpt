@@ -13,17 +13,25 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected int HTProgRight = 0;
 
+    protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
 
-    protected string dmt_show_flag = "Y";
+    protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
+    protected string QLock = "true";//收費與接洽事項的控制
+    protected string QHide = "true";
+    protected string PLock = "true";//交辦內容的控制
+    protected string RLock = "true";//承辦內容的控制
+    protected string P1Lock = "true";//控制show圖檔
+    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
+        submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
@@ -31,14 +39,15 @@
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            QueryPageLayout();
+            PageLayout();
             this.DataBind();
         }
     }
-    
-    
-    private void QueryPageLayout() {
-        //決定要不要顯示案件主檔畫面
+
+
+
+    private void PageLayout() {
+        //決定要不要顯示案件主檔頁籤
         if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
             dmt_show_flag = "N";
         }
@@ -190,6 +199,16 @@
     function this_init() {
         settab("#tran");
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("input.dateField").datepick();
+        //欄位控制
+        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $(".Lock").lock();
+        $(".MLock").lock(<%#MLock%>);
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").lock(<%#QHide%>);
+        $(".PLock").lock(<%#PLock%>);
+        $(".RLock").lock(<%#RLock%>);
+        $(".P1Lock").lock(<%#P1Lock%>);
 
         //取得案件資料
         $.ajax({
@@ -217,12 +236,6 @@
         dmt_form.init();
         tran_form.init();
         brupload_form.init();
-
-        $("input.dateField").datepick();
-
-        //欄位控制
-        $(".Lock").lock();
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
     }
 
     // 切換頁籤

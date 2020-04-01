@@ -36,17 +36,17 @@
 	<tr id="tr_Popt_show1" style="display:none">
 		<td class="lightbluetable" valign="top"  align="right"><strong>案件編號：</strong></td>
 		<td class="whitetablebg" colspan="7" valign="top">
-			<input type="text" size="11" id="Opt_no" name="Opt_no" class="Lock" maxLength="10">
+			<input type="text" size="11" id="Opt_no" name="Opt_no" class="QLock" maxLength="10">
 		</td>
 	</tr>
 	<TR>
 		<td class="lightbluetable"  align="right">區所本所編號 :</td>
 		<td class="whitetablebg"  align="left" colspan=3 >
-			<Select id="Branch" name="Branch" class="unlockADD"></Select>
-			<input type="text" id="Bseq" name="Bseq" SIZE=5 class="unlockADD" maxLength="5">-
-			<input type="text" id="Bseq1" name="Bseq1" SIZE=1 class="unlockADD" maxLength="1">
-			<input type="button" value="確定" class="cbutton showADD" id="btnBseq" name="btnBseq">
-			<input type="hidden" id="keyBseq" name="keyBseq" class="Hide" value="N">
+			<Select id="Branch" name="Branch" class="QLock"></Select>
+			<input type="text" id="Bseq" name="Bseq" SIZE=5 class="QLock" maxLength="5">-
+			<input type="text" id="Bseq1" name="Bseq1" SIZE=1 class="QLock" maxLength="1">
+			<input type="button" value="確定" class="cbutton QHide" id="btnBseq" name="btnBseq">
+			<input type="hidden" id="keyBseq" name="keyBseq" class="QHide" value="N">
 			<input type="hidden" id="oldBranch" name="oldBranch">
 			<input type="hidden" id="oldBseq" name="oldBseq">
 			<input type="hidden" id="oldBseq1" name="oldBseq1">
@@ -55,24 +55,24 @@
 	<TR>
 		<td class="lightbluetable"  align="right">營洽 :</td>
 		<td class="whitetablebg"  align="left">
-			<input type="text" id="in_scode" name="in_scode" class="Lock" SIZE=5 >
-			<input type="text" id="scode_name" name="scode_name" class="Lock" SIZE=10 >
+			<input type="text" id="in_scode" name="in_scode" class="CLock" SIZE=5 >
+			<input type="text" id="scode_name" name="scode_name" class="CLock" SIZE=10 >
 		</td>
 		<td class="lightbluetable"  align="right">出名代理人 :</td>
 		<td class="whitetablebg"  align="left">
-			<select id=agt_no name=agt_no class="Lock" SIZE=1 ></select>
+			<select id=agt_no name=agt_no class="CLock" SIZE=1 ></select>
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">案件名稱 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="appl_name" name="appl_name" class="Lock" SIZE=90 maxlength=100 >
+			<input type="text" id="appl_name" name="appl_name" class="CLock" SIZE=90 maxlength=100 >
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">申請人 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="ap_cname" name="ap_cname" class="Lock" SIZE=60 maxlength=60 >
+			<input type="text" id="ap_cname" name="ap_cname" class="CLock" SIZE=60 maxlength=60 >
 		    <input type="hidden" id="cust_seq" name="cust_seq">
 		    <input type="hidden" id="cust_area" name="cust_area">
 		    <input type="hidden" id="att_sql" name="att_sql">
@@ -81,7 +81,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right">交辦案性 :</td>
 		  <td class="whitetablebg"  align="left" colspan=3>
-			 	案性：<select id=Arcase NAME=Arcase SIZE=1 class="unlockADD">	</SELECT>
+			 	案性：<select id=Arcase NAME=Arcase SIZE=1 class="QLock"></SELECT>
 				<input type="hidden" id="arcase_type" name="arcase_type">
 				<input type="hidden" id="arcase_class" name="arcase_class">
 		</td>
@@ -89,13 +89,13 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>法定期限 :</td>
 		  <td class="whitetablebg"  align="left" colspan=3 >
-			<input type="text" id="dfy_last_date" name="dfy_last_date" SIZE=10 class="BRClass dateField" maxlength=10>
+			<input type="text" id="dfy_last_date" name="dfy_last_date" SIZE=10 class="RLock dateField" maxlength=10>
 		</td>
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right">工作說明 :</td>
 		<TD class=lightbluetable colspan=3>
-			<textarea ROWS="6" COLS="90%" id=remark name="remark" class="BRClass"></textarea>
+			<textarea ROWS="6" COLS="90%" id=remark name="remark" class="RLock"></textarea>
 		</TD>
 	</tr>
 </table>
@@ -135,8 +135,8 @@
         }
 
         $("#tr_Popt_show1").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
-        $(".unlockADD").unlock($("#submittask").val()=="ADD");//新增分案解鎖
-        $(".showADD").showFor($("#submittask").val()=="ADD");//新增分案顯示
+        //$(".unlockADD").unlock($("#submittask").val()=="ADD");//新增分案解鎖
+        //$(".showADD").showFor($("#submittask").val()=="ADD");//新增分案顯示
     }
 
     //載入爭救案件資料

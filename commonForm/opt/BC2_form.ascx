@@ -19,7 +19,7 @@
 	<tr>
 		<td class="lightbluetable" valign="top"><strong>※、代理人</strong></td>
 		<td class="whitetablebg" colspan="3" valign="top">
-		    <select id=Pagt_no NAME=Pagt_no class="Lock"></select>
+		    <select id=Pagt_no NAME=Pagt_no class="QLock"></select>
 		</td>
 	</tr>
 	<tr>
@@ -28,29 +28,29 @@
 	<tr>
 		<td class=lightbluetable align=right>商標種類：</td>
 		<td class=whitetablebg colspan="3" >
-			<input type=radio name=PS_Mark value=""  class="Lock">商標
-			<input type=radio name=PS_Mark value="S" class="Lock">92年修正前服務標章
-			<input type=radio name=PS_Mark value="N" class="Lock">團體商標
-			<input type=radio name=PS_Mark value="M" class="Lock">團體標章
-			<input type=radio name=PS_Mark value="L" class="Lock">證明標章
+			<input type=radio name=PS_Mark value=""  class="QLock">商標
+			<input type=radio name=PS_Mark value="S" class="QLock">92年修正前服務標章
+			<input type=radio name=PS_Mark value="N" class="QLock">團體商標
+			<input type=radio name=PS_Mark value="M" class="QLock">團體標章
+			<input type=radio name=PS_Mark value="L" class="QLock">證明標章
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right width="20%">註冊號數：</td>
 		<td class=whitetablebg width="30%">
-			<input type="text" id="Pissue_no" name="Pissue_no" size="20" maxlength="20" class="Lock">
+			<input type="text" id="Pissue_no" name="Pissue_no" size="20" maxlength="20" class="QLock">
 		</TD>
 		<td class=lightbluetable align=right width="20%">商標/標章名稱：</td>
 		<td class=whitetablebg width="30%">
-			<input type="text" id="PAppl_name" name="PAppl_name" size="40" maxlength="100" class="Lock">
+			<input type="text" id="PAppl_name" name="PAppl_name" size="40" maxlength="100" class="QLock">
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right >案件種類：</td>
 		<td class=whitetablebg colspan="3">
-			<input type=radio name=Premark3 value="DI1" class="Lock">評定案件
-			<input type=radio name=Premark3 value="DO1" class="Lock">異議案件
-			<input type=radio name=Premark3 value="DR1" class="Lock">廢止案件
+			<input type=radio name=Premark3 value="DI1" class="PLock">評定案件
+			<input type=radio name=Premark3 value="DO1" class="PLock">異議案件
+			<input type=radio name=Premark3 value="DR1" class="PLock">廢止案件
 		</TD>
 	</tr>
 	<tr>
@@ -59,9 +59,9 @@
 	<tr>
 		<td class=lightbluetable align=right >種　　類：</td>
 		<td class=whitetablebg colspan="3">
-				<input type=radio name=PMark value="B" class="Lock">爭議案申請人或異議人
-				<input type=radio name=PMark value="I" class="Lock">系爭商標商標權人
-				<input type=radio name=PMark value="R" class="Lock">利害關係人
+				<input type=radio name=PMark value="B" class="PLock">爭議案申請人或異議人
+				<input type=radio name=PMark value="I" class="PLock">系爭商標商標權人
+				<input type=radio name=PMark value="R" class="PLock">利害關係人
 		</TD>
 	</tr>
 	<tr>
@@ -70,19 +70,19 @@
 	<tr>
 		<td class=lightbluetable align=right><span id="span_other_item">指定發言姓名</span>：</td>
 		<td class=whitetablebg colspan="3">
-			<input type=text id=Pother_item name=Pother_item size="55" maxlength="50" class="Lock">
+			<input type=text id=Pother_item name=Pother_item size="55" maxlength="50" class="PLock">
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right>職　　稱：</td>
 		<td class=whitetablebg colspan="3">
-			<input type=text id=Pother_item1 name=Pother_item1 size="55" maxlength="50" class="Lock">
+			<input type=text id=Pother_item1 name=Pother_item1 size="55" maxlength="50" class="PLock">
 		</TD>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right><span id="span_other_item2">聯絡電話</span>：</td>
 		<td class=whitetablebg colspan="3">
-			<input type=text name=Pother_item2 name=Pother_item2 size="33" maxlength="30" class="Lock">
+			<input type=text name=Pother_item2 name=Pother_item2 size="33" maxlength="30" class="PLock">
 		</TD>
 	</tr>
 	<tr>
@@ -90,7 +90,7 @@
 	</tr>
 	<TR>
 		<TD class=whitetablebg colspan="4">
-		<TEXTAREA id=Ptran_remark1 NAME=Ptran_remark1 ROWS=6 COLS=100 class="Lock"></TEXTAREA>
+		<TEXTAREA id=Ptran_remark1 NAME=Ptran_remark1 ROWS=6 COLS=100 class="PLock"></TEXTAREA>
 		</TD>
 	</TR>	
 </table>	

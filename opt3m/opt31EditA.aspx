@@ -14,6 +14,8 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
+    protected string Back_flag = "";//退回flag
+    protected string End_flag = "";//結辦flag
     
     protected string dmt_show_flag = "Y";
 
@@ -22,12 +24,22 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
+        submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
-        submitTask = Request["submitTask"] ?? "";
+        Back_flag = Request["Back_flag"] ?? "N";//退回flag
+        End_flag = Request["End_flag"] ?? "";//結辦flag(B)
 
         if (submitTask == "ADD") HTProgCap += "‧<b style='color:Red'>新增</b>";
+        if (prgid == "opt31") {
+            HTProgCap = "爭救案承辦內容維護";
+        } else if (prgid == "opt31_1") {
+            HTProgCap = "爭救案結辦作業";
+        } else {
+            HTProgCap = "爭救案承辦內容查詢";
+            submitTask = "Q";
+        }
         
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
@@ -63,6 +75,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
+            <input type=button value ="區所案件資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
@@ -77,6 +90,8 @@
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+    <input type="text" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
+    <input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
@@ -154,6 +169,7 @@
         $("#btnsearchSubmit2").showFor($("#submittask").val()!="ADD");//分案時顯示[分　　案]
         $(".Lock").lock();
         $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
+        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
     }
 
     // 切換頁籤
@@ -207,5 +223,13 @@
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.submit();
+    }
+    //區所案件資料複製
+    function GetBranchData(){
+        var tlink = "opt31_GetCase.aspx?prgid="+$("#prgid").val();
+        tlink += "&qBranch="+$("#Branch").val()+"&qseq="+$("#Bseq").val()+"&qseq1="+$("#Bseq1").val();
+        tlink += "&qopt_sqlno=" +$("#opt_sqlno").val()+ "&qopt_no=" +$("#Opt_no").val();
+        tlink += "&qBr=Y";
+        window.open(tlink,"win_opt31", "width=600 height=300 top=140 left=220 toolbar=no, menubar=no, location=no, directories=no resizable=yes status=no scrollbars=yes");
     }
 </script>

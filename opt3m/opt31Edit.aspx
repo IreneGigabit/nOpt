@@ -11,9 +11,6 @@
 <%@ Register Src="~/commonForm/opt/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
 <%@ Register Src="~/commonForm/opt/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
 
-
-
-
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt31";//程式檔名前綴
@@ -26,14 +23,24 @@
     protected string case_no = "";
     protected string Back_flag = "";//退回flag
     protected string End_flag = "";//結辦flag
-    
-    protected string dmt_show_flag = "Y";
+
+    protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
+    protected string QLock = "true";//收費與接洽事項的控制
+    protected string QHide = "true";
+    protected string PLock = "true";//交辦內容的控制
+    protected string RLock = "true";//承辦內容_分案的控制
+    protected string BLock = "true";//承辦內容_承辦的控制
+    protected string SLock = "true";//承辦內容_發文的控制
+    protected string SELock = "true";
+    protected string ALock = "true";//承辦內容_判行的控制
+    protected string P1Lock = "true";//控制show圖檔
+    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
-        
+
         submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
@@ -50,20 +57,34 @@
             submitTask = "Q";
         }
 
-        
         Token myToken = new Token(prgid);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            QueryPageLayout();
+            PageLayout();
             this.DataBind();
         }
     }
-    
-    
-    private void QueryPageLayout() {
+
+    private void PageLayout() {
         //決定要不要隱藏案件主檔畫面
         if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
             dmt_show_flag = "N";
+        }
+
+        //欄位開關
+        if (prgid.IndexOf("opt31") > -1) {
+            if (Back_flag != "B") {//不是退回
+                PLock = "false";
+                BLock = "false";
+                SLock = "false";
+                ALock = "false";
+            }
+        }
+
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
         }
 
         //交辦內容欄位畫面
@@ -209,6 +230,32 @@
     function this_init() {
         settab("#tran");
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("input.dateField").datepick();
+        //欄位控制
+        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $(".Lock").lock();
+        $(".MLock").lock(<%#MLock%>);
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").lock(<%#QHide%>);
+        $(".PLock").lock(<%#PLock%>);
+        $(".RLock").lock(<%#RLock%>);
+        $(".BLock").lock(<%#BLock%>);
+        $(".SLock").lock(<%#SLock%>);
+        $(".SELock").lock(<%#SELock%>);
+        $(".ALock").lock(<%#ALock%>);
+        $(".P1Lock").lock(<%#P1Lock%>);
+        //$(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() != "B");//承辦/結辦
+        //$(".SEClass").unlock($("#submittask").val()!="Q"&&(<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦/結辦
+
+        if($("#Back_flag").val() == "B"){
+            settab("#br");
+            $("#tabreject").show();//退回視窗
+            $("#tabPR,#tabSend").hide();//承辦內容/發文視窗
+        }else{
+            $("#tabreject").hide();//退回視窗
+            $("#tabPR,#tabSend").show();//承辦內容/發文視窗
+        }
+        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
 
         //取得案件資料
         $.ajax({
@@ -239,24 +286,7 @@
         br_form.init();
         back_form.init();
         pr_form.init();
-
-        $("input.dateField").datepick();
-
-        //欄位控制
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $(".Lock").lock();
-        $(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() == "B");//承辦結辦
-        $(".SEClass").unlock((<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦結辦
-
-        if($("#Back_flag").val() == "B"){
-            settab("#br");
-            $("#tabreject").show();//退回視窗
-            $("#tabPR,#tabSend").hide();//承辦內容/發文視窗
-        }else{
-            $("#tabreject").hide();//退回視窗
-            $("#tabPR,#tabSend").show();//承辦內容/發文視窗
-        }
-        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
+        send_form.init();
     }
 
     // 切換頁籤
@@ -297,4 +327,13 @@
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.submit();
     });
+
+    function GetBranchData(){
+        var tlink = "opt31_GetCase.aspx?prgid="+$("#prgid").val();
+        tlink += "&qBranch="+$("#Branch").val()+"&qseq="+$("#Bseq").val()+"&qseq1="+$("#Bseq1").val();
+        tlink += "&qCase_no=" +$("#case_no").val()+ "&qArcase=" + $("#tfy_Arcase").val();
+        tlink += "&qopt_sqlno=" +$("#opt_sqlno").val()+ "&qopt_no=" +$("#opt_no").val();
+        tlink += "&qBr=N";
+        window.open(tlink,"win_opt31", "width=600 height=400 top=140 left=220 toolbar=no, menubar=no, location=no, directories=no resizable=yes status=no scrollbars=yes");
+    }
 </script>
