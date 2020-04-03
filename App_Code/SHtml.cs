@@ -12,20 +12,47 @@ using System.Text.RegularExpressions;
 public static class SHtml
 {
 	/// <summary>
-	/// 產生Option字串
+	/// 產生Option字串(內建「請選擇」)
 	/// </summary> 
-	/// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
+    /// <param name="conn">DBHelper物件</param>
+    /// <param name="sql">SQL語法</param>
+    /// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
 	/// <param name="textFormat">option的文字格式用{}包住欄位,ex:{scode}_{sc_name}</param>
-	/// <param name="attrFormat">option的attribute格式用{}包住欄位,ex:value1='{scode1}'</param>
-	/// <param name="showEmpty">空白選項的顯示字串</param>
 	/// <returns></returns>
-	public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat, string attrFormat, string emptyStr) {
+    public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat) {
+        return Option(conn, sql, valueFormat, textFormat, "", true);
+    }
+
+    /// <summary>
+    /// 產生Option字串
+    /// </summary> 
+    /// <param name="conn">DBHelper物件</param>
+    /// <param name="sql">SQL語法</param>
+    /// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
+    /// <param name="textFormat">option的文字格式用{}包住欄位,ex:{scode}_{sc_name}</param>
+    /// <param name="showEmpty">空白選項的顯示字串</param>
+    /// <returns></returns>
+    public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat, bool showEmpty) {
+        return Option(conn, sql, valueFormat, textFormat, "", showEmpty);
+    }
+
+    /// <summary>
+    /// 產生Option字串
+    /// </summary> 
+    /// <param name="conn">DBHelper物件</param>
+    /// <param name="sql">SQL語法</param>
+    /// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
+    /// <param name="textFormat">option的文字格式用{}包住欄位,ex:{scode}_{sc_name}</param>
+    /// <param name="attrFormat">option的attribute格式用{}包住欄位,ex:value1='{scode1}'</param>
+    /// <param name="showEmpty">空白選項的顯示字串</param>
+    /// <returns></returns>
+    public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat, string attrFormat, bool showEmpty) {
 		Regex rgx = new Regex("{([^{}]+)}", RegexOptions.IgnoreCase);
 		string rtnStr = "";
 
 		//處理空白選項
-		if (emptyStr != "")
-			rtnStr += "<option value='' style='color:blue' selected>" + emptyStr + "</option>\n";
+        if (showEmpty)
+			rtnStr += "<option value='' style='color:blue' selected>請選擇</option>\n";
 
 		using (SqlDataReader dr = conn.ExecuteReader(sql)) {
 			while (dr.Read()) {

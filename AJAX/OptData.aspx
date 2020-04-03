@@ -35,7 +35,7 @@
         DataTable dt_attList = GetBRAtt(cust_area, cust_seq);//聯絡人清單
         DataTable dt_ap = GetBRAP(case_no);//申請人
         DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);//交辦費用
-        DataTable dt_arcase = GetArcase(arcase_type);//案性
+        DataTable dt_arcase = GetArcase(arcase_type);//委辦案性
         DataTable dt_arcaseItem = GetArcaseItem();//其他費用案性
         DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
         DataTable dt_casegood = GetCaseGood(opt_sqlno, case_no, branch);//類別
@@ -138,6 +138,19 @@
                 dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
                 dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
                 dt.Rows[0]["send_dept"] = dt.Rows[0].SafeRead("send_dept", "B");
+                
+                if (dt.Rows[0].SafeRead("rs_type", "") == "") { dt.Rows[0]["rs_type"] = dt.Rows[0].SafeRead("arcase_type", ""); }
+                if (dt.Rows[0].SafeRead("rs_code", "") == "") { dt.Rows[0]["rs_code"] = dt.Rows[0].SafeRead("arcase", ""); }
+                if (dt.Rows[0].SafeRead("rs_class", "") == "") {
+                    using (DBHelper connB = new DBHelper(strConnB, false)) {
+                        SQL = "Select rs_class from code_br where rs_type='" + dt.Rows[0].SafeRead("rs_type", "") + "' and rs_code='" + dt.Rows[0].SafeRead("rs_code", "") + "' and cr='Y' ";
+                        using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
+                            if (dr.Read()) {
+                                dt.Rows[0]["rs_class"] = dr.SafeRead("rs_class", "").Trim();
+                            }
+                        }
+                    }
+                }
             }
 
             return dt;

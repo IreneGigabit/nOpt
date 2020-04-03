@@ -70,9 +70,9 @@
 				<select id="act_code" name="act_code" class="SLock" ></select>
 			</span>	
 		</td>
-		<input type="hidden" name="code_br_agt_no">
-		<input type="hidden" name="code_br_agt_nonm">
-		<input type="hidden" name="rs_agt_no">
+		<input type="text" id="code_br_agt_no" name="code_br_agt_no">
+		<input type="text" id="code_br_agt_nonm" name="code_br_agt_nonm">
+		<input type="text" id="rs_agt_no" name="rs_agt_no">
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文內容 :</td>
@@ -84,7 +84,7 @@
 		<td class="lightbluetable"  align="right" nowrap>規費支出 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
 			<input type="text" id="Send_Fees" name="Send_Fees" SIZE=10  maxlength="10" class="SELock">
-			<input type="hidden" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SELock">
+			<input type="text" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SELock">
 		</td>
 	</TR>
 	<TR id="tr_score_flag">
@@ -97,21 +97,21 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    $("#send_cl,#send_cl1").getOption({//發文對象/單位副本
-        url: "../ajax/_GetSqlDataBranch.aspx",
-        data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_CL'" },
-        valueFormat: "{cust_code}",
-        textFormat: "{code_name}",
-    });
-    $("#send_sel").getOption({//官方號碼
-        url: "../ajax/_GetSqlDataBranch.aspx",
-        data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_SEL'" },
-        valueFormat: "{cust_code}",
-        textFormat: "{code_name}",
-    });
-
     var send_form = {};
     send_form.init = function () {
+        $("#send_cl,#send_cl1").getOption({//發文對象/單位副本
+            url: "../ajax/_GetSqlDataBranch.aspx",
+            data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_CL'" },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}"
+        });
+        $("#send_sel").getOption({//官方號碼
+            url: "../ajax/_GetSqlDataBranch.aspx",
+            data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_SEL'" },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}"
+        });
+
         send_form.loadOpt();
         //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
     }
@@ -119,38 +119,52 @@
     send_form.loadOpt = function () {
         var jOpt = br_opt.opt[0];
 
-        $("#rs_type").val(jOpt.rs_type);
-        if($("#rs_type").val()=="")$("#rs_type").val(jOpt.arcase_type);
-
         $("#rs_class").getOption({//結構分類
             url: "../ajax/_GetSqlDataBranch.aspx",
-            data: { branch: "<%#branch%>"
-                , sql: "select cust_code,code_name from cust_code where code_type='"+$("#rs_type").val()+"' and mark is null and mark1='B' "+
-				      " and cust_code in (select rs_class from vcode_act where cg ='G' and rs = 'S' and rs_type='" +$("#rs_type").val()+ "') order by cust_code"
+            data: {
+                branch: "<%#branch%>"
+                , sql: "select cust_code,code_name from cust_code where code_type='" + jOpt.rs_type + "' and mark is null and mark1='B' " +
+				      " and cust_code in (select rs_class from vcode_act where cg ='G' and rs = 'S' and rs_type='" + jOpt.rs_type + "') order by cust_code"
             },
             valueFormat: "{cust_code}",
-            textFormat: "{code_name}",
+            textFormat: "{code_name}"
         });
 
-        $("#rs_code").val(jOpt.rs_code);
-        if($("#rs_code").val()=="")$("#rs_type").val(jOpt.arcase);
+        $("#rs_code").getOption({//案性
+            url: "../ajax/_GetSqlDataBranch.aspx",
+            data: {
+                branch: "<%#branch%>"
+				, sql: "select rs_code,rs_detail,rs_class from code_br where dept='<%#Session["Dept"]%>' and gs='Y' " +
+				      " and rs_type = '" + jOpt.rs_type + "' and mark='B' " +
+					    " and (end_date is null or end_date = '' or end_date > getdate()) "+
+				      " order by rs_class,rs_code"
+            },
+            valueFormat: "{rs_code}",
+            textFormat: "{rs_detail}"
+        });
 
-        $("#rs_class").val(jOpt.rs_class);
-        //if($("#rs_class").val()==""){
-            $.ajax({
-                type: "get",
-                url: getRootPath() + "/ajax/_GetSqlDataBranch.aspx",
-                data: { branch: "<%#branch%>"
-                    , sql: "Select rs_class from code_br where rs_type='"+$("#rs_type").val()+"' and rs_code='"+$("#rs_code").val()+"' and cr='Y'"
-                },
-                async: false,
-                cache: false,
-                success: function (json) {
-                    $("#rs_class").val(json.rs_class);
-                },
-                error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案性資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-            });
-        //}
+        //處理事項
+        var sql="select distinct b.act_code, c.code_name, c.sql from code_br a,code_act b,cust_code c " +
+                " where a.dept = '<%#Session["Dept"]%>' and a.gs = 'Y'" +
+                " and a.rs_type = '" + jOpt.rs_type + "' " +
+                " and b.cg = 'G' and b.rs = 'S' " +
+                " and a.sqlno = b.code_sqlno "+
+                " and b.act_code = c.cust_code "+
+                " and c.code_type = 'tact_Code' "+
+                " and (a.end_date is null or a.end_date = '' or a.end_date > getdate()) "+
+                " and (b.end_date is null or b.end_date = '' or b.end_date > getdate()) ";
+        if (jOpt.rs_class !="") sql+= " and a.rs_class = '" +jOpt.rs_class + "' ";
+        if (jOpt.rs_code !="") sql+= " and a.rs_code = '" +jOpt.rs_code + "' ";
+        sql+=" order by c.sql";
+        $("#act_code").getOption({
+            url: "../ajax/_GetSqlDataBranch.aspx",
+            data: {
+                branch: "<%#branch%>"
+				, sql: sql
+            },
+            valueFormat: "{act_code}",
+            textFormat: "{code_name}"
+        });
 
         //預計發文日期
         $("#GS_date").val(jOpt.gs_date);
@@ -177,10 +191,7 @@
             }
         }
         //發文單位
-        if (jOpt.send_dept=="")
-            $("input[name='send_dept'][value='B']").prop("checked", true);
-        else
-            $("input[name='send_dept'][value='" + jOpt.send_dept + "']").prop("checked", true);
+        $("input[name='send_dept'][value='" + jOpt.send_dept + "']").prop("checked", true);
 
         //發文對象
         $("#send_cl").val(jOpt.send_cl);
@@ -201,48 +212,110 @@
         $("#rs_detail").val(jOpt.rs_detail);
 
         //規費支出
-        $("#Send_Fees").val(jOpt.BFees);
-        $("#old_Send_Fees").val(jOpt.BFees);
+        var send_Fees = jOpt.bfees;
+        $("#Send_Fees").val(jOpt.bfees);
+        $("#old_Send_Fees").val(jOpt.bfees);
 
         //是否輸入評分
         $("input[name='score_flag'][value='" + jOpt.score_flag + "']").prop("checked", true);
         $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1);//承辦結辦作業不顯示
 
+        $("#rs_type").val(jOpt.rs_type);
+        $("#rs_class").val(jOpt.rs_class);
+        if($("#submittask").val()!="Q") $("#rs_class").triggerHandler("change");
+        $("#rs_code").val(jOpt.rs_code);
+        if($("#submittask").val()!="Q") $("#rs_code").triggerHandler("change");
+        $("#act_code").val(jOpt.act_code);
+        if($("#submittask").val()!="Q") $("#act_code").triggerHandler("change");
     }
 
     //依結構分類帶案性代碼
-    $("#rs_class").change(function () { send_form.setRsCode(); });
-    send_form.setRsCode = function () {
+    $("#rs_class").change(function () {
         $("#rs_code").getOption({//案性代碼
             url: "../ajax/RsCode.aspx",
             data: { branch: "<%#branch%>", cgrs: "GR", rs_class: $("#rs_class").val() },
-            valueFormat: "{rscode}",
+            valueFormat: "{rs_code}",
             textFormat: "{rs_detail}",
-            attrFormat: "value1='{rsclass}'"
+            attrFormat: "value1='{rs_class}'"
         });
-    }
+    });
 
     //依案性帶處理事項/規費收費標準
-    $("#rs_code").change(function () { send_form.setActCode(); });
-    send_form.setActCode = function () {
+    $("#rs_code").change(function () {
         $("#act_code").getOption({//處理事項
             url: "../ajax/ActCode.aspx",
             data: { branch: "<%#branch%>", cgrs: "GS", rs_class: $("#rs_class").val(), rs_code: $("#rs_code").val() },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}",
+            valueFormat: "{act_code}",
+            textFormat: "{act_code_name}",
         });
-        $("#act_code").getOption({//處理事項
-            url: "../ajax/ActCode.aspx",
-            data: { branch: "<%#branch%>", cgrs: "GS", rs_class: $("#rs_class").val(), rs_code: $("#rs_code").val() },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}",
-        });
-    }
+        $("#act_code").val("_").triggerHandler("change");
 
+        //規費收費標準
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/ajax/Fee.aspx",
+            data: { branch: "<%#branch%>", country: "T", arcase: $("#rs_code").val(), type: "Fee" },
+            async: false,
+            cache: false,
+            success: function (json) {
+                var JSONdata = $.parseJSON(json);
+                if (JSONdata.length == 0) {
+                    $("#Send_Fees").val("0");
+                    $("#old_Send_Fees").val("0");
+                } else {
+                    $.each(JSONdata, function (i, item) {
+                        $("#Send_Fees").val(item.fees);
+                        $("#old_Send_Fees").val(item.fees);
+                    });
+                }
+            },
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>規費收費標準載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        });
+
+        if ($("#rs_class").val()!="" && $("#rs_code").val()!=""){
+            send_form.getcode_br_agt_no();
+        }
+    });
+
+    //依處理事項代發文內容
+    $("#act_code").change(function () {
+        if ($(this).prop('selectedIndex') == 0) {
+            $("#rs_detail").val($('#rs_code option:selected').text());
+        } else {
+            if ($('#act_code option:selected').text() != "_") {
+                $("#rs_detail").val($('#rs_code option:selected').text() + $('#act_code option:selected').text());
+            } else {
+                $("#rs_detail").val($('#rs_code option:selected').text());
+            }
+            //當處理事項為補呈理由時，將規費清空為0
+            if ($(this).val == "B2") {
+                $("#Send_Fees").val("0");
+            } else {
+                $("#Send_Fees").val($("#old_Send_Fees").val());
+            }
+        }
+    });
 
     //是否輸入評分
-    $("input[name='score_flag']").click(function () { send_form.setTabQu(); });
-    send_form.setTabQu = function () {
+    $("input[name='score_flag']").click(function () {
         $("#tabQu").showFor$("input[name='score_flag']:checked").val()=="Y"();
+    });
+
+    send_form.getcode_br_agt_no=function(){
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/ajax/rsagt_no.aspx",
+            data: { branch: "<%#branch%>", cgrs: "GS", rs_type:$("#rs_type").val(),rs_class: $("#rs_class").val(),rs_code: $("#rs_code").val() },
+            async: false,
+            cache: false,
+            success: function (json) {
+            var JSONdata = $.parseJSON(json);
+                $.each(JSONdata, function (i, item) {
+                    $("#code_br_agt_no").val(item.remark);
+                    $("#code_br_agt_nonm").val(item.agt_name);
+                });
+            },
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>規費收費標準載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        });
     }
 </script>

@@ -6,10 +6,21 @@
     protected string branch = "";
     protected string opt_sqlno = "";
 
+    protected string tfy_oth_code = "", F_tscode = "", tfy_Ar_mark = "", tfy_source = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
-        
+
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
+            tfy_oth_code = SHtml.Option(cnn, "SELECT branch,branchname FROM sysctrl.dbo.branch_code WHERE class = 'branch'", "{branch}", "{branch}_{branchname}");
+        }
+        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
+            F_tscode = SHtml.Option(connB, "select distinct scode,sc_name,scode1 from sysctrl.dbo.vscode_roles where branch='"+branch+"' and dept='T' and syscode='"+branch+"Tbrt' and roles='sales' order by scode1", "{scode}", "{sc_name}");
+            tfy_Ar_mark = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='ar_mark' and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)", "{cust_code}", "{code_name}");
+            tfy_source = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code", "{cust_code}", "({cust_code}---{code_name})");
+        }
+     
         this.DataBind();
     }
 </script>
@@ -19,7 +30,7 @@
 <TR>
 	<td class="lightbluetable" align=right>洽案營洽 :</td>
 	<td class="whitetablebg" align="left" colspan=3>
-		<select id="F_tscode" name="F_tscode" class="QLock"></SELECT>
+		<select id="F_tscode" name="F_tscode" class="QLock"><%#F_tscode%></SELECT>
 	</td>
 </TR>
 <TR>
@@ -70,7 +81,7 @@
 			    <TD class=whitetablebg width=5%><input type="text" id="nfy_oth_money" name="nfy_oth_money" size="8" style="text-align:right;" class="QLock"></TD>
 			    <TD class=lightbluetable align=right width=4%>轉帳單位：</TD>
 			    <TD class=whitetablebg width=5%>
-			    <select id=tfy_oth_code NAME=tfy_oth_code class="QLock"></SELECT>
+			    <select id=tfy_oth_code NAME=tfy_oth_code class="QLock"><%#tfy_oth_code%></SELECT>
 			    </TD>
 		    </TR>
 		    <TR>
@@ -85,7 +96,7 @@
 <TR>
 	<TD class=lightbluetable align=right>請款註記：</TD>
 	<TD class=whitetablebg>
-        <Select id=tfy_Ar_mark name=tfy_Ar_mark class="QLock"></Select>
+        <Select id=tfy_Ar_mark name=tfy_Ar_mark class="QLock"><%#tfy_Ar_mark%></Select>
 	</TD>
 	<TD class=lightbluetable align=right>折扣率：</TD>
 	<TD class="whitetablebg">
@@ -97,7 +108,7 @@
 <TR>
 	<TD class=lightbluetable align=right>案源代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=tfy_source name=tfy_source class="QLock"></Select>
+        <Select id=tfy_source name=tfy_source class="QLock"><%#tfy_source%></Select>
 	</TD>
 	<TD class=lightbluetable align=right>契約號碼：</TD>
 	<TD class=whitetablebg>
@@ -134,12 +145,12 @@
 <script language="javascript" type="text/javascript">
     var case_form = {};
     case_form.init = function () {
-        $("#F_tscode").getOption({//洽案營洽
+        /*$("#F_tscode").getOption({//洽案營洽
             url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select distinct scode,sc_name,scode1 from sysctrl.dbo.vscode_roles where branch='<%#branch%>' and dept='T' and syscode='<%#branch%>Tbrt' and roles='sales' order by scode1" },
             valueFormat: "{scode}",
             textFormat: "{sc_name}"
-        });
+        });*/
         $("#tfy_Arcase").getOption({//案性
             dataList: br_opt.arcase,
             valueFormat: "{rs_code}",
@@ -155,6 +166,7 @@
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
+    /*
         $("#tfy_oth_code").getOption({//轉帳單位
             url: "../ajax/_GetSqlDataCnn.aspx",
             data: { sql: "SELECT branch,branchname FROM sysctrl.dbo.branch_code WHERE class = 'branch'" },
@@ -172,7 +184,7 @@
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code" },
             valueFormat: "{cust_code}",
             textFormat: "({cust_code}---{code_name})"
-        });
+        });*/
 
         //案性/案源
         var jCase = br_opt.opt[0];

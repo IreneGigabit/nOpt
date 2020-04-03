@@ -64,12 +64,12 @@
             if (ttype == "Arcase") {
                 SQL = "select * from code_br ";
                 SQL += "where rs_class='" + ar_form + "' and rs_code like '" + tmpArcase + "%' ";
-                SQL += " and getdate() >= beg_date and end_date is null AND no_code='N' and rs_type='" + code_type + "' ";
+                SQL += "and getdate() >= beg_date and end_date is null AND no_code='N' and rs_type='" + code_type + "' ";
                 SQL += "and mark=" + (mark == "" ? "null" : "'" + mark + "'") + " ";
             } else if (ttype == "Fee") {
                 SQL = "select * from case_fee ";
-                SQL += " where dept='T' and country='" + country + "' and rs_code='" + tmpArcase + "' ";
-                SQL += "' and (" + (case_date == "" ? "getdate()" : "'" + case_date + "'") + " between beg_date and end_date) ";
+                SQL += "where dept='T' and country='" + country + "' and rs_code='" + tmpArcase + "' ";
+                SQL += "and (" + (case_date == "" ? "getdate()" : "'" + case_date + "'") + " between beg_date and end_date) ";
             }
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);

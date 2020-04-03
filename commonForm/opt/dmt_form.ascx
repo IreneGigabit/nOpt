@@ -5,11 +5,22 @@
     protected string SQL = "";
     protected string branch = "";
     protected string opt_sqlno = "";
+
+    protected string tfzy_country = "", tfzy_end_code = "";
     
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
-        
+      
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
+        {
+            tfzy_country = SHtml.Option(cnn, "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code", "{coun_code}", "{coun_code}-{coun_c}");
+        }
+        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false))
+        {
+            tfzy_end_code = SHtml.Option(connB, "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld", "{chrelno}", "{chrelname}");
+        }
+  
         this.DataBind();
     }
 </script>
@@ -104,7 +115,7 @@
 		外文：<INPUT TYPE=text NAME=tfzd_Eappl_name id=tfzd_Eappl_name class="QLock" alt="『圖樣外文』" SIZE="60" MAXLENGTH="100" ><br>
 		中文字義：<input type=text name=tfzd_eappl_name1 id=tfzd_eappl_name1 class="QLock" alt="『中文字義』" SIZE="60" MAXLENGTH="100"  ><br>
 		讀音：<input type=text name=tfzd_eappl_name2 id=tfzd_eappl_name2 class="QLock" alt="『讀音』" SIZE="30" MAXLENGTH="100"  >　
-		語文別：<select NAME="tfzy_Zname_type" id="tfzy_Zname_type" class="QLock"></select>
+		語文別：<select NAME="tfzy_Zname_type" id="tfzy_Zname_type" class="QLock"><%#tfzy_country%></select>
 		<input type="hidden" name="tfzd_Zname_type" id="tfzd_Zname_type">
 		</TD>
 	</tr>
@@ -131,7 +142,7 @@
 		<td class="whitetablebg" colspan="3"><input TYPE="text" id="pfzd_prior_date" NAME="pfzd_prior_date" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">優先權首次申請國家：</td>
 		<td class="whitetablebg" colspan="3">
-            <select NAME="tfzy_prior_country" id="tfzy_prior_country" class="QLock"></select>
+            <select NAME="tfzy_prior_country" id="tfzy_prior_country" class="QLock"><%#tfzy_country%></select>
 		    <input type="hidden" name="tfzd_prior_country">
 		</td>
 	</tr>
@@ -156,7 +167,7 @@
 		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_end_date" NAME="tfzd_end_date" class="QLock" SIZE="10"></TD>
 		<td class="lightbluetable" align="right">結案代碼：</td>
 		<td class="whitetablebg" colspan="3">
-            <select id="tfzy_end_code" NAME="tfzy_end_code" class="QLock"></select>
+            <select id="tfzy_end_code" NAME="tfzy_end_code" class="QLock"><%#tfzy_end_code%></select>
 		    <input type="hidden" name="tfzd_End_Code">
 		</TD>
 	</tr>
@@ -208,27 +219,22 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    $("#tfzy_Zname_type").getOption({//語文別
-        url: "../ajax/_GetSqlDataCnn.aspx",
-        data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
-        valueFormat: "{coun_code}",
-        textFormat: "{coun_code}-{coun_c}"
-    });
-    $("#tfzy_prior_country").getOption({//優先權首次申請國家
-        url: "../ajax/_GetSqlDataCnn.aspx",
-        data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
-        valueFormat: "{coun_code}",
-        textFormat: "{coun_code}-{coun_c}"
-    });
-    $("#tfzy_end_code").getOption({//結案代碼
-        url: "../ajax/_GetSqlDataBranch.aspx",
-        data: { branch: "<%#branch%>", sql: "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld" },
-        valueFormat: "{chrelno}",
-        textFormat: "{chrelname}"
-    });
-
     var dmt_form = {};
     dmt_form.init = function () {
+        /*
+        $("#tfzy_Zname_type,#tfzy_prior_country").getOption({//語文別/優先權首次申請國家
+            url: "../ajax/_GetSqlDataCnn.aspx",
+            data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
+            valueFormat: "{coun_code}",
+            textFormat: "{coun_code}-{coun_c}"
+        });
+        $("#tfzy_end_code").getOption({//結案代碼
+            url: "../ajax/_GetSqlDataBranch.aspx",
+            data: { branch: "<%#branch%>", sql: "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld" },
+            valueFormat: "{chrelno}",
+            textFormat: "{chrelname}"
+        });
+        */
         var jOpt = br_opt.opt[0];
         $("#opt_no").val(jOpt.opt_no);
         $("#Branch").val(jOpt.branch);

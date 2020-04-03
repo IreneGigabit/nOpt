@@ -259,15 +259,14 @@
 </table>	
 
 <script language="javascript" type="text/javascript">
-    $("#Pagt_no").getOption({//代理人
-        url: "../ajax/LookupDataBranch.aspx",
-        data: { type: "getagtdata", branch: "<%#branch%>" },
-        valueFormat: "{agt_no}",
-        textFormat: "{strcomp_name}{agt_name}"
-    });
-
     var tran_form = {};
     tran_form.init = function () {
+        $("#Pagt_no").getOption({//代理人
+            url: "../ajax/LookupDataBranch.aspx",
+            data: { type: "getagtdata", branch: "<%#branch%>" },
+            valueFormat: "{agt_no}",
+            textFormat: "{strcomp_name}{agt_name}"
+        });
 
         var jOpt = br_opt.opt[0];
         $("#Popt_no").val(jOpt.opt_no);

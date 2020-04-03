@@ -136,12 +136,12 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="x-ua-compatible" content="IE=10">
+    <meta http-equiv="x-ua-compatible" content="IE=9">
     <title></title>
     <link href="inc/setstyle.css" rel="stylesheet" />
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-    <%--<script type="text/javascript"  src="js/json2.js"></script>--%>
-    <script type="text/javascript" src="js/toastr.min.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-1.12.4.min.js"></script>
+    <%--<script type="text/javascript"  src="js/lib/json2.js"></script>--%>
+    <script type="text/javascript" src="js/lib/toastr.min.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
 </head>
 <body style="margin:0px 0px 0px 0px;overflow:hidden;background:url('images/top/back5.gif');background-repeat: no-repeat;">
@@ -256,7 +256,7 @@
                     menuHeight += 15;
                 }
                 //if (zmenu[i].Name.CodeLength() > maxLen) maxLen = zmenu[i].Name.CodeLength();
-                maxLen = Math.max($.BLen(zmenu[i].Name), maxLen)
+                maxLen = Math.max(zmenu[i].Name.CodeLength(), maxLen)
                 zmenu[i].pTop = menuHeight + 31
                 menuHtm += "<div style=\"margin: 0px 0px 0px 0px;padding: 2px 1px 1px 1px;color: #000;background-color: #f0f0f0;cursor: pointer;height: 18px;\" " +
 					"onmouseover=\"javascript:PopMenuOver(this)\" onmouseout=\"javascript:PopMenuOut(this)\" " +

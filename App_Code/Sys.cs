@@ -65,23 +65,11 @@ public class Sys
 	}
 
 	public static string getConnString(string parameter) {
-		string str = "";
-		try {
-			str = ConfigurationManager.ConnectionStrings[parameter].ConnectionString;
-		}
-		catch {
-		}
-		return str;
+        return ConfigurationManager.ConnectionStrings[parameter].ConnectionString ?? "";
 	}
 
 	public static string getAppSetting(string parameter) {
-		string str = "";
-		try {
-			str = ConfigurationManager.AppSettings[parameter];
-		}
-		catch {
-		}
-		return str;
+        return ConfigurationManager.AppSettings[parameter] ?? "";
 	}
 
 	public static void errorLog(Exception ex, string sqlStr, string prgID) {

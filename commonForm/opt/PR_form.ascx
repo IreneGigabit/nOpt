@@ -46,16 +46,16 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    $("#pr_per").getOption({//承辦完成百分比
-        url: "../ajax/_GetSqlData.aspx",
-        data: { sql: "Select cust_code,code_name from cust_code where code_type='Opr_per' order by sortfld" },
-        valueFormat: "{cust_code}",
-        textFormat: "{code_name}",
-        showEmpty: false,
-    });
-
     var pr_form = {};
     pr_form.init = function () {
+        $("#pr_per").getOption({//承辦完成百分比
+            url: "../ajax/_GetSqlData.aspx",
+            data: { sql: "Select cust_code,code_name from cust_code where code_type='Opr_per' order by sortfld" },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}",
+            showEmpty: false,
+        });
+
         pr_form.loadOpt();
         //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
     }

@@ -349,7 +349,7 @@
 			    //$(this).nextAll(".errlog:eq(0)").html("");
 			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
 
-				if ($.BLen($(this).val()) > settings.max) {
+				if ($(this).val().CodeLength() > settings.max) {
 					errmsg = settings.msg || "長度過長，請檢查！";
 				}
 				
@@ -442,6 +442,7 @@
 
 	        return this.each(function () {
 	            var obj = $(this);
+	            obj.empty();
 
 	            if (settings.dataList == null) {
 	                $.ajax({

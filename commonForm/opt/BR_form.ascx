@@ -7,12 +7,18 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
+
+    protected string pr_branch = "";
    
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
         submitTask = Request["submitTask"] ?? "";
+
+        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
+            pr_branch = SHtml.Option(conn, "select cust_code,code_name from cust_code where code_type='OBranch'", "{cust_code}", "{code_name}",false);
+        }
         
         this.DataBind();
     }
@@ -35,7 +41,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right">承辦區所別 :</td>
 		<td class="whitetablebg">
-			<Select id="pr_branch" name="pr_branch" class="Lock"></Select>
+			<Select id="pr_branch" name="pr_branch" class="Lock"><%#pr_branch%></Select>
 		</td>
 		<td class="lightbluetable"  align="right">承辦人員 :</td>
 		<td class="whitetablebg">
@@ -51,22 +57,23 @@
 </table>
 
 <script language="javascript" type="text/javascript">
-    $("#pr_branch").getOption({//承辦區所別
-        url: "../ajax/_GetSqlData.aspx",
-        data: { sql: "select cust_code,code_name from cust_code where code_type='OBranch'" },
-        valueFormat: "{cust_code}",
-        textFormat: "{code_name}",
-        showEmpty: false,
-        setValue: "B"
-    });
-    $("#pr_scode").getOption({//爭議組承辦人員
-        url: "../ajax/LookupDataCnn.aspx?type=GetPrScode",
-        valueFormat: "{scode}",
-        textFormat: "{scode}_{sc_name}"
-    });
-
     var br_form = {};
     br_form.init = function () {
+        /*
+        $("#pr_branch").getOption({//承辦區所別
+            url: "../ajax/_GetSqlData.aspx",
+            data: { sql: "select cust_code,code_name from cust_code where code_type='OBranch'" },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}",
+            showEmpty: false,
+            setValue: "B"
+        });*/
+        $("#pr_scode").getOption({//爭議組承辦人員
+            url: "../ajax/LookupDataCnn.aspx?type=GetPrScode",
+            valueFormat: "{scode}",
+            textFormat: "{scode}_{sc_name}"
+        });
+
         if ("<%#case_no%>" != "") {
             br_form.loadOpt();
         }

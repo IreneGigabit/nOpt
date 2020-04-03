@@ -15,23 +15,6 @@ function getRootDir() {
     return postPath;
 }
 
-//判斷字串是否為JSON格式
-function isJSON(str) {
-    if (typeof str == 'string') {
-        try {
-            var obj = JSON.parse(str);
-            if (typeof obj == 'object' && obj) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (e) {
-            return false;
-        }
-    }
-    return false;
-}
-
 /*ajax function(get)*/
 function ajaxByGet(url, param) {
     return $.ajax({
@@ -61,10 +44,17 @@ function decodeStr(encodedString) {
     return textArea.value;
 }
 
+//#region NulltoEmpty 若為null回傳空字串
+function NulltoEmpty(s) {
+    if (s == null || s == undefined) return "";
+    return s;
+}
+//#endregion
+
 //#region dateReviver
 //json日期格式返回new Date格式
 //dateConvert(jOpt.last_date);
-var dateConvert = function (value) {
+function dateConvert(value) {
     var a;
     var b;
     //a→2018-12-26T10:47:00
@@ -82,13 +72,13 @@ var dateConvert = function (value) {
     else {
         return "";
     }
-};
+}
 //end region
 
 //#region dateReviver
 //json日期格式轉指定格式
 //dateReviver(jOpt.last_date, "yyyy/M/d");
-var dateReviver = function (value, pstr) {
+function dateReviver(value, pstr) {
     var a;
     var b;
     //a→2018-12-26T10:47:00
@@ -106,7 +96,7 @@ var dateReviver = function (value, pstr) {
     else {
         return "";
     }
-};
+}
 //end region
 
 //#region Date.prototype.format
@@ -184,7 +174,7 @@ String.prototype.Left = function (n) {
 String.prototype.CutData = function (n) {
     if (n <= 0)
         return "";
-    else if (n > $.BLen(String(this)))
+    else if (n > String(this).CodeLength())
         return this;
     else {
         var len = 0, tStr2 = "";
@@ -202,8 +192,10 @@ String.prototype.CutData = function (n) {
         return tStr2;
     }
 }
-/*
+
+//#region CodeLength計算字元長度(英數=1,中文=2)
 String.prototype.CodeLength = function () {
+    /*
     var len = 0;
     var i = 0;
     var chCd;
@@ -213,14 +205,28 @@ String.prototype.CodeLength = function () {
         else len += 1;
     }
     return len;
+    */
+    return this.replace(/[^\x00-\xff]/g, "xx").length;
 }
-*/
+//#endregion
+
 if (!String.prototype.trim) {
 	String.prototype.trim = function () {
 		//return this.replace(/[(^\s+)(\s+$)]/g,"");//會把字符串中間的空白也去掉  
 		//return this.replace(/^\s+|\s+$/g,""); //  
 		return this.replace(/^\s+/g, "").replace(/\s+$/g, "");
 	};
+}
+
+function showBlockUI(param) {
+    $.blockUI({
+        message: "<div id=\"divProgress\">" +
+        "<img id=\"imgLoading\" src=\"../images/loading.gif\" style=\"border-width:0px;\" /><br />" +
+        "<h2 style=\"color:#aaaaaa\">" + param + "</h2>" +
+        "</div>",
+        //message: param,
+        css: { borderWidth: '0px', backgroundColor: 'transparent' } //透明背景
+    });
 }
 
 //靜態函式
@@ -284,20 +290,6 @@ if (!String.prototype.trim) {
         $("#divMaskFrame").fadeOut(500);
         $("#divProgress").fadeOut(500);
         $("body").css("cursor", "default");
-    }
-    //#endregion
-
-    //#region $.BLen 計算字元長度(英數=1,中文=2)
-    $.BLen = function (str) {
-        var arr = str.match(/[^\x00-\xff]/ig);
-        return arr == null ? str.length : str.length + arr.length;
-    }
-    //#endregion
-
-    //#region $.NulltoEmpty 若為null回傳空字串
-    $.NulltoEmpty = function (s) {
-        if (s == null || s == undefined) return "";
-        return s;
     }
     //#endregion
 })(jQuery);

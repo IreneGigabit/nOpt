@@ -5,10 +5,23 @@
     protected string SQL = "";
     protected string branch = "";
     protected string opt_sqlno = "";
+
+    protected string F_ap_country = "", F_con_code = "", F_dis_type = "", F_pay_type = "";
     
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
+        
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
+        {
+            F_ap_country = SHtml.Option(cnn, "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code", "{coun_code}", "{coun_code}-{coun_c}");
+        }
+        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false))
+        {
+            F_con_code = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='H' order by cust_code", "{cust_code}", "{cust_code}---{code_name}");
+            F_dis_type = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Discount' order by cust_code", "{cust_code}", "{cust_code}---{code_name}");
+            F_pay_type = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Payment' order by cust_code", "{cust_code}", "{cust_code}---{code_name}");
+        }
         
         this.DataBind();
     }
@@ -24,7 +37,7 @@
 	</TD>
 	<TD class=lightbluetable  align="right">客戶國籍：</TD>
 	<TD class=whitetablebg>
-        <Select id="F_ap_country" name="F_ap_country" class="MLock"></SELECT>
+        <Select id="F_ap_country" name="F_ap_country" class="MLock"><%#F_ap_country%></SELECT>
 	</TD>
 </TR>
 <TR>
@@ -107,7 +120,7 @@
 <TR>
 	<TD class=lightbluetable align="right">顧問種類：</TD>
 	<TD class=whitetablebg>
-        <select id=F_con_code class="MLock"></SELECT>
+        <select id=F_con_code class="MLock"><%#F_con_code%></SELECT>
 	</TD>
 	<TD class=lightbluetable align="right">顧問迄日：</TD>
 	<TD class=whitetablebg><INPUT TYPE=text id=F_con_term SIZE=10 class="MLock"></TD>
@@ -135,21 +148,21 @@
 <TR>
 	<TD class=lightbluetable align=right>專利折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_pdis_type class="MLock"></SELECT>
+        <Select id=F_pdis_type class="MLock"><%#F_dis_type%></SELECT>
 	</TD>
 <TD class=lightbluetable align=right>商標折扣代碼：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tdis_type class="MLock"></SELECT>
+        <Select id=F_tdis_type class="MLock"><%#F_dis_type%></SELECT>
 	</TD>
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>專利付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_ppay_type class="MLock"></SELECT>
+        <Select id=F_ppay_type class="MLock"><%#F_pay_type%></SELECT>
 	</TD>
 	<TD class=lightbluetable align=right>商標付款條件：</TD>
 	<TD class=whitetablebg>
-        <Select id=F_tpay_type class="MLock"></SELECT>
+        <Select id=F_tpay_type class="MLock"><%#F_pay_type%></SELECT>
 	</TD>
 </TR>
 <TR>
@@ -160,7 +173,7 @@
 <script language="javascript" type="text/javascript">
     var cust_form={};
     cust_form.init = function () {
-        $("#F_ap_country").getOption({//客戶國籍
+        /*$("#F_ap_country").getOption({//客戶國籍
             url: "../ajax/_GetSqlDataCnn.aspx",
             data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
             valueFormat: "{coun_code}",
@@ -183,7 +196,7 @@
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='Payment' order by cust_code" },
             valueFormat: "{cust_code}",
             textFormat: "{cust_code}---{code_name}"
-        });
+        });*/
 
         //if (br_opt.cust.length == 0) {
         //    toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！");

@@ -32,14 +32,14 @@
     }
 
     protected DataTable GetAgtData() {
-        using (DBHelper conn = new DBHelper(strConnB, false)) {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "SELECT agt_no,''agt_name,''strcomp_name,agt_name1,agt_name2,agt_name3,treceipt ";
             SQL += ",(select form_name from cust_code where code_type='company' and cust_code=agt.treceipt) as comp_name ";
             SQL += "FROM agt ";
             SQL += "ORDER BY agt_no";
 
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+            connB.DataTable(SQL, dt);
 
             for (int i = 0; i < dt.Rows.Count; i++) {
                 dt.Rows[i]["agt_name"] = dt.Rows[i].SafeRead("agt_name1", "");

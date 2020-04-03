@@ -119,7 +119,7 @@
             conn.ExecuteNonQuery(SQL);
 	
             //抓insert後的流水號
-	        SQL = "SELECT IDENT_CURRENT('br_opt') AS Current_Identity";
+            SQL = "SELECT SCOPE_IDENTITY() AS Current_Identity";
             object objResult1 = conn.ExecuteScalar(SQL);
             opt_sqlno = objResult1.ToString();
 

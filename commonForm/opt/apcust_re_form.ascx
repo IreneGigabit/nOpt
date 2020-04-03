@@ -7,10 +7,21 @@
     protected string branch = "";
     protected string opt_sqlno = "";
 
+    protected string apclass = "", ap_country = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
-
+  
+        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false))
+        {
+            apclass = SHtml.Option(connB, "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld", "{cust_code}", "{code_name}");
+        }
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
+        {
+            ap_country = SHtml.Option(cnn, "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code", "{coun_code}", "{coun_c}");
+        }
+        
         this.DataBind();
     }
 </script>
@@ -32,7 +43,7 @@
 				<input type=text id="apnum_##" name="apnum_##" value="##." class="Lock" size=2>申請人種類：
 			</TD>
 			<TD class=sfont9>
-				<select id="apclass_##" name="apclass_##" class="MLock"></select>
+				<select id="apclass_##" name="apclass_##" class="MLock"><%#apclass%></select>
                 <input type="checkbox" id="ap_hserver_flag_##" name="ap_hserver_flag_##" value="Y" onclick="apcust_re_form.apserver_flag('##')" class="Lock">註記此申請人為應受送達人
                 <input type="hidden" id="ap_server_flag_##" name="ap_server_flag_##" value="N">
 			</TD>
@@ -46,7 +57,7 @@
 		<TR>
 			<TD class=lightbluetable align=right>申請人國籍：</TD>
 			<TD class=sfont9 colspan=3>
-                <select id="ap_country_##" name="ap_country_##" class="MLock"></select>
+                <select id="ap_country_##" name="ap_country_##" class="MLock"><%#ap_country%></select>
 			</TD>
 		</TR>
 		<TR>
@@ -143,6 +154,7 @@
 <script language="javascript" type="text/javascript">
     var apcust_re_form={};
     apcust_re_form.init = function () {
+        /*
         $("select[id='apclass_##']").getOption({//申請人種類
             url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld" },
@@ -155,7 +167,7 @@
             valueFormat: "{coun_code}",
             textFormat: "{coun_c}"
         });
-
+        */
         var jCaseap = br_opt.caseap;
         $.each(jCaseap, function (i, item) {
             //增加一筆
