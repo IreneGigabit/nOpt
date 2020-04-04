@@ -10,6 +10,8 @@
 <%@ Register Src="~/commonForm/opt/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
 <%@ Register Src="~/commonForm/opt/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
 <%@ Register Src="~/commonForm/opt/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
+<%@ Register Src="~/commonForm/opt/upload_Form.ascx" TagPrefix="uc1" TagName="upload_Form" %>
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -118,6 +120,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
 <body>
@@ -195,6 +198,8 @@
                 <!--include file="../commonForm/opt/PR_form.ascx"--><!--承辦內容-->
                 <uc1:Send_form runat="server" id="Send_form" />
                 <!--include file="../commonForm/opt/Send_form.ascx"--><!--發文資料-->
+                <uc1:upload_Form runat="server" ID="upload_Form" />
+                <!--include file="../commonForm/opt/upload_form.ascx"--><!--上傳文件-->
             </div>
         </td>
     </tr>
@@ -288,7 +293,8 @@
         back_form.init();
         pr_form.init();
         send_form.init();
-    }
+        upload_form.init();
+   }
 
     // 切換頁籤
     $("#CTab td.tab").click(function (e) {

@@ -13,14 +13,8 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
   
-        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false))
-        {
-            apclass = SHtml.Option(connB, "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld", "{cust_code}", "{code_name}");
-        }
-        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
-        {
-            ap_country = SHtml.Option(cnn, "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code", "{coun_code}", "{coun_c}");
-        }
+        apclass = Funcs.getcust_code_mul("apclass","","sortfld").Option("{cust_code}", "{code_name}");
+        ap_country=Funcs.getcountry().Option("{coun_code}", "{coun_c}");
         
         this.DataBind();
     }
@@ -65,8 +59,8 @@
 			<TD class=sfont9 colspan=3>
                 <input type=hidden id="ap_cname_##" name="ap_cname_##">
 		        <input type=hidden id="apsqlno_##" name="apsqlno_##">
-		        <INPUT TYPE=text id="ap_cname1_##" name="ap_cname1_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock"><br>
-		        <INPUT TYPE=text id="ap_cname2_##" name="ap_cname2_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock">
+		        <INPUT TYPE=text id="ap_cname1_##" name="ap_cname1_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxLength,this.alt)" class="MLock"><br>
+		        <INPUT TYPE=text id="ap_cname2_##" name="ap_cname2_##" SIZE=40 MAXLENGTH=60 alt="申請人名稱(中)" onblur="fDataLen(this.value,this.maxLength,this.alt)" class="MLock">
 			</TD>
 		</TR>
 		<TR>
@@ -86,8 +80,8 @@
 			<TD class=lightbluetable align=right>申請人名稱(英)：</TD>
 			<TD class=sfont9 colspan=3>
                 <input type=hidden id="ap_ename_##" name="ap_ename_##">
-		        <INPUT TYPE=text id="ap_ename1_##" name="ap_ename1_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock"><br>
-		        <INPUT TYPE=text id="ap_ename2_##" name="ap_ename2_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxlength,this.alt)" class="MLock">
+		        <INPUT TYPE=text id="ap_ename1_##" name="ap_ename1_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxLength,this.alt)" class="MLock"><br>
+		        <INPUT TYPE=text id="ap_ename2_##" name="ap_ename2_##" SIZE=60 MAXLENGTH=100 alt="申請人名稱(英)" onblur="fDataLen(this.value,this.maxLength,this.alt)" class="MLock">
 			</TD>
 		</TR>
 		<TR>

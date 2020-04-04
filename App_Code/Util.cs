@@ -289,7 +289,7 @@ public static class Util
 		length *= 4;
 
 		if (startIndex >= byte32Array.Length) return "";
-		length = (startIndex + length) > byte32Array.Length ? byte32Array.Length - startIndex : length;
+        length = (startIndex + length) > byte32Array.Length ? byte32Array.Length - startIndex : length;
 		return Encoding.UTF32.GetString(byte32Array, startIndex, length);
 	}
 
@@ -301,7 +301,7 @@ public static class Util
 	/// <param name="startIndex">擷取的起始位置，不能大於字串長度</param>
 	/// <returns>字串</returns>
 	public static string Substr(this string s, int startIndex) {
-		return s.Substr(startIndex, Int32.MaxValue);
+		return s.Substr(startIndex, s.Length);
 	}
 	#endregion
 
@@ -318,6 +318,41 @@ public static class Util
         }
 
         return sBuilder.ToString();
+    }
+    #endregion
+
+    #region Request - 同Request["xxxx"]
+    public static string Request(string s) {
+        return (HttpContext.Current.Request[s] ?? "").ToString();
+    }
+    #endregion
+
+    #region IsNumeric - 判斷是否為數值
+    public static bool IsNumeric(object Expresion) {
+        bool isNum = true;
+        double retNum = 0.0;
+
+        isNum = Double.TryParse(Convert.ToString(Expresion), System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out retNum);
+
+        return isNum;
+    }
+    #endregion
+
+    #region dbnull - 寫入db用,若是空白則回傳null,否則回傳'xxxxx'
+    public static string dbnull(string iStr) {
+        if (iStr == null || iStr == "") return "null";
+
+        iStr = iStr.Replace("'", "''");
+        return "'" + iStr + "'";
+    }
+    #endregion
+
+    #region fRound - 四捨五入
+    /// <summary>  
+    /// 四捨五入
+    /// </summary>  
+    public static decimal fRound(decimal num, int decimals) {
+        return Math.Round(num, decimals, MidpointRounding.AwayFromZero);
     }
     #endregion
 }

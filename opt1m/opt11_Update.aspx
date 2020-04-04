@@ -177,7 +177,7 @@
         SQL+="from vbr_opt where case_no='" + case_no + "' and branch='" + branch + "'";
         using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
             if (dr.Read()) {
-		        fseq=Sys.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
+		        fseq=Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
 		        in_scode=dr.SafeRead("in_scode", "");
 		        in_scode_name=dr.SafeRead("scode_name", "");
 		        cust_area=dr.SafeRead("cust_area", "");

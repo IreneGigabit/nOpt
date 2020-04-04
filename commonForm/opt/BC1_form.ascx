@@ -99,13 +99,13 @@
 		                    <input type=text name='DE1_apnum_##' class="Lock" style='color:black;' size=2 value='##.'>名稱：
 			            </TD>
 			            <TD class=sfont9>
-		                    <input TYPE=text ID="tfr4_ncname1_##" NAME="tfr4_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
+		                    <input TYPE=text ID="tfr4_ncname1_##" NAME="tfr4_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『名稱』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
 			            </TD>
 		            </TR>
 		            <TR>
 			            <TD class=lightbluetable align=right>地址：</TD>
 			            <TD class=sfont9>
-		                    <INPUT TYPE=text id="tfr4_naddr1_##" name="tfr4_naddr1_##" SIZE=60 MAXLENGTH=60 alt='『地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
+		                    <INPUT TYPE=text id="tfr4_naddr1_##" name="tfr4_naddr1_##" SIZE=60 MAXLENGTH=60 alt='『地址』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
 			            </TD>
 		            </TR>
 	            </TFOOT>

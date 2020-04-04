@@ -48,6 +48,7 @@
         DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
         DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
         DataTable dt_brdmt_attach = GetBRDmtAttach(case_no);
+        DataTable dt_opt_attach = GetOptAttach(opt_sqlno);
 
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
@@ -74,6 +75,7 @@
         Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
         Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
         Response.Write(",\"brdmt_attach\":" + JsonConvert.SerializeObject(dt_brdmt_attach, settings).ToUnicode() + "\n");
+        Response.Write(",\"opt_attach\":" + JsonConvert.SerializeObject(dt_opt_attach, settings).ToUnicode() + "\n");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
@@ -135,7 +137,7 @@
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
 
-                dt.Rows[0]["fseq"] = Sys.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
+                dt.Rows[0]["fseq"] = Funcs.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
                 dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
                 dt.Rows[0]["send_dept"] = dt.Rows[0].SafeRead("send_dept", "B");
                 
@@ -486,6 +488,23 @@
             for (int i = 0; i < dt.Rows.Count; i++) {
                 dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
             }
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region GetOptAttach
+    private DataTable GetOptAttach(string pOptSqlno) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select * ";
+            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm ";
+            SQL += " from attach_opt ";
+            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D' ";
+            SQL += " order by opt_sqlno,attach_no ";
+
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
 
             return dt;
         }

@@ -69,7 +69,7 @@
                     appl_name = dr.SafeRead("appl_name", "").CutData(20);
                 }
             }
-            Fappl_name=Sys.formatSeq(qSeq, qSeq1, "", qBranch, Sys.GetSession("dept"));
+            Fappl_name=Funcs.formatSeq(qSeq, qSeq1, "", qBranch, Sys.GetSession("dept"));
             Fappl_name += " " + appl_name;
         }
     }

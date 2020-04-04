@@ -113,8 +113,8 @@
 	        SQL = "insert into br_opt(opt_no,branch,Bseq,Bseq1,Bcase_date,Last_date";
 	        SQL += ",in_scode,in_date,ctrl_date,pr_branch,pr_scode,br_remark,stat_code,mark,br_source,confirm_date) values (";
 	        SQL += "'"+opt_no+"','"+Request["branch"]+"',"+Request["Bseq"]+",'"+Request["Bseq1"]+"'";
-	        SQL += ",'"+DateTime.Now.ToString("yyyy/MM/dd")+"',"+Funcs.dbnull(Request["dfy_last_date"])+",'"+Session["scode"]+"','"+DateTime.Now.ToString("yyyy/MM/dd")+"'";
-	        SQL += ","+Funcs.dbnull(Request["ctrl_date"])+",'"+Request["pr_branch"]+"','"+Request["pr_scode"]+"'";
+	        SQL += ",'"+DateTime.Now.ToString("yyyy/MM/dd")+"',"+Util.dbnull(Request["dfy_last_date"])+",'"+Session["scode"]+"','"+DateTime.Now.ToString("yyyy/MM/dd")+"'";
+	        SQL += ","+Util.dbnull(Request["ctrl_date"])+",'"+Request["pr_branch"]+"','"+Request["pr_scode"]+"'";
             SQL += ",'" + Request["br_remark"].ToBig5() + "','NN','N','opt','" + DateTime.Now.ToString("yyyy/MM/dd") + "')";
             conn.ExecuteNonQuery(SQL);
 	
@@ -135,10 +135,10 @@
 	        SQL = " insert into opt_detail(opt_sqlno,branch,seq,seq1,in_date,apsqlno,ap_cname,ap_ename,apply_date,apply_no,issue_date,issue_no ";
 	        SQL += ",appl_name,agt_no,open_date,rej_no,dmt_term1,dmt_term2 ";
 	        SQL += ") values ('"+opt_sqlno+"','"+Request["branch"]+"','"+Request["Bseq"]+"','"+Request["Bseq1"]+"','"+DateTime.Now.ToString("yyyy/MM/dd")+"','"+Request["apsqlno"]+"' ";
-            SQL += ",'" + Request["ap_cname"].ToBig5() + "','" + Request["ap_ename"].ToBig5() + "'," + Funcs.dbnull(Request["apply_date"]) + ",'" + Request["apply_no"] + "'";
-            SQL += "," + Funcs.dbnull(Request["issue_date"]) + ",'" + Request["issue_no"] + "'," + Funcs.dbnull(Request["appl_name"].ToBig5()) + ",'" + Request["agt_no"] + "'";
-	        SQL += ","+Funcs.dbnull(Request["open_date"])+",'"+Request["rej_no"]+"',"+Funcs.dbnull(Request["dmt_term1"])+"";
-	        SQL += ","+Funcs.dbnull(Request["dmt_term2"])+")";
+            SQL += ",'" + Request["ap_cname"].ToBig5() + "','" + Request["ap_ename"].ToBig5() + "'," + Util.dbnull(Request["apply_date"]) + ",'" + Request["apply_no"] + "'";
+            SQL += "," + Util.dbnull(Request["issue_date"]) + ",'" + Request["issue_no"] + "'," + Util.dbnull(Request["appl_name"].ToBig5()) + ",'" + Request["agt_no"] + "'";
+	        SQL += ","+Util.dbnull(Request["open_date"])+",'"+Request["rej_no"]+"',"+Util.dbnull(Request["dmt_term1"])+"";
+	        SQL += ","+Util.dbnull(Request["dmt_term2"])+")";
             conn.ExecuteNonQuery(SQL);
 	
 	        //新增接洽案件申請人檔

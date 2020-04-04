@@ -55,7 +55,7 @@
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
                 //組本所編號
-                page.pagedTable.Rows[i]["fseq"] = Sys.formatSeq(
+                page.pagedTable.Rows[i]["fseq"] = Funcs.formatSeq(
                     page.pagedTable.Rows[i].SafeRead("Bseq", "")
                     , page.pagedTable.Rows[i].SafeRead("Bseq1", "")
                     , ""

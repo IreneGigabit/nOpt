@@ -12,16 +12,10 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         
-        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
-        {
-            F_ap_country = SHtml.Option(cnn, "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code", "{coun_code}", "{coun_code}-{coun_c}");
-        }
-        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false))
-        {
-            F_con_code = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='H' order by cust_code", "{cust_code}", "{cust_code}---{code_name}");
-            F_dis_type = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Discount' order by cust_code", "{cust_code}", "{cust_code}---{code_name}");
-            F_pay_type = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Payment' order by cust_code", "{cust_code}", "{cust_code}---{code_name}");
-        }
+        F_ap_country = Funcs.getcountry().Option("{coun_code}", "{coun_code}-{coun_c}");
+        F_con_code = Funcs.getcust_code_mul("H","","cust_code").Option("{cust_code}", "{cust_code}---{code_name}");
+        F_dis_type = Funcs.getcust_code_mul("Discount","","cust_code").Option("{cust_code}", "{cust_code}---{code_name}");
+        F_pay_type = Funcs.getcust_code_mul("Payment","","cust_code").Option("{cust_code}", "{cust_code}---{code_name}");
         
         this.DataBind();
     }

@@ -6,12 +6,16 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
-   
+
+    protected string pr_per= "";
+  
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
         
+        pr_per = Funcs.getcust_code("Opr_per","","sortfld").Option("{cust_code}", "{code_name}");
+
         this.DataBind();
     }
 </script>
@@ -34,7 +38,7 @@
 		</td>
 		<td class="lightbluetable" width="10%" align="right" nowrap>承辦完成百分比 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT name="pr_per" id="pr_per" class="BLock"></SELECT>
+			<SELECT name="pr_per" id="pr_per" class="BLock"><%#pr_per%></SELECT>
 		</td>
 	</TR>
 	<Tr>
@@ -48,13 +52,14 @@
 <script language="javascript" type="text/javascript">
     var pr_form = {};
     pr_form.init = function () {
+        /*
         $("#pr_per").getOption({//承辦完成百分比
             url: "../ajax/_GetSqlData.aspx",
             data: { sql: "Select cust_code,code_name from cust_code where code_type='Opr_per' order by sortfld" },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}",
             showEmpty: false,
-        });
+        });*/
 
         pr_form.loadOpt();
         //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");

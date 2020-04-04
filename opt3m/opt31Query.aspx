@@ -190,7 +190,7 @@
     $(document).ajaxStop(function () { $.maskStop(); });
 
     $("#qryPr_scode").getOption({//爭議組承辦人員
-        url: "../ajax/LookupDataCnn.aspx?type=GetPrScode",
+        url: "../ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
         valueFormat: "{scode}",
         textFormat: "{scode}_{sc_name}"
     })

@@ -111,23 +111,23 @@
 		                    <input type=text name='DI1_apnum_##' class="Lock" style='color:black;' size=2 value='##.'>名稱或姓名：
 			            </TD>
 			            <TD class=sfont9>
-		                    <input TYPE=text ID="ttg3_mod_ap_ncname1_##" NAME="ttg3_mod_ap_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
+		                    <input TYPE=text ID="ttg3_mod_ap_ncname1_##" NAME="ttg3_mod_ap_ncname1_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
                             <br />
-                            <input TYPE=text id="ttg3_mod_ap_ncname2_##" NAME="ttg3_mod_ap_ncname2_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
+                            <input TYPE=text id="ttg3_mod_ap_ncname2_##" NAME="ttg3_mod_ap_ncname2_##" SIZE=60 MAXLENGTH=60 alt='『註冊人名稱』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
 			            </TD>
 		            </TR>
 		            <TR>
 			            <TD class=lightbluetable align=right>地　　　址：</TD>
 			            <TD class=sfont9>
 			            	<input TYPE=text id="ttg3_mod_ap_nzip_##" NAME="ttg3_mod_ap_nzip_##" SIZE=5 MAXLENGTH=5 class="PLock" />
-		                    <input TYPE=text id="ttg3_mod_ap_naddr1_##" NAME="ttg3_mod_ap_naddr1_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
-		                    <input TYPE=text id="ttg3_mod_ap_naddr2_##" NAME="ttg3_mod_ap_naddr2_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
+		                    <input TYPE=text id="ttg3_mod_ap_naddr1_##" NAME="ttg3_mod_ap_naddr1_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
+		                    <input TYPE=text id="ttg3_mod_ap_naddr2_##" NAME="ttg3_mod_ap_naddr2_##" SIZE=30 MAXLENGTH=60 alt='『註冊人地址』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
                        </TD>
 		            </TR>
 		            <TR>
 			            <TD class=lightbluetable align=right>代理人姓名：</TD>
 			            <TD class=sfont9>
-                            <input TYPE=text id="ttg3_mod_ap_ncrep_##" NAME="ttg3_mod_ap_ncrep_##" SIZE=20 MAXLENGTH=20 alt='『註冊人代理人』' onblur='fDataLen(this.value,this.maxlength,this.alt)' class="PLock">
+                            <input TYPE=text id="ttg3_mod_ap_ncrep_##" NAME="ttg3_mod_ap_ncrep_##" SIZE=20 MAXLENGTH=20 alt='『註冊人代理人』' onblur='fDataLen(this.value,this.maxLength,this.alt)' class="PLock">
                         </TD>
 		            </TR>
 	            </TFOOT>

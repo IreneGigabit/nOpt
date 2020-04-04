@@ -240,17 +240,4 @@ public class Sys
 			MailMsg.Dispose();//釋放訊息
         }
     }
-
-
-    /// <summary>  
-    /// 組本所編號
-    /// </summary>  
-    public static string formatSeq(string seq, string seq1, string country, string branch, string dept) {
-		string lseq = branch + dept + "-" + seq;
-		lseq += (seq1 != "_" ? ("-" + seq1) : "");
-		lseq += (country != "" ? (" " + country.ToUpper()) : "");
-		return lseq;
-	}
-
-
 }

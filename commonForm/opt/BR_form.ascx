@@ -9,17 +9,15 @@
     protected string case_no = "";
 
     protected string pr_branch = "";
-   
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
         submitTask = Request["submitTask"] ?? "";
 
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            pr_branch = SHtml.Option(conn, "select cust_code,code_name from cust_code where code_type='OBranch'", "{cust_code}", "{code_name}",false);
-        }
-        
+        pr_branch = Funcs.getcust_code("OBranch", "", "").Option("{cust_code}", "{code_name}", false);
+
         this.DataBind();
     }
 </script>
@@ -69,7 +67,7 @@
             setValue: "B"
         });*/
         $("#pr_scode").getOption({//爭議組承辦人員
-            url: "../ajax/LookupDataCnn.aspx?type=GetPrScode",
+            url: "../ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}"
         });

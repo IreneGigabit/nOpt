@@ -6,12 +6,17 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
-   
+
+    protected string send_cl = "", send_sel = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
-        
+
+        send_cl = Funcs.getcust_code_mul("SEND_CL","","").Option("{cust_code}", "{code_name}");
+        send_sel = Funcs.getcust_code_mul("SEND_SEL","","").Option("{cust_code}", "{code_name}");
+
         this.DataBind();
     }
 </script>
@@ -41,15 +46,15 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文對象 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl name=send_cl class="SLock"></SELECT>
+			<SELECT id=send_cl name=send_cl class="SLock"><%#send_cl%></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>單位副本 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl1 name=send_cl1  class="SLock"></SELECT>
+			<SELECT id=send_cl1 name=send_cl1  class="SLock"><%#send_cl%></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>官方號碼 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_sel name=send_sel class="SLock"></SELECT>
+			<SELECT id=send_sel name=send_sel class="SLock"><%#send_sel%></SELECT>
 		</td>
 	</TR>
 	<TR>
@@ -99,6 +104,7 @@
 <script language="javascript" type="text/javascript">
     var send_form = {};
     send_form.init = function () {
+        /*
         $("#send_cl,#send_cl1").getOption({//發文對象/單位副本
             url: "../ajax/_GetSqlDataBranch.aspx",
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_CL'" },
@@ -110,7 +116,7 @@
             data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_SEL'" },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}"
-        });
+        });*/
 
         send_form.loadOpt();
         //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
@@ -299,6 +305,10 @@
     //是否輸入評分
     $("input[name='score_flag']").click(function () {
         $("#tabQu").showFor$("input[name='score_flag']:checked").val()=="Y"();
+    });
+
+    $("#Send_Fees").blur(function () {
+        chkNum($(this).val(), "規費");
     });
 
     send_form.getcode_br_agt_no=function(){

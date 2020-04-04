@@ -413,7 +413,17 @@ td
 	color:white;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 3px 4px 3px 4px;
+    padding: 3px 4px 2px 4px;
+	background-color:#9966cc;
+	border: solid 1px;
+	border-color: #8df #009 #009 #8df;
+}
+.delbutton
+{
+	color:#fff;
+    cursor: pointer;
+	font: small 84% Verdana, Arial;
+    padding: 3px 4px 1px 4px;
 	background-color:#9966cc;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -422,7 +432,7 @@ input.cbutton {
 	color:#fff;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 3px 4px 3px 4px;
+    padding: 3px 4px 1px 4px;
 	background-color:#005599;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -443,7 +453,7 @@ input.ybutton {
 	color:#fff;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 3px 4px 3px 4px;
+    padding: 3px 4px 2px 4px;
 	background-color:#d80;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -454,7 +464,7 @@ input.rbutton {
 	color:#fff;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 3px 4px 3px 4px;
+    padding: 3px 4px 2px 4px;
 	background-color:#d20;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -466,7 +476,7 @@ input.redbutton
 	color:white;
     cursor: pointer;
 	font: small 84% Verdana, Arial;
-    padding: 3px 4px 3px 4px;
+    padding: 3px 4px 2px 4px;
 	background-color:#d00;
 	border: solid 1px;
 	border-color: #8df #009 #009 #8df;
@@ -571,20 +581,6 @@ td.seltab1
     TEXT-INDENT: 8pt;
     BACKGROUND-COLOR: aliceblue;
     TEXT-ALIGN: left
-}
-.delbutton
-{
-    BORDER-RIGHT: 1px solid;
-    BORDER-TOP: 1px solid;
-    PADDING-LEFT: 2px;
-    FONT-SIZE: 10pt;
-    BORDER-LEFT: 1px solid;
-    CURSOR: pointer;
-    COLOR: white;
-    LINE-HEIGHT: 10pt;
-    PADDING-TOP: 4px;
-    BORDER-BOTTOM: 1px solid;
-    BACKGROUND-COLOR: #9966cc
 }
 .data14
 {
@@ -946,11 +942,11 @@ input.btn5 {}
 .vGrp9 {}
 
 
-
+/*
 input[type=button]:disabled,input[type=button][disabled] {
     color: #666 !important;
     background: #cccccc !important;
-}
+}*/
 
 .errlog {
 	/*color:#ff0000;*/

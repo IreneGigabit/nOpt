@@ -4,7 +4,7 @@
 * Date: 2010-08-24 21:29
 * Revision: 0001
 */
-(function($) {
+(function ($) {
 	$.isDate = function(strDate) {
 		//alert(strDate);
 		if (strDate == null) return false;
@@ -13,6 +13,7 @@
 		var b = dt_reg.test(strDate);
 		var s1 = "-";
 		var s2 = "-";
+		//console.log(strDate,b);
 		if (b) {
 			var dareDec = dt_reg.exec(strDate);
 			s1 = dareDec[1];
@@ -24,8 +25,10 @@
 			else
 				b = true;
 		} else b = false;
+
 		if (b) {
-			var nndt = new Date(strDate.replace(/\D/g, "/"));
+		    //console.log(strDate, b);
+		    var nndt = new Date(strDate.replace(/\D/g, "/"));
 			var str2 = nndt.getFullYear() + s1 + (nndt.getMonth() + 1) + s2 + nndt.getDate();
 			//alert(str2);
 			b = false;

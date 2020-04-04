@@ -13,14 +13,16 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
 
         using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
-            tfy_oth_code = SHtml.Option(cnn, "SELECT branch,branchname FROM sysctrl.dbo.branch_code WHERE class = 'branch'", "{branch}", "{branch}_{branchname}");
+            tfy_oth_code = SHtml.Option(cnn, "SELECT branch,branchname FROM branch_code WHERE class = 'branch'", "{branch}", "{branch}_{branchname}");
         }
         using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
             F_tscode = SHtml.Option(connB, "select distinct scode,sc_name,scode1 from sysctrl.dbo.vscode_roles where branch='"+branch+"' and dept='T' and syscode='"+branch+"Tbrt' and roles='sales' order by scode1", "{scode}", "{sc_name}");
-            tfy_Ar_mark = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='ar_mark' and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)", "{cust_code}", "{code_name}");
-            tfy_source = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code", "{cust_code}", "({cust_code}---{code_name})");
+            //tfy_Ar_mark = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='ar_mark' and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)", "{cust_code}", "{code_name}");
+            //tfy_source = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code", "{cust_code}", "({cust_code}---{code_name})");
         }
-     
+        tfy_Ar_mark = Funcs.getcust_code_mul("ar_mark","and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)","").Option("{cust_code}", "{code_name}");
+        tfy_source = Funcs.getcust_code_mul("Source","AND cust_code<> '__' AND End_date is null","cust_code").Option("{cust_code}", "{cust_code}---{code_name}");
+
         this.DataBind();
     }
 </script>

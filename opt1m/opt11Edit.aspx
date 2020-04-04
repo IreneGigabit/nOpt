@@ -83,11 +83,6 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 </head>
-<script language="javascript" type="text/javascript">
-    //if (!(window.parent.tt === undefined)) {
-    //    window.parent.tt.rows = "20%,80%";
-    //}
-</script>
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -188,11 +183,9 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        //console.log("111");
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "20%,80%";
         }
-        //console.log("222");
         this_init();
     });
 

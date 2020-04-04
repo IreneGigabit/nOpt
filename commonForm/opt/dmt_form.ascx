@@ -7,20 +7,17 @@
     protected string opt_sqlno = "";
 
     protected string tfzy_country = "", tfzy_end_code = "";
-    
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
-      
-        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
-        {
-            tfzy_country = SHtml.Option(cnn, "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code", "{coun_code}", "{coun_code}-{coun_c}");
-        }
+
+        tfzy_country = Funcs.getcountry().Option("{coun_code}", "{coun_code}-{coun_c}");
         using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false))
         {
             tfzy_end_code = SHtml.Option(connB, "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld", "{chrelno}", "{chrelname}");
         }
-  
+
         this.DataBind();
     }
 </script>
