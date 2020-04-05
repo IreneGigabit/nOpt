@@ -10,10 +10,11 @@
 
 <script runat="server">
     protected string isql = "";
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
 
     protected void Page_Load(object sender, EventArgs e) {
-        Token myToken = new Token(prgid);
+        Token myToken = new Token(HTProgCode);
         myToken.CheckMe(false, true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {

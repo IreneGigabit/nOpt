@@ -11,13 +11,17 @@
 <%@ Register Src="~/commonForm/opt/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
 <%@ Register Src="~/commonForm/opt/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
 <%@ Register Src="~/commonForm/opt/upload_Form.ascx" TagPrefix="uc1" TagName="upload_Form" %>
-
+<%@ Register Src="~/commonForm/opt/Qu_form.ascx" TagPrefix="uc1" TagName="Qu_form" %>
+<%@ Register Src="~/commonForm/opt/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt31";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+
+    protected string btnEnd = "";
 
     protected string submitTask = "";
     protected string branch = "";
@@ -37,6 +41,10 @@
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
     protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
+    protected string show_qu_form = "N";//控制顯示品質評分欄位
+    protected string show_ap_form = "N";//控制顯示判行內容欄位
+    protected string word_show_flag = "N";//決定有沒有列印button
+    protected string sameap_flag = "N";//判行和承辦人員是否為同一人
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -47,19 +55,22 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
-        Back_flag = Request["Back_flag"] ?? "N";//退回flag
-        End_flag = Request["End_flag"] ?? "";//結辦flag(B)
+        Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
+        End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
 
         if (prgid == "opt31") {
             HTProgCap = "爭救案承辦內容維護";
+            End_flag = "N";
         } else if (prgid == "opt31_1") {
             HTProgCap = "爭救案結辦作業";
+            HTProgCode = "opt31";
+            End_flag = "Y";
         } else {
             HTProgCap = "爭救案承辦內容查詢";
             submitTask = "Q";
         }
 
-        Token myToken = new Token(prgid);
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             PageLayout();
@@ -68,21 +79,59 @@
     }
 
     private void PageLayout() {
-        //決定要不要隱藏案件主檔畫面
-        if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
+        //決定要不要顯示案件主檔畫面
+        if (",DO1,DI1,DR1,".IndexOf(","+Request["arcase"]+",")>-1) {
             dmt_show_flag = "N";
         }
+        
+        //決定有沒有列印button
+        if (",DO1,DI1,DR1,DE1,AD7".IndexOf(","+Request["arcase"]+",")>-1) {
+	        word_show_flag="Y";
+        }
 
+        //判行內容/品質評分欄位要不要顯示
+        if (End_flag == "Y") {
+            string dojob_scode = "";
+            using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false).Debug(Request["chkTest"] == "TEST")) {
+                string SQL = "select DISTINCT C.scode from scode_roles As C " +
+                "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' " +
+                "And C.prgid = 'opt31' " +
+                "Order By C.scode ";
+                object objResult = cnn.ExecuteScalar(SQL);
+                dojob_scode = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim().ToLower() : "";
+            }
+            //當為結案時,如果承辦人如為林雪貞
+            //則結辦後即可執行發文作業,
+            //所以判行須輸入的資料要出來
+            if (Sys.GetSession("scode").ToLower() == dojob_scode) {
+                //判行內容欄位要不要show的flag
+                show_ap_form = "Y";
+                //判行和承辦人員是否為同一人
+                sameap_flag = "Y";
+                //品質評分欄位要不要show的flag
+                using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
+                    string SQL = "select ref_code from cust_code where code_type='T92' and cust_code='" + Request["arcase"] + "'";
+                    object objResult = conn.ExecuteScalar(SQL);
+                    string ref_code = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim() : "";
+                    if (ref_code != "V")
+                        show_qu_form = "Y";
+                }
+            }
+        }
+   
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
+                if (prgid!="opt31_1") {//不是結辦
+                    btnEnd = "<a href=\"javascript:void(0);\" onclick=\"formSearchSubmit('U','opt31_1')\" >[結辦處理]</a>";
+                }
                 PLock = "false";
                 BLock = "false";
                 SLock = "false";
                 ALock = "false";
             }
         }
-
         if (submitTask != "Q") {
             if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
                 SELock = "false";
@@ -131,6 +180,7 @@
             <input type=button value ="區所交辦資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+            <%#btnEnd%>
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
@@ -146,6 +196,11 @@
     <input type="text" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
     <input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="text" id="dmt_show_flag" name="dmt_show_flag" value="<%=dmt_show_flag%>">
+	<input type="text" id="word_show_flag" name="word_show_flag" value="<%=word_show_flag%>">
+	<input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
+	<input type="text" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
+	<input type="text" id="progid" name="progid">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -200,6 +255,10 @@
                 <!--include file="../commonForm/opt/Send_form.ascx"--><!--發文資料-->
                 <uc1:upload_Form runat="server" ID="upload_Form" />
                 <!--include file="../commonForm/opt/upload_form.ascx"--><!--上傳文件-->
+                <uc1:Qu_form runat="server" ID="Qu_form" />
+                <!--include file="../commonForm/opt/Qu_form.ascx"--><!--品質評分-->
+                <uc1:AP_form runat="server" ID="AP_form" />
+                <!--include file="../commonForm/opt/AP_form.ascx"--><!--判行資料-->
             </div>
         </td>
     </tr>
@@ -239,6 +298,9 @@
         $("input.dateField").datepick();
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
+        $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
+
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
@@ -294,6 +356,8 @@
         pr_form.init();
         send_form.init();
         upload_form.init();
+        qu_form.init();
+        ap_form.init();
    }
 
     // 切換頁籤

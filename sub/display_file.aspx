@@ -70,12 +70,13 @@
             }
         } else {
             //Response.Write("file_path="+file_path+"<HR>");
+            //Response.Write("folder_name="+folder_name+"<HR>");
             //Response.Write("file_name="+file_name+"<HR>");
             //Response.End();
 
             if (chkFolderExist(file_path)) {
-                if (chkFileExist(file_path + "/" + file_name)) {
-                    show_photo(file_path + "/" + file_name);
+                if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
+                    show_photo(file_path + "/" + folder_name + "/" + file_name);
                 } else {
                     error_msg("圖檔");
                 }

@@ -10,7 +10,8 @@
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt11";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
     protected string submitTask = "";
@@ -36,7 +37,7 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
 
-        Token myToken = new Token(prgid);
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             PageLayout();
@@ -156,7 +157,7 @@
 	    <Tr>
 		    <TD align=center class=lightbluetable width="18%"><font color="red">退回原因</font></TD>
 		    <TD class=lightbluetable>
-			    <textarea ROWS="5" COLS="82%" align="left" id=Preject_reason name=Preject_reason ></textarea>
+			    <textarea ROWS="5" style="width:82%" align="left" id=Preject_reason name=Preject_reason ></textarea>
 		    </TD>
 	    </tr>
     </table>

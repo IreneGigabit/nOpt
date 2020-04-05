@@ -95,7 +95,7 @@
 	<Tr>
 		<td class="lightbluetable" align="right">工作說明 :</td>
 		<TD class=lightbluetable colspan=3>
-			<textarea ROWS="6" COLS="90%" id=remark name="remark" class="RLock"></textarea>
+			<textarea ROWS="6" style="width:90%" id=remark name="remark" class="RLock"></textarea>
 		</TD>
 	</tr>
 </table>

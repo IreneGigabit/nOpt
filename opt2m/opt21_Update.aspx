@@ -7,7 +7,8 @@
 <script runat="server">
     protected string HTProgCap = "主管分案作業‧-入檔";//功能名稱
     protected string HTProgPrefix = "opt21";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
     protected string SQL = "";
@@ -30,8 +31,8 @@
         branch = Request["branch"];
         opt_sqlno = Request["opt_sqlno"];
         submitTask = Request["submitTask"];
-        
-        Token myToken = new Token(prgid);
+
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             if (submitTask == "U") {

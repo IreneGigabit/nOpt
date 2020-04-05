@@ -7,7 +7,8 @@
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt31";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
     protected string submitTask = "";
@@ -29,19 +30,21 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
         Back_flag = Request["Back_flag"] ?? "N";//退回flag
-        End_flag = Request["End_flag"] ?? "";//結辦flag(B)
+        End_flag = Request["End_flag"] ?? "N";//結辦flag(B)
 
         if (submitTask == "ADD") HTProgCap += "‧<b style='color:Red'>新增</b>";
         if (prgid == "opt31") {
             HTProgCap = "爭救案承辦內容維護";
         } else if (prgid == "opt31_1") {
             HTProgCap = "爭救案結辦作業";
+            HTProgCode = "opt31";
+            End_flag = "Y";
         } else {
             HTProgCap = "爭救案承辦內容查詢";
             submitTask = "Q";
         }
-        
-        Token myToken = new Token(prgid);
+
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             QueryPageLayout();

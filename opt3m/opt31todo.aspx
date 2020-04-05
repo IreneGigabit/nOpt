@@ -8,7 +8,8 @@
 <script runat="server">
     protected string HTProgCap = "爭救案進度查詢";//HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt31";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
     protected string SQL = "";
@@ -31,7 +32,7 @@
         fseq = Request["fseq"] ?? "";
         scode_name = Request["scode_name"] ?? "";
 
-        Token myToken = new Token(prgid);
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             json_data = QueryData();

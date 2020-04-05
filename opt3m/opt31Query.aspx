@@ -4,7 +4,8 @@
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt31";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
     protected string qryPr_scode = "";
@@ -14,7 +15,7 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        Token myToken = new Token(prgid);
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             QueryPageLayout();

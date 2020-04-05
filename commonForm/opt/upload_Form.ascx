@@ -158,6 +158,9 @@
             $("#tr_opt_attach_" + tfilenum).remove();
             $("#" + fld + "_filenum").val(Math.max(0, tfilenum - 1));
             $("#" + fld + "_sqlnum").val(Math.max(0, tsqlnum - 1));
+        } else {
+            //檔案已存在要刪除
+            //upload_form.DelOptAttach(tfilenum);
         }
     }
 
@@ -175,10 +178,43 @@
             "&source_name=" + fld + "_source_name_" + nRow +
             "&desc=" + fld + "_desc_" + nRow;
         window.open(url, "", "width=700 height=600 top=50 left=50 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+        //先判斷原本資料是否有attach_sqlno,若有表示修改,若沒有表示新增
+        if ($("#" + fld + "_attach_sqlno_" + nRow).val() != "") {
+            $("#" + fld + "_dbflag_" + nRow).val("U");
+        } else {
+            $("#" + fld + "_dbflag_" + nRow).val("A");
+        }
     }
 
     upload_form.DelOptAttach = function (nRow) {
-        window.open($("#open_path_" + nRow).val());
+        var fld = $("#opt_uploadfield").val();
+        var popt_no = $("#opt_no").val().Left(4);
+        var topt_no = $("#opt_no").val().substr(4);
+        var tfolder = "attach" + "/" + popt_no + "/" + topt_no;
+
+        if ($("#" + fld + "_name_" + nRow).val() == "") {
+            return false;
+        }
+        if (confirm("確定刪除上傳附件？")) {
+            var url = "../sub/del_draw_file.aspx?type=doc&folder_name=" + tfolder + "&draw_file=" + $("#" + fld + "_" + nRow).val() +
+                "&btnname=btn" + fld + "_" + nRow + "&form_name=" + fld + "_" + nRow;
+            window.open(url, "myWindowOne1", "width=700 height=600 top=10 left=10 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbar=no");
+            //window.open(url, "myWindowOne1", "width=1 height=1 top=1000 left=1000 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbar=no");
+            $("#" + fld + "_doc_type" + nRow).val("");
+            $("#" + fld + "_name_" + nRow).val("");
+            $("#" + fld + "_desc_" + nRow).val("");
+            $("#" + fld + "_" + nRow).val("");
+            $("#" + fld + "_size_" + nRow).val("");
+            $("#" + fld + "_path_" + nRow).val("");
+            $("#" + fld + "_add_date_" + nRow).val("");
+            $("#" + fld + "_add_scode_" + nRow).val("");
+            $("#" + fld + "_source_name_" + nRow).val("");
+            //$("#btn" + fld + "_" + nRow).prop("disabled", false);
+            //當刪除時,修改DBflag = 'D'
+            $("#" + fld + "_dbflag_" + nRow).val("D");
+        } else {
+            $("#" + fld + "_desc_" + nRow).focus();
+        }
     }
 
     upload_form.PreviewOptAttach = function (nRow) {

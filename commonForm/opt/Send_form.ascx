@@ -304,7 +304,7 @@
 
     //是否輸入評分
     $("input[name='score_flag']").click(function () {
-        $("#tabQu").showFor$("input[name='score_flag']:checked").val()=="Y"();
+        $("#tabQu").showFor($("input[name='score_flag']:checked").val()=="Y");
     });
 
     $("#Send_Fees").blur(function () {

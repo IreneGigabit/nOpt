@@ -4,7 +4,8 @@
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"] ?? "爭救案區所交辦資料複製";//功能名稱
     protected string HTProgPrefix = HttpContext.Current.Request["prgid"] ?? "";//程式檔名前綴
-    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
     protected string SQL = "";
 
@@ -36,7 +37,7 @@
         qopt_no = (Request["qopt_no"] ?? "").Trim();
         qBr = (Request["qBr"] ?? "").Trim();//N代表區所交辦　//Y代表自行分案
 
-        Token myToken = new Token(prgid);
+        Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             PageLayout();
