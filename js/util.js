@@ -15,6 +15,13 @@ function getRootDir() {
     return postPath;
 }
 
+//串接欄位的值
+function getValueStr(selector, symbol) {
+    return $(selector).map(function () {
+        return $(this).val();
+    }).get().join(symbol);
+}
+
 /*ajax function(get)*/
 function ajaxByGet(url, param) {
     return $.ajax({
