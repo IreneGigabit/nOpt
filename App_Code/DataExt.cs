@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Web;
 using System.Data;
 using System.Data.SqlClient;
@@ -557,6 +558,17 @@ public static class DataExt
     */
     #endregion
 
+    #region RequestForm 擴展
+    public static Dictionary<string, string> ToDictionary(this NameValueCollection col) {
+        var dict = new Dictionary<string, string>();
+
+        foreach (var key in col.Keys) {
+            dict.Add(key.ToString(), col[key.ToString()].ToBig5().Trim());
+        }
+
+        return dict;
+    }
+    #endregion
 }
 
 

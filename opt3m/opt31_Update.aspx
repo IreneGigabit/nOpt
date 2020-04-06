@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -12,31 +12,50 @@
     protected int HTProgRight = 0;
 
     protected string SQL = "";
-    protected string strConnB = "";
     protected string msg = "";
 
-    protected string case_no = "";
-    protected string branch = "";
-    protected string opt_sqlno = "";
-    protected string submitTask = "";
+    string case_no = "";
+    string branch = "";
+    string opt_no = "";
+    string opt_sqlno = "";
+    string submitTask = "";
+    string Reportp = "";
+    string end_flag = "";
+    string sameap_flag = "";
+    //交辦資料
+    string Arcase = "";
 
+    string Pmod_ap = "N";//預設N
+    string Pmod_pul = "N";//預設N
+    string Pmod_aprep = "N";//預設N
+    string Pmod_claim1 = "N";//預設N
+    string Pmod_class = "N";//預設N
+    string Pmod_dmt = "N";//預設N
+    
+    protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
+    
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        strConnB = Conn.OptB(Request["branch"]);
-
-        case_no = Request["case_no"];
-        branch = Request["branch"];
-        opt_sqlno = Request["opt_sqlno"];
-        submitTask = Request["submitTask"];
-
+        case_no=(Request["case_no"]??"").Trim();
+        branch=(Request["Branch"]??"").Trim();
+        opt_no=(Request["opt_no"]??"").Trim();
+        opt_sqlno=(Request["opt_sqlno"]??"").Trim();
+        submitTask=(Request["submittask"]??"").Trim();
+        end_flag=(Request["End_flag"]??"").Trim();
+        sameap_flag=(Request["sameap_flag"]??"").Trim();
+        //交辦資料
+        Arcase=(Request["tfy_Arcase"]??"").Trim();
+   
+        ReqVal=Request.Form.ToDictionary();
+        
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
             if (submitTask == "U" || submitTask == "P") {//承辦結辦/列印
-                doConfirm();//分案確認
+                doConfirm();
             } else if (submitTask == "B") {//退回分案
                 doBack();
             }
@@ -48,44 +67,115 @@
     private void doConfirm() {
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
-            //抓前一todo的流水號
-            string pre_sqlno = "";
-            SQL = "Select max(sqlno) as maxsqlno from todo_opt ";
-            SQL += "where syscode='" + Session["Syscode"] + "' ";
-            SQL += "and apcode='opt11' and opt_sqlno='" + opt_sqlno + "' ";
-            SQL += "and dowhat='BR' ";
-            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                if (dr.Read()) {
-                    pre_sqlno = dr.SafeRead("maxsqlno", "");
-                }
-            }
-        
-            SQL = "update br_opt set in_scode='" + Session["scode"] + "'";
-            SQL += ",in_date='" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
-            SQL += ",last_date='" + Request["dfy_last_date"] + "'";
-            SQL += ",ctrl_date='" + Request["ctrl_date"] + "'";
-            SQL += ",pr_branch='" + Request["pr_branch"] + "'";
-            SQL += ",pr_scode='" + Request["pr_scode"] + "'";
-            SQL += ",br_remark='" + Request["Br_remark"].ToBig5() + "'";
-            SQL += ",stat_code='NN'";
-            SQL += " where opt_sqlno='" + opt_sqlno + "'";
-            conn.ExecuteNonQuery(SQL);
+            Del_opttranlist(conn);//刪除案件異動明細檔
 
-            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "'";
-            SQL += ",resp_date=getdate()";
-            SQL += ",job_status='YY'";
-            SQL += " where apcode='opt11' and opt_sqlno='" + opt_sqlno + "'";
-            SQL += " and dowhat='BR' and syscode='" + Session["Syscode"] + "' ";
-            SQL += " and sqlno=" + pre_sqlno;
-            conn.ExecuteNonQuery(SQL);
-    
-            //入流程控制檔
-            SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no ";
-            SQL += ",in_scode,in_date,dowhat,job_status) values ( ";
-            SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
-            SQL += ",'" + Session["scode"] + "',getdate(),'PR','NN')";
-            conn.ExecuteNonQuery(SQL);
-            
+            if (Arcase == "DO1" || Arcase == "DI1" || Arcase == "DR1") {//申請異議，評定，廢止
+                string P1mod_pul = "N", P2mod_pul = "N", P3mod_pul = "N", P4mod_pul = "N";
+                if (ReqVal["P1mod_pul_new_no"] != "" || ReqVal["P1mod_pul_ncname1"] != "" || ReqVal["P1mod_pul_mod_type"] != "") {
+                    P1mod_pul = "Y";
+                    insert_opttranlist(conn, "mod_pul", "1");
+                }
+                if (ReqVal["P2mod_pul_mod_type"] != "") {
+                    P2mod_pul = "Y";
+                    insert_opttranlist(conn, "mod_pul", "2");
+                }
+                if (ReqVal["P3mod_pul_new_no"] != "" || ReqVal["P3mod_pul_mod_dclass"] != "" || ReqVal["P3mod_pul_mod_type"] != "") {
+                    P3mod_pul = "Y";
+                    insert_opttranlist(conn, "mod_pul", "3");
+                }
+                if (ReqVal["P4mod_pul_new_no"] != "" || ReqVal["P4mod_pul_mod_dclass"] != "" || ReqVal["P4mod_pul_ncname1"] != "" || ReqVal["P4mod_pul_mod_type"] != "") {
+                    P4mod_pul = "Y";
+                    insert_opttranlist(conn, "mod_pul", "4");
+                }
+                if (P1mod_pul == "Y" || P2mod_pul == "Y" || P3mod_pul == "Y" || P4mod_pul == "Y") {
+                    Pmod_pul = "Y";
+                }
+
+                if (ReqVal["Pmod_dmt_ncname1"] != "" || ReqVal["Pmod_dmt_ncname2"] != "" || ReqVal["Pmod_dmt_nename1"] != "" || ReqVal["mod_dmt_nename2"] != "" || ReqVal["Pmod_dmt_ncrep"] != "") {
+                    Pmod_dmt = "Y";
+                    insert_opttranlist(conn, "mod_dmt", "");
+                }
+                Request.Form.ToDictionary();
+
+                if (Arcase == "DR1") {//廢止
+                    //2012/10/5因應2012/7/1新申請書增加商標違法說明
+                    if (ReqVal["Pmod_claim1_ncname1"] != "") {
+                        Pmod_claim1 = "Y";
+                        insert_opttranlist(conn, "mod_claim1", "");
+                    }
+                    if (ReqVal["Pmod_class_ncname1"] != "" || ReqVal["Pmod_class_ncname2"] != "" || ReqVal["Pmod_class_nename1"] != "" || ReqVal["Pmod_class_nename2"] != "" || ReqVal["Pmod_class_ncrep"] != "") {
+                        Pmod_class = "Y";
+                        insert_opttranlist(conn, "mod_class", "");
+                    }
+                    //被異議人資料
+                    if (ReqVal["DR1_apnum"] == "") ReqVal["DR1_apnum"] = "0";
+                    if (Convert.ToInt32(ReqVal["DR1_apnum"]) > 0) {
+                        for (int k = 1; k <= Convert.ToInt32(ReqVal["DR1_apnum"]); k++) {
+                            SQL = "INSERT INTO opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,ncname2,ncrep,nzip,naddr1,naddr2";
+                            SQL += ") VALUES('" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_ap',";
+                            SQL += "'" + ReqVal["ttg1_mod_ap_ncname1_" + k] + "','" + ReqVal["ttg1_mod_ap_ncname2_" + k] + "',";
+                            SQL += "'" + ReqVal["ttg1_mod_ap_ncrep_" + k] + "','" + ReqVal["ttg1_mod_ap_nzip_" + k] + "',";
+                            SQL += "'" + ReqVal["ttg1_mod_ap_naddr1_" + k] + "','" + ReqVal["ttg1_mod_ap_naddr2_" + k] + "')";
+                            conn.ExecuteNonQuery(SQL);
+                        }
+                        Pmod_ap = "Y";
+                    }
+                } else if (Arcase == "DI1") {//評定
+                    if (ReqVal["Pmod_aprep_mod_count"] != "") {
+                        Pmod_aprep = "Y";
+                        insert_opttranlist(conn, "mod_aprep", ReqVal["Pmod_aprep_mod_count"]);
+                    }
+                    //被異議人資料
+                    if (ReqVal["DI1_apnum"] == "") ReqVal["DI1_apnum"] = "0";
+                    if (Convert.ToInt32(ReqVal["DI1_apnum"]) > 0) {
+                        for (int k = 1; k <= Convert.ToInt32(ReqVal["DI1_apnum"]); k++) {
+                            SQL = "INSERT INTO opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,ncname2,ncrep,nzip,naddr1,naddr2";
+                            SQL += ") VALUES('" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_ap',";
+                            SQL += "'" + ReqVal["ttg3_mod_ap_ncname1_" + k] + "','" + ReqVal["ttg3_mod_ap_ncname2_" + k] + "',";
+                            SQL += "'" + ReqVal["ttg3_mod_ap_ncrep_" + k] + "','" + ReqVal["ttg3_mod_ap_nzip_" + k] + "',";
+                            SQL += "'" + ReqVal["ttg3_mod_ap_naddr1_" + k] + "','" + ReqVal["ttg3_mod_ap_naddr2_" + k] + "')";
+                            conn.ExecuteNonQuery(SQL);
+                        }
+                        Pmod_ap = "Y";
+                    }
+                } else if (Arcase == "DO1") {//異議
+                    if (ReqVal["Pmod_aprep_mod_count"] != "") {
+                        Pmod_aprep = "Y";
+                        insert_opttranlist(conn, "mod_aprep", ReqVal["Pmod_aprep_mod_count"]);
+                    }
+                    //被異議人資料
+                    if (ReqVal["DO1_apnum"] == "") ReqVal["DO1_apnum"] = "0";
+                    if (Convert.ToInt32(ReqVal["DO1_apnum"] ?? "0") > 0) {
+                        for (int k = 1; k <= Convert.ToInt32(ReqVal["DO1_apnum"]); k++) {
+                            SQL = "INSERT INTO opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,ncname2,ncrep,nzip,naddr1,naddr2";
+                            SQL += ") VALUES('" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_ap',";
+                            SQL += "'" + ReqVal["ttg2_mod_ap_ncname1_" + k] + "','" + ReqVal["ttg2_mod_ap_ncname2_" + k] + "',";
+                            SQL += "'" + ReqVal["ttg2_mod_ap_ncrep_" + k] + "','" + ReqVal["ttg2_mod_ap_nzip_" + k] + "',";
+                            SQL += "'" + ReqVal["ttg2_mod_ap_naddr1_" + k] + "','" + ReqVal["ttg2_mod_ap_naddr2_" + k] + "')";
+                            conn.ExecuteNonQuery(SQL);
+                        }
+                        Pmod_ap = "Y";
+                    }
+                }
+                update_optdetail(conn);
+                Update_opttran(conn);
+
+            } else if (Arcase == "DE1" || Arcase == "AD7" || Arcase == "DE2" || Arcase == "AD8") {//申請聽證,出席聽證
+                update_optdetail(conn);
+                Update_opttran(conn);
+                if (Arcase == "DE1" || Arcase == "AD7") {
+                    //新增對照當事人資料
+                    if (ReqVal["de1_apnum"] == "") ReqVal["de1_apnum"] = "0";
+                    for (int k = 1; k <= Convert.ToInt32(ReqVal["de1_apnum"] ?? "0"); k++) {
+                        SQL = "insert into opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,naddr1) values (";
+                        SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_client','" + ReqVal["tfr4_ncname1_" + k] + "','" + ReqVal["tfr4_naddr1_" + k] + "')";
+                        conn.ExecuteNonQuery(SQL);
+                    }
+                }
+            } else {
+                update_optdetail(conn);
+                Update_opttran(conn);
+            }
             //conn.Commit();
             conn.RollBack();
             msg = "分案成功";
@@ -127,7 +217,7 @@
             }
 
             SQL = "update todo_opt set approve_scode='" + Session["scode"] + "' ";
-            SQL += ",approve_desc='" + Request["Preject_reason"].ToBig5() + "' ";
+            SQL += ",approve_desc='" + ReqVal["Preject_reason"] + "' ";
             SQL += ",resp_date=getdate() ";
             SQL += ",job_status='XX' ";
             SQL += " where apcode='opt21' and opt_sqlno='" + opt_sqlno + "' ";
@@ -139,11 +229,10 @@
             SQL = " insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,Branch";
             SQL += ",case_no,in_scode,in_date,dowhat,job_status) values (";
             SQL += "'" + pre_sqlno + "','" + Session["syscode"] + "','opt11'," + opt_sqlno + ",'" + branch + "'";
-            SQL += "'" + Request["case_no"] + "','" + Session["scode"] + "',getdate(),'BR','NN')";
+            SQL += "'" + case_no + "','" + Session["scode"] + "',getdate(),'BR','NN')";
             conn.ExecuteNonQuery(SQL);
 
             //conn.Commit();
-            //connB.Commit();
             conn.RollBack();
             msg = "退回成功";
         }
@@ -156,6 +245,116 @@
         finally {
             conn.Dispose();
         }
+    }
+    
+    
+ //交辦內容opt_detail
+    private void update_optdetail(DBHelper conn) {
+        SQL = "Update opt_detail set ";
+        SQL += " Cappl_name=" + Util.dbnull(ReqVal["PCappl_name"]) + "";
+        SQL += ",Eappl_name=" + Util.dbnull(ReqVal["PEappl_name"]) + "";
+        SQL += ",Jappl_name=" + Util.dbnull(ReqVal["PJappl_name"]) + "";
+        SQL += ",Zappl_name1=" + Util.dbnull(ReqVal["PZappl_name1"]) + "";
+        SQL += ",Draw=" + Util.dbnull(ReqVal["PDraw"]) + "";
+        SQL += ",Remark3='" + ReqVal["Remark3"] + "'";
+        SQL += ",Mark=" + Util.dbnull(ReqVal["PMark"]) + "";
+        SQL += " where opt_sqlno='" + opt_sqlno + "'";
+        conn.ExecuteNonQuery(SQL);
+    }
+
+//案件異動檔opt_tran
+    private void Update_opttran(DBHelper conn) {
+        SQL = "Update opt_tran set ";
+        SQL += " agt_no1=" + Util.dbnull(ReqVal["Pagt_no1"]) + "";
+        SQL += ",mod_ap=" + Util.dbnull(ReqVal["Pmod_ap"]) + "";
+        SQL += ",mod_aprep=" + Util.dbnull(ReqVal["Pmod_aprep"]) + "";
+        SQL += ",mod_claim1=" + Util.dbnull(ReqVal["Pmod_claim1"]) + "";
+        SQL += ",mod_pul=" + Util.dbnull(ReqVal["Pmod_pul"]) + "";
+        SQL += ",mod_dmt=" + Util.dbnull(ReqVal["Pmod_dmt"]) + "";
+        SQL += ",mod_class=" + Util.dbnull(ReqVal["Pmod_class"]) + "";
+        SQL += ",tran_remark1='" + ReqVal["Ptran_remark1"] + "'";
+        SQL += ",tran_remark2='" + ReqVal["Ptran_remark2"] + "'";
+        SQL += ",tran_remark3='" + ReqVal["Ptran_remark3"] + "'";
+        SQL += ",tran_remark4='" + ReqVal["Ptran_remark4"] + "'";
+        SQL += ",other_item='" + ReqVal["Pother_item"] + "'";
+        SQL += ",other_item1='" + ReqVal["Pother_item1"] + "'";
+        SQL += ",other_item2='" + ReqVal["Pother_item2"] + "'";
+        SQL += ",tran_mark='" + ReqVal["Ptran_mark"] + "'";
+        SQL += " where opt_sqlno='" + opt_sqlno + "'";
+        conn.ExecuteNonQuery(SQL);
+    }
+       
+    //案件異動名細檔opt_tranlist
+    private void insert_opttranlist(DBHelper conn, string Pfield, string pno) {
+        if (Pfield == "mod_ap") {
+        } else if (Pfield == "mod_pul") {
+            if (pno == "1") {
+                SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+                SQL += ",mod_field,new_no,ncname1,mod_type";
+                SQL += ") values (";
+                SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+                SQL += ",'" + Pfield + "','" + ReqVal["P1mod_pul_new_no"] + "','" + ReqVal["P1mod_pul_ncname1"] + "'";
+                SQL += ",'" + ReqVal["P1mod_pul_mod_type"] + "')";
+            } else if (pno == "2") {
+                SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+                SQL += ",mod_field,mod_type";
+                SQL += ") values (";
+                SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+                SQL += ",'" + Pfield + "','" + ReqVal["P2mod_pul_mod_type"] + "')";
+            } else if (pno == "3") {
+                SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+                SQL += ",mod_field,mod_type,new_no,mod_dclass";
+                SQL += ") values (";
+                SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+                SQL += ",'" + Pfield + "','" + ReqVal["P3mod_pul_mod_type"] + "','" + ReqVal["P3mod_pul_new_no"] + "','" + ReqVal["P3mod_pul_mod_dclass"] + "')";
+            } else if (pno == "4") {
+                SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+                SQL += ",mod_field,mod_type,new_no,mod_dclass,ncname1";
+                SQL += ") values (";
+                SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+                SQL += ",'" + Pfield + "','" + ReqVal["P4mod_pul_mod_type"] + "','" + ReqVal["P4mod_pul_new_no"] + "','" + ReqVal["P4mod_pul_mod_dclass"] + "'";
+                SQL += ",'" + ReqVal["P4mod_pul_ncname1"] + "')";
+            }
+            conn.ExecuteNonQuery(SQL);
+        } else if (Pfield == "mod_claim1") {
+            SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+            SQL += ",mod_field,ncname1";
+            SQL += ") values (";
+            SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+            SQL += ",'" + Pfield + "','" + ReqVal["Pmod_claim1_ncname1"] + "')";
+            conn.ExecuteNonQuery(SQL);
+        } else if (Pfield == "mod_aprep") {
+            for (int i = 1; i <= Convert.ToInt32(pno); i++) {
+                SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+                SQL += ",mod_field,mod_count,ncname1,new_no";
+                SQL += ") values (";
+                SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+                SQL += ",'" + Pfield + "'," + Util.dbnull(pno) + ",'" + ReqVal["Pmod_aprep_ncname1" + i] + "'";
+                SQL += ",'" + ReqVal["Pmod_aprep_new_no" + i] + "'";
+                conn.ExecuteNonQuery(SQL);
+            }
+        } else if (Pfield == "mod_dmt") {
+            SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+            SQL += ",mod_field,ncname1,ncname2,nename1,nename2";
+            SQL += ",ncrep) values (";
+            SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+            SQL += ",'" + Pfield + "','" + ReqVal["Pmod_dmt_ncname1"] + "','" + ReqVal["Pmod_dmt_ncname2"] + "'";
+            SQL += ",'" + ReqVal["Pmod_dmt_nename1"] + "','" + ReqVal["Pmod_dmt_nename2"] + "','" + ReqVal["Pmod_dmt_ncrep"] + "')";
+            conn.ExecuteNonQuery(SQL);
+        } else if (Pfield == "mod_class") {
+            SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
+            SQL += ",mod_field,ncname1,ncname2,nename1,nename2";
+            SQL += ",ncrep) values (";
+            SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
+            SQL += ",'" + Pfield + "','" + ReqVal["Pmod_class_ncname1"] + "','" + ReqVal["Pmod_class_ncname2"] + "'";
+            SQL += ",'" + ReqVal["Pmod_class_nename1"] + "','" + ReqVal["Pmod_class_nename2"] + "','" + ReqVal["Pmod_class_ncrep"] + "')";
+            conn.ExecuteNonQuery(SQL);
+        }
+    }
+	
+    private void Del_opttranlist(DBHelper conn) {
+        string SQL = "Delete opt_tranlist where opt_sqlno='" + opt_sqlno + "'";
+        conn.ExecuteNonQuery(SQL);
     }
 </script>
 

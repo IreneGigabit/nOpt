@@ -165,7 +165,7 @@ public class Token
         if (!_Passworded) url = "Login.aspx";
 
         StringBuilder strOut = new StringBuilder();
-        strOut.AppendLine("<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>");
+        strOut.AppendLine("<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf8'>");
         strOut.AppendLine("<script type='text/javascript'>");
         strOut.AppendLine("alert('" + strMsg.Replace("'", "\\'") + "'); ");
         strOut.AppendLine("if (typeof(window.opener)!='undefined'){");

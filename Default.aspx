@@ -135,7 +135,7 @@
 </script>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
     <meta http-equiv="x-ua-compatible" content="IE=9">
     <title></title>
     <link href="inc/setstyle.css" rel="stylesheet" />
