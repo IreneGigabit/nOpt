@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="di1_form" %>
+<%@ Control Language="C#" ClassName="di1_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -164,6 +164,7 @@
             <input type="checkbox" name="Pother_item1_1" value="I" class="PLock">註冊
             <input type="checkbox" name="Pother_item1_1" value="R" class="PLock">延展註冊時 商標法
             <input TYPE=text NAME=Pother_item1_2 id=Pother_item1_2 SIZE=30 MAXLENGTH=50 class="PLock">
+            <input type="hidden" id="Pother_item1" name="Pother_item1">
 		</td>
 	</tr>
 	<tr>
@@ -242,7 +243,7 @@
 		<TD class=whitetablebg colspan=7>
             本案與<input TYPE=text id=Pitem1 NAME=Pitem1 SIZE=10 MAXLENGTH=10 class="dateField PLock">
             (年/月/日)註冊第<input type="text" id="Pitem2" name="Pitem2" SIZE=10 class="PLock">號<input type="text" id="Pitem3" name="Pitem3" SIZE=10 class="PLock">案有關
-            <input type="hidden" name="Pother_item">
+            <input type="hidden" id="Pother_item" name="Pother_item">
 		</TD>
 	</TR>
 	<tr>
