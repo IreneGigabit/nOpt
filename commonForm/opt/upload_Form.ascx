@@ -83,6 +83,7 @@
     var upload_form = {};
     upload_form.init = function () {
         upload_form.getOptattach("<%=uploadfield%>");
+        $(".delcol").showFor($("#submittask").val() == "D");
     }
 
     upload_form.getOptattach = function (fld) {
