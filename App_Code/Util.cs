@@ -347,6 +347,14 @@ public static class Util
     }
     #endregion
 
+    #region dbzero - 寫入db用,若是空白則回傳0,否則回傳數值
+    public static string dbzero(string iStr) {
+        if (iStr == null || iStr == "") return "0";
+
+        return iStr;
+    }
+    #endregion
+
     #region fRound - 四捨五入
     /// <summary>  
     /// 四捨五入

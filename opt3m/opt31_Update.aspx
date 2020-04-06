@@ -176,6 +176,16 @@
                 update_optdetail(conn);
                 Update_opttran(conn);
             }
+
+            upin_attach_opt(opt_sqlno, "PR");
+	        update_bropt(conn);
+	        if(end_flag=="Y"){//結辦
+		        update_bropt_end(conn);
+            }
+	        if(sameap_flag=="Y"){
+		        update_bropt_ap(conn);
+	        }
+        
             //conn.Commit();
             conn.RollBack();
             msg = "分案成功";
@@ -248,7 +258,7 @@
     }
     
     
- //交辦內容opt_detail
+    //交辦內容opt_detail
     private void update_optdetail(DBHelper conn) {
         SQL = "Update opt_detail set ";
         SQL += " Cappl_name=" + Util.dbnull(ReqVal["PCappl_name"]) + "";
@@ -262,7 +272,7 @@
         conn.ExecuteNonQuery(SQL);
     }
 
-//案件異動檔opt_tran
+    //案件異動檔opt_tran
     private void Update_opttran(DBHelper conn) {
         SQL = "Update opt_tran set ";
         SQL += " agt_no1=" + Util.dbnull(ReqVal["Pagt_no1"]) + "";
@@ -356,6 +366,128 @@
         string SQL = "Delete opt_tranlist where opt_sqlno='" + opt_sqlno + "'";
         conn.ExecuteNonQuery(SQL);
     }
+
+    private void update_bropt(DBHelper conn) {
+        SQL = "update br_opt set pr_hour=" + Util.dbzero(ReqVal["pr_hour"]) + "";
+        SQL += ",pr_per=" + Util.dbzero(ReqVal["pr_per"]) + "";
+        SQL += ",pr_date=" + Util.dbnull(ReqVal["pr_date"]) + "";
+        SQL += ",pr_remark='" + ReqVal["pr_remark"] + "'";
+        SQL += ",send_dept=" + Util.dbnull(ReqVal["send_dept"]) + "";
+        SQL += ",mp_date=" + Util.dbnull(ReqVal["mp_date"]) + "";
+        SQL += ",GS_date=" + Util.dbnull(ReqVal["GS_date"]) + "";
+        SQL += ",Send_cl=" + Util.dbnull(ReqVal["Send_cl"]) + "";
+        SQL += ",Send_cl1=" + Util.dbnull(ReqVal["Send_cl1"]) + "";
+        SQL += ",Send_Sel=" + Util.dbnull(ReqVal["Send_Sel"]) + "";
+        SQL += ",rs_type=" + Util.dbnull(ReqVal["rs_type"]) + "";
+        SQL += ",rs_class=" + Util.dbnull(ReqVal["rs_class"]) + "";
+        SQL += ",rs_code=" + Util.dbnull(ReqVal["rs_code"]) + "";
+        SQL += ",act_code=" + Util.dbnull(ReqVal["act_code"]) + "";
+        SQL += ",RS_detail='" + ReqVal["RS_detail"] + "'";
+        SQL += ",Fees=" + Util.dbzero(ReqVal["Send_Fees"]) + "";
+        SQL += ",tran_scode='" + Session["scode"] + "'";
+        SQL += ",tran_date=getdate()";
+        SQL += " where opt_sqlno='" + opt_sqlno + "'";
+        conn.ExecuteNonQuery(SQL);
+    }
+
+    private void update_bropt_end(DBHelper conn) {
+        string Job_Scode = "";
+        if (ReqVal["ap_type"] == "1")
+            Job_Scode = ReqVal["job_scode1"];
+        else if (ReqVal["ap_type"] == "2")
+            Job_Scode = ReqVal["job_scode2"];
+
+        SQL = "update br_opt set stat_code='NY'";
+        SQL += ",rs_agt_no='" + ReqVal["rs_agt_no"] + "'";
+        SQL += ",AP_Scode='" + Job_Scode + "'";
+        SQL += ",tran_date=getdate()";
+        SQL += " where opt_sqlno='" + opt_sqlno + "'";
+        conn.ExecuteNonQuery(SQL);
+
+        //抓前一todo的流水號
+        string pre_sqlno = "";
+        SQL = "Select max(sqlno) as maxsqlno from todo_opt where syscode='" + Session["Syscode"] + "'";
+        SQL += " and apcode='opt21' and opt_sqlno='" + opt_sqlno + "'";
+        SQL += " and dowhat='PR'";
+        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+            if (dr.Read()) {
+                pre_sqlno = dr.SafeRead("maxsqlno", "");
+            }
+        }
+
+        SQL = "update todo_opt set approve_scode='" + Session["scode"] + "'";
+        SQL += ",resp_date=getdate()";
+        SQL += ",job_status='YY'";
+        SQL += " where apcode='opt21' and opt_sqlno='" + opt_sqlno + "'";
+        SQL += " and dowhat='PR' and syscode='" + Session["Syscode"] + "'";
+        SQL += " and sqlno=" + pre_sqlno;
+        conn.ExecuteNonQuery(SQL);
+
+        //入流程控制檔
+        SQL = " insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no,in_scode,in_date";
+        SQL += ",dowhat,job_scode,job_status) values (";
+        SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
+        SQL += ",'" + Session["scode"] + "',getdate(),'AP','" + Job_Scode + "','NN')";
+        conn.ExecuteNonQuery(SQL);
+    }
+        
+    //當承辦與判行同一人時執行這段
+    private void update_bropt_ap(DBHelper conn) {
+	    SQL="update br_opt set PRY_hour="+Util.dbzero(ReqVal["PRY_hour"]) + "";
+	    SQL+=",AP_hour="+Util.dbzero(ReqVal["AP_hour"]) + "";
+	    SQL+=",send_dept="+Util.dbnull(ReqVal["send_dept"]) + "";
+	    SQL+=",mp_date="+Util.dbnull(ReqVal["mp_date"]) + "";
+	    SQL+=",GS_date="+Util.dbnull(ReqVal["GS_date"]) + "";
+	    SQL+=",Send_cl="+Util.dbnull(ReqVal["Send_cl"]) + "";
+	    SQL+=",Send_cl1="+Util.dbnull(ReqVal["Send_cl1"]) + "";
+	    SQL+=",Send_Sel="+Util.dbnull(ReqVal["Send_Sel"]) + "";
+	    SQL+=",rs_type="+Util.dbnull(ReqVal["rs_type"]) + "";
+	    SQL+=",rs_class="+Util.dbnull(ReqVal["rs_class"]) + "";
+	    SQL+=",rs_code="+Util.dbnull(ReqVal["rs_code"]) + "";
+	    SQL+=",act_code="+Util.dbnull(ReqVal["act_code"]) + "";
+	    SQL+=",RS_detail='"+ReqVal["RS_detail"] + "'";
+	    SQL+=",Fees="+Util.dbzero(ReqVal["Send_Fees"]) + "";
+	    SQL+=",ap_date='"+DateTime.Today.ToShortDateString()+"'";
+	    SQL+=",ap_remark='"+ReqVal["ap_remark"] + "'";
+        if (ReqVal["score_flag"]=="Y")
+	    IF trim(request("score_flag"))="Y" then
+		    SQL+=",score_flag="+Util.dbnull(ReqVal["score_flag"]) + "";
+		    SQL+=",score="+Util.dbzero(ReqVal["Score"]) + "";
+	    Else
+		    SQL+=",score_flag='N'"
+		    SQL+=",score=0"
+	    End IF
+	    SQL+=",remark='"+ReqVal["opt_remark"] + "'";
+	    SQL+=",stat_code='YY'"
+	    SQL+=",tran_scode='" + Session["scode"] + "'"
+	    SQL+=",tran_date=getdate()"
+	    SQL+=" where opt_sqlno='" + opt_sqlno + "'";
+            conn.ExecuteNonQuery(SQL);
+	
+	    SQL = "Select max(sqlno) as maxsqlno from todo_opt where syscode='"+ Session["Syscode"] +"'"
+	    SQL+= " and apcode='opt31' and opt_sqlno='" + opt_sqlno + "'";
+	    SQL+= " and dowhat='AP'"
+	    RSreg.Open qSQL,Conn,1,1
+	    IF not RSreg.EOF then
+		    pre_sqlno=trim(RSreg("maxsqlno"))
+	    End IF
+	    RSreg.close
+
+	    SQL="update todo_opt set approve_scode='" + Session["scode"] + "'"
+	    SQL+= ",resp_date=getdate()"
+	    SQL+= ",job_status='YY'"
+	    SQL+= " where apcode='opt31' and opt_sqlno='" + opt_sqlno + "'";
+	    SQL+= " and dowhat='AP' and syscode='"+ Session["Syscode"] +"'"
+	    SQL+= " and sqlno=" + pre_sqlno;
+            conn.ExecuteNonQuery(SQL);
+
+	    //入流程控制檔
+	    SQL = " insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no,in_scode,in_date"
+	    SQL+=",dowhat,job_status) values ("
+	    SQL+="'" + pre_sqlno+"','"+ Session["Syscode"] +"','opt22'," + opt_sqlno + ",'"+ branch +"','"+ case_no +"'";
+	    SQL+=",'" + Session["scode"] + "',getdate(),'MG_GS','NN')" ;
+        conn.ExecuteNonQuery(SQL);
+    }  
 </script>
 
 <script language="javascript" type="text/javascript">
