@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -157,7 +157,7 @@
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
 <title><%=HTProgCap%></title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.css")%>" />
@@ -198,7 +198,6 @@
 	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 	<input type="text" id="dmt_show_flag" name="dmt_show_flag" value="<%=dmt_show_flag%>">
 	<input type="text" id="word_show_flag" name="word_show_flag" value="<%=word_show_flag%>">
-	<input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="text" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
 	<input type="text" id="progid" name="progid">
 
@@ -267,14 +266,22 @@
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 </form>
 
-<table border="0" width="98%" cellspacing="0" cellpadding="0" >
-<tr>
+<table border="0" width="98%" cellspacing="0" cellpadding="0">
+<tr id="tr_button1">
+    <td width="100%" align="center">
+		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
+		<input type=button value="結辦" class="cbutton" onClick="formEndSubmit('U')" id="btnEndSubmit">
+        <input type=button value="申請書列印" class="cbutton" id="btnPrintSubmit">
+		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">
+    </td>
+</tr>
+<tr id="tr_button2" style="display:none">
     <td align="center">
-        <input type=button value ="分　　案" class="cbutton" id="btnsearchSubmit">
+        <input type=button value="退回" class="redbutton" id="btnBackSubmit">
+        <input type=button value="取消" class="c1button" id="btnResetSubmit">
     </td>
 </tr>
 </table>
-
 </body>
 </html>
 
@@ -312,16 +319,19 @@
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
+        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//編修存檔
+        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//結辦
+        $("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//申請書列印
         //$(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() != "B");//承辦/結辦
         //$(".SEClass").unlock($("#submittask").val()!="Q"&&(<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦/結辦
 
         if($("#Back_flag").val() == "B"){
             settab("#br");
-            $("#tabreject").show();//退回視窗
-            $("#tabPR,#tabSend").hide();//承辦內容/發文視窗
+            $("#tabreject,#tr_button2").show();//退回視窗&按鈕
+            $("#tabPR,#tabSend,#tr_button1").hide();//承辦內容/發文視窗/承辦&結辦按鈕
         }else{
-            $("#tabreject").hide();//退回視窗
-            $("#tabPR,#tabSend").show();//承辦內容/發文視窗
+            $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
+            $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
         }
         $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
 
@@ -380,25 +390,7 @@
         }
     })
 
-    //分　　案
-    $("#btnsearchSubmit").click(function () {
-        var errFlag = false;
-
-        errFlag = $("#ctrl_date").chkDate({ br:true,require: true, msg: "預計完成日期格式錯誤(yyyy/mm/dd)或未輸入！" }) || errFlag;
-        errFlag = $("#pr_scode").chkRequire({ msg: "請輸入承辦人員！！" }) || errFlag;
-
-        if (errFlag) {
-		    alert("輸入的資料有誤,請檢查!!");
-		    return false;
-		}
-
-        $("select,textarea,input").unlock();
-        $("#btnsearchSubmit").lock();
-        reg.submittask.value = "U";
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
-        reg.submit();
-    });
-
+    //區所交辦資料複製
     function GetBranchData(){
         var tlink = "opt31_GetCase.aspx?prgid="+$("#prgid").val();
         tlink += "&qBranch="+$("#Branch").val()+"&qseq="+$("#Bseq").val()+"&qseq1="+$("#Bseq1").val();
@@ -407,4 +399,212 @@
         tlink += "&qBr=N";
         window.open(tlink,"win_opt31", "width=600 height=400 top=140 left=220 toolbar=no, menubar=no, location=no, directories=no resizable=yes status=no scrollbars=yes");
     }
+
+    //申請書列印
+    $("#btnPrintSubmit").click(function () {
+        formSaveSubmit('P',$("#prgid").val());
+    });
+
+    //編修存檔/列印
+    function formSaveSubmit(dowhat,opt_prgid){
+        //相關聯案件
+        $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
+        if($("#tfy_Arcase").val()=="DI1"){//評定
+            //2013/1/24因應商標法修正改為多選
+            var pother_item0=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+            var pother_item1=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+
+            if(pother_item0.indexOf("I")>-1||pother_item0.indexOf("R")>-1){//註冊/延展註冊時 商標法
+                pother_item1+=";"+$("#Pother_item1_2").val();
+                if(pother_item0.indexOf("R")>-1){
+                    pother_item1+="|"+$("#Pother_item1_2t").val();
+                }
+            }else if(pother_item0.indexOf("O")>-1){//商標法
+                pother_item1+=";"+$("#Pother_item1_2t").val();
+            }
+            $("#Pother_item1").val(pother_item1);
+        }
+
+        if(dowhat=="P"){//列印 
+            if (!confirm("是否存檔？")){//確認列印申請書表格
+                return false;
+            }
+        }
+	    
+        $("select,textarea,input").unlock();
+        $("#tr_button1 input:button").lock();
+        reg.submittask.value = dowhat;
+        reg.progid.value=opt_prgid
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.submit();
+    }
+
+    //結辦
+    function formEndSubmit(dowhat){
+        //相關聯案件
+        $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
+        if($("#tfy_Arcase").val()=="DI1"){//評定
+            //2013/1/24因應商標法修正改為多選
+            var pother_item0=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+            var pother_item1=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+
+            if(pother_item0.indexOf("I")>-1||pother_item0.indexOf("R")>-1){//註冊/延展註冊時 商標法
+                pother_item1+=";"+$("#Pother_item1_2").val();
+                if(pother_item0.indexOf("R")>-1){
+                    pother_item1+="|"+$("#Pother_item1_2t").val();
+                }
+            }else if(pother_item0.indexOf("O")>-1){//商標法
+                pother_item1+=";"+$("#Pother_item1_2t").val();
+            }
+            $("#Pother_item1").val(pother_item1);
+        }
+        settab("#br");
+
+        if($("#code_br_agt_no").val()!=""&&$("#Pagt_no").val()!=""){
+            if($("#code_br_agt_no").val()!=$("#Pagt_no").val()){
+                var msg="交辦時出名代理人("+$("#Pagt_no").val()+"_" +$( "#Pagt_no option:selected" ).text()+ ")與官發出名代理人("+$("#code_br_agt_no").val()+"_"+$("#code_br_agt_nonm").val()+")不同，是否確認結辦？";
+                if(!confirm(msg)) return false;
+            }
+            $("#rs_agt_no").val($("#Pagt_no").val());
+        }else{
+            if($("#Pagt_no").val()!=""){
+                $("#rs_agt_no").val($("#Pagt_no").val());
+            }else{
+                $("#rs_agt_no").val($("#code_br_agt_no").val());
+            }
+        }
+
+        if ($("#Pr_hour").val()==""||$("#Pr_hour").val()=="0"){
+            if(!confirm("是否確定不輸入承辦時數？")) {
+                $("#Pr_hour").focus();
+                return false;
+            }
+        }
+        if($("input[name='send_dept']:checked").length==0){
+            alert("請輸入發文單位！");
+            $("input[name='send_dept']")[0].focus();
+            return false;
+        }
+        if ($("#GS_date").val()==""){
+            alert("請輸入發文日期！");
+            $("#GS_date").focus();
+            return false;
+        }
+        if ($("#mp_date").val()==""){
+            alert("請輸入總收發文日期！！");
+            $("#mp_date").focus();
+            return false;
+        }
+        if ($("#send_cl").val()==""){
+            alert("請輸入發文對象！！");
+            $("#send_cl").focus();
+            return false;
+        }
+        if ($("#send_sel").val()==""){
+            alert("請輸入官方號碼！！");
+            $("#send_sel").focus();
+            return false;
+        }
+        if ($("#rs_class").val()==""){
+            alert("請輸入發文代碼之結構分類！！");
+            $("#rs_class").focus();
+            return false;
+        }
+        if ($("#rs_code").val()==""){
+            alert("請輸入發文代碼之案性！！");
+            $("#rs_code").focus();
+            return false;
+        }
+        if ($("#act_code").val()==""){
+            alert("請輸入發文代碼之處理事項！！");
+            $("#act_code").focus();
+            return false;
+        }
+        if ($("#rs_detail").val()==""){
+            alert("請輸入發文內容！！");
+            $("#rs_detail").focus();
+            return false;
+        }
+
+        var fld = $("#opt_uploadfield").val();
+        if(parseInt($("#" + fld + "_filenum").val(), 10)==0){
+            if(!confirm("無上傳檔案，是否確定結辦？？")) {
+                return false;
+            }
+        }
+
+        if ($("#sameap_flag").val()=="Y"){
+            if($("input[name='score_flag']")[0].prop("checked")){
+                if ($("#Score").val()==""){
+                    alert("請輸入接洽得分！");
+                    $("#Score").focus();
+                    return false;
+                }
+            }
+
+            if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
+                if(!confirm("是否確定不輸入核准時數？？")) {
+                    $("#PRY_hour").focus();
+                    return false;
+                }
+            }
+
+            if ($("#AP_hour").val()==""||$("#AP_hour").val()=="0"){
+                if(!confirm("是否確定不輸入判行核稿時數？？")) {
+                    $("#AP_hour").focus();
+                    return false;
+                }
+            }
+        }
+        
+        reg.prgid.value="opt31";
+        $("select,textarea,input").unlock();
+        $("#tr_button1 input:button").lock();
+        reg.submittask.value = dowhat;
+        reg.progid.value=opt_prgid
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.submit();
+    }
+
+    //退回分案(1)
+    $("#btnBack1Submit").click(function () {
+        if (confirm("是否確定退回重新分案？？")) {
+            $("#tr_button1,#tabpr,#tabSend").hide();
+            $("#tr_button2,#tabreject").show();
+        }else{
+            $("#tr_button1,#tabpr,#tabSend").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+    });
+
+    //退回(2)
+    $("#btnBackSubmit").click(function () {
+        var doback=true;
+        if ($("#Back_flag").val() == "B"){
+            doback=confirm("是否確定退回重新分案？？");
+        }
+
+        if (doback){
+            if ($("#Preject_reason").val() == "") {
+                alert("請輸入退回原因！");
+                $("#Preject_reason").focus();
+                return false;
+            }
+            $("#btnBackSubmit,#btnResetSubmit").lock();
+
+            reg.submittask.value = "B";
+            reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.submit();
+        }
+    });
+
+    //取消
+    $("#btnResetSubmit").click(function () {
+        if($("#Back_flag").val() != "B"){//不是退回作業才開關
+            $("#tabPR,#tabSend,#tr_button1").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+        $("#tr_button1 input:button").unlock();
+   });
+
 </script>
