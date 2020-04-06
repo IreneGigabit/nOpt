@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
 
 <script runat="server">
@@ -152,7 +152,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="x-ua-compatible" content="IE=9">
 <title>文件上傳</title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
@@ -178,7 +179,7 @@
                     <br>
                     <table width="95%" border="0">
                         <tr> 
-                            <td align="center">
+                            <td align="left">
                                 <font size="2" color="#009900">使用方式：</font><br>
                                 <table border="0" width="100%">
                                 <tr>
