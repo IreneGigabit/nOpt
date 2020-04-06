@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="dr1_form" %>
+<%@ Control Language="C#" ClassName="dr1_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -196,7 +196,7 @@
 		<TD class=whitetablebg colspan=7>
             本案與<input TYPE=text id=Pitem1 NAME=Pitem1 SIZE=10 MAXLENGTH=10 class="dateField PLock">
             (年/月/日)註冊第<input type="text" id="Pitem2" name="Pitem2" SIZE=10 class="PLock">號<input type="text" id="Pitem3" name="Pitem3" SIZE=10 class="PLock">案有關
-            <input type="hidden" name="Pother_item">
+            <input type="hidden" id="Pother_item" name="Pother_item">
 		</TD>
 	</TR>
 	<tr>
