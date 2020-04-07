@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -282,6 +282,8 @@
     </td>
 </tr>
 </table>
+
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500"></iframe>
 </body>
 </html>
 
@@ -289,6 +291,10 @@
     if (!(window.parent.tt === undefined)) {
         window.parent.tt.rows = "0%,100%";
     }
+
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
+    });
 
     $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
     $(document).ajaxStop(function () { $.maskStop(); });
@@ -334,6 +340,10 @@
             $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
         }
         $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
+
+        if ($("#sameap_flag").val()=="Y"){
+            $("#btnSaveSubmit,#btnEndSubmit").val("結辦暨判行");
+        }
 
         //取得案件資料
         $.ajax({
@@ -434,8 +444,9 @@
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock();
         reg.submittask.value = dowhat;
-        reg.progid.value=opt_prgid
+        reg.progid.value=opt_prgid;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
         reg.submit();
     }
 
@@ -561,13 +572,15 @@
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock();
         reg.submittask.value = dowhat;
-        reg.progid.value=opt_prgid
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
         reg.submit();
     }
 
     //退回分案(1)
     $("#btnBack1Submit").click(function () {
+        settab("#br");
+
         if (confirm("是否確定退回重新分案？？")) {
             $("#tr_button1,#tabpr,#tabSend").hide();
             $("#tr_button2,#tabreject").show();
@@ -594,6 +607,7 @@
 
             reg.submittask.value = "B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.target = "ActFrame";
             reg.submit();
         }
     });
