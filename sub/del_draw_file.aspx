@@ -10,8 +10,6 @@
     protected string file_path = "";
     protected string btnname = "";
     
-    protected Dictionary<string, string> SrvrVal = new Dictionary<string, string>();
- 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
