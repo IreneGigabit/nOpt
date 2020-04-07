@@ -1,7 +1,13 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 
-<%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
+<%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+<%@ Register Src="~/commonForm/opt/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+<%@ Register Src="~/commonForm/opt/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
+<%@ Register Src="~/commonForm/opt/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
+<%@ Register Src="~/commonForm/opt/upload_Form.ascx" TagPrefix="uc1" TagName="upload_Form" %>
+<%@ Register Src="~/commonForm/opt/Qu_form.ascx" TagPrefix="uc1" TagName="Qu_form" %>
+<%@ Register Src="~/commonForm/opt/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 
 
 <script runat="server">
@@ -11,14 +17,32 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
+    protected string opt_job_scode1 = "",opt_job_scode2 = "";
+
+    protected string btnEnd = "";
+
     protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
     protected string Back_flag = "";//退回flag
     protected string End_flag = "";//結辦flag
-    
-    protected string dmt_show_flag = "Y";
+
+    protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
+    protected string QLock = "true";//收費與接洽事項的控制
+    protected string QHide = "true";
+    protected string PLock = "true";//交辦內容的控制
+    protected string RLock = "true";//承辦內容_分案的控制
+    protected string BLock = "true";//承辦內容_承辦的控制
+    protected string SLock = "true";//承辦內容_發文的控制
+    protected string SELock = "true";
+    protected string ALock = "true";//承辦內容_判行的控制
+    protected string P1Lock = "true";//控制show圖檔
+    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
+    protected string show_qu_form = "N";//控制顯示品質評分欄位
+    protected string show_ap_form = "N";//控制顯示判行內容欄位
+    protected string word_show_flag = "N";//決定有沒有列印button
+    protected string sameap_flag = "N";//判行和承辦人員是否為同一人
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -29,10 +53,23 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
-        Back_flag = Request["Back_flag"] ?? "N";//退回flag
-        End_flag = Request["End_flag"] ?? "N";//結辦flag(B)
+        Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
+        End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
 
-        if (submitTask == "ADD") HTProgCap += "‧<b style='color:Red'>新增</b>";
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
+            string sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
+                        "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                        "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' And C.prgid = 'opt31' " +
+                        "Order By C.scode ";
+            opt_job_scode1 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
+
+            sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
+                        "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                        "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opt31' " +
+                        "Order By C.scode ";
+            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}",false);
+        }
+
         if (prgid == "opt31") {
             HTProgCap = "爭救案承辦內容維護";
         } else if (prgid == "opt31_1") {
@@ -47,13 +84,65 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            QueryPageLayout();
+            PageLayout();
             this.DataBind();
         }
     }
-    
-    
-    private void QueryPageLayout() {
+
+    private void PageLayout() {
+        //決定要不要顯示案件主檔畫面
+        if (",DO1,DI1,DR1,".IndexOf("," + Request["arcase"] + ",") > -1) {
+            dmt_show_flag = "N";
+        }
+
+        //判行內容/品質評分欄位要不要顯示
+        if (End_flag == "Y") {
+            string dojob_scode = "";
+            using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false).Debug(Request["chkTest"] == "TEST")) {
+                string SQL = "select DISTINCT C.scode from scode_roles As C " +
+                "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' " +
+                "And C.prgid = 'opt31' " +
+                "Order By C.scode ";
+                object objResult = cnn.ExecuteScalar(SQL);
+                dojob_scode = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim().ToLower() : "";
+            }
+            //當為結案時,如果承辦人如為林雪貞
+            //則結辦後即可執行發文作業,
+            //所以判行須輸入的資料要出來
+            if (Sys.GetSession("scode").ToLower() == dojob_scode) {
+                //判行內容欄位要不要show的flag
+                show_ap_form = "Y";
+                //判行和承辦人員是否為同一人
+                sameap_flag = "Y";
+                //品質評分欄位要不要show的flag
+                using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
+                    string SQL = "select ref_code from cust_code where code_type='T92' and cust_code='" + Request["arcase"] + "'";
+                    object objResult = conn.ExecuteScalar(SQL);
+                    string ref_code = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim() : "";
+                    if (ref_code != "V")
+                        show_qu_form = "Y";
+                }
+            }
+        }
+
+        //欄位開關
+        if (prgid.IndexOf("opt31") > -1) {
+            if (Back_flag != "B") {//不是退回
+                if (prgid != "opt31_1") {//不是結辦
+                    btnEnd = "<a href=\"javascript:void(0);\" onclick=\"formSaveSubmit('U','opt31_1')\" >[結辦處理]</a>";
+                }
+                PLock = "false";
+                BLock = "false";
+                SLock = "false";
+                ALock = "false";
+            }
+        }
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
+        }
     }
 
 </script>
@@ -71,6 +160,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
 <body>
@@ -103,23 +193,58 @@
             <uc1:BR_formA runat="server" ID="BR_formA" />
             <!--include file="../commonForm/opt/BR_formA.ascx"--><!--承辦內容-->
             <uc1:BR_form runat="server" ID="BR_form" />
-            <!--include file="../commonForm/opt/BR_form.ascx"--><!--承辦內容-->
+            <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案內容-->
+            <uc1:Back_form runat="server" ID="Back_form" />
+            <!--include file="../commonForm/opt/Back_form.ascx"--><!--退回處理-->
+            <uc1:PR_form runat="server" ID="PR_form" />
+            <!--include file="../commonForm/opt/PR_form.ascx"--><!--承辦內容-->
+            <uc1:Send_form runat="server" id="Send_form" />
+            <!--include file="../commonForm/opt/Send_form.ascx"--><!--發文資料-->
+            <uc1:upload_Form runat="server" ID="upload_Form" />
+            <!--include file="../commonForm/opt/upload_form.ascx"--><!--上傳文件-->
+            <uc1:Qu_form runat="server" ID="Qu_form" />
+            <!--include file="../commonForm/opt/Qu_form.ascx"--><!--品質評分-->
+            <uc1:AP_form runat="server" ID="AP_form" />
+            <!--include file="../commonForm/opt/AP_form.ascx"--><!--判行資料-->
         </td>
     </tr>
     </table>
+	<table id='tabend' border="0" width="98%" cellspacing="0" cellpadding="0">
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr >
+			<td align="right">
+				<label for="ap_type1"><input type="radio" value="1" name="ap_type" id="ap_type1" checked >正常簽核：</label>
+				<select id='job_scode1' name='job_scode1' ><%#opt_job_scode1%></select>
+				&nbsp;&nbsp;&nbsp;				
+			</td>
+			<td align="left"> 
+				<label for="ap_type2"><input type="radio" value="2" name="ap_type" id="ap_type2" >例外簽核：</label>
+				<select id='job_scode2' name='job_scode2' disabled ><%#opt_job_scode2%></select>
+			</td>
+		</tr>
+	</table>
     <br />
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 </form>
 
-<table border="0" width="98%" cellspacing="0" cellpadding="0" >
-<tr>
+<table border="0" width="98%" cellspacing="0" cellpadding="0">
+<tr id="tr_button1">
+    <td width="100%" align="center">
+		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
+		<input type=button value="結辦" class="cbutton" onClick="formEndSubmit('U')" id="btnEndSubmit">
+		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">
+    </td>
+</tr>
+<tr id="tr_button2" style="display:none">
     <td align="center">
-        <input type=button value ="新增分案" class="cbutton" onClick="formSearchSubmit('ADD')" id="btnsearchSubmit1">
-        <input type=button value ="分　　案" class="cbutton" onClick="formSearchSubmit('U')" id="btnsearchSubmit2">
+        <input type=button value="退回" class="redbutton" id="btnBackSubmit">
+        <input type=button value="取消" class="c1button" id="btnResetSubmit">
     </td>
 </tr>
 </table>
 
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500"></iframe>
 </body>
 </html>
 
@@ -127,6 +252,14 @@
     if (!(window.parent.tt === undefined)) {
         window.parent.tt.rows = "0%,100%";
     }
+
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
+    });
+
+    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
+    $(document).ajaxStop(function () { $.maskStop(); });
+
 
     $(function () {
         this_init();
@@ -137,6 +270,43 @@
     function this_init() {
         settab("#br");
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("input.dateField").datepick();
+        //欄位控制
+        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
+        $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
+        $("#tabend").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
+
+        $(".Lock").lock();
+        $(".MLock").lock(<%#MLock%>);
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").lock(<%#QHide%>);
+        $(".PLock").lock(<%#PLock%>);
+        $(".RLock").lock(<%#RLock%>);
+        $(".BLock").lock(<%#BLock%>);
+        $(".SLock").lock(<%#SLock%>);
+        $(".SELock").lock(<%#SELock%>);
+        $(".ALock").lock(<%#ALock%>);
+        $(".P1Lock").lock(<%#P1Lock%>);
+        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//編修存檔
+        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//結辦
+        $("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//申請書列印
+        //$(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() != "B");//承辦/結辦
+        //$(".SEClass").unlock($("#submittask").val()!="Q"&&(<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦/結辦
+
+        if($("#Back_flag").val() == "B"){
+            settab("#br");
+            $("#tabreject,#tr_button2").show();//退回視窗&按鈕
+            $("#tabPR,#tabSend,#tr_button1").hide();//承辦內容/發文視窗/承辦&結辦按鈕
+        }else{
+            $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
+            $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
+        }
+        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
+
+        if ($("#sameap_flag").val()=="Y"){
+            $("#btnSaveSubmit,#btnEndSubmit").val("結辦暨判行");
+        }
 
         //取得案件資料
         $.ajax({
@@ -161,19 +331,15 @@
         });
 
 
+        $("#sopt_no").html(br_opt.opt[0].opt_no);
         br_formA.init();
         br_form.init();
-
-        $("input.dateField").datepick();
-
-        //欄位控制
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $("#span_sopt_no").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
-        $("#btnsearchSubmit1").showFor($("#submittask").val()=="ADD");//新增分案時顯示[新增分案]
-        $("#btnsearchSubmit2").showFor($("#submittask").val()!="ADD");//分案時顯示[分　　案]
-        $(".Lock").lock();
-        $(".BRClass").unlock("<%#prgid%>"=="opt21");//分案作業要解鎖承辦內容
-        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
+        back_form.init();
+        pr_form.init();
+        send_form.init();
+        upload_form.init();
+        qu_form.init();
+        ap_form.init();
     }
 
     // 切換頁籤
@@ -196,38 +362,6 @@
         }
     })
 
-    //分　　案/新增分案
-    function formSearchSubmit(dowhat) {
-        var errFlag = false;
-
-        errFlag = $("#Branch").chkRequire() || errFlag;
-        errFlag = $("#Bseq").chkRequire() || errFlag;
-        errFlag = $("#Bseq1").chkRequire() || errFlag;
-        errFlag = $("#dfy_last_date").chkRequire() || errFlag;
-        errFlag = $("#ctrl_date").chkRequire() || errFlag;
-        errFlag = $("#pr_scode").chkRequire() || errFlag;
-        errFlag = $("#Arcase").chkRequire() || errFlag;
-
-        if (($("#Bseq").val()!=$("#oldBseq").val()
-            ||$("#Bseq1").val()!=$("#oldBseq1").val()
-            ||$("#Branch").val()!=$("#oldBranch").val())
-            &&$("#oldBseq").val()!=""&&$("#oldBseq1").val()&&$("#oldBranch").val()
-            ){
-            alert("區所案件編號變動過，請按[確定]按鈕，重新抓取資料!!!");
-            errFlag=true;
-        }
-
-        if (errFlag) {
-		    alert("輸入的資料有誤,請檢查!!");
-		    return false;
-		}
-
-        $("select,textarea,input").unlock();
-        $("#btnsearchSubmit1,#btnsearchSubmit2").lock();
-        reg.submittask.value = dowhat;
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
-        reg.submit();
-    }
     //區所案件資料複製
     function GetBranchData(){
         var tlink = "opt31_GetCase.aspx?prgid="+$("#prgid").val();
@@ -236,4 +370,221 @@
         tlink += "&qBr=Y";
         window.open(tlink,"win_opt31", "width=600 height=300 top=140 left=220 toolbar=no, menubar=no, location=no, directories=no resizable=yes status=no scrollbars=yes");
     }
+
+    //編修存檔/列印/[結辦處理]
+    function formSaveSubmit(dowhat,opt_prgid){
+        //相關聯案件
+        $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
+        if($("#tfy_Arcase").val()=="DI1"){//評定
+            //2013/1/24因應商標法修正改為多選
+            var pother_item0=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+            var pother_item1=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+
+            if(pother_item0.indexOf("I")>-1||pother_item0.indexOf("R")>-1){//註冊/延展註冊時 商標法
+                pother_item1+=";"+$("#Pother_item1_2").val();
+                if(pother_item0.indexOf("R")>-1){
+                    pother_item1+="|"+$("#Pother_item1_2t").val();
+                }
+            }else if(pother_item0.indexOf("O")>-1){//商標法
+                pother_item1+=";"+$("#Pother_item1_2t").val();
+            }
+            $("#Pother_item1").val(pother_item1);
+        }
+
+        if(dowhat=="P"){//列印 
+            if (!confirm("是否存檔？")){//確認列印申請書表格
+                return false;
+            }
+        }
+	    
+        $("select,textarea,input").unlock();
+        $("#tr_button1 input:button").lock();
+        reg.submittask.value = dowhat;
+        reg.progid.value=opt_prgid;
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
+        reg.submit();
+    }
+
+    //結辦
+    function formEndSubmit(dowhat){
+        //相關聯案件
+        $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
+        if($("#tfy_Arcase").val()=="DI1"){//評定
+            //2013/1/24因應商標法修正改為多選
+            var pother_item0=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+            var pother_item1=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+
+            if(pother_item0.indexOf("I")>-1||pother_item0.indexOf("R")>-1){//註冊/延展註冊時 商標法
+                pother_item1+=";"+$("#Pother_item1_2").val();
+                if(pother_item0.indexOf("R")>-1){
+                    pother_item1+="|"+$("#Pother_item1_2t").val();
+                }
+            }else if(pother_item0.indexOf("O")>-1){//商標法
+                pother_item1+=";"+$("#Pother_item1_2t").val();
+            }
+            $("#Pother_item1").val(pother_item1);
+        }
+        settab("#br");
+
+        if($("#code_br_agt_no").val()!=""&&$("#Pagt_no").val()!=""){
+            if($("#code_br_agt_no").val()!=$("#Pagt_no").val()){
+                var msg="交辦時出名代理人("+$("#Pagt_no").val()+"_" +$( "#Pagt_no option:selected" ).text()+ ")與官發出名代理人("+$("#code_br_agt_no").val()+"_"+$("#code_br_agt_nonm").val()+")不同，是否確認結辦？";
+                if(!confirm(msg)) return false;
+            }
+            $("#rs_agt_no").val($("#Pagt_no").val());
+        }else{
+            if($("#Pagt_no").val()!=""){
+                $("#rs_agt_no").val($("#Pagt_no").val());
+            }else{
+                $("#rs_agt_no").val($("#code_br_agt_no").val());
+            }
+        }
+
+        if ($("#Pr_hour").val()==""||$("#Pr_hour").val()=="0"){
+            if(!confirm("是否確定不輸入承辦時數？")) {
+                $("#Pr_hour").focus();
+                return false;
+            }
+        }
+        if($("input[name='send_dept']:checked").length==0){
+            alert("請輸入發文單位！");
+            $("input[name='send_dept']")[0].focus();
+            return false;
+        }
+        if ($("#GS_date").val()==""){
+            alert("請輸入發文日期！");
+            $("#GS_date").focus();
+            return false;
+        }
+        if ($("#mp_date").val()==""){
+            alert("請輸入總收發文日期！！");
+            $("#mp_date").focus();
+            return false;
+        }
+        if ($("#send_cl").val()==""){
+            alert("請輸入發文對象！！");
+            $("#send_cl").focus();
+            return false;
+        }
+        if ($("#send_sel").val()==""){
+            alert("請輸入官方號碼！！");
+            $("#send_sel").focus();
+            return false;
+        }
+        if ($("#rs_class").val()==""){
+            alert("請輸入發文代碼之結構分類！！");
+            $("#rs_class").focus();
+            return false;
+        }
+        if ($("#rs_code").val()==""){
+            alert("請輸入發文代碼之案性！！");
+            $("#rs_code").focus();
+            return false;
+        }
+        if ($("#act_code").val()==""){
+            alert("請輸入發文代碼之處理事項！！");
+            $("#act_code").focus();
+            return false;
+        }
+        if ($("#rs_detail").val()==""){
+            alert("請輸入發文內容！！");
+            $("#rs_detail").focus();
+            return false;
+        }
+
+        var fld = $("#opt_uploadfield").val();
+        if(parseInt($("#" + fld + "_filenum").val(), 10)==0){
+            if(!confirm("無上傳檔案，是否確定結辦？？")) {
+                return false;
+            }
+        }
+
+        if ($("#sameap_flag").val()=="Y"){
+            if($("input[name='score_flag']")[0].prop("checked")){
+                if ($("#Score").val()==""){
+                    alert("請輸入接洽得分！");
+                    $("#Score").focus();
+                    return false;
+                }
+            }
+
+            if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
+                if(!confirm("是否確定不輸入核准時數？？")) {
+                    $("#PRY_hour").focus();
+                    return false;
+                }
+            }
+
+            if ($("#AP_hour").val()==""||$("#AP_hour").val()=="0"){
+                if(!confirm("是否確定不輸入判行核稿時數？？")) {
+                    $("#AP_hour").focus();
+                    return false;
+                }
+            }
+        }
+        
+        reg.prgid.value="opt31";
+        $("select,textarea,input").unlock();
+        $("#tr_button1 input:button").lock();
+        reg.submittask.value = dowhat;
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
+        reg.submit();
+    }
+
+    //退回分案(1)
+    $("#btnBack1Submit").click(function () {
+        settab("#br");
+
+        if (confirm("是否確定退回重新分案？？")) {
+            $("#tr_button1,#tabpr,#tabSend").hide();
+            $("#tr_button2,#tabreject").show();
+        }else{
+            $("#tr_button1,#tabpr,#tabSend").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+    });
+
+    //退回(2)
+    $("#btnBackSubmit").click(function () {
+        var doback=true;
+        if ($("#Back_flag").val() == "B"){
+            doback=confirm("是否確定退回重新分案？？");
+        }
+
+        if (doback){
+            if ($("#Preject_reason").val() == "") {
+                alert("請輸入退回原因！");
+                $("#Preject_reason").focus();
+                return false;
+            }
+            $("#btnBackSubmit,#btnResetSubmit").lock();
+
+            reg.submittask.value = "B";
+            reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.target = "ActFrame";
+            reg.submit();
+        }
+    });
+
+    //取消
+    $("#btnResetSubmit").click(function () {
+        if($("#Back_flag").val() != "B"){//不是退回作業才開關
+            $("#tabPR,#tabSend,#tr_button1").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+        $("#tr_button1 input:button").unlock();
+    });
+
+    //簽核人員
+    $("input[name='ap_type']").click(function () {
+        if($("input[name='ap_type']:checked").val()=="1"){
+            $("#job_scode1").unlock();
+            $("#job_scode2").lock();
+        }else{
+            $("#job_scode1").lock();
+            $("#job_scode2").unlock();
+        }
+    });
 </script>

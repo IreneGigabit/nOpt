@@ -30,12 +30,12 @@
 	    <TR>
 		    <TD align=center colspan=5 class=lightbluetable1>
                 <font color=white>承&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font>
-	            <input type="text" id="<%=uploadfield%>_maxAttach_no" name="<%=uploadfield%>_maxAttach_no" value="<%=doc_maxAttach_no%>"><!--目前table裡最大值-->
-	            <input type="text" id="<%=uploadfield%>_attach_cnt" name="<%=uploadfield%>_attach_cnt" value="<%=doc_attach_cnt%>">
-	            <input type="text" id="<%=uploadfield%>_filenum" name="<%=uploadfield%>_filenum" value="0"><!--attach_no-->
-	            <input type="text" id="<%=uploadfield%>_sqlnum" name="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
-	            <input type="text" id="opt_uploadfield" name="opt_uploadfield" value="<%#uploadfield%>">
-	            <input type="text" id="opt_uploadsource" name="opt_uploadsource" value="<%=opt_source_type%>"><!--為了入區所opt.source的欄位-->
+	            <input type="hidden" id="<%=uploadfield%>_maxAttach_no" name="<%=uploadfield%>_maxAttach_no" value="<%=doc_maxAttach_no%>"><!--目前table裡最大值-->
+	            <input type="hidden" id="<%=uploadfield%>_attach_cnt" name="<%=uploadfield%>_attach_cnt" value="<%=doc_attach_cnt%>">
+	            <input type="hidden" id="<%=uploadfield%>_filenum" name="<%=uploadfield%>_filenum" value="0"><!--attach_no-->
+	            <input type="hidden" id="<%=uploadfield%>_sqlnum" name="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
+	            <input type="hidden" id="opt_uploadfield" name="opt_uploadfield" value="<%#uploadfield%>">
+	            <input type="hidden" id="opt_uploadsource" name="opt_uploadsource" value="<%=opt_source_type%>"><!--為了入區所opt.source的欄位-->
             </TD>
 	    </TR>
 	    <TR id="tr_upload_btn">
@@ -55,14 +55,14 @@
 	            <input type=button id='btn<%=uploadfield%>_##' name='btn<%=uploadfield%>_##' class='cbutton BLock' value='上傳' onclick="upload_form.UploadOptAttach('##')">
 	            <input type=button id='btn<%=uploadfield%>_D_##' name='btn<%=uploadfield%>_D_##' class='delbutton BLock' value='刪除' onclick="upload_form.DelOptAttach('##')">
 	            <input type=button id='btn<%=uploadfield%>_S_##' name='btn<%=uploadfield%>_S_##' class='cbutton' value='檢視' onclick="upload_form.PreviewOptAttach('##')">
-	            <input type='text' id='<%=uploadfield%>_dbflag_##' name='<%=uploadfield%>_dbflag_##' value="A">
-	            <input type='text' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
-	            <input type='text' id='<%=uploadfield%>_size_##' name='<%=uploadfield%>_size_##'>
-	            <input type='text' id='<%=uploadfield%>_##' name='<%=uploadfield%>_##'>
-	            <input type='text' id='<%=uploadfield%>_attach_no_##' name='<%=uploadfield%>_attach_no_##' value='##'>
-	            <input type='text' id='<%=uploadfield%>_path_##' name='<%=uploadfield%>_path_##' value=''>
-	            <input type='text' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
-	            <input type='text' id='<%=uploadfield%>_source_name_##' name='<%=uploadfield%>_source_name_##' value=''><br>
+	            <input type='hidden' id='<%=uploadfield%>_dbflag_##' name='<%=uploadfield%>_dbflag_##' value="A">
+	            <input type='hidden' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
+	            <input type='hidden' id='<%=uploadfield%>_size_##' name='<%=uploadfield%>_size_##'>
+	            <input type='hidden' id='<%=uploadfield%>_##' name='<%=uploadfield%>_##'>
+	            <input type='hidden' id='<%=uploadfield%>_attach_no_##' name='<%=uploadfield%>_attach_no_##' value='##'>
+	            <input type='hidden' id='<%=uploadfield%>_path_##' name='<%=uploadfield%>_path_##' value=''>
+	            <input type='hidden' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
+	            <input type='hidden' id='<%=uploadfield%>_source_name_##' name='<%=uploadfield%>_source_name_##' value=''><br>
 	            文件種類：<Select id='<%=uploadfield%>_doc_type_##' name='<%=uploadfield%>_doc_type_##' Onchange="upload_form.getdesc('##')" class="BLock"><%=html_attach_doc%></Select>
 	            附件說明：<input type=text id='<%=uploadfield%>_desc_##' name='<%=uploadfield%>_desc_##' class="BLock" size=50 maxlength=50 onblur="fChkDataLen(this,'附件說明')">
 	            上傳日期：<input type=text id='<%=uploadfield%>_add_date_##' name='<%=uploadfield%>_add_date_##' class="Lock" size=10 maxlength=10 onblur="fChkDataLen(this,'上傳日期')">

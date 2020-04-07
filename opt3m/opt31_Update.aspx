@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -31,7 +31,7 @@
     string Pmod_claim1 = "N";//預設N
     string Pmod_class = "N";//預設N
     string Pmod_dmt = "N";//預設N
-    
+
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected StringBuilder strOut = new StringBuilder();
 
@@ -69,7 +69,7 @@
             if (sameap_flag == "Y" && ReqVal.TryGet("send_dept", "") == "L") {
                 MailWin();//轉法律處作業出現outlook通知
             }
-            
+
             this.DataBind();
         }
     }
@@ -206,15 +206,17 @@
                         msg = "結案暨判行成功";
                     else
                         msg = "結案成功";
-                    strOut.AppendLine("alert('"+msg+"');");
+                    strOut.AppendLine("alert('" + msg + "');");
                     if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
                 } else {
-                    msg = "編修存檔完成";
+                    if (ReqVal.TryGet("progid", "") == "opt31") {
+                        msg = "編修存檔完成";
+                        strOut.AppendLine("alert('" + msg + "');");
+                    }
                     string thref = "opt31Edit.aspx?prgid=opt31&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&arcase=" + Arcase;
-                    if(ReqVal.TryGet("progid","")!=""){
-                        thref = "opt31Edit.asp?prgid=" + ReqVal.TryGet("progid", "") + "&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&arcase=" + Arcase;
-				    }
-                    strOut.AppendLine("alert('"+msg+"');");
+                    if (ReqVal.TryGet("progid", "") != "") {
+                        thref = "opt31Edit.aspx?prgid=" + ReqVal.TryGet("progid", "") + "&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&arcase=" + Arcase;
+                    }
                     if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.href='" + thref + "';");
                 }
             } else if (submitTask == "P") {
@@ -309,7 +311,7 @@
             conn.Dispose();
         }
     }
-    
+
     //交辦內容opt_detail
     private void update_optdetail(DBHelper conn) {
         SQL = "Update opt_detail set ";
@@ -345,7 +347,7 @@
         SQL += " where opt_sqlno='" + opt_sqlno + "'";
         conn.ExecuteNonQuery(SQL);
     }
-       
+
     //案件異動名細檔opt_tranlist
     private void insert_opttranlist(DBHelper conn, string Pfield, string pno) {
         if (Pfield == "mod_ap") {
@@ -482,7 +484,7 @@
         SQL += ",'" + Session["scode"] + "',getdate(),'AP','" + Job_Scode + "','NN')";
         conn.ExecuteNonQuery(SQL);
     }
-        
+
     //當承辦與判行同一人時執行這段
     private void update_bropt_ap(DBHelper conn) {
         SQL = "update br_opt set PRY_hour=" + Util.dbzero(ReqVal.TryGet("PRY_hour", "0")) + "";
@@ -570,7 +572,7 @@
                     conn.ExecuteNonQuery(SQL);
                 }
             } else if (dbflag == "U") {
-                Sys.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
+                Funcs.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
                 SQL = "Update attach_opt set Source='" + psource + "'";
                 SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "") + "'";
                 SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
@@ -585,7 +587,7 @@
                 SQL += " Where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
                 conn.ExecuteNonQuery(SQL);
             } else if (dbflag == "D") {
-                Sys.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
+                Funcs.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
                 //當attach_sqlno <> empty時,表示db有值,必須刪除data(update attach_flag = 'D')
                 if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
                     SQL = "update attach_opt set attach_flag='D'";

@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 
 /// <summary>  
 /// 原Server_code.vbs
@@ -127,6 +128,56 @@ public class Funcs {
         }
     }
     #endregion
+
+    #region insert_log_table
+    /// <summary>
+    /// 寫入 Log 檔，適用於 log table 中有 ud_flag、ud_date、ud_scode、prgid 這些欄位者
+    /// </summary>
+    /// <param name="ud_flag">log_flag(U/D)</param>
+    /// <param name="prgid">執行異動的prgid</param>
+    /// <param name="table">執行異動的table,ex:要新增至 attach_opt_log 則傳入 attach_opt</param>
+    /// <param name="pKey">key 值欄位名稱&值</param>
+
+    public static void insert_log_table(DBHelper conn, string ud_flag, string prgid, string table, Dictionary<string, string> pKey) {
+        string SQL = "";
+        string usql = "";
+        string wsql = "";
+        string tfield_str = "";
+
+        SQL = "SELECT b.name FROM sysobjects AS a, syscolumns AS b ";
+        SQL += "WHERE a.id = b.id  AND a.name = " + Util.dbnull(table) + " AND a.xtype='U' ";
+        SQL += "ORDER BY b.colid ";
+        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+            while (dr.Read()) {
+                tfield_str += (tfield_str != "" ? "," : "") + dr["name"].ToString();
+            }
+        }
+
+        foreach (KeyValuePair<string, string> item in pKey) {
+            wsql += string.Format(" and {0} ='{1}' ", item.Key, item.Value);
+        }
+
+        //依log檔的prgid欄位名稱判斷(prgid or ud_prgid)
+        switch (table.ToLower()) {
+            case "step_ext":
+                usql = "INSERT INTO " + table + "_log(ud_flag, ud_date, ud_scode, ud_prgid," + tfield_str + ")";
+                usql += " SELECT " + Util.dbnull(ud_flag) + ",GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + Util.dbnull(prgid) + "," + tfield_str;
+                usql += " FROM " + table;
+                usql += " WHERE 1=1 ";
+                usql += wsql;
+                break;
+            default:
+                usql = "insert into " + table + "_log(ud_flag,ud_date,ud_scode,prgid," + tfield_str + ")";
+                usql += " SELECT " + Util.dbnull(ud_flag) + ",GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + Util.dbnull(prgid) + "," + tfield_str;
+                usql += " FROM " + table;
+                usql += " WHERE 1=1 ";
+                usql += wsql;
+                break;
+        }
+        conn.ExecuteNonQuery(usql);
+    }
+    #endregion
+
 }
 
 

@@ -36,7 +36,8 @@
             SQL += " from code_br c where gs='Y' ";
             SQL += " and (end_date is null or end_date = '' or end_date > getdate())";
             SQL += " and rs_type='" + RS_type + "'";
-
+            SQL += " and rs_class='" + RS_class + "'";
+            SQL += " and rs_code='" + RS_code + "'";
             connB.DataTable(SQL, dt);
             
             for (int i = 0; i < dt.Rows.Count; i++) {

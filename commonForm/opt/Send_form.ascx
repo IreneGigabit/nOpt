@@ -74,10 +74,10 @@
 			<span id=span_act_code>
 				<select id="act_code" name="act_code" class="SLock" ></select>
 			</span>	
+		    <input type="hidden" id="code_br_agt_no" name="code_br_agt_no">
+		    <input type="hidden" id="code_br_agt_nonm" name="code_br_agt_nonm">
+		    <input type="hidden" id="rs_agt_no" name="rs_agt_no">
 		</td>
-		<input type="text" id="code_br_agt_no" name="code_br_agt_no">
-		<input type="text" id="code_br_agt_nonm" name="code_br_agt_nonm">
-		<input type="text" id="rs_agt_no" name="rs_agt_no">
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文內容 :</td>
@@ -89,7 +89,7 @@
 		<td class="lightbluetable"  align="right" nowrap>規費支出 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
 			<input type="text" id="Send_Fees" name="Send_Fees" SIZE=10  maxlength="10" class="SELock">
-			<input type="text" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SELock">
+			<input type="hidden" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SELock">
 		</td>
 	</TR>
 	<TR id="tr_score_flag">
@@ -174,25 +174,25 @@
 
         //預計發文日期
         $("#GS_date").val(jOpt.gs_date);
-        if($("#GS_date").val()==""&&$("#prgid").val=="opt31_1"){//結辦
+        if($("#GS_date").val()==""&&$("#prgid").val()=="opt31_1"){//結辦
             $("#GS_date").val((new Date().format("yyyy/M/d")));
         }
 
         //總收發文日期,若無值,預設為發文日期後一天
         $("#mp_date").val(jOpt.mp_date);
-        if ($("#mp_date").val() == "" && $("#prgid").val == "opt31_1") {//結辦
+        if ($("#mp_date").val() == "" && $("#prgid").val() == "opt31_1") {//結辦
             switch ((new Date($("#mp_date").val())).getDay()) {
                 case 5:
-                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(3));//星期五加三天
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(3).format("yyyy/M/d"));//星期五加三天
                     break;
                 case 6:
-                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(2));//星期六加兩天
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(2).format("yyyy/M/d"));//星期六加兩天
                     break;
                 case 0:
-                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(1));//星期日加一天
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(1).format("yyyy/M/d"));//星期日加一天
                     break;
                 default:
-                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(1));//加一天
+                    $("#mp_date").val(new Date($("#GS_date").val()).addDays(1).format("yyyy/M/d"));//加一天
                     break;
             }
         }

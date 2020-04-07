@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -20,6 +20,8 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+
+    protected string opt_job_scode1 = "",opt_job_scode2 = "";
 
     protected string btnEnd = "";
 
@@ -58,6 +60,21 @@
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
 
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
+            string sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
+                        "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                        "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' And C.prgid = 'opt31' " +
+                        "Order By C.scode ";
+            opt_job_scode1 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
+
+            sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
+                        "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                        "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opt31' " +
+                        "Order By C.scode ";
+            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}",false);
+        }
+
+
         if (prgid == "opt31") {
             HTProgCap = "爭救案承辦內容維護";
             End_flag = "N";
@@ -83,10 +100,10 @@
         if (",DO1,DI1,DR1,".IndexOf(","+Request["arcase"]+",")>-1) {
             dmt_show_flag = "N";
         }
-        
+
         //決定有沒有列印button
         if (",DO1,DI1,DR1,DE1,AD7".IndexOf(","+Request["arcase"]+",")>-1) {
-	        word_show_flag="Y";
+            word_show_flag="Y";
         }
 
         //判行內容/品質評分欄位要不要顯示
@@ -119,12 +136,12 @@
                 }
             }
         }
-   
+
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
-                if (prgid!="opt31_1") {//不是結辦
-                    btnEnd = "<a href=\"javascript:void(0);\" onclick=\"formSearchSubmit('U','opt31_1')\" >[結辦處理]</a>";
+                if (prgid != "opt31_1") {//不是結辦
+                    btnEnd = "<a href=\"javascript:void(0);\" onclick=\"formSaveSubmit('U','opt31_1')\" >[結辦處理]</a>";
                 }
                 PLock = "false";
                 BLock = "false";
@@ -190,16 +207,16 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
-	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
-    <input type="text" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
-    <input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
-	<input type="text" id="dmt_show_flag" name="dmt_show_flag" value="<%=dmt_show_flag%>">
-	<input type="text" id="word_show_flag" name="word_show_flag" value="<%=word_show_flag%>">
-	<input type="text" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
-	<input type="text" id="progid" name="progid">
+    <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+    <input type="hidden" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
+    <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="dmt_show_flag" name="dmt_show_flag" value="<%=dmt_show_flag%>">
+	<input type="hidden" id="word_show_flag" name="word_show_flag" value="<%=word_show_flag%>">
+	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
+	<input type="hidden" id="progid" name="progid">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -262,6 +279,21 @@
         </td>
     </tr>
     </table>
+	<table id='tabend' border="0" width="98%" cellspacing="0" cellpadding="0">
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr >
+			<td align="right">
+				<label for="ap_type1"><input type="radio" value="1" name="ap_type" id="ap_type1" checked >正常簽核：</label>
+				<select id='job_scode1' name='job_scode1' ><%#opt_job_scode1%></select>
+				&nbsp;&nbsp;&nbsp;				
+			</td>
+			<td align="left"> 
+				<label for="ap_type2"><input type="radio" value="2" name="ap_type" id="ap_type2" >例外簽核：</label>
+				<select id='job_scode2' name='job_scode2' disabled ><%#opt_job_scode2%></select>
+			</td>
+		</tr>
+	</table>
     <br />
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 </form>
@@ -313,6 +345,7 @@
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
         $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
+        $("#tabend").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
 
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
@@ -415,7 +448,7 @@
         formSaveSubmit('P',$("#prgid").val());
     });
 
-    //編修存檔/列印
+    //編修存檔/列印/[結辦處理]
     function formSaveSubmit(dowhat,opt_prgid){
         //相關聯案件
         $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
@@ -619,6 +652,16 @@
             $("#tr_button2,#tabreject").hide();
         }
         $("#tr_button1 input:button").unlock();
-   });
+    });
 
+    //簽核人員
+    $("input[name='ap_type']").click(function () {
+        if($("input[name='ap_type']:checked").val()=="1"){
+            $("#job_scode1").unlock();
+            $("#job_scode2").lock();
+        }else{
+            $("#job_scode1").lock();
+            $("#job_scode2").unlock();
+        }
+    });
 </script>
