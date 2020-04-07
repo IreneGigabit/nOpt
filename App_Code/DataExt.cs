@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -559,8 +559,8 @@ public static class DataExt
     #endregion
 
     #region RequestForm 擴展
-    public static Dictionary<string, string> ToDictionary(this NameValueCollection col) {
-        var dict = new Dictionary<string, string>();
+	public static Dictionary<string, string> ToDictionary(this NameValueCollection col) {
+		var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var key in col.Keys) {
             dict.Add(key.ToString(), col[key.ToString()].ToBig5().Trim());
@@ -569,6 +569,17 @@ public static class DataExt
         return dict;
     }
     #endregion
+
+	#region Dictionary 擴展
+	public static TValue TryGet<TKey, TValue>(this Dictionary<TKey, TValue> input, TKey key, TValue ifNotFound) {
+		TValue val;
+		if (input.TryGetValue(key, out val)) {
+			return val;
+		}
+
+		return ifNotFound;
+	}
+	#endregion
 }
 
 
