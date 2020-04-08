@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -23,11 +23,10 @@
 
     protected string opt_job_scode1 = "",opt_job_scode2 = "";
 
-    protected string btnEnd = "";
-
     protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
+    protected string opt_no = "";
     protected string case_no = "";
     protected string Back_flag = "";//退回flag
     protected string End_flag = "";//結辦flag
@@ -56,6 +55,7 @@
         submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
+        opt_no = Request["opt_no"] ?? "";
         case_no = Request["case_no"] ?? "";
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
@@ -140,9 +140,6 @@
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
-                if (prgid != "opt31_1") {//不是結辦
-                    btnEnd = "<a href=\"javascript:void(0);\" onclick=\"formSaveSubmit('U','opt31_1')\" >[結辦處理]</a>";
-                }
                 PLock = "false";
                 BLock = "false";
                 SLock = "false";
@@ -192,12 +189,12 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%><%=HTProgCap%>】
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
             <input type=button value ="區所交辦資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <%#btnEnd%>
+            <a id="btnEnd" href="javascript:void(0);" onclick="formSaveSubmit('U','opt31_1')" >[結辦處理]</a>
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
@@ -262,7 +259,7 @@
             </div>
             <div class="tabCont" id="#br">
                 <uc1:BR_form runat="server" ID="BR_form" />
-                <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案內容-->
+                <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案設定-->
                 <uc1:Back_form runat="server" ID="Back_form" />
                 <!--include file="../commonForm/opt/Back_form.ascx"--><!--退回處理-->
                 <uc1:PR_form runat="server" ID="PR_form" />
@@ -270,7 +267,7 @@
                 <uc1:Send_form runat="server" id="Send_form" />
                 <!--include file="../commonForm/opt/Send_form.ascx"--><!--發文資料-->
                 <uc1:upload_Form runat="server" ID="upload_Form" />
-                <!--include file="../commonForm/opt/upload_form.ascx"--><!--上傳文件-->
+                <!--include file="../commonForm/opt/upload_form.ascx"--><!--承辦附件資料-->
                 <uc1:Qu_form runat="server" ID="Qu_form" />
                 <!--include file="../commonForm/opt/Qu_form.ascx"--><!--品質評分-->
                 <uc1:AP_form runat="server" ID="AP_form" />
@@ -279,7 +276,7 @@
         </td>
     </tr>
     </table>
-	<table id='tabend' border="0" width="98%" cellspacing="0" cellpadding="0">
+	<table id='tabjob' border="0" width="98%" cellspacing="0" cellpadding="0">
 		<tr><td>&nbsp;</td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr >
@@ -345,7 +342,7 @@
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
         $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
-        $("#tabend").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
+        $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
 
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
@@ -358,11 +355,11 @@
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
-        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//編修存檔
-        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//結辦
-        $("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//申請書列印
-        //$(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() != "B");//承辦/結辦
-        //$(".SEClass").unlock($("#submittask").val()!="Q"&&(<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦/結辦
+        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//[編修存檔]
+        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//[結辦]
+        $("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//[申請書列印]
+        $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()!="opt31_1");//[結辦處理]
+        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//[區所交辦資料複製]
 
         if($("#Back_flag").val() == "B"){
             settab("#br");
@@ -372,7 +369,6 @@
             $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
             $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
         }
-        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
 
         if ($("#sameap_flag").val()=="Y"){
             $("#btnSaveSubmit,#btnEndSubmit").val("結辦暨判行");
@@ -578,7 +574,7 @@
         }
 
         if ($("#sameap_flag").val()=="Y"){
-            if($("input[name='score_flag']")[0].prop("checked")){
+            if($("input[name='score_flag']:eq(0)").prop("checked")){
                 if ($("#Score").val()==""){
                     alert("請輸入接洽得分！");
                     $("#Score").focus();
