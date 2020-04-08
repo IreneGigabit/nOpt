@@ -61,7 +61,7 @@
 		<td class="lightbluetable"  align="right" nowrap>發文代碼 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
 			結構分類：
-			<input type="text" name="rs_type" id="rs_type">
+			<input type="hidden" name="rs_type" id="rs_type">
 			<span id=span_rs_class>
 				<select id="rs_class" name="rs_class" class="SELock"></select>
 			</span>
