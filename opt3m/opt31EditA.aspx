@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -24,6 +24,7 @@
     protected string submitTask = "";
     protected string branch = "";
     protected string opt_sqlno = "";
+    protected string opt_no = "";
     protected string case_no = "";
     protected string Back_flag = "";//退回flag
     protected string End_flag = "";//結辦flag
@@ -34,14 +35,13 @@
     protected string PLock = "true";//交辦內容的控制
     protected string RLock = "true";//承辦內容_分案的控制
     protected string BLock = "true";//承辦內容_承辦的控制
+    protected string CLock = "true";//承辦內容_承辦的控制
     protected string SLock = "true";//承辦內容_發文的控制
     protected string SELock = "true";
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
-    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
     protected string show_qu_form = "N";//控制顯示品質評分欄位
     protected string show_ap_form = "N";//控制顯示判行內容欄位
-    protected string word_show_flag = "N";//決定有沒有列印button
     protected string sameap_flag = "N";//判行和承辦人員是否為同一人
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
@@ -52,6 +52,7 @@
         submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
+        opt_no = Request["opt_no"] ?? "";
         case_no = Request["case_no"] ?? "";
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
@@ -90,11 +91,6 @@
     }
 
     private void PageLayout() {
-        //決定要不要顯示案件主檔畫面
-        if (",DO1,DI1,DR1,".IndexOf("," + Request["arcase"] + ",") > -1) {
-            dmt_show_flag = "N";
-        }
-
         //判行內容/品質評分欄位要不要顯示
         if (End_flag == "Y") {
             string dojob_scode = "";
@@ -129,9 +125,6 @@
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
-                if (prgid != "opt31_1") {//不是結辦
-                    btnEnd = "<a href=\"javascript:void(0);\" onclick=\"formSaveSubmit('U','opt31_1')\" >[結辦處理]</a>";
-                }
                 PLock = "false";
                 BLock = "false";
                 SLock = "false";
@@ -166,11 +159,12 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%><%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
             <input type=button value ="區所案件資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+            <a id="btnEnd" href="opt31EditA.aspx?prgid=opt31_1&opt_sqlno=<%=opt_sqlno%>&opt_no=<%#opt_sqlno%>&branch=<%#branch%>">[結辦處理]</a>
             <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
@@ -183,17 +177,19 @@
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
-    <input type="text" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
-    <input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
+    <input type="hidden" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
+    <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
+	<input type="hidden" id="progid" name="progid">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td>
             <uc1:BR_formA runat="server" ID="BR_formA" />
-            <!--include file="../commonForm/opt/BR_formA.ascx"--><!--承辦內容-->
+            <!--include file="../commonForm/opt/BR_formA.ascx"--><!--工作資料-->
             <uc1:BR_form runat="server" ID="BR_form" />
-            <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案內容-->
+            <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案設定-->
             <uc1:Back_form runat="server" ID="Back_form" />
             <!--include file="../commonForm/opt/Back_form.ascx"--><!--退回處理-->
             <uc1:PR_form runat="server" ID="PR_form" />
@@ -201,7 +197,7 @@
             <uc1:Send_form runat="server" id="Send_form" />
             <!--include file="../commonForm/opt/Send_form.ascx"--><!--發文資料-->
             <uc1:upload_Form runat="server" ID="upload_Form" />
-            <!--include file="../commonForm/opt/upload_form.ascx"--><!--上傳文件-->
+            <!--include file="../commonForm/opt/upload_form.ascx"--><!--承辦附件資料-->
             <uc1:Qu_form runat="server" ID="Qu_form" />
             <!--include file="../commonForm/opt/Qu_form.ascx"--><!--品質評分-->
             <uc1:AP_form runat="server" ID="AP_form" />
@@ -209,7 +205,7 @@
         </td>
     </tr>
     </table>
-	<table id='tabend' border="0" width="98%" cellspacing="0" cellpadding="0">
+	<table id='tabjob' border="0" width="98%" cellspacing="0" cellpadding="0">
 		<tr><td>&nbsp;</td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr >
@@ -272,10 +268,9 @@
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
         $("input.dateField").datepick();
         //欄位控制
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
         $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
-        $("#tabend").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
+        $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
 
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
@@ -284,15 +279,15 @@
         $(".PLock").lock(<%#PLock%>);
         $(".RLock").lock(<%#RLock%>);
         $(".BLock").lock(<%#BLock%>);
+        $(".CLock").lock(<%#CLock%>);
         $(".SLock").lock(<%#SLock%>);
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
-        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//編修存檔
-        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//結辦
-        $("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//申請書列印
-        //$(".SClass").unlock($("#prgid").val().indexOf("opt31") > -1 && $("#Back_flag").val() != "B");//承辦/結辦
-        //$(".SEClass").unlock($("#submittask").val()!="Q"&&(<%#HTProgRight%> & 64) || (<%#HTProgRight%> & 256));//承辦/結辦
+        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//[編修存檔]
+        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//[結辦]
+        $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()!="opt31_1");//[結辦處理]
+        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//[區所案件資料複製]
 
         if($("#Back_flag").val() == "B"){
             settab("#br");
@@ -302,7 +297,6 @@
             $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
             $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
         }
-        $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//區所交辦資料複製
 
         if ($("#sameap_flag").val()=="Y"){
             $("#btnSaveSubmit,#btnEndSubmit").val("結辦暨判行");
@@ -373,71 +367,24 @@
 
     //編修存檔/列印/[結辦處理]
     function formSaveSubmit(dowhat,opt_prgid){
-        //相關聯案件
-        $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
-        if($("#tfy_Arcase").val()=="DI1"){//評定
-            //2013/1/24因應商標法修正改為多選
-            var pother_item0=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
-            var pother_item1=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
-
-            if(pother_item0.indexOf("I")>-1||pother_item0.indexOf("R")>-1){//註冊/延展註冊時 商標法
-                pother_item1+=";"+$("#Pother_item1_2").val();
-                if(pother_item0.indexOf("R")>-1){
-                    pother_item1+="|"+$("#Pother_item1_2t").val();
-                }
-            }else if(pother_item0.indexOf("O")>-1){//商標法
-                pother_item1+=";"+$("#Pother_item1_2t").val();
-            }
-            $("#Pother_item1").val(pother_item1);
-        }
-
-        if(dowhat=="P"){//列印 
-            if (!confirm("是否存檔？")){//確認列印申請書表格
-                return false;
-            }
-        }
-	    
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock();
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
         reg.target = "ActFrame";
         reg.submit();
     }
 
     //結辦
     function formEndSubmit(dowhat){
-        //相關聯案件
-        $("#Pother_item").val($("#Pitem1").val()+";"+$("#Pitem2").val()+";"+$("#Pitem3").val()+";")
-        if($("#tfy_Arcase").val()=="DI1"){//評定
-            //2013/1/24因應商標法修正改為多選
-            var pother_item0=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
-            var pother_item1=getValueStr($("input[name='Pother_item1_1']:checked"),"|");
+        $("#rs_agt_no").val($("#code_br_agt_no").val());
 
-            if(pother_item0.indexOf("I")>-1||pother_item0.indexOf("R")>-1){//註冊/延展註冊時 商標法
-                pother_item1+=";"+$("#Pother_item1_2").val();
-                if(pother_item0.indexOf("R")>-1){
-                    pother_item1+="|"+$("#Pother_item1_2t").val();
-                }
-            }else if(pother_item0.indexOf("O")>-1){//商標法
-                pother_item1+=";"+$("#Pother_item1_2t").val();
-            }
-            $("#Pother_item1").val(pother_item1);
-        }
-        settab("#br");
-
-        if($("#code_br_agt_no").val()!=""&&$("#Pagt_no").val()!=""){
-            if($("#code_br_agt_no").val()!=$("#Pagt_no").val()){
-                var msg="交辦時出名代理人("+$("#Pagt_no").val()+"_" +$( "#Pagt_no option:selected" ).text()+ ")與官發出名代理人("+$("#code_br_agt_no").val()+"_"+$("#code_br_agt_nonm").val()+")不同，是否確認結辦？";
-                if(!confirm(msg)) return false;
-            }
-            $("#rs_agt_no").val($("#Pagt_no").val());
-        }else{
-            if($("#Pagt_no").val()!=""){
-                $("#rs_agt_no").val($("#Pagt_no").val());
-            }else{
-                $("#rs_agt_no").val($("#code_br_agt_no").val());
+        if($("input[name='score_flag']:eq(0)").prop("checked")){
+            if ($("#Score").val()==""){
+                alert("請輸入接洽得分！");
+                $("#Score").focus();
+                return false;
             }
         }
 
@@ -492,23 +439,13 @@
             $("#rs_detail").focus();
             return false;
         }
-
-        var fld = $("#opt_uploadfield").val();
-        if(parseInt($("#" + fld + "_filenum").val(), 10)==0){
-            if(!confirm("無上傳檔案，是否確定結辦？？")) {
-                return false;
-            }
+        if ($("#Send_Fees").val()==""){
+            alert("請輸入規費支出！！");
+            $("#Send_Fees").focus();
+            return false;
         }
 
         if ($("#sameap_flag").val()=="Y"){
-            if($("input[name='score_flag']")[0].prop("checked")){
-                if ($("#Score").val()==""){
-                    alert("請輸入接洽得分！");
-                    $("#Score").focus();
-                    return false;
-                }
-            }
-
             if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
                 if(!confirm("是否確定不輸入核准時數？？")) {
                     $("#PRY_hour").focus();
@@ -528,7 +465,7 @@
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock();
         reg.submittask.value = dowhat;
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
         reg.target = "ActFrame";
         reg.submit();
     }
@@ -562,7 +499,7 @@
             $("#btnBackSubmit,#btnResetSubmit").lock();
 
             reg.submittask.value = "B";
-            reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
             reg.target = "ActFrame";
             reg.submit();
         }
