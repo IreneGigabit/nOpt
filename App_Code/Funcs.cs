@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -137,7 +137,6 @@ public class Funcs {
     /// <param name="prgid">執行異動的prgid</param>
     /// <param name="table">執行異動的table,ex:要新增至 attach_opt_log 則傳入 attach_opt</param>
     /// <param name="pKey">key 值欄位名稱&值</param>
-
     public static void insert_log_table(DBHelper conn, string ud_flag, string prgid, string table, Dictionary<string, string> pKey) {
         string SQL = "";
         string usql = "";
@@ -159,6 +158,19 @@ public class Funcs {
 
         //依log檔的prgid欄位名稱判斷(prgid or ud_prgid)
         switch (table.ToLower()) {
+			case "case_opt":
+			case "opt_detail":
+			case "caseitem_opt":
+			case "caseopt_good":
+			case "opt_tran":
+			case "opt_tranlist":
+			case "caseopt_ap":
+                usql = "INSERT INTO " + table + "_log(ud_date, ud_scode, " + tfield_str + ")";
+                usql += " SELECT GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + tfield_str;
+                usql += " FROM " + table;
+                usql += " WHERE 1=1 ";
+                usql += wsql;
+                break;
             case "step_ext":
                 usql = "INSERT INTO " + table + "_log(ud_flag, ud_date, ud_scode, ud_prgid," + tfield_str + ")";
                 usql += " SELECT " + Util.dbnull(ud_flag) + ",GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + Util.dbnull(prgid) + "," + tfield_str;
