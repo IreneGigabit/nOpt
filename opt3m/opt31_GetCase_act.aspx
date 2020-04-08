@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -236,90 +236,96 @@
         }
     }
 
-    private void log_update(DBHelper connb) {
-        //case_opt_log
-        SQL = "insert into case_opt_log(ud_date,ud_scode,Opt_sqlno,Branch,Case_no,in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type";
-        SQL += ",arcase_class,arcase,div_arcase,service,fees,tot_case,add_service,add_fees,gs_fees";
-        SQL += ",gs_curr,oth_arcase,oth_code,oth_money";
-        SQL += ",ar_service,ar_fees,ar_curr,ar_code,ar_mark,discount,discount_chk,ar_chk";
-        SQL += ",ar_chk1,source,cust_date,pr_date,case_date";
-        SQL += ",case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark)";
-        SQL += " select getdate(),'" + Session["scode"] + "',opt_sqlno,Branch,Case_no,in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type,arcase_class";
-        SQL += ",arcase,div_arcase,service,fees,tot_case,add_service,add_fees,gs_fees,gs_curr,oth_arcase,oth_code";
-        SQL += ",oth_money,ar_service,ar_fees,ar_curr,ar_code,ar_mark,discount,discount_chk,ar_chk,ar_chk1,source";
-        SQL += ",cust_date,pr_date,case_date,case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark";
-        SQL += " from case_opt where opt_sqlno='" + qopt_sqlno + "'";
-        connb.ExecuteNonQuery(SQL);
+    private void log_update(DBHelper conn) {
+        Funcs.insert_log_table(conn, "U", prgid, "case_opt", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
+        ////case_opt_log
+        //SQL = "insert into case_opt_log(ud_date,ud_scode,Opt_sqlno,Branch,Case_no,in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type";
+        //SQL += ",arcase_class,arcase,div_arcase,service,fees,tot_case,add_service,add_fees,gs_fees";
+        //SQL += ",gs_curr,oth_arcase,oth_code,oth_money";
+        //SQL += ",ar_service,ar_fees,ar_curr,ar_code,ar_mark,discount,discount_chk,ar_chk";
+        //SQL += ",ar_chk1,source,cust_date,pr_date,case_date";
+        //SQL += ",case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark)";
+        //SQL += " select getdate(),'" + Session["scode"] + "',opt_sqlno,Branch,Case_no,in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type,arcase_class";
+        //SQL += ",arcase,div_arcase,service,fees,tot_case,add_service,add_fees,gs_fees,gs_curr,oth_arcase,oth_code";
+        //SQL += ",oth_money,ar_service,ar_fees,ar_curr,ar_code,ar_mark,discount,discount_chk,ar_chk,ar_chk1,source";
+        //SQL += ",cust_date,pr_date,case_date,case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark";
+        //SQL += " from case_opt where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
 
+        Funcs.insert_log_table(conn, "U", prgid, "opt_detail", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
         //opt_detail_log
-        SQL = " insert into opt_detail_log(ud_date,ud_scode,Branch,Case_no,opt_sqlno,seq,seq1,s_mark,pul,tcn_ref,class_type,class,class_count,tcn_class,tcn_name,tcn_mark";
-        SQL += ",in_date,apsqlno,ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,apply_date,apply_no,issue_date,issue_no";
-        SQL += ",appl_name,cappl_name,eappl_name,eappl_name1,eappl_name2,jappl_name,jappl_name1,jappl_name2,zappl_name1,zappl_name2";
-        SQL += ",zname_type,oappl_name,draw,draw_file,symbol,color,agt_no,prior_date,prior_no,prior_country,open_date,rej_no,end_date,end_code";
-        SQL += ",dmt_term1,dmt_term2,renewal,grp_code,good_name,good_count,remark1,remark2,remark3,remark4,tr_date,tr_scode,ref_no,ref_no1,Mseq,Mseq1,mark) ";
-        SQL += "select getdate(),'" + Session["scode"] + "',Branch,Case_no,opt_sqlno,seq,seq1,s_mark,pul,tcn_ref,class_type,class,class_count,tcn_class,tcn_name,tcn_mark";
-        SQL += ",in_date,apsqlno,ap_cname,ap_cname1,ap_cname2";
-        SQL += ",ap_ename,ap_ename1,ap_ename2,apply_date,apply_no,issue_date,issue_no,appl_name,cappl_name,eappl_name,eappl_name1,eappl_name2";
-        SQL += ",jappl_name,jappl_name1,jappl_name2,zappl_name1,zappl_name2,zname_type,oappl_name,draw,draw_file,symbol,color,agt_no,prior_date";
-        SQL += ",prior_no,prior_country,open_date,rej_no,end_date,end_code,dmt_term1,dmt_term2,renewal,grp_code,good_name,good_count,remark1,remark2";
-        SQL += ",remark3,remark4,tr_date,tr_scode,ref_no,ref_no1,Mseq,Mseq1,mark from opt_detail where opt_sqlno='" + qopt_sqlno + "'";
-
-        connb.ExecuteNonQuery(SQL);
+        //SQL = " insert into opt_detail_log(ud_date,ud_scode,Branch,Case_no,opt_sqlno,seq,seq1,s_mark,pul,tcn_ref,class_type,class,class_count,tcn_class,tcn_name,tcn_mark";
+        //SQL += ",in_date,apsqlno,ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,apply_date,apply_no,issue_date,issue_no";
+        //SQL += ",appl_name,cappl_name,eappl_name,eappl_name1,eappl_name2,jappl_name,jappl_name1,jappl_name2,zappl_name1,zappl_name2";
+        //SQL += ",zname_type,oappl_name,draw,draw_file,symbol,color,agt_no,prior_date,prior_no,prior_country,open_date,rej_no,end_date,end_code";
+        //SQL += ",dmt_term1,dmt_term2,renewal,grp_code,good_name,good_count,remark1,remark2,remark3,remark4,tr_date,tr_scode,ref_no,ref_no1,Mseq,Mseq1,mark) ";
+        //SQL += "select getdate(),'" + Session["scode"] + "',Branch,Case_no,opt_sqlno,seq,seq1,s_mark,pul,tcn_ref,class_type,class,class_count,tcn_class,tcn_name,tcn_mark";
+        //SQL += ",in_date,apsqlno,ap_cname,ap_cname1,ap_cname2";
+        //SQL += ",ap_ename,ap_ename1,ap_ename2,apply_date,apply_no,issue_date,issue_no,appl_name,cappl_name,eappl_name,eappl_name1,eappl_name2";
+        //SQL += ",jappl_name,jappl_name1,jappl_name2,zappl_name1,zappl_name2,zname_type,oappl_name,draw,draw_file,symbol,color,agt_no,prior_date";
+        //SQL += ",prior_no,prior_country,open_date,rej_no,end_date,end_code,dmt_term1,dmt_term2,renewal,grp_code,good_name,good_count,remark1,remark2";
+        //SQL += ",remark3,remark4,tr_date,tr_scode,ref_no,ref_no1,Mseq,Mseq1,mark from opt_detail where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
 
         //caseitem_opt_log
-        SQL = "insert into caseitem_opt_log(ud_date,ud_scode,opt_sqlno,Branch,Case_no,item_sql,seq,seq1,item_arcase";
-        SQL += " ,item_service,item_fees,item_count,mark) ";
-        SQL += " select getdate(),'" + Session["scode"] + "',opt_sqlno,Branch,Case_no,item_sql";
-        SQL += " ,seq,seq1,item_arcase,item_service,item_fees,item_count,mark ";
-        SQL += " from caseitem_opt where opt_sqlno='" + qopt_sqlno + "'";
-        connb.ExecuteNonQuery(SQL);
+        Funcs.insert_log_table(conn, "U", prgid, "caseitem_opt", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
+        //SQL = "insert into caseitem_opt_log(ud_date,ud_scode,opt_sqlno,Branch,Case_no,item_sql,seq,seq1,item_arcase";
+        //SQL += " ,item_service,item_fees,item_count,mark) ";
+        //SQL += " select getdate(),'" + Session["scode"] + "',opt_sqlno,Branch,Case_no,item_sql";
+        //SQL += " ,seq,seq1,item_arcase,item_service,item_fees,item_count,mark ";
+        //SQL += " from caseitem_opt where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
 
         //caseopt_good_log	
-        SQL = "insert into caseopt_good_log(ud_date,ud_scode,sqlno,opt_sqlno,Branch,Case_no,class";
-        SQL += ",dmt_grp_code,dmt_goodname,dmt_goodcount,tr_date,tr_scode,mark) ";
-        SQL += " select getdate(),'" + Session["scode"] + "',sqlno,opt_sqlno,Branch,Case_no";
-        SQL += ",class,dmt_grp_code,dmt_goodname,dmt_goodcount,tr_date,tr_scode,mark ";
-        SQL += " from caseopt_good where opt_sqlno='" + qopt_sqlno + "'";
-        connb.ExecuteNonQuery(SQL);
+        Funcs.insert_log_table(conn, "U", prgid, "caseopt_good", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
+        //SQL = "insert into caseopt_good_log(ud_date,ud_scode,sqlno,opt_sqlno,Branch,Case_no,class";
+        //SQL += ",dmt_grp_code,dmt_goodname,dmt_goodcount,tr_date,tr_scode,mark) ";
+        //SQL += " select getdate(),'" + Session["scode"] + "',sqlno,opt_sqlno,Branch,Case_no";
+        //SQL += ",class,dmt_grp_code,dmt_goodname,dmt_goodcount,tr_date,tr_scode,mark ";
+        //SQL += " from caseopt_good where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
 
         //opt_tran_log	
-        SQL = " insert into opt_tran_log(ud_date,ud_scode,opt_sqlno,Branch,Case_no,agt_no1,agt_no2,mod_ap";
-        SQL += ",mod_aprep,mod_apaddr,mod_agt,mod_agtaddr";
-        SQL += ",mod_dmt,mod_class,mod_pul,mod_tcnref,mod_claim1,mod_claim2,mod_oth,mod_oth1";
-        SQL += ",mod_oth2,term1,term2,tran_remark1,tran_remark2,debit_money";
-        SQL += ",other_item,other_item1,other_item2,tr_date,tr_scode,tran_mark) ";
-        SQL += " select getdate(),'" + Session["scode"] + "',opt_sqlno,Branch,case_no,agt_no1";
-        SQL += ",agt_no2,mod_ap,mod_aprep,mod_apaddr,mod_agt,mod_agtaddr,mod_dmt,mod_class";
-        SQL += ",mod_pul,mod_tcnref,mod_claim1,mod_claim2,mod_oth,mod_oth1,mod_oth2,term1,term2";
-        SQL += ",tran_remark1,tran_remark2,debit_money,other_item";
-        SQL += ",other_item1,other_item2,tr_date,tr_scode,tran_mark ";
-        SQL += " from opt_tran where opt_sqlno='" + qopt_sqlno + "'";
-        connb.ExecuteNonQuery(SQL);
+        Funcs.insert_log_table(conn, "U", prgid, "opt_tran", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
+        //SQL = " insert into opt_tran_log(ud_date,ud_scode,opt_sqlno,Branch,Case_no,agt_no1,agt_no2,mod_ap";
+        //SQL += ",mod_aprep,mod_apaddr,mod_agt,mod_agtaddr";
+        //SQL += ",mod_dmt,mod_class,mod_pul,mod_tcnref,mod_claim1,mod_claim2,mod_oth,mod_oth1";
+        //SQL += ",mod_oth2,term1,term2,tran_remark1,tran_remark2,debit_money";
+        //SQL += ",other_item,other_item1,other_item2,tr_date,tr_scode,tran_mark) ";
+        //SQL += " select getdate(),'" + Session["scode"] + "',opt_sqlno,Branch,case_no,agt_no1";
+        //SQL += ",agt_no2,mod_ap,mod_aprep,mod_apaddr,mod_agt,mod_agtaddr,mod_dmt,mod_class";
+        //SQL += ",mod_pul,mod_tcnref,mod_claim1,mod_claim2,mod_oth,mod_oth1,mod_oth2,term1,term2";
+        //SQL += ",tran_remark1,tran_remark2,debit_money,other_item";
+        //SQL += ",other_item1,other_item2,tr_date,tr_scode,tran_mark ";
+        //SQL += " from opt_tran where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
 
         //opt_tranlist_log
-        SQL = "insert into opt_tranlist_log(ud_date,ud_scode,tran_sqlno,opt_sqlno,Branch,Case_no,mod_field,mod_type";
-        SQL += ",mod_dclass,mod_count,new_no,ncname1,ncname2,nename1,nename2,ncrep";
-        SQL += ",nerep,nzip,naddr1,naddr2,neaddr1,neaddr2,neaddr3,neaddr4,ntel0,ntel,ntel1,nfax,nserver_flag";
-        SQL += ",old_no,ocname1,ocname2,oename1,oename2,ocrep,oerep,ozip,oaddr1,oaddr2,oeaddr1,oeaddr2";
-        SQL += ",oeaddr3,oeaddr4,otel0,otel,otel1,ofax,oserver_flag";
-        SQL += ",list_remark,tran_code,mark) ";
-        SQL += " select getdate(),'" + Session["scode"] + "',tran_sqlno,opt_sqlno,Branch,case_no,mod_field";
-        SQL += ",mod_type,mod_dclass,mod_count,new_no";
-        SQL += ",ncname1,ncname2,nename1,nename2,ncrep,nerep,nzip";
-        SQL += ",naddr1,naddr2,neaddr1,neaddr2,neaddr3,neaddr4,ntel0,ntel,ntel1,nfax,nserver_flag";
-        SQL += ",old_no,ocname1,ocname2,oename1,oename2,ocrep,oerep,ozip,oaddr1,oaddr2,oeaddr1,oeaddr2";
-        SQL += ",oeaddr3,oeaddr4,otel0,otel,otel1,ofax,oserver_flag";
-        SQL += ",list_remark,tran_code,mark ";
-        SQL += " from opt_tranlist where opt_sqlno='" + qopt_sqlno + "'";
-        connb.ExecuteNonQuery(SQL);
+        Funcs.insert_log_table(conn, "U", prgid, "opt_tranlist", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
+        //SQL = "insert into opt_tranlist_log(ud_date,ud_scode,tran_sqlno,opt_sqlno,Branch,Case_no,mod_field,mod_type";
+        //SQL += ",mod_dclass,mod_count,new_no,ncname1,ncname2,nename1,nename2,ncrep";
+        //SQL += ",nerep,nzip,naddr1,naddr2,neaddr1,neaddr2,neaddr3,neaddr4,ntel0,ntel,ntel1,nfax,nserver_flag";
+        //SQL += ",old_no,ocname1,ocname2,oename1,oename2,ocrep,oerep,ozip,oaddr1,oaddr2,oeaddr1,oeaddr2";
+        //SQL += ",oeaddr3,oeaddr4,otel0,otel,otel1,ofax,oserver_flag";
+        //SQL += ",list_remark,tran_code,mark) ";
+        //SQL += " select getdate(),'" + Session["scode"] + "',tran_sqlno,opt_sqlno,Branch,case_no,mod_field";
+        //SQL += ",mod_type,mod_dclass,mod_count,new_no";
+        //SQL += ",ncname1,ncname2,nename1,nename2,ncrep,nerep,nzip";
+        //SQL += ",naddr1,naddr2,neaddr1,neaddr2,neaddr3,neaddr4,ntel0,ntel,ntel1,nfax,nserver_flag";
+        //SQL += ",old_no,ocname1,ocname2,oename1,oename2,ocrep,oerep,ozip,oaddr1,oaddr2,oeaddr1,oeaddr2";
+        //SQL += ",oeaddr3,oeaddr4,otel0,otel,otel1,ofax,oserver_flag";
+        //SQL += ",list_remark,tran_code,mark ";
+        //SQL += " from opt_tranlist where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
 
         //caseopt_ap_log
-        SQL = "insert into caseopt_ap_log(ud_date,ud_scode,opt_ap_sqlno,opt_sqlno,case_no,branch,apsqlno,server_flag,apcust_no";
-        SQL += ",ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,tran_date,tran_scode,mark) ";
-        SQL += " select getdate(),'" + Session["scode"] + "',opt_ap_sqlno,opt_sqlno,case_no,branch,apsqlno,server_flag,apcust_no";
-        SQL += ",ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,tran_date,tran_scode,mark ";
-        SQL += " from caseopt_ap where opt_sqlno='" + qopt_sqlno + "'";
-        connb.ExecuteNonQuery(SQL);
+        Funcs.insert_log_table(conn, "U", prgid, "caseopt_ap", new Dictionary<string, string>() { { "opt_sqlno", qopt_sqlno } });
+        //SQL = "insert into caseopt_ap_log(ud_date,ud_scode,opt_ap_sqlno,opt_sqlno,case_no,branch,apsqlno,server_flag,apcust_no";
+        //SQL += ",ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,tran_date,tran_scode,mark) ";
+        //SQL += " select getdate(),'" + Session["scode"] + "',opt_ap_sqlno,opt_sqlno,case_no,branch,apsqlno,server_flag,apcust_no";
+        //SQL += ",ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,tran_date,tran_scode,mark ";
+        //SQL += " from caseopt_ap where opt_sqlno='" + qopt_sqlno + "'";
+        //connb.ExecuteNonQuery(SQL);
     }
 </script>
 
