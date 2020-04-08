@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -93,8 +93,8 @@
         <br>
         <table id="tabBtn" border="0" width="100%" cellspacing="0" cellpadding="0" align="center">
 	        <tr><td width="100%" align="center">
-			    <input type="button" value="查  詢" class="cbutton" id="btnSrch" name="btnSrch">
-			    <input type="button" value="重　填" class="cbutton" id="btnRest" name="button2">
+			    <input type="button" value="查　詢" class="cbutton" id="btnSrch" name="btnSrch">
+			    <input type="button" value="重　填" class="cbutton" id="btnRest" name="btnRest">
 	        </td></tr>
         </table>
     </div>
@@ -154,7 +154,9 @@
 		<td align="center">{{confirm_date}}</td>
 		<td align="center">{{dowhat_name}}</td>
 		<td align="center" nowrap>
-			<a href="opt31_GetCase.aspx?prgid=<%#prgid%>&qBranch={{branch}}&qseq={{bseq}}&qseq1={{bseq1}}&qCase_no={{case_no}}&qArcase={{arcase}}&qopt_sqlno={{opt_sqlno}}&qopt_no={{opt_no}}&qBr={{qBr}}" target="Eblank">[複製]</a>
+            <span id="tr_act_{{nRow}}">
+			    <a href="opt31_GetCase.aspx?prgid=<%#prgid%>&qBranch={{branch}}&qseq={{bseq}}&qseq1={{bseq1}}&qCase_no={{case_no}}&qArcase={{arcase}}&qopt_sqlno={{opt_sqlno}}&qopt_no={{opt_no}}&qBr={{qBr}}" target="Eblank">[複製]</a>
+            </span>
 		</td>
 	</tr>
 	</tfoot>
@@ -172,7 +174,6 @@
 <script language="javascript" type="text/javascript">
     $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
     $(document).ajaxStop(function () { $.maskStop(); });
-
 
     $("#qryBranch,#qrycust_area").getOption({//區所別
         url: "../ajax/_GetSqlDataCnn.aspx",
@@ -274,6 +275,7 @@
                         strLine1 = strLine1.replace(/{{qBr}}/g, item.qbr);
 
                         $("#dataList>tbody").append(strLine1);
+                        $("#tr_act_"+nRow).showFor(item.bstat_code!="YS"&&item.tran_status!="DT"&&item.tran_status!="DY");
                     });
                 });
             },
@@ -286,6 +288,14 @@
             }
         });
     };
+
+    $("#qryBranch").change(function (e) {
+        $("#qrycust_area").prop('selectedIndex', $(this).prop('selectedIndex'));
+    });
+
+    $("#qrycust_area").change(function (e) {
+        $("#qryBranch").prop('selectedIndex', $(this).prop('selectedIndex'));
+    });
 
     //每頁幾筆
     $("#PerPage").change(function (e) {

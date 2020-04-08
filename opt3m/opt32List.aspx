@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -18,7 +18,7 @@
         myToken.CheckMe(false, true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq,''optap_cname,''qbr ";
+            isql = "select a.*,''fseq,''optap_cname,''qbr,''tran_status ";
             isql += ",(select code_name from cust_code as c where code_type='Ostat_code' and a.Bstat_code=c.cust_code) as dowhat_name ";
             isql += " from vbr_opt a ";
             isql += " where a.Bmark='N' and (a.opt_no is not null) ";
@@ -89,14 +89,13 @@
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
                 //承辦狀態
                 isql = "Select max(Tran_status) as Tran_status from cancel_opt where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
-                string Tran_status = "";
                 using (SqlDataReader dr = conn.ExecuteReader(isql)) {
                     if (dr.Read()) {
-                        Tran_status += dr.SafeRead("Tran_status", "").Trim();
+                        page.pagedTable.Rows[i]["tran_status"] = dr.SafeRead("Tran_status", "").Trim();
                     }
                 }
 
-                if (Tran_status == "DT" || Tran_status == "DY")
+                if (page.pagedTable.Rows[i].SafeRead("tran_status", "") == "DT" || page.pagedTable.Rows[i].SafeRead("tran_status", "") == "DY")
                     page.pagedTable.Rows[i]["dowhat_name"] = "註銷中";
                 else {
                     if (page.pagedTable.Rows[i].SafeRead("dowhat_name", "") == "")
