@@ -256,6 +256,10 @@
         $("#arcase_class").val($(":selected",obj).attr("val2"));
     };
 
+    $("#BSeq").blur(function (e) {
+        chkNum($(this).val(), "區所案件編號");
+    });
+
     $("#dfy_last_date").blur(function (e) {
         if ($("#dfy_last_date").val() != "") {
             var Adate = (new Date($("#dfy_last_date").val())).addDays(-5);
