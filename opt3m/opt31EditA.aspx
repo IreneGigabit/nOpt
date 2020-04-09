@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -57,6 +57,15 @@
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
 
+        Token myToken = new Token(HTProgCode);
+        HTProgRight = myToken.CheckMe();
+        if (HTProgRight >= 0) {
+            PageLayout();
+            this.DataBind();
+        }
+    }
+
+    private void PageLayout() {
         using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
             string sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
                         "LEFT JOIN scode AS D ON D.scode = C.scode " +
@@ -68,9 +77,10 @@
                         "LEFT JOIN scode AS D ON D.scode = C.scode " +
                         "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opt31' " +
                         "Order By C.scode ";
-            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}",false);
+            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
         }
-
+        
+        //欄位開關
         if (prgid == "opt31") {
             HTProgCap = "爭救案承辦內容維護";
         } else if (prgid == "opt31_1") {
@@ -82,15 +92,6 @@
             submitTask = "Q";
         }
 
-        Token myToken = new Token(HTProgCode);
-        HTProgRight = myToken.CheckMe();
-        if (HTProgRight >= 0) {
-            PageLayout();
-            this.DataBind();
-        }
-    }
-
-    private void PageLayout() {
         //判行內容/品質評分欄位要不要顯示
         if (End_flag == "Y") {
             string dojob_scode = "";
@@ -240,7 +241,7 @@
 </tr>
 </table>
 
-<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500"></iframe>
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -265,12 +266,13 @@
     //初始化
     function this_init() {
         settab("#br");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).click();//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
         $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
         $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
+        $("#tr_Popt_show1").show();
 
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
