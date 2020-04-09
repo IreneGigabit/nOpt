@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -165,14 +165,14 @@ public class Funcs {
 			case "opt_tran":
 			case "opt_tranlist":
 			case "caseopt_ap":
-                usql = "INSERT INTO " + table + "_log(ud_date, ud_scode, " + tfield_str + ")";
+				usql = "insert into " + table + "_log(ud_date,ud_scode," + tfield_str + ")";
                 usql += " SELECT GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + tfield_str;
                 usql += " FROM " + table;
                 usql += " WHERE 1=1 ";
                 usql += wsql;
                 break;
             case "step_ext":
-                usql = "INSERT INTO " + table + "_log(ud_flag, ud_date, ud_scode, ud_prgid," + tfield_str + ")";
+				usql = "insert into " + table + "_log(ud_flag,ud_date,ud_scode,ud_prgid," + tfield_str + ")";
                 usql += " SELECT " + Util.dbnull(ud_flag) + ",GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + Util.dbnull(prgid) + "," + tfield_str;
                 usql += " FROM " + table;
                 usql += " WHERE 1=1 ";
