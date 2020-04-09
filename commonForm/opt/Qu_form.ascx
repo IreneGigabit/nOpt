@@ -42,11 +42,11 @@
     qu_form.init = function () {
         var jOpt = br_opt.opt[0];
         $("#score_pr_scode").val(jOpt.scode_name);
-        $("#Score").val(jOpt.Score);
+        $("#Score").val(jOpt.score);
         $("#opt_Remark").val(jOpt.opt_remark);
     }
 
     $("#Score").blur(function (e) {
-        chkNum($(this).val(), "接洽得分");
+        chkNum1($(this)[0], "接洽得分");
     });
 </script>
