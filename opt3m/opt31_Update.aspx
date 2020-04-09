@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -324,6 +324,8 @@
             conn.RollBack();
             Sys.errorLog(ex, conn.exeSQL, prgid);
             msg = "退回失敗";
+            strOut.AppendLine("alert('" + msg + "');");
+            
             throw new Exception(msg, ex);
         }
         finally {
@@ -650,7 +652,8 @@
 
         string subject = fseq + "-" + appl_name + "-" + cust_name;
         Response.Write("<script language=javascript>\n");
-        Response.Write("window.open('mailto:?subject=" + subject + "');\n");
+        //Response.Write("window.open('mailto:?subject=" + subject + "');\n");
+        Response.Write("document.location.href='mailto:?subject=" + subject + "'\n");
         Response.Write("<" + "/script>\n");
     }
 </script>
