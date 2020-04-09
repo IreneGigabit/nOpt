@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -60,6 +60,15 @@
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
 
+        Token myToken = new Token(HTProgCode);
+        HTProgRight = myToken.CheckMe();
+        if (HTProgRight >= 0) {
+            PageLayout();
+            this.DataBind();
+        }
+    }
+
+    private void PageLayout() {
         using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
             string sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
                         "LEFT JOIN scode AS D ON D.scode = C.scode " +
@@ -71,9 +80,8 @@
                         "LEFT JOIN scode AS D ON D.scode = C.scode " +
                         "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opt31' " +
                         "Order By C.scode ";
-            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}",false);
+            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
         }
-
 
         if (prgid == "opt31") {
             HTProgCap = "爭救案承辦內容維護";
@@ -87,15 +95,21 @@
             submitTask = "Q";
         }
 
-        Token myToken = new Token(HTProgCode);
-        HTProgRight = myToken.CheckMe();
-        if (HTProgRight >= 0) {
-            PageLayout();
-            this.DataBind();
+        //欄位開關
+        if (prgid.IndexOf("opt31") > -1) {
+            if (Back_flag != "B") {//不是退回
+                PLock = "false";
+                BLock = "false";
+                SLock = "false";
+                ALock = "false";
+            }
         }
-    }
-
-    private void PageLayout() {
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
+        }
+        
         //決定要不要顯示案件主檔畫面
         if (",DO1,DI1,DR1,".IndexOf(","+Request["arcase"]+",")>-1) {
             dmt_show_flag = "N";
@@ -134,21 +148,6 @@
                     if (ref_code != "V")
                         show_qu_form = "Y";
                 }
-            }
-        }
-
-        //欄位開關
-        if (prgid.IndexOf("opt31") > -1) {
-            if (Back_flag != "B") {//不是退回
-                PLock = "false";
-                BLock = "false";
-                SLock = "false";
-                ALock = "false";
-            }
-        }
-        if (submitTask != "Q") {
-            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
-                SELock = "false";
             }
         }
 
@@ -312,7 +311,7 @@
 </tr>
 </table>
 
-<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500"></iframe>
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -336,10 +335,11 @@
     //初始化
     function this_init() {
         settab("#tran");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).click();//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" != "Y"));
         $("#tabQu").showFor($("#End_flag").val() == "Y");//結辦顯示品質評分
         $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
         $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
