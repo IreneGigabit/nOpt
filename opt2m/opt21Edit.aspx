@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -88,6 +88,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
 <body>
@@ -192,10 +193,11 @@
     //初始化
     function this_init() {
         settab("#br");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).click();//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
+        $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" != "Y"));
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
