@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -147,11 +147,11 @@
 	</thead>
 	<tfoot style="display:none">
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-		<td align="center">{{opt_no}}</td>
-		<td align="center">{{fseq}}</td>
-		<td nowrap>{{ap_cname}}</td>
-		<td nowrap>{{appl_name}}</td>
-		<td nowrap>{{arcase_name}}</td>
+		<td align="center"><a href='{{urlasp}}' target='Eblank'>{{opt_no}}</a></td>
+		<td align="center"><a href='{{urlasp}}' target='Eblank'>{{fseq}}</a></td>
+		<td nowrap><a href='{{urlasp}}' target='Eblank'>{{ap_cname}}</a></td>
+		<td nowrap><a href='{{urlasp}}' target='Eblank'>{{appl_name}}</a></td>
+		<td nowrap><a href='{{urlasp}}' target='Eblank'>{{arcase_name}}</a></td>
 		<td align="center">{{confirm_date}}</td>
 		<td align="center">{{dowhat_name}}</td>
 		<td align="center" nowrap>
@@ -185,7 +185,7 @@
     $(function () {
         $("input.dateField").datepick();
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input");//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
         $("#tabBtn").showFor((<%#HTProgRight%> & 6)).find("input").prop("checked",true);//[查詢][重填]
     });
 
@@ -274,7 +274,16 @@
                         strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
                         strLine1 = strLine1.replace(/{{qBr}}/g, item.qbr);
 
+                        var urlasp="";
+                        if(item.case_no!=""){
+                            urlasp="../opt2m/opt22Edit.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&case_no="+item.case_no+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q"
+                        }else{
+                            urlasp="../opt2m/opt22EditA.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q"
+                        }
+                        strLine1 = strLine1.replace(/{{urlasp}}/g, urlasp);
+
                         $("#dataList>tbody").append(strLine1);
+
                         //Bstat_code=YS(已發文)或cancel_opt.tran_stat=DT(轉上級簽核)、DY(簽准)不可執行作業
                         $("#tr_act_"+nRow).showFor(item.bstat_code!="YS"&&item.tran_status!="DT"&&item.tran_status!="DY");
                     });

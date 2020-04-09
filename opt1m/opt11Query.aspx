@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -77,7 +77,7 @@
         </tr>	
         </table>
     </div>
-
+    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 
     <div id="divPaging" style="display:none">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
@@ -157,6 +157,8 @@
             textFormat: "{branch}_{branchname}"
         });
 
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+
         $("#btnSrch").click();
     });
 
@@ -187,6 +189,7 @@
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }
+                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
                 //////更新分頁變數
                 var totRow = parseInt(JSONdata.totrow, 10);
                 if (totRow > 0) {
