@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -173,13 +173,13 @@
         });
 
         //預計發文日期
-        $("#GS_date").val(jOpt.gs_date);
+        $("#GS_date").val(dateReviver(jOpt.gs_date, "yyyy/M/d"));
         if($("#GS_date").val()==""&&$("#prgid").val()=="opt31_1"){//結辦
             $("#GS_date").val((new Date().format("yyyy/M/d")));
         }
 
         //總收發文日期,若無值,預設為發文日期後一天
-        $("#mp_date").val(jOpt.mp_date);
+        $("#mp_date").val(dateReviver(jOpt.mp_date, "yyyy/M/d"));
         if ($("#mp_date").val() == "" && $("#prgid").val() == "opt31_1") {//結辦
             switch ((new Date($("#mp_date").val())).getDay()) {
                 case 5:
@@ -223,6 +223,7 @@
         $("#old_Send_Fees").val(jOpt.bfees);
 
         //是否輸入評分
+        $("input[name='score_flag'][value='" + $("#show_qu_form").val() + "']").prop("checked", true).triggerHandler("click");
         $("input[name='score_flag'][value='" + jOpt.score_flag + "']").prop("checked", true);
         $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1);//承辦結辦作業不顯示
 
@@ -308,7 +309,7 @@
     });
 
     $("#Send_Fees").blur(function () {
-        chkNum($(this).val(), "規費");
+        chkNum1($(this)[0], "規費");
     });
 
     send_form.getcode_br_agt_no=function(){
