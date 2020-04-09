@@ -21,7 +21,7 @@
             //tfy_source = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code", "{cust_code}", "({cust_code}---{code_name})");
         }
         tfy_Ar_mark = Funcs.getcust_code_mul("ar_mark","and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)","").Option("{cust_code}", "{code_name}");
-        tfy_source = Funcs.getcust_code_mul("Source","AND cust_code<> '__' AND End_date is null","cust_code").Option("{cust_code}", "{cust_code}---{code_name}");
+        tfy_source = Funcs.getcust_code_mul("Source","AND cust_code<> '__' AND End_date is null","cust_code").Option("{cust_code}", "({cust_code})---{code_name}");
 
         this.DataBind();
     }
