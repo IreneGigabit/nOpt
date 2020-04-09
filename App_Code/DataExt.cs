@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -609,6 +609,50 @@ public class DBNullCreationConverter : JsonConverter
 
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
 		writer.WriteValue(string.Empty);
+	}
+
+	public override bool CanRead {
+		get {
+			return false;
+		}
+	}
+	/// <summary>
+	/// 是否允許轉換JSON字符串時調用
+	/// </summary>
+	public override bool CanWrite {
+		get {
+			return true;
+		}
+	}
+}
+#endregion
+
+#region class TrimCreationConverter
+/// <summary>
+/// 將輸出的值Trim()掉
+/// ref:https://www.cnblogs.com/wsq-blog/p/10888566.html
+/// </summary>
+public class TrimCreationConverter : JsonConverter
+{
+	/// <summary>
+	/// 是否允許轉換
+	/// </summary>
+	public override bool CanConvert(Type objectType) {
+		bool canConvert = false;
+		switch (objectType.FullName) {
+			case "System.String":
+				canConvert = true;
+				break;
+		}
+		return canConvert;
+	}
+
+	public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+		return existingValue;
+	}
+
+	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+		writer.WriteValue(value.ToString().Trim());
 	}
 
 	public override bool CanRead {
