@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -37,6 +37,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
 <body>
@@ -300,4 +301,12 @@
         }
     });
     //////////////////////
+
+    $("#qryopt_no").blur(function (e) {
+        chkNum1($(this)[0], "案件編號");
+    });
+
+    $("#qryBSeq").blur(function (e) {
+        chkNum1($(this)[0], "區所案件編號");
+    });
 </script>
