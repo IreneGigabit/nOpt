@@ -57,10 +57,10 @@
     }
 
     $("#PRY_hour").blur(function (e) {
-        chkNum($(this).val(), "核准時數");
+        chkNum1($(this)[0], "核准時數");
     });
 
     $("#AP_hour").blur(function (e) {
-        chkNum($(this).val(), "判行時數");
+        chkNum1($(this)[0], "判行時數");
     });
 </script>
