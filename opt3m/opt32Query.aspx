@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -37,6 +37,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
 <body>
@@ -165,8 +166,7 @@
 </TABLE>
 <br>
 備註:<br>
-1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">退回</font>狀態，可按下該圖示查詢相關退回紀錄
-
+1.承辦狀態為「已發文」或「註銷中」不可執行作業
 </body>
 </html>
 
@@ -185,7 +185,7 @@
     $(function () {
         $("input.dateField").datepick();
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input");//☑測試
         $("#tabBtn").showFor((<%#HTProgRight%> & 6)).find("input").prop("checked",true);//[查詢][重填]
     });
 
@@ -275,6 +275,7 @@
                         strLine1 = strLine1.replace(/{{qBr}}/g, item.qbr);
 
                         $("#dataList>tbody").append(strLine1);
+                        //Bstat_code=YS(已發文)或cancel_opt.tran_stat=DT(轉上級簽核)、DY(簽准)不可執行作業
                         $("#tr_act_"+nRow).showFor(item.bstat_code!="YS"&&item.tran_status!="DT"&&item.tran_status!="DY");
                     });
                 });
@@ -288,14 +289,6 @@
             }
         });
     };
-
-    $("#qryBranch").change(function (e) {
-        $("#qrycust_area").prop('selectedIndex', $(this).prop('selectedIndex'));
-    });
-
-    $("#qrycust_area").change(function (e) {
-        $("#qryBranch").prop('selectedIndex', $(this).prop('selectedIndex'));
-    });
 
     //每頁幾筆
     $("#PerPage").change(function (e) {
@@ -332,4 +325,20 @@
         }
     });
     //////////////////////
+
+    $("#qryBranch").change(function (e) {
+        $("#qrycust_area").prop('selectedIndex', $(this).prop('selectedIndex'));
+    });
+
+    $("#qrycust_area").change(function (e) {
+        $("#qryBranch").prop('selectedIndex', $(this).prop('selectedIndex'));
+    });
+
+    $("#qryBSeq").blur(function (e) {
+        chkNum1($(this)[0], "區所案件編號");
+    });
+
+    $("#qrycust_seq").blur(function (e) {
+        chkNum1($(this)[0], "客戶編號");
+    });
 </script>
