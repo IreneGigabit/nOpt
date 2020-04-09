@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 
 <script runat="server">
@@ -115,7 +115,7 @@
     </Table>
     <br>
     <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="50%" align="center">
-      <Tr class="qBrN">
+      <Tr>
 	    <td class="lightbluetable" nowrap align="center" width="10%" Onclick="checkall()" style="cursor:pointer">
 		    全選
 	    </td>
@@ -171,6 +171,8 @@
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 </form>
+
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -182,9 +184,13 @@
         this_init();
     });
 
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
+    });
+
     //初始化
     function this_init() {
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true);//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).click();//☑測試
 
         //欄位控制
         $(".qBrN").showFor($("#qBr").val() == "N");
@@ -223,6 +229,7 @@
 		    $("select,textarea,input").unlock();
 		    $("#btnSubmit").lock(!$("#chkTest").prop("checked"));
 		    reg.action = "opt31_GetCase_act.aspx";
+		    reg.target = "ActFrame";
 		    reg.submit();
 		}
     });
