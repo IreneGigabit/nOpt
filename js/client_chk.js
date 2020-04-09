@@ -93,3 +93,15 @@ function chkNum(pValue, pmsg) {
         return false;
     }
 }
+
+function chkNum1(pObj, pmsg) {
+    if (pObj.value != "") {
+        if (!isNumeric(pObj.value)) {
+            alert(pmsg + "必須為數值!!!");
+            pObj.focus();
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
