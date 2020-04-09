@@ -79,4 +79,12 @@
 
         $("#tr_pr_date").showFor($("#End_flag").val() == "Y");
     }
+
+    $("#Pr_hour").blur(function () {
+        chkNum1($(this)[0], "承辦時數");
+    });
+
+    $("#pr_per").blur(function () {
+        chkNum1($(this)[0], "承辦完成百分比");
+    });
 </script>
