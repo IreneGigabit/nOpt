@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -332,9 +332,8 @@
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
-        if (!(window.parent.tt === undefined)) {
-            //window.parent.tt.rows = "100%,0%";
-            window.parent.Etop.goSearch();
+        if (!(window.parent.parent.tt === undefined)) {
+            window.parent.parent.tt.rows = "100%,0%";
         }else{
             window.opener.this_init();
             window.close();
