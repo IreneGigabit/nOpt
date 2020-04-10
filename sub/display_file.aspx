@@ -33,9 +33,9 @@
     }
 
     private void PageLayout() {
-        file_path = "/opt/opt_file";
+        file_path = "/nopt/opt_file";
         if (strtype == "law_opt") {
-            file_path = "/opt/law_opt";
+            file_path = "/nopt/law_opt";
         }
 
         if (gs_date != "") {
