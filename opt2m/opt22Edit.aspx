@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -216,7 +216,7 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0">
 <tr id="tr_button1">
     <td width="100%" align="center">
-		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
+		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U')" id="btnSaveSubmit">
 		<input type=button value="退回承辦" class="redbutton" id="btnBack1Submit">
     </td>
 </tr>
@@ -257,7 +257,7 @@
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" != "Y"));
-        $("#tr_button1,#tr_button2").showFor($("#submittask").val()!="Q");//辦按鈕
+        $("#tr_button1,#tr_button2").showFor($("#submittask").val()!="Q");//按鈕
         $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
@@ -350,6 +350,12 @@
                 $("#Score").focus();
                 return false;
             }
+        }
+
+        if ($("#opt_Remark").val()==""){
+            alert("請輸入案件缺失及評語！");
+            $("#opt_Remark").focus();
+            return false;
         }
 
         if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
