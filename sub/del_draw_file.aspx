@@ -24,8 +24,8 @@
         cust_area = (Request["cust_area"] ?? "").Left(1)+gdept;
         btnname = Request["btnname"] ?? "";
 
-        file_path = "/opt/opt_file/";
-        if (type == "law_opt") file_path = "/opt/law_opt/";
+        file_path = "/nopt/opt_file/";
+        if (type == "law_opt") file_path = "/nopt/law_opt/";
 
         //Response.Write("draw_file=" + draw_file + "<BR>");
         //Response.Write("file_name=" + file_name + "<BR>");
