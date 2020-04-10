@@ -335,7 +335,7 @@
     //初始化
     function this_init() {
         settab("#tran");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).click();//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
