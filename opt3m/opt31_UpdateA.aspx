@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -318,25 +318,25 @@
             if (dbflag == "A") {
                 //當上傳路徑不為空的 and attach_sqlno為空的,才需要新增
                 if (ReqVal.TryGet(opt_uploadfield + "_" + i, "") != "" && ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
-                    SQL = "insert into attach_opt (Opt_sqlno,Source" +
-                           ",add_date,add_scode,Attach_no,attach_path,attach_desc" +
-                           ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode" +
-                           ",Source_name,doc_type" +
-                           ") values (" +
-                           popt_sqlno + ",'" + psource + "'" +
-                           ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'" +
-                           ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "") + "'" +
-                           ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'" +
-                           ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'" +
-                           ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'" +
-                           ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'" +
-                           ")";
+                    SQL = "insert into attach_opt (Opt_sqlno,Source";
+                    SQL += ",add_date,add_scode,Attach_no,attach_path,attach_desc";
+                    SQL += ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode";
+                    SQL += ",Source_name,doc_type";
+                    SQL += ") values (";
+                    SQL += popt_sqlno + ",'" + psource + "'";
+                    SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace("\\nopt\\", "\\opt\\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                    SQL += ")";
                     conn.ExecuteNonQuery(SQL);
                 }
             } else if (dbflag == "U") {
                 Funcs.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
                 SQL = "Update attach_opt set Source='" + psource + "'";
-                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "") + "'";
+                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace("\\nopt\\", "\\opt\\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                 SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
                 SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
                 SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
