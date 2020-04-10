@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -223,8 +223,11 @@
         $("#old_Send_Fees").val(jOpt.bfees);
 
         //是否輸入評分
-        $("input[name='score_flag'][value='" + $("#show_qu_form").val() + "']").prop("checked", true).triggerHandler("click");
-        $("input[name='score_flag'][value='" + jOpt.score_flag + "']").prop("checked", true);
+        if(jOpt.score_flag!=""){
+            $("input[name='score_flag'][value='" + jOpt.score_flag + "']").prop("checked", true).triggerHandler("click");
+        }else{
+            $("input[name='score_flag'][value='" + $("#show_qu_form").val() + "']").prop("checked", true).triggerHandler("click");
+        }
         $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1);//承辦結辦作業不顯示
 
         $("#rs_type").val(jOpt.rs_type);
@@ -305,7 +308,7 @@
 
     //是否輸入評分
     $("input[name='score_flag']").click(function () {
-        $("#tabQu").showFor($("input[name='score_flag']:checked").val()=="Y");
+        $("#tabQu").hideFor($("input[name='score_flag']:checked").val()=="N");
     });
 
     $("#Send_Fees").blur(function () {
