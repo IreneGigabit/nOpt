@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -73,6 +73,7 @@
                     , page.pagedTable.Rows[i].SafeRead("Branch", "")
                     , Sys.GetSession("dept"));
 
+                //申請人
                 isql = "select ap_cname from caseopt_ap ";
                 isql += "where case_no='" + page.pagedTable.Rows[i].SafeRead("case_no", "")+"' ";
                 isql += "and opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
@@ -82,9 +83,8 @@
                         ap_cname += (ap_cname != "" ? "、" : "") + dr.SafeRead("ap_cname", "").Trim();
                     }
                 }
-
-                //申請人
                 page.pagedTable.Rows[i]["optap_cname"] = ap_cname.CutData(30);
+
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
                 //承辦狀態
