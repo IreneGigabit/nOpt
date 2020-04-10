@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -84,20 +84,20 @@
     private string showDRFile(string pBranch, string pFile) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             //抓區所商標圖server主機名稱(iis)
-            string uploadserver_name = "";
-            SQL = "Select code_name,form_name from cust_code where code_type='OSerName' and cust_code='" + pBranch + "'";
-            DataTable dt = new DataTable();
-
-            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                if (dr.Read()) {
-                    uploadserver_name = dr.SafeRead("form_name", "");
-                }
-                if (uploadserver_name == "") {
-                    if (Sys.Host == "web10") uploadserver_name = "web01";
-                    else if (Sys.Host == "web08") uploadserver_name = "web02";
-                    else uploadserver_name = Sys.Host;
-                }
-            }
+            string uploadserver_name = Sys.webservername(pBranch);
+            //SQL = "Select code_name,form_name from cust_code where code_type='OSerName' and cust_code='" + pBranch + "'";
+            //DataTable dt = new DataTable();
+            //
+            //using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+            //    if (dr.Read()) {
+            //        uploadserver_name = dr.SafeRead("form_name", "");
+            //    }
+            //    if (uploadserver_name == "") {
+            //        if (Sys.Host == "web10") uploadserver_name = "web01";
+            //        else if (Sys.Host == "web08") uploadserver_name = "web02";
+            //        else uploadserver_name = Sys.Host;
+            //    }
+            //}
 
             string rtnStr = "";
             if (pFile.IndexOf("\\") > -1) {//絕對路徑
