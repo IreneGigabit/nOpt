@@ -74,8 +74,8 @@
     }
 
     private void DoUpLoad() {
-        string mappath_name = @"\opt\opt_file\";
-        if (type == "law_opt") mappath_name = @"\opt\law_opt\";
+        string mappath_name = @"\nopt\opt_file\";
+        if (type == "law_opt") mappath_name = @"\nopt\law_opt\";
 
         string file_path = mappath_name + SrvrVal["folder_name"] + "\\";//指定儲存路徑
         if (!System.IO.Directory.Exists(Server.MapPath(file_path))) {
