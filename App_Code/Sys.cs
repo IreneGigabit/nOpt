@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -161,6 +161,11 @@ public class Sys
 				rtnStr = "web02";//開發環境
 				break;
 		}
+		if (pBranch.ToUpper() == "N") rtnStr = "sinn03";
+		if (pBranch.ToUpper() == "C") rtnStr = "sic09";
+		if (pBranch.ToUpper() == "S") rtnStr = "sis09";
+		if (pBranch.ToUpper() == "K") rtnStr = "sik09";
+
 		return rtnStr;
 	}
 
@@ -174,7 +179,7 @@ public class Sys
 				if (pBranch.ToUpper() == "N") rtnStr = "sinn11";
 				if (pBranch.ToUpper() == "C") rtnStr = "sic11";
 				if (pBranch.ToUpper() == "S") rtnStr = "sis11";
-				if (pBranch.ToUpper() == "K") rtnStr = "sik08";
+				if (pBranch.ToUpper() == "K") rtnStr = "sik11";
 				break;
 			case "web10":
 				rtnStr = "web01";//測試環境
