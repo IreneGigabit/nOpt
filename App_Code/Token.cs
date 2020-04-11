@@ -22,7 +22,7 @@ public class Token
 
     public Token()
         : this(
-		 Sys.GetSession("Syscode")
+		 Sys.getAppSetting("Sysmenu")//因menu的syscode不同.所以不能用syscode
 		, ""
         , Sys.GetSession("LoginGrp")
         , Conn.Sysctrl
@@ -30,7 +30,7 @@ public class Token
 
     public Token(string APcode)
         : this(
-         Sys.GetSession("Syscode")
+         Sys.getAppSetting("Sysmenu")
         , APcode
         , Sys.GetSession("LoginGrp")
         , Conn.Sysctrl
@@ -115,6 +115,7 @@ public class Token
                     " AND SYScode = '" + SysCode + "'" +
                     " AND GETDATE() BETWEEN beg_date AND end_date";
                 //HttpContext.Current.Response.Write(SQL);
+                //HttpContext.Current.Response.End();
                 try {
                     SqlCommand cmd = new SqlCommand(SQL, cn);
                     cn.Open();

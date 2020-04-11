@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -19,7 +19,7 @@
         HTProgRight= myToken.CheckMe(false,true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq,''send_dept_name ";
+            isql = "select a.*,''fseq,''send_dept_name,''optap_cname,''contract_flag ";
             isql += "from vbr_opt a ";
             isql += "where (a.Bstat_code like 'YY%') and a.Bmark='N' ";
 
@@ -84,7 +84,7 @@
                         ap_cname += (ap_cname != "" ? "、" : "") + dr.SafeRead("ap_cname", "").Trim();
                     }
                 }
-                page.pagedTable.Rows[i]["ap_cname"] = ap_cname.CutData(20);
+                page.pagedTable.Rows[i]["optap_cname"] = ap_cname.CutData(20);
                 
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
@@ -109,6 +109,7 @@
                         }
                     }
                 }
+                page.pagedTable.Rows[i]["contract_flag"] = contract_flag;
             }
 
             var settings = new JsonSerializerSettings()

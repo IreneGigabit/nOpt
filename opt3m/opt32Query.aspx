@@ -43,7 +43,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%><%#HTProgCap%>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
