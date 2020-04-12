@@ -140,7 +140,7 @@
             <td align="center"><input type=checkbox id="BT" name="B{{nRow}}" value="Y"></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{opt_no}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{fseq}}</a>
-			    <img src="../images/mailg.gif" title="Email通知區所" align="absmiddle"  border="0" onClick="tobrbutton_email('{{fseq}}','{{case_no}}','{{last_date}}','{{appl_name}}','{{gs_date}}','{{opt_sqlno}}','{{branch}}')">
+			    <img id="maialIcon{{nRow}}" src="../images/mailg.gif" style="cursor:pointer" title="Email通知區所" align="absmiddle"  border="0" onClick="tobrbutton_email('{{nRow}}','{{fseq}}','{{case_no}}','{{last_date}}','{{appl_name}}','{{gs_date}}','{{opt_sqlno}}','{{branch}}')">
 		    </td>
 		    <td><a href='{{urlasp}}' target='Eblank'>{{ap_cname}}</a></td>
 		    <td><a href='{{urlasp}}' target='Eblank'>{{appl_name}}</a></td>
@@ -157,6 +157,9 @@
 		        <input type="text" id="mp_date{{nRow}}" name="mp_date{{nRow}}" value="{{mp_date}}">
 		        <input type="text" id="contract_flag{{nRow}}" name="contract_flag{{nRow}}" value="{{contract_flag}}">
 		        <input type="text" id="fseq{{nRow}}" name="fseq{{nRow}}" value="{{fseq}}">
+		        <input type="text" id="case_no{{nRow}}" value="{{case_no}}">
+		        <input type="text" id="mailto{{nRow}}" value="{{mailto}}">
+		        <input type="text" id="mailcc{{nRow}}" value="{{mailcc}}">
 		    </td>
 	    </tr>
 	    </tfoot>
@@ -197,8 +200,7 @@
 
     $(function () {
         $("input.dateField").datepick();
-        //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
 
         $("#btnSrch").click();
     });
@@ -286,11 +288,19 @@
                         strLine1 = strLine1.replace(/{{case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{branch}}/g, item.branch);
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
+                        strLine1 = strLine1.replace(/{{mailto}}/g, item.mailto);
+                        strLine1 = strLine1.replace(/{{mailcc}}/g, item.mailcc);
+
+                        var urlasp="";
+                        if(item.case_no!=""){
+                            urlasp="../opt2m/opt22Edit.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&case_no="+item.case_no+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q"
+                        }else{
+                            urlasp="../opt2m/opt22EditA.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q"
+                        }
+                        strLine1 = strLine1.replace(/{{urlasp}}/g, urlasp);
 
                         $("#dataList>tbody").append(strLine1);
-                        $("#todoBack_" + nRow).showFor(item.bstat_code.Right(1) == "X");
-                        $("#tr_edit_"+nRow).showFor(item.case_no!="");
-                        $("#tr_editA_" + nRow).showFor(item.case_no == "");
+                        $("#maialIcon" + nRow).showFor(item.contract_flag=="Y");
                     });
                 });
             },
@@ -364,6 +374,7 @@
             }
         }
         $("btnSubmit,#btnBack").lock(!$("#chkTest").prop("checked"));
+        reg.submittask.value="U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         //reg.submit();
@@ -463,64 +474,18 @@
     }
 
     //契約書後補通知區所mail簽核
-    function tobrbutton_email(fseq,case_no,last_date,appl_name,gs_date,opt_sqlno,branch){
-        /*
-        var server="<%#Sys.Host%>";
-        var Sender="",StrToList="",CCtoList="";
-        if(server=="web8"||server=="web10"){
-            Sender="<%#Session["scode"]%>"//寄件者
-            StrToList="<%#Session["scode"]%>@saint-island.com.tw"  //收件者
-        }else{
-            Sender="<%#Session["scode"]%>"//寄件者
-            //通知區所承辦、程序
-            fsql="select in_scode from todo_opt where opt_sqlno=" & opt_sqlno & " and apcode='brt18' and dowhat='RE' and job_status='YY' "
-            url = "/opt/xml/xmlgetsqldata.asp?searchsql=" & fsql
-            set xmldoc = CreateObject("Microsoft.XMLDOM")
-            xmldoc.async = false
-            xmldoc.validateOnParse = true
-            if xmldoc.load (url) then
-            if xmldoc.selectSingleNode("//xhead/Found").text = "Y" then
-            todo_scode = xmldoc.selectSingleNode("//xhead/in_scode").text
-        else
-                        todo_scode = ""	
-            end if
-        end if
-        set xmldoc = nothing
-			
-            fsql="select scode from sysctrl.dbo.scode_group where grpclass='" & branch & "' and grpid='T210' and grptype='F'"
-            url = "/opt/xml/xmlgetsqldata.asp?searchsql=" & fsql
-            set xmldoc = CreateObject("Microsoft.XMLDOM")
-            xmldoc.async = false
-            xmldoc.validateOnParse = true
-            if xmldoc.load (url) then
-            if xmldoc.selectSingleNode("//xhead/Found").text = "Y" then
-            bproc_scode =  xmldoc.selectSingleNode("//xhead/scode").text
-        else
-                        bproc_scode = ""	
-            end if
-        end if
-        set xmldoc = nothing
-	        
-            if todo_scode<>"" then
-            StrToList=todo_scode & "@saint-island.com.tw;"  //收件者						
-            end if
-            if bproc_scode<>"" then   
-            StrToList=StrToList & bproc_scode & "@saint-island.com.tw"
-            end if  
-            CCtoList = " "	'副本 
-
-        }
-
+    function tobrbutton_email(nRow,fseq,case_no,last_date,appl_name,gs_date,opt_sqlno,branch){
+        var StrToList=$("#mailto"+nRow).val();
+        var CCtoList=$("#mailcc"+nRow).val();
 	
-        tsubject = "國內所爭救案系統－官發待契約書後補通知（區所編號： " & fseq & " ）"
+        var tsubject = "國內所爭救案系統－官發待契約書後補通知（區所編號： " + fseq + " ）";
 	
-        tbody = "致: 國內所 程序、承辦" & "%0A%0A"
-        tbody = tbody & "【通 知 日 期 】: "&date()
-        tbody = tbody & "%0A【區所編號】:" & fseq & "，交辦單號：" & case_no & "，法定期限：" & last_date & "，預計發文日期：" & gs_date  
-        tbody = tbody & "%0A【案件名稱】:" & appl_name
-        tbody = tbody & "%0A 請儘速後補契約書，以俾爭議組發文，如無法及時完成後補，請進行mail簽核作業，經主管同意後由資訊部開放可先官發。"
+        var tbody = "致: 國內所 程序、承辦" + "%0A%0A";
+        tbody += "【通 知 日 期 】: "+(new Date()).format("yyyy/M/d");
+        tbody += "%0A【區所編號】:" + fseq + "，交辦單號："+ case_no +"，法定期限："+ last_date+ "，預計發文日期："+ gs_date  ;
+        tbody += "%0A【案件名稱】:" + appl_name;
+        tbody += "%0A 請儘速後補契約書，以俾爭議組發文，如無法及時完成後補，請進行mail簽核作業，經主管同意後由資訊部開放可先官發。";
 	
-        window.parent.Eblank.location.href= "mailto:"& StrToList &"?subject="&tsubject&"&cc="&CCtoList&"&body="&tbody
-        */
+        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&cc="+CCtoList+"&body="+tbody;
     }
 </script>

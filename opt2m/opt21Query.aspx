@@ -143,6 +143,7 @@
 		<td align="center">
 			<a id="tr_edit_{{nRow}}" href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
 			<a id="tr_editA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
+			<a id="tr_delA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=DEL" target="Eblank">[刪除分案]</a>
 		</td>
 	</tr>
 	</tfoot>
@@ -151,8 +152,8 @@
 </TABLE>
 <br>
 備註:<br>
-1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">承辦退回</font>狀態，可按下該圖示查詢相關退回紀錄
-
+1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">承辦退回</font>狀態，可按下該圖示查詢相關退回紀錄<br />
+2.自行新增分案且有退回者，才能執行[刪除分案]<br />
 </body>
 </html>
 
@@ -171,7 +172,7 @@
             textFormat: "{branch}_{branchname}"
         });
 
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("#btnSrch").click();
     });
 
@@ -255,6 +256,7 @@
                         $("#todoBack_" + nRow).showFor(item.bstat_code.Right(1) == "X");
                         $("#tr_edit_"+nRow).showFor(item.case_no!="");
                         $("#tr_editA_" + nRow).showFor(item.case_no == "");
+                        $("#tr_delA_" + nRow).showFor(item.case_no == ""&&item.bstat_code.Right(1) == "X");
                     });
                 });
             },

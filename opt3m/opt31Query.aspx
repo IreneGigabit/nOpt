@@ -206,7 +206,7 @@
     $(function () {
         $("input.dateField").datepick();
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
 
         $("#btnSrch").click();
     });

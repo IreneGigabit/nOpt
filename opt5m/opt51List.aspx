@@ -12,17 +12,22 @@
     protected string isql = "";
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
+    protected int HTProgRight = 0;
 
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(HTProgCode);
-        myToken.CheckMe(false, true);
+        HTProgRight= myToken.CheckMe(false,true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq,''optap_cname,''qbr,''tran_status ";
-            isql += ",(select code_name from cust_code as c where code_type='Ostat_code' and a.Bstat_code=c.cust_code) as dowhat_name ";
-            isql += " from vbr_opt a ";
-            isql += " where a.Bmark='N' and (a.opt_no is not null) ";
+		isql = "select a.*,b.creason,b.input_date,b.sqlno as cancel_sqlno,''fseq,''optap_cname ";
+		isql+= " from vbr_opt a ";
+		isql+= " inner join cancel_opt as b ";
+		isql+= " on a.opt_sqlno=b.opt_sqlno ";
+        isql += " where (b.tran_status='DY') and a.Bmark='N' ";
 
+            if ((Request["qryopt_no"] ?? "") != "") {
+                isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
+            }
             if ((Request["qryBranch"] ?? "") != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
@@ -32,26 +37,17 @@
             if ((Request["qryBSeq1"] ?? "") != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
-            if ((Request["qryCase_no"] ?? "") != "") {
-                isql += " and a.Case_no='" + Request["qryCase_no"] + "'";
+            if ((Request["qryinput_dateS"] ?? "") != "") {
+                isql += " and b.input_date>='" + Request["qryinput_dateS"] + "'";
             }
-            if ((Request["qryCust_area"] ?? "") != "") {
-                isql += " and a.Cust_area='" + Request["qryCust_area"] + "'";
-            }
-            if ((Request["qryCust_seq"] ?? "") != "") {
-                isql += " and a.Cust_seq='" + Request["qryCust_seq"] + "'";
-            }
-            if ((Request["qryap_cname"] ?? "") != "") {
-                isql += " and ( a.ap_cname like '%" + Request["qryap_cname"] + "%' or a.ap_ename like '%" + Request["qryap_cname"] + "%') ";
-            }
-            if ((Request["qryappl_name"] ?? "") != "") {
-                isql += " and a.appl_name like '%" + Request["qryappl_name"] + "%'";
+            if ((Request["qryinput_dateE"] ?? "") != "") {
+                isql += " and b.input_date<='" + Request["qryinput_dateE"] + "'";
             }
 
             if ((Request["qryOrder"] ?? "") != "") {
                 isql += " order by " + Request["qryOrder"];
             } else {
-                isql += " order by a.opt_no";
+                isql += " order by b.input_date";
             }
 
             DataTable dt = new DataTable();
@@ -75,7 +71,7 @@
 
                 //申請人
                 isql = "select ap_cname from caseopt_ap ";
-                isql += "where case_no='" + page.pagedTable.Rows[i].SafeRead("case_no", "")+"' ";
+                isql += "where case_no='" + page.pagedTable.Rows[i].SafeRead("case_no", "") + "' ";
                 isql += "and opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
                 string ap_cname = "";
                 using (SqlDataReader dr = conn.ExecuteReader(isql)) {
@@ -83,33 +79,14 @@
                         ap_cname += (ap_cname != "" ? "、" : "") + dr.SafeRead("ap_cname", "").Trim();
                     }
                 }
-                page.pagedTable.Rows[i]["optap_cname"] = ap_cname.CutData(30);
+                page.pagedTable.Rows[i]["optap_cname"] = ap_cname.CutData(20);
 
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
-                //承辦狀態
-                isql = "Select max(Tran_status) as Tran_status from cancel_opt where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
-                using (SqlDataReader dr = conn.ExecuteReader(isql)) {
-                    if (dr.Read()) {
-                        page.pagedTable.Rows[i]["tran_status"] = dr.SafeRead("Tran_status", "").Trim();
-                    }
-                }
 
-                if (page.pagedTable.Rows[i].SafeRead("tran_status", "") == "DT" || page.pagedTable.Rows[i].SafeRead("tran_status", "") == "DY")
-                    page.pagedTable.Rows[i]["dowhat_name"] = "註銷中";
-                else {
-                    if (page.pagedTable.Rows[i].SafeRead("dowhat_name", "") == "")
-                        page.pagedTable.Rows[i]["dowhat_name"] = "未收件";
-                }
-                //作業
-                if (page.pagedTable.Rows[i].SafeRead("Case_no", "") != "")
-                    page.pagedTable.Rows[i]["qbr"] = "N";
-                else
-                    page.pagedTable.Rows[i]["qbr"] = "Y";
             }
 
-            var settings = new JsonSerializerSettings()
-            {
+            var settings = new JsonSerializerSettings() {
                 Formatting = Formatting.Indented,
                 ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
                 Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
@@ -118,4 +95,6 @@
             Response.End();
         }
     }
+
+
 </script>

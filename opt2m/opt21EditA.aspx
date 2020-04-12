@@ -87,7 +87,7 @@
 <form id="reg" name="reg" method="post">
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
@@ -105,14 +105,22 @@
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
-<tr>
+<tr id="tr_button1">
     <td align="center">
         <input type=button value ="新增分案" class="cbutton" onClick="formSearchSubmit('ADD')" id="btnsearchSubmit1">
         <input type=button value ="分　　案" class="cbutton" onClick="formSearchSubmit('U')" id="btnsearchSubmit2">
+        <input type=button value ="刪除分案" class="cbutton" id="btnsearchSubmit3">
+    </td>
+</tr>
+<tr id="tr_button2" style="display:none">
+    <td align="center">
+        <input type=button value="刪除" class="redbutton" id="btnDelSubmit">
+        <input type=button value="取消" class="c1button" id="btnResetSubmit">
     </td>
 </tr>
 </table>
 
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -120,6 +128,10 @@
     if (!(window.parent.tt === undefined)) {
         window.parent.tt.rows = "0%,100%";
     }
+
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
+    });
 
     $(function () {
         this_init();
@@ -135,7 +147,8 @@
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#span_sopt_no").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
         $("#btnsearchSubmit1").showFor($("#submittask").val()=="ADD");//新增分案時顯示[新增分案]
-        $("#btnsearchSubmit2").showFor($("#submittask").val()!="ADD");//分案時顯示[分　　案]
+        $("#btnsearchSubmit2").showFor($("#submittask").val()=="U");//分案時顯示[分　　案]
+        $("#btnsearchSubmit3").showFor($("#submittask").val()=="DEL");//刪除分案時顯示[刪除分案]
         $(".Lock").lock();
         $(".QLock").lock(<%#QLock%>);
         $(".QHide").lock(<%#QHide%>);
@@ -218,7 +231,36 @@
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit1,#btnsearchSubmit2").lock();
         reg.submittask.value = dowhat;
+        reg.target = "ActFrame";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.submit();
     }
+
+
+    //刪除分案(1)
+    $("#btnsearchSubmit3").click(function () {
+        if (confirm("是否確定刪除分案？？")) {
+            $("#tr_button1").hide();
+            $("#tr_button2").show();
+        }else{
+            $("#tr_button1").show();
+            $("#tr_button2").hide();
+        }
+    });
+
+    //刪除分案(2)
+    $("#btnDelSubmit").click(function () {
+        reg.submittask.value = "DEL";
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
+        reg.submit();
+    });
+
+    //取消
+    $("#btnResetSubmit").click(function () {
+        $("#tr_button1").show();
+        $("#tr_button2").hide();
+        $("#tr_button1 input:button").unlock();
+    });
+
 </script>

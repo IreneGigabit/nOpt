@@ -39,6 +39,8 @@
                 doConfirm();//分案確認
             } else if (submitTask == "ADD") {//新增分案主檔
                 doAdd();
+            } else if (submitTask == "DEL") {//刪除分案主檔
+                doDel();
             }
             
             this.DataBind();
@@ -174,6 +176,55 @@
         finally {
             conn.Dispose();
             connB.Dispose();
+        }
+    }
+
+    private void doDel() {
+        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+        try {
+            //註記刪除
+            SQL = "Update br_opt Set mark='D'";
+            SQL += " where opt_sqlno='" + opt_sqlno + "'";
+            conn.ExecuteNonQuery(SQL);
+
+            SQL = "Update case_opt Set mark='D'";
+            SQL += " where opt_sqlno='" + opt_sqlno + "'";
+            conn.ExecuteNonQuery(SQL);
+
+            
+            //抓前一todo的流水號
+            string pre_sqlno = "";
+            SQL = "Select max(sqlno) as maxsqlno from todo_opt ";
+            SQL += "where syscode='" + Session["Syscode"] + "' ";
+            SQL += "and apcode='opt11' and opt_sqlno='" + opt_sqlno + "' ";
+            SQL += "and dowhat='BR' ";
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    pre_sqlno = dr.SafeRead("maxsqlno", "");
+                }
+            }
+
+            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "' ";
+            SQL += ",approve_desc='刪除分案' ";
+            SQL += ",resp_date=getdate() ";
+            SQL += ",job_status='XX' ";
+            SQL += " where apcode='opt11' and opt_sqlno='" + opt_sqlno + "'";
+            SQL += " and dowhat='BR' and syscode='" + Session["Syscode"] + "' ";
+            SQL += " and sqlno=" + pre_sqlno;
+            conn.ExecuteNonQuery(SQL);
+
+            //conn.Commit();
+            conn.RollBack();
+            msg = "刪除分案成功";
+        }
+        catch (Exception ex) {
+            conn.RollBack();
+            Sys.errorLog(ex, conn.exeSQL, prgid);
+            msg = "刪除分案失敗";
+            throw new Exception(msg, ex);
+        }
+        finally {
+            conn.Dispose();
         }
     }
 </script>

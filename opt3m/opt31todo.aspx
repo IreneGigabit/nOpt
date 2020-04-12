@@ -60,7 +60,7 @@
                 Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
             };
 
-            return JsonConvert.SerializeObject(dt, settings).ToUnicode().Replace("\"","\\\"");
+            return JsonConvert.SerializeObject(dt, settings).ToUnicode().Replace("\\", "\\\\").Replace("\"", "\\\"");
         }
     }
 </script>
