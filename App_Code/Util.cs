@@ -355,6 +355,15 @@ public static class Util
     }
     #endregion
 
+    #region dbdate - 寫入db用,若是空白則回傳nul,否則回傳日期
+    public static string dbdate(string iStr,string format) {
+        if (iStr == null || iStr == "") return "null";
+
+		iStr = DateTime.ParseExact(iStr, "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
+        return "'" + iStr + "'";
+    }
+    #endregion
+
     #region fRound - 四捨五入
     /// <summary>  
     /// 四捨五入
