@@ -193,8 +193,8 @@
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
 
         //欄位控制
-        $(".qBrN").showFor($("#qBr").val() == "N");
-        $(".qBrY").showFor($("#qBr").val() == "Y");
+        $(".qBrN").showFor($("#qBr").val() == "N");//區所交辦
+        $(".qBrY").showFor($("#qBr").val() == "Y");//自行新增分案
     }
 
     //關閉視窗
