@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -177,7 +177,7 @@
             }
 
             SQL = "update todo_opt set approve_scode='" + Session["scode"] + "' ";
-            SQL += ",approve_desc='" + ReqVal.TryGet("Preject_reason", "") + "' ";
+            SQL += ",approve_desc='" + ReqVal.TryGet("Preject_reason", "").ToBig5() + "' ";
             SQL += ",resp_date=getdate() ";
             SQL += ",job_status='XX' ";
             SQL += " where apcode='opt31' and opt_sqlno='" + opt_sqlno + "' ";
