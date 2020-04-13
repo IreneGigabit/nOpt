@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -110,8 +110,8 @@
 	    <font color="red">=== 目前無資料 ===</font>
     </div>
 
-    <input type="text" id="count" name="count">
-    <input type="text" id="submittask" name="submittask">
+    <input type="hidden" id="count" name="count">
+    <input type="hidden" id="submittask" name="submittask">
     <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	    <thead>
           <Tr>
@@ -139,16 +139,16 @@
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{ctrl_date}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{ap_date}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{input_date}}</a>
-		        <input type="text" id="branch{{nRow}}" name="branch{{nRow}}" value="{{branch}}">
-		        <input type="text" id="opt_sqlno{{nRow}}" name="opt_sqlno{{nRow}}">
-		        <input type="text" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
-		        <input type="text" id="send_dept{{nRow}}" name="send_dept{{nRow}}" value="{{send_dept}}">
-		        <input type="text" id="gs_date{{nRow}}" name="gs_date{{nRow}}" value="{{gs_date}}">
-		        <input type="text" id="input_scode{{nRow}}" name="input_scode{{nRow}}" value="{{input_scode}}">
-		        <input type="text" id="Pin_scode{{nRow}}" name="Pin_scode{{nRow}}" value="{{in_scode}}">
-		        <input type="text" id="in_scode{{nRow}}" name="in_scode{{nRow}}" value="">
-		        <input type="text" id="case_no{{nRow}}" name="case_no{{nRow}}" value="{{case_no}}">
-		        <input type="text" id="cancel_sqlno{{nRow}}" name="cancel_sqlno{{nRow}}" value="{{cancel_sqlno}}">
+		        <input type="hidden" id="branch{{nRow}}" name="branch{{nRow}}" value="{{branch}}">
+		        <input type="hidden" id="opt_sqlno{{nRow}}" name="opt_sqlno{{nRow}}">
+		        <input type="hidden" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
+		        <input type="hidden" id="send_dept{{nRow}}" name="send_dept{{nRow}}" value="{{send_dept}}">
+		        <input type="hidden" id="gs_date{{nRow}}" name="gs_date{{nRow}}" value="{{gs_date}}">
+		        <input type="hidden" id="input_scode{{nRow}}" name="input_scode{{nRow}}" value="{{input_scode}}">
+		        <input type="hidden" id="Pin_scode{{nRow}}" name="Pin_scode{{nRow}}" value="{{in_scode}}">
+		        <input type="hidden" id="in_scode{{nRow}}" name="in_scode{{nRow}}" value="">
+		        <input type="hidden" id="case_no{{nRow}}" name="case_no{{nRow}}" value="{{case_no}}">
+		        <input type="hidden" id="cancel_sqlno{{nRow}}" name="cancel_sqlno{{nRow}}" value="{{cancel_sqlno}}">
 		    </td>
 	    </tr>
 	    <tr>
