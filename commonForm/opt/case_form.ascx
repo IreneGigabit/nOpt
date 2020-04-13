@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="case_form" %>
+<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -7,6 +7,7 @@
     protected string opt_sqlno = "";
 
     protected string tfy_oth_code = "", F_tscode = "", tfy_Ar_mark = "", tfy_source = "";
+    protected string tfy_send_way = "", tfy_receipt_title = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
@@ -19,6 +20,8 @@
             F_tscode = SHtml.Option(connB, "select distinct scode,sc_name,scode1 from sysctrl.dbo.vscode_roles where branch='"+branch+"' and dept='T' and syscode='"+branch+"Tbrt' and roles='sales' order by scode1", "{scode}", "{sc_name}");
             //tfy_Ar_mark = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='ar_mark' and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)", "{cust_code}", "{code_name}");
             //tfy_source = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code", "{cust_code}", "({cust_code}---{code_name})");
+            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
+            tfy_receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
         }
         tfy_Ar_mark = Funcs.getcust_code_mul("ar_mark","and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)","").Option("{cust_code}", "{code_name}");
         tfy_source = Funcs.getcust_code_mul("Source","AND cust_code<> '__' AND End_date is null","cust_code").Option("{cust_code}", "({cust_code})---{code_name}");
@@ -31,15 +34,15 @@
 <TABLE border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%">
 <TR>
 	<td class="lightbluetable" align=right>洽案營洽 :</td>
-	<td class="whitetablebg" align="left" colspan=3>
+	<td class="whitetablebg" align="left" colspan=5>
 		<select id="F_tscode" name="F_tscode" class="QLock"><%#F_tscode%></SELECT>
 	</td>
 </TR>
 <TR>
-	<TD class=lightbluetable align=left colspan=4><strong>案性及費用：</strong></TD>
+	<TD class=lightbluetable align=left colspan=6><strong>案性及費用：</strong></TD>
 </TR>
 <TR>
-    <TD class=whitetablebg align=center colspan=4>
+    <TD class=whitetablebg align=center colspan=6>
 	    <TABLE border=0 class=bluetable cellspacing=1 cellpadding=2 >
 		    <TR>
 		        <TD class=lightbluetable align=right width="4%">案&nbsp;&nbsp;&nbsp;&nbsp;性：</TD>
@@ -101,7 +104,7 @@
         <Select id=tfy_Ar_mark name=tfy_Ar_mark class="QLock"><%#tfy_Ar_mark%></Select>
 	</TD>
 	<TD class=lightbluetable align=right>折扣率：</TD>
-	<TD class="whitetablebg">
+	<TD class="whitetablebg" colspan="3">
         <input TYPE="hidden" id="nfy_Discount" name="nfy_Discount">
         <input TYPE=text id="Discount" name="Discount" class="QLock">
 	    <INPUT TYPE=checkbox id=tfy_discount_chk name=tfy_discount_chk value="Y" class="QLock" >折扣請核單
@@ -113,7 +116,7 @@
         <Select id=tfy_source name=tfy_source class="QLock"><%#tfy_source%></Select>
 	</TD>
 	<TD class=lightbluetable align=right>契約號碼：</TD>
-	<TD class=whitetablebg>
+	<TD class=whitetablebg colspan="3">
         <input type="radio" id="Contract_no_Type_N" name="Contract_no_Type" value="N" class="QLock">
         <INPUT TYPE=text id=tfy_Contract_no name=tfy_Contract_no SIZE=10 MAXLENGTH=10  class="QLock">
 		<input type="radio" id="Contract_no_Type_A" name="Contract_no_Type" value="A" class="QLock">後續案無契約書
@@ -132,13 +135,31 @@
 </TR>
 <TR>
 	<TD class=lightbluetable align=right>法定期限：</TD>
-	<TD class=whitetablebg align=left colspan=3>
+	<TD class=whitetablebg align=left colspan=5>
         <INPUT type=text id=dfy_last_date name=dfy_last_date SIZE=10 class="dateField QLock">
 	</TD>
 </TR>
+<TR id=tr_send_way>
+	<TD class=lightbluetable align=right>發文方式：</TD>
+	<TD class=whitetablebg><SELECT id="tfy_send_way" name="tfy_send_way" class="QLock"><%#tfy_send_way%></select>
+	</TD>
+	<TD class=lightbluetable align=right>官發收據種類：</TD>
+	<TD class=whitetablebg>
+		<select id="tfy_receipt_type" name="tfy_receipt_type" class="QLock">
+			<option value='' style='color:blue'>請選擇</option>
+			<option value="P">紙本收據</option>
+			<option value="E">電子收據</option>
+		</select>
+	</TD>
+	<TD class=lightbluetable align=right>收據抬頭：</TD>
+	<TD class=whitetablebg>
+		<select id="tfy_receipt_title" name="tfy_receipt_title" class="QLock"><%#tfy_receipt_title%></select>
+		<input type="hidden" id="tfy_rectitle_name" name="tfy_rectitle_name">
+	</TD>
+</tr>
 <TR>
 	<TD class=lightbluetable align=right>其他接洽：<BR>事項記錄：</TD>
-	<TD class=whitetablebg colspan=3><TEXTAREA id=tfy_Remark name=tfy_Remark ROWS=6 COLS=70 class="QLock"></TEXTAREA>
+	<TD class=whitetablebg colspan=5><TEXTAREA id=tfy_Remark name=tfy_Remark ROWS=6 COLS=70 class="QLock"></TEXTAREA>
 	</TD>
 </TR>
 </TABLE>
@@ -245,5 +266,11 @@
                 $("#ta_" + item.item_sql).show();
             }
         });
+
+        //送件方式
+        $("#tfy_send_way").val(jCase.send_way);
+        $("#tfy_receipt_type").val(jCase.receipt_type);
+        $("#tfy_receipt_title").val(jCase.receipt_title);
+        $("#tfy_rectitle_name").val(jCase.rectitle_name);
     }
 </script>
