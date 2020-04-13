@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -101,13 +101,15 @@
                         SQL += ",gs_curr,oth_arcase,oth_code,oth_money";
                         SQL += ",ar_service,ar_fees,ar_curr,ar_code,ar_mark,discount,discount_chk,ar_chk";
                         SQL += ",ar_chk1,source,cust_date,pr_date,case_date";
-                        SQL += ",case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark)";
+                        SQL += ",case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark";
+                        SQL += ",rectitle_name,send_way,receipt_type,receipt_title)";
                         SQL += " select '" + qopt_sqlno + "','" + qBranch + "','" + qCase_no + "',in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type";
                         SQL += ",arcase_class,arcase,div_arcase,service,fees,tot_case,add_service,add_fees,gs_fees";
                         SQL += ",gs_curr,oth_arcase,oth_code,oth_money";
                         SQL += ",ar_service,ar_fees,ar_curr,ar_code,ar_mark,discount,discount_chk,ar_chk";
                         SQL += ",ar_chk1,source,cust_date,pr_date,case_date";
                         SQL += ",case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark";
+                        SQL += ",rectitle_name,send_way,receipt_type,receipt_title";
                         SQL += " from " + Sys.tdbname(qBranch) + "case_dmt where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
 
