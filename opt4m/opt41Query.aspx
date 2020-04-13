@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -37,6 +37,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
@@ -45,7 +46,6 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>‧<b style="color:Red">未發文清單</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <!--<a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;-->
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
     </tr>
@@ -62,8 +62,8 @@
         <tr>
 	        <td class="text9">
 		        ◎發文方式:
-			        <input type="radio" name="qrysend_dept" value="B" checked>專案室發文
-			        <input type="radio" name="qrysend_dept" value="L">轉發法律處
+			        <input type="radio" name="qrysend_dept" id="qrysend_deptB" value="B" checked><label for="qrysend_deptB">專案室發文</label>
+			        <input type="radio" name="qrysend_dept" id="qrysend_deptL" value="L"><label for="qrysend_deptL">轉發法律處</label>
             <tr>
         </tr>
         <tr>
@@ -118,8 +118,8 @@
 	    <font color="red">=== 目前無資料 ===</font>
     </div>
 
-    <input type="text" id="count" name="count">
-    <input type="text" id="submittask" name="submittask">
+    <input type="hidden" id="count" name="count">
+    <input type="hidden" id="submittask" name="submittask">
     <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	    <thead>
           <Tr>
@@ -147,19 +147,19 @@
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{pr_scode_name}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{last_date}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{ap_date}}</a></td>
-		    <td align="center"><a href='{{urlasp}}' target='Eblank'><input type="text" name="step_date{{nRow}}" value="{{gs_date}}" size="10" class="dateField" onblur="chkstep_date('{{nRow}}')"></a></td>
+		    <td align="center"><input type="text" id="step_date{{nRow}}" name="step_date{{nRow}}" value="{{gs_date}}" size="10" class="dateField" onblur="chkstep_date('{{nRow}}')"></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{send_dept_name}}</a>
-		        <input type="text" id="branch{{nRow}}" name="branch{{nRow}}" value="{{branch}}">
-		        <input type="text" id="opt_sqlno{{nRow}}" name="opt_sqlno{{nRow}}">
-		        <input type="text" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
-		        <input type="text" id="send_dept{{nRow}}" name="send_dept{{nRow}}" value="{{send_dept}}">
-		        <input type="text" id="gs_date{{nRow}}" name="gs_date{{nRow}}" value="{{gs_date}}">
-		        <input type="text" id="mp_date{{nRow}}" name="mp_date{{nRow}}" value="{{mp_date}}">
-		        <input type="text" id="contract_flag{{nRow}}" name="contract_flag{{nRow}}" value="{{contract_flag}}">
-		        <input type="text" id="fseq{{nRow}}" name="fseq{{nRow}}" value="{{fseq}}">
-		        <input type="text" id="case_no{{nRow}}" value="{{case_no}}">
-		        <input type="text" id="mailto{{nRow}}" value="{{mailto}}">
-		        <input type="text" id="mailcc{{nRow}}" value="{{mailcc}}">
+		        <input type="hidden" id="branch{{nRow}}" name="branch{{nRow}}" value="{{branch}}">
+		        <input type="hidden" id="opt_sqlno{{nRow}}" name="opt_sqlno{{nRow}}">
+		        <input type="hidden" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
+		        <input type="hidden" id="send_dept{{nRow}}" name="send_dept{{nRow}}" value="{{send_dept}}">
+		        <input type="hidden" id="gs_date{{nRow}}" name="gs_date{{nRow}}" value="{{gs_date}}">
+		        <input type="hidden" id="mp_date{{nRow}}" name="mp_date{{nRow}}" value="{{mp_date}}">
+		        <input type="hidden" id="contract_flag{{nRow}}" name="contract_flag{{nRow}}" value="{{contract_flag}}">
+		        <input type="hidden" id="fseq{{nRow}}" name="fseq{{nRow}}" value="{{fseq}}">
+		        <input type="hidden" id="case_no{{nRow}}" value="{{case_no}}">
+		        <input type="hidden" id="mailto{{nRow}}" value="{{mailto}}">
+		        <input type="hidden" id="mailcc{{nRow}}" value="{{mailcc}}">
 		    </td>
 	    </tr>
 	    </tfoot>
@@ -167,6 +167,7 @@
 	    </tbody>
     </TABLE>
     <br>
+    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
     <table border="0" width="98%" cellspacing="0" cellpadding="0" align="center">
         <tr>
             <td width="100%" align="center">     
@@ -176,7 +177,6 @@
         </tr>
     </table>
     </form>
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 
     <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
@@ -199,8 +199,10 @@
     });
 
     $(function () {
-        $("input.dateField").datepick();
+        $("#qryBMPDateS,#qryBMPDateE").datepick();
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
+
+        $("#qryBMPDateE").val((new Date().format("yyyy/M/d")));
 
         $("#btnSrch").click();
     });
@@ -228,7 +230,7 @@
             data: $("#reg").serialize(),
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                if (!JSONdata.totrow) {
+                if (JSONdata.totrow===undefined) {
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }
@@ -300,6 +302,7 @@
                         strLine1 = strLine1.replace(/{{urlasp}}/g, urlasp);
 
                         $("#dataList>tbody").append(strLine1);
+                        $("#step_date"+nRow).datepick();
                         $("#maialIcon" + nRow).showFor(item.contract_flag=="Y");
                     });
                 });
@@ -363,9 +366,8 @@
             alert(errMsg);
             return false;
         }
-
-        if( chkgsdate) return false;
-        if( chkcontractflag)return false;
+        if( chkgsdate() ) return false;
+        if( chkcontractflag() )return false;
         for(var i=1;i<=parseInt($("#count").val(), 10);i++){
             if($("input[name='B"+i+"']").prop("checked")==true){
                 $("#opt_sqlno"+i).val($("#sqlno"+i).val());
@@ -377,7 +379,7 @@
         reg.submittask.value="U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
-        //reg.submit();
+        reg.submit();
     });
 
     //退回承辦
@@ -409,7 +411,7 @@
             reg.submittask.value="B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
             reg.target = "ActFrame";
-            //reg.submit();
+            reg.submit();
         }
     });
 
@@ -428,24 +430,24 @@
 
     //檢查契約書後補註記
     function chkcontractflag(){
-        chkcontractflag=false
         for(var c=1;c<=parseInt($("#count").val(), 10);c++){
             if($("input[name='B"+c+"']").prop("checked")==true){
                 if($("#contract_flag"+c).val()=="Y"){
                     if((<%#HTProgRight%> & 256)){
                         if (!confirm("案件" +$("#fseq"+c).val()+"尚有契約書後補，確定發文嗎？"))
                             return true;
+                    }else{
+                        alert("案件" +$("#fseq"+c).val()+ "尚有契約書後補，請通知國內所，以便發文!");
+                        return true;
                     }
-                }else{
-                    alert("案件" +$("#fseq"+c).val()+ "尚有契約書後補，請通知國內所，以便發文!");
-                    return true;
                 }
             }
         }
+        return false;
     }
 
     //發文方式
-    $("input [name=qrysend_dept]").click(function (e) {
+    $("input[name=qrysend_dept]").click(function (e) {
         goSearch();
     });
 
@@ -486,6 +488,7 @@
         tbody += "%0A【案件名稱】:" + appl_name;
         tbody += "%0A 請儘速後補契約書，以俾爭議組發文，如無法及時完成後補，請進行mail簽核作業，經主管同意後由資訊部開放可先官發。";
 	
-        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&cc="+CCtoList+"&body="+tbody;
+        
+        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&cc= "+CCtoList+"&body="+tbody;
     }
 </script>
