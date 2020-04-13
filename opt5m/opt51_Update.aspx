@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -55,10 +55,6 @@
                     SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     conn.ExecuteNonQuery(SQL);
 
-                    SQL = "Update case_opt Set mark='D'";
-                    SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
-                    conn.ExecuteNonQuery(SQL);
-
                     SQL = "Update cancel_opt Set tran_status='DZ'";
                     SQL += ",conf_date=getdate()";
                     SQL += ",conf_scode='" + Session["scode"] + "'";
@@ -92,7 +88,12 @@
                     connB.ExecuteNonQuery(SQL);
 
                     //通知區所抽件完成
-                    //CreateMail(conn, pre_sqlno, todo_scode, ReqVal.TryGet("case_no" + i, ""), ReqVal.TryGet("branch" + i, ""));
+                    CreateMail(conn, pre_sqlno, todo_scode, ReqVal.TryGet("case_no" + i, ""), ReqVal.TryGet("branch" + i, ""));
+
+                    //發完mail才能更新註記,否則找不到
+                    SQL = "Update case_opt Set mark='D'";
+                    SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
+                    conn.ExecuteNonQuery(SQL);
                  
                     //connB.Commit();
                     //conn.Commit();
@@ -125,9 +126,10 @@
         string ap_cname = "", appl_name = "", arcase_name = "", last_date = "";
         SQL = "select Bseq,Bseq1,branch,in_scode,scode_name,cust_area,cust_seq ";
         SQL += ",appl_name,arcase_name,Last_date,ap_cname ";
-        SQL += "from vbr_opt where case_no='" + case_no + "' and branch='" + branch + "'";
+        SQL += "from vbr_opt where case_no='" + case_no + "' and branch='" + branch + "' ";
         using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
             if (dr.Read()) {
+                Response.Write("**111**<HR>");
                 fseq = Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
                 in_scode = dr.SafeRead("in_scode", "");
                 in_scode_name = dr.SafeRead("scode_name", "");
@@ -137,10 +139,12 @@
                 appl_name = dr.SafeRead("appl_name", "");
                 arcase_name = dr.SafeRead("arcase_name", "");
                 last_date = dr.SafeRead("last_date", "");
+            } else {
+                Response.Write("**222**<HR>");
             }
         }
 
-        string Subject = "專案室爭救案件抽作完成通知";
+        string Subject = "專案室爭救案件抽件完成通知";
         string strFrom = Session["scode"] + "@saint-island.com.tw";
         List<string> strTo = new List<string>();
         List<string> strCC = new List<string>();
@@ -167,8 +171,7 @@
             "【營洽】 : <B>" + in_scode + "-" + in_scode_name + "</B><br>" +
             "【申請人】 : <B>" + ap_cname + "</B><br>" +
             "【案件名稱】 : <B>" + appl_name + "</B><br>" +
-            "【案性】 : <B>" + arcase_name + "</B><Br><Br><p>" +
-            "◎請至承辦作業－＞國內案承辦交辦發文作業，重新交辦。 ";
+            "【案性】 : <B>" + arcase_name + "</B><Br><Br><p>";
 
         Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
     }
