@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="case_form" %>
+﻿<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -86,7 +86,7 @@
 			    <TD class=whitetablebg width=5%><input type="text" id="nfy_oth_money" name="nfy_oth_money" size="8" style="text-align:right;" class="QLock"></TD>
 			    <TD class=lightbluetable align=right width=4%>轉帳單位：</TD>
 			    <TD class=whitetablebg width=5%>
-			    <select id=tfy_oth_code NAME=tfy_oth_code class="QLock"><%#tfy_oth_code%></SELECT>
+			    <select id=tfy_oth_code NAME=tfy_oth_code class="QLock"><%#tfy_oth_code%><option value="Z">Z_轉其他人</option></SELECT>
 			    </TD>
 		    </TR>
 		    <TR>

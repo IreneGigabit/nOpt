@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -20,7 +20,7 @@
     protected string att_sql = "";
     protected string arcase_type = "";
     protected string case_no = "";
-
+    protected string ar_form = "";
 
     //http://web08/nOpt/AJAX/OptData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
 
@@ -35,8 +35,8 @@
         DataTable dt_attList = GetBRAtt(cust_area, cust_seq);//聯絡人清單
         DataTable dt_ap = GetBRAP(case_no);//申請人
         //DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);//交辦費用
-        //DataTable dt_arcase = GetArcase(arcase_type);//委辦案性
-        //DataTable dt_arcaseItem = GetArcaseItem();//其他費用案性
+        DataTable dt_arcase = GetArcase(arcase_type,ar_form);//委辦案性
+        DataTable dt_arcaseItem = GetArcaseItem(ar_form);//其他費用案性
         //DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
         //DataTable dt_casegood = GetCaseGood(opt_sqlno, case_no, branch);//類別
         //DataTable dt_tran = GetTran(opt_sqlno);//異動
@@ -62,7 +62,7 @@
         Response.Write(",\"att_list\":" + JsonConvert.SerializeObject(dt_attList, settings).ToUnicode() + "\n");
         Response.Write(",\"caseap\":" + JsonConvert.SerializeObject(dt_ap, settings).ToUnicode() + "\n");
         //Response.Write(",\"casefee\":" + JsonConvert.SerializeObject(dt_casefee, settings).ToUnicode() + "\n");
-        //Response.Write(",\"arcase\":" + JsonConvert.SerializeObject(dt_arcase, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcase\":" + JsonConvert.SerializeObject(dt_arcase, settings).ToUnicode() + "\n");
         //Response.Write(",\"arcase_item\":" + JsonConvert.SerializeObject(dt_arcaseItem, settings).ToUnicode() + "\n");
         //Response.Write(",\"arcase_other\":" + JsonConvert.SerializeObject(dt_arcaseOther, settings).ToUnicode() + "\n");
         //Response.Write(",\"casegood\":" + JsonConvert.SerializeObject(dt_casegood, settings).ToUnicode() + "\n");
@@ -136,6 +136,7 @@
                 att_sql = dt.Rows[0].SafeRead("att_sql", "");
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
+                ar_form = dt.Rows[0].SafeRead("ar_form", "");
 
                 dt.Rows[0]["fseq"] = Funcs.formatSeq(dt.Rows[0].SafeRead("Bseq", "")
                                     , dt.Rows[0].SafeRead("Bseq1", "")
@@ -144,7 +145,7 @@
                                     , Sys.GetSession("dept")+"E");
                 dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
                 dt.Rows[0]["send_dept"] = dt.Rows[0].SafeRead("send_dept", "B");
-                
+
             }
 
             return dt;
@@ -257,14 +258,15 @@
     #endregion
 
     #region GetArcase 委辦案性
-    private DataTable GetArcase(string pType) {
-        using (DBHelper connB = new DBHelper(strConnB, false)) {
-            SQL = "SELECT rs_code,prt_code,rs_detail,remark ";
-            SQL += "FROM code_br ";
-            SQL += "WHERE  (mark = 'B' ) And cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' and getdate() >= beg_date ";
-            SQL += "ORDER BY rs_code";
+    private DataTable GetArcase(string pType,string pAr_form) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "SELECT  rs_code, rs_detail ";
+            SQL += "FROM " + Sys.kdbname + ".dbo.code_ext ";
+            SQL += "WHERE rs_class like '" +pAr_form+ "%' And  cr_flag= 'Y' ";
+            SQL += "And getdate() >= beg_date and (end_date is null or end_date='' or end_date > getdate()) ";
+            SQL+="And (Mark is null or left(mark,1)<>'A') and rs_type='" +pType+ "' ORDER BY rs_code";
             DataTable dt = new DataTable();
-            connB.DataTable(SQL, dt);
+            conn.DataTable(SQL, dt);
 
             return dt;
         }
@@ -272,12 +274,12 @@
     #endregion
 
     #region GetArcaseItem 其他費用案性
-    private DataTable GetArcaseItem() {
+    private DataTable GetArcaseItem(string pAr_form) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "SELECT  rs_code, rs_detail ";
-            SQL += "FROM code_br ";
-            SQL += "WHERE rs_class = 'Z1' And cr= 'Y' and dept='T' AND no_code='N' and getdate() >= beg_date ";
-            SQL += "ORDER BY rs_code";
+            SQL += "FROM  code_ext ";
+            SQL += "WHERE rs_class like  '" + pAr_form + "%'  And  cr_flag= 'Y' and left(mark,1)='A' ";
+            SQL += " and getdate() >= beg_date and (end_date is null or end_date='' or end_date > getdate()) ORDER BY rs_code";
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);
 

@@ -35,16 +35,6 @@ EXEC sp_refreshview vbr_opt
 EXEC sp_refreshview vopt_641
 
 
-USE [sindbs]
-GO
-BEGIN TRANSACTION
-GO
-ALTER TABLE dbo.Bstep_temp ADD
-	send_way varchar(2) NULL
-GO
-ALTER TABLE dbo.Bstep_temp SET (LOCK_ESCALATION = TABLE)
-GO
-COMMIT
 
 
 
@@ -109,6 +99,16 @@ GO
 
 
 
+USE [sindbs]
+GO
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.Bstep_temp ADD
+	send_way varchar(2) NULL
+GO
+ALTER TABLE dbo.Bstep_temp SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
 
 
 
