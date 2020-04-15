@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
+<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -182,11 +182,6 @@
             $("#apatt_tel1_" + nRow).val(item.apatt_tel1);
             $("#apatt_fax_" + nRow).val(item.apatt_fax);
 
-            apcust_re_form.apserver_flag(nRow);
-            $("#ap_fcname_" + nRow).val(item.ap_fcname);
-            $("#ap_lcname_" + nRow).val(item.ap_lcname);
-            $("#ap_fename_" + nRow).val(item.ap_fename);
-            $("#ap_lename_" + nRow).val(item.ap_lename);
             $("#ap_sql_" + nRow).val(item.ap_sql);
             //申請人序號空值不顯示
             if (item.ap_sql == "" || item.ap_sql == "0") {
