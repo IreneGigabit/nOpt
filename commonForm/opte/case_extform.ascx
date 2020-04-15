@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="case_form" %>
+<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -64,8 +64,8 @@
 	</tr>
 	<TR>
 		<TD class=lightbluetable align=left colspan=4><strong>案性及費用：</strong>
-            <input type="button" id="ta_add" name="ta_add" class="cbutton" value="增加費用" onclick="ta_display('Add')">
-            <input type="button" id="ta_del" name="ta_del" class="cbutton" value="減少費用" onclick="ta_display('Del')">
+            <input type="button" id="ta_add" name="ta_add" class="cbutton QLock" value="增加費用" onclick="ta_display('Add')">
+            <input type="button" id="ta_del" name="ta_del" class="cbutton QLock" value="減少費用" onclick="ta_display('Del')">
 		</TD>
 	</TR>
 	<TR>
@@ -74,20 +74,20 @@
 			<tr>
 				<td class=lightbluetable align=right width="15%">委辦案性：</td>
 				<td class=whitetablebg align=left>
-				    <select id=tfg_item_Arcase0 NAME=tfg_item_Arcase0 onchange ="ToArcase(reg.tfz1_country.value , this.value,reg.Ar_Form.value)" class="QLock"></SELECT>
+				    <select id=tfg_item_Arcase0 name=tfg_item_Arcase0 onchange ="ToArcase(reg.tfz1_country.value , this.value,reg.Ar_Form.value)" class="QLock"></SELECT>
 				    <input type="hidden" id="tfy_Arcase" name="tfy_Arcase">
 				</td>
 				<td class=lightbluetable align=right>服務費：</td>
 				<td class=whitetablebg align=left>
-				    <INPUT TYPE=text NAME=tfg_Service0 SIZE=8 maxlength=8 style="text-align:right;" class="QLock">
-				    <INPUT TYPE=hidden NAME=nfz_Service0>
-				    <INPUT TYPE=hidden NAME=ifz_Service0>
+				    <INPUT TYPE=text id=tfg_Service0 name=tfg_Service0 SIZE=8 maxlength=8 style="text-align:right;" class="QLock">
+				    <INPUT TYPE=hidden id=nfz_Service0 name=nfz_Service0>
+				    <INPUT TYPE=hidden id=ifz_Service0 name=ifz_Service0>
 				</td>
 				<td class=lightbluetable align=right>規費：</td>
 				<td class=whitetablebg align=left>
-				    <INPUT TYPE=text NAME=tfg_fees0 SIZE=8 maxlength=8 style="text-align:right;" class="QLock">
-				    <INPUT TYPE=hidden NAME=nfz_fees0>
-				    <INPUT TYPE=hidden NAME=ifz_fees0>
+				    <INPUT TYPE=text id=tfg_fees0 name=tfg_fees0 SIZE=8 maxlength=8 style="text-align:right;" class="QLock">
+				    <INPUT TYPE=hidden id=nfz_fees0 name=nfz_fees0>
+				    <INPUT TYPE=hidden id=ifz_fees0 name=ifz_fees0>
 				</td>
 			</tr>
 			<tr id=ta9 style="display:none">
@@ -145,7 +145,7 @@
 			<TR>
 				<td class=lightbluetable align=right colspan=2></td>	
 				<td class=lightbluetable align=right>轉帳金額：</TD>
-				<TD class=whitetablebg width=5%><input type="text" name="nfy_oth_money" size="8" maxlength=8 value="" style="text-align:right;" onblur="vbs:summary()" class="QLock"></TD>		
+				<TD class=whitetablebg width=5%><input type="text" id="nfy_oth_money" name="nfy_oth_money" size="8" maxlength=8 value="" style="text-align:right;" onblur="vbs:summary()" class="QLock"></TD>		
 				<td class=lightbluetable align=right>轉帳單位：</TD>
 				<TD class=whitetablebg width=5%>
 				<select id=tfy_oth_code NAME=tfy_oth_code class="QLock">
@@ -178,11 +178,11 @@
 							<td class=lightbluetable2 align=center width=20%>已請款次數</td>
 						</TR>
 						<TR>
-							<td class=whitetablebg><INPUT TYPE=text NAME=xadd_service SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
-							<td class=whitetablebg><INPUT TYPE=text NAME=xadd_fees SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
-							<td class=whitetablebg><INPUT TYPE=text NAME=xar_service SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
-							<td class=whitetablebg><INPUT TYPE=text NAME=xar_fees SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
-							<td class=whitetablebg><INPUT TYPE=text NAME=xar_curr SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+							<td class=whitetablebg><INPUT TYPE=text id=xadd_service name=xadd_service SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+							<td class=whitetablebg><INPUT TYPE=text id=xadd_fees name=xadd_fees SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+							<td class=whitetablebg><INPUT TYPE=text id=xar_service name=xar_service SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+							<td class=whitetablebg><INPUT TYPE=text id=xar_fees name=xar_fees SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
+							<td class=whitetablebg><INPUT TYPE=text id=xar_curr name=xar_curr SIZE=8 maxlength=8 style="text-align:right;" class="Lock"></td>
 						</TR>
 					</TABLE>		  
 				</TD>
@@ -213,20 +213,23 @@
 	</TR>		
 	<TR>
 		<TD class=lightbluetable align=right>契約號碼：</TD>
-		<TD class=whitetablebg><input type="radio" name="Contract_no_Type" class="QLock"><INPUT TYPE=text NAME=tfy_Contract_no SIZE=10 MAXLENGTH=10 onchange="reg.Contract_no_Type(0).checked=true" class="QLock">
-		<span id="contract_type" style="display:">
-			<input type="radio" name="Contract_no_Type" onclick="reg.tfy_Contract_no.value=''" class="QLock">後續案無契約書
-		</span>
-		<span style="display:none"><!--2015/12/29修改，併入C不顯示-->
-			<input type="radio" name="Contract_no_Type" onclick="reg.tfy_Contract_no.value=''" class="QLock">特案簽報
-		</span>	
-		<input type="radio" name="Contract_no_Type" onclick="reg.tfy_Contract_no.value=''" class="QLock">其他契約書無編號/特案簽報
-		<input type="radio" name="Contract_no_Type" value="M" onclick="vbscript:contract_type_ctrl()" class="QLock">總契約書
-		<span id="span_btn_contract" style="display:none">
-			<INPUT TYPE=text NAME=Mcontract_no SIZE=10 MAXLENGTH=10 readonly class="gsedit">
-			<input type=button class="sgreenbutton" name="btn_contract" value="查詢總契約書" class="QLock">
-			+客戶案件委辦書
-		</span>
+		<TD class=whitetablebg>
+        <input type="radio" id="Contract_no_Type_N" name="Contract_no_Type" value="N" class="QLock">
+            <INPUT TYPE=text id=tfy_Contract_no NAME=tfy_Contract_no SIZE=10 MAXLENGTH=10 onchange="reg.Contract_no_Type(0).checked=true" class="QLock">
+		    <span id="contract_type" style="display:">
+		        <input type="radio" id="Contract_no_Type_A" name="Contract_no_Type" value="A" class="QLock">後續案無契約書
+		    </span>
+		    <span style="display:none"><!--2015/12/29修改，併入C不顯示-->
+		        <input type="radio" id="Contract_no_Type_B" name="Contract_no_Type" value="B" class="QLock">特案簽報
+		    </span>	
+	        <input type="radio" id="Contract_no_Type_C" name="Contract_no_Type" value="C" class="QLock">其他契約書無編號/特案簽報
+	        <input type="radio" id="Contract_no_Type_M" name="Contract_no_Type" value="M" class="QLock">總契約書
+		    <span id="span_btn_contract" style="display:none">
+			    <INPUT TYPE=text id=Mcontract_no NAME=Mcontract_no SIZE=10 MAXLENGTH=10 class="gsedit">
+			    <input type=button class="sgreenbutton QLock" name="btn_contract" value="查詢總契約書">
+			    +客戶案件委辦書
+		    </span>
+		</TD>
 		<TD class=lightbluetable align=right>案源代碼：</TD>
 		<TD class=whitetablebg>
             <Select id=tfy_Source NAME=tfy_Source class="QLock"><%#tfy_source%></Select>
@@ -253,11 +256,12 @@
 	</TR>	
 	<TR>
 		<TD class=lightbluetable align=right>其他接洽：<BR>事項記錄：</TD>
-		<TD class=whitetablebg colspan=3><TEXTAREA NAME=tfy_Remark ROWS=7 COLS=60 class="QLock"></TEXTAREA>
-		<input type=hidden name="nfy_tot_case" id="nfy_tot_case" value="0">
-		<input type=hidden name="TaCount" value="">
-		<input type=hidden name="anfees" value="">
-		<input type=hidden name="tfy_ar_code" value="N">	
+		<TD class=whitetablebg colspan=3>
+            <TEXTAREA id=tfy_Remark NAME=tfy_Remark ROWS=7 COLS=60 class="QLock"></TEXTAREA>
+		    <input type=hidden name="nfy_tot_case" id="nfy_tot_case" value="0">
+		    <input type=hidden name="TaCount" id="TaCount" value="">
+		    <input type=hidden name="anfees" id="anfees" value="">
+		    <input type=hidden name="tfy_ar_code" id="tfy_ar_code" value="N">	
 		</TD>
 	</TR>				
 </TABLE>
@@ -274,13 +278,8 @@
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
-        $("select[id='nfyi_item_Arcase_##']").getOption({//其他費用
+        $("select[id='tfg_item_Arcase_##']").getOption({//其他費用
             dataList: br_opt.arcase_item,
-            valueFormat: "{rs_code}",
-            textFormat: "{rs_code}---{rs_detail}"
-        });
-        $("#tfy_oth_arcase").getOption({//轉帳費用
-            dataList: br_opt.arcase_other,
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
@@ -289,32 +288,25 @@
         var jCase = br_opt.opt[0];
         $("#tfz1_country").val(jCase.country);
         $("#F_tscode").val(jCase.in_scode);
+        $("#tfy_Arcase").val(jCase.arcase);
         $("#tfg_item_Arcase0").val(jCase.arcase);
         $("#tfy_oth_code").val(jCase.oth_code);
-        $("#tfy_oth_arcase").val(jCase.oth_arcase);
         $("#tfy_Ar_mark").val(jCase.ar_mark);
         $("#tfy_discount_chk").prop("checked", jCase.discount_chk == "Y");
-        $("#tfy_source").val(jCase.source);
+        $("#tfy_Source").val(jCase.source);
+
         if (jCase.contract_type != "") {
             $("input[name='Contract_no_Type'][value='" + jCase.contract_type + "']").prop("checked", true);
             if (jCase.contract_type == "M") {
                 $("#span_btn_contract").show();
                 $("#Mcontract_no").val(jCase.contract_no);
             }
-            if (jCase.contract_type == "N") {
+            if ("ABCM".indexOf(jCase.contract_type)==-1) {
+                $("input[name='Contract_no_Type']:eq(0)").prop("checked", true);
                 $("#tfy_Contract_no").val(jCase.contract_no);
             }
         }
-
-        $("#dfy_last_date").val(dateReviver(jCase.last_date, "yyyy/M/d"));
-        $("#tfy_Remark").val(jCase.remark);
-        $("#nfy_service").val(jCase.service);
-        $("#nfy_fees").val(jCase.fees);
-        $("#nfy_oth_money").val(jCase.oth_money);
-        $("#OthSum").val(jCase.othsum);
-        $("#nfy_Discount").val(jCase.discount);
-        $("#Discount").val(jCase.discount + "%");
-        $("#code_type").val(jCase.code_type);
+        $("#tfy_ar_code").val(jCase.ar_code);
 
         //產生其他費用tr
         for (z = 1; z <= jCase.tot_case; z++) {
@@ -325,24 +317,46 @@
         //費用
         $.each(br_opt.casefee, function (i, item) {
             if (item.item_sql == "0") {
-                $("#tfg_item_Arcase0").val(item.item_arcase);
-                $("#nfyi_Service").val(item.item_service);
-                $("#nfyi_Fees").val(item.item_fees);
-                $("#Service").val(item.service == "" ? "0" : item.service);
-                $("#fees").val(item.fees == "" ? "0" : item.fees);
+                $("#tfg_item_Arcase0").val(item.item_arcase == "" ? "0" : item.item_arcase);
+                $("#tfg_Service0").val(item.item_service == "" ? "0" : item.item_service);
+                $("#nfz_Service0").val("0");
+                $("#tfg_fees0").val(item.item_fees == "" ? "0" : item.item_fees);
+                $("#nfz_fees0").val("0");
                 $("#TaCount").val(item.item_sql);
             } else {
-                $("#nfyi_item_Arcase_" + item.item_sql).val(item.item_arcase);
-                $("#nfyi_item_count_" + item.item_sql).val(item.item_count);
-                $("#nfyi_Service_" + item.item_sql).val(item.item_service);
-                $("#nfzi_Service_" + item.item_sql).val(item.item_service);
-                $("#nfyi_fees_" + item.item_sql).val(item.item_fees);
-                $("#nfzi_fees_" + item.item_sql).val(item.item_fees);
-                $("#nfzi_service_" + item.item_sql).val(item.service == "" ? "0" : item.service);
-                $("#nfzi_fees_" + item.item_sql).val(item.fees == "" ? "0" : item.fees);
+                $("#tfg_item_Arcase_" + item.item_sql).val(item.item_arcase);
+                $("#tfg_item_count_" + item.item_sql).val(item.item_count);
+                $("#tfg_Service_" + item.item_sql).val(item.item_service);
+                $("#nfz_Service_" + item.item_sql).val("0");
+                $("#tfg_fees_" + item.item_sql).val(item.item_fees);
+                $("#nfz_fees_" + item.item_sql).val("0");
+                if (item.p_service == "0" && item.p_fees == "0") {
+                    $("#anfees").val("N");
+                } else {
+                    $("#anfees").val("Y");
+                }
                 $("#TaCount").val(item.item_sql);
+
                 $("#ta_" + item.item_sql).show();
             }
         });
+
+        $("#nfy_tot_service").val(jCase.service);
+        $("#nfy_tot_fees").val(jCase.fees);
+        $("#tfy_Tot_Tax").val(jCase.tot_tax);
+        $("#nfy_oth_money").val(jCase.oth_money);
+        $("#tfy_oth_code").val(jCase.oth_code);
+        $("#utaxOthSum").val(parseFloat(jCase.service) + parseFloat(jCase.fees) + parseFloat(jCase.oth_money));
+        $("#OthSum").val(jCase.othsum);
+        $("#xadd_service").val(jCase.add_service);
+        $("#xadd_fees").val(jCase.add_fees);
+        $("#xar_service").val(jCase.ar_service);
+        $("#xar_fees").val(jCase.ar_fees);
+        $("#xar_curr").val(jCase.ar_curr);
+        $("#nfy_Discount").val(jCase.discount);
+        $("#Discount").val(jCase.discount + "%");
+        $("#tfy_invoice_chk").val(jCase.invoice_chk);
+        $("#tfy_last_date").val(dateReviver(jCase.last_date, "yyyy/M/d"));
+        $("#code_type").val(jCase.arcase_type);
     }
 </script>
