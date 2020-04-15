@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -21,6 +21,7 @@
     protected string arcase_type = "";
     protected string case_no = "";
     protected string ar_form = "";
+    protected string country = "";
 
     //http://web08/nOpt/AJAX/OptData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
 
@@ -34,7 +35,7 @@
         DataTable dt_cust = GetBRCust(cust_area, cust_seq);//客戶
         DataTable dt_attList = GetBRAtt(cust_area, cust_seq);//聯絡人清單
         DataTable dt_ap = GetBRAP(case_no);//申請人
-        //DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);//交辦費用
+        DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch, country);//交辦費用
         DataTable dt_arcase = GetArcase(arcase_type,ar_form);//委辦案性
         DataTable dt_arcaseItem = GetArcaseItem(ar_form);//其他費用案性
         //DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
@@ -61,9 +62,9 @@
         Response.Write(",\"cust\":" + JsonConvert.SerializeObject(dt_cust, settings).ToUnicode() + "\n");
         Response.Write(",\"att_list\":" + JsonConvert.SerializeObject(dt_attList, settings).ToUnicode() + "\n");
         Response.Write(",\"caseap\":" + JsonConvert.SerializeObject(dt_ap, settings).ToUnicode() + "\n");
-        //Response.Write(",\"casefee\":" + JsonConvert.SerializeObject(dt_casefee, settings).ToUnicode() + "\n");
+        Response.Write(",\"casefee\":" + JsonConvert.SerializeObject(dt_casefee, settings).ToUnicode() + "\n");
         Response.Write(",\"arcase\":" + JsonConvert.SerializeObject(dt_arcase, settings).ToUnicode() + "\n");
-        //Response.Write(",\"arcase_item\":" + JsonConvert.SerializeObject(dt_arcaseItem, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcase_item\":" + JsonConvert.SerializeObject(dt_arcaseItem, settings).ToUnicode() + "\n");
         //Response.Write(",\"arcase_other\":" + JsonConvert.SerializeObject(dt_arcaseOther, settings).ToUnicode() + "\n");
         //Response.Write(",\"casegood\":" + JsonConvert.SerializeObject(dt_casegood, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran\":" + JsonConvert.SerializeObject(dt_tran, settings).ToUnicode() + "\n");
@@ -241,14 +242,13 @@
     #endregion
 
     #region GetCaseFees 交辦費用
-    private DataTable GetCaseFees(string pType, string pOptSqlno,string pCaseNo,string pBranch) {
+    private DataTable GetCaseFees(string pType, string pOptSqlno,string pCaseNo,string pBranch,string pCountry) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select a.item_sql,a.item_arcase,a.item_count,a.item_service,a.item_fees,b.prt_code,c.service,c.fees,c.others,c.oth_code,c.oth_code1 ";
-            SQL += "from caseitem_opt a ";
-            SQL += "inner join "+Sys.kdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
-            SQL += "left outer join "+Sys.kdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
-            SQL += "where a.opt_sqlno='" + pOptSqlno + "' and a.Case_no= '" + pCaseNo + "' and a.Branch='" + pBranch + "' ";
-            SQL += "order by a.item_sql";
+            SQL = "select a.*,b.service as P_service,b.fees as P_fees from caseitem_opte a ";
+            SQL += "left outer join " + Sys.kdbname + ".dbo.case_fee b on b.dept='T' and b.country='" + pCountry + "' and b.rs_code=a.item_arcase and getdate() between b.beg_date and b.end_date ";
+            SQL += "where opt_sqlno = '" + pOptSqlno + "' and case_no='" + pCaseNo + "' and branch='" + pBranch + "' ";
+            SQL += "order by item_sql";
+
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -275,13 +275,13 @@
 
     #region GetArcaseItem 其他費用案性
     private DataTable GetArcaseItem(string pAr_form) {
-        using (DBHelper connB = new DBHelper(strConnB, false)) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "SELECT  rs_code, rs_detail ";
-            SQL += "FROM  code_ext ";
+            SQL += "FROM  " + Sys.kdbname + ".dbo.code_ext ";
             SQL += "WHERE rs_class like  '" + pAr_form + "%'  And  cr_flag= 'Y' and left(mark,1)='A' ";
             SQL += " and getdate() >= beg_date and (end_date is null or end_date='' or end_date > getdate()) ORDER BY rs_code";
             DataTable dt = new DataTable();
-            connB.DataTable(SQL, dt);
+            conn.DataTable(SQL, dt);
 
             return dt;
         }
