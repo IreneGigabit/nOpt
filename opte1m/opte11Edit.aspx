@@ -1,9 +1,11 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opte/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
 <%@ Register Src="~/commonForm/opte/BrtAPcust_Form.ascx" TagPrefix="uc1" TagName="BrtAPcust_Form" %>
 <%@ Register Src="~/commonForm/opte/case_extform.ascx" TagPrefix="uc1" TagName="case_extform" %>
+<%@ Register Src="~/commonForm/opte/Ext_Form.ascx" TagPrefix="uc1" TagName="Ext_Form" %>
+
 
 
 
@@ -97,7 +99,7 @@
                 <td class="tab" href="#attent">案件聯絡人</td>
                 <td class="tab" href="#apcust_re">申請人</td>
                 <td class="tab" href="#case">收費與接洽事項</td>
-                <td class="tab" href="#dmt">案件主檔</td>
+                <td class="tab" href="#ext">案件主檔</td>
                 <td class="tab" href="#tran">交辦內容</td>
             </tr>
         </table>
@@ -121,12 +123,13 @@
                 <uc1:case_extform runat="server" ID="case_extform" />
                 <!--include file="../commonForm/opte/case_extform.ascx"--><!--收費與接洽事項-->
             </div>
-            <div class="tabCont" id="#dmt">
-                <!--include file="../commonForm/opte/dmt_form.ascx"--><!--案件主檔-->
+            <div class="tabCont" id="#ext">
+                <uc1:Ext_Form runat="server" ID="Ext_Form" />
+                <!--include file="../commonForm/opte/ext_form.ascx"--><!--案件主檔-->
             </div>
             <div class="tabCont" id="#tran">
-                <!--include file="../commonForm/opte/dmt_form.ascx"--><!--案件主檔-->
-                <!--include file="../commonForm/opte/dmt_form.ascx"--><!--案件主檔-->
+                <!--include file="../commonForm/opte/ext_form.ascx"--><!--案件主檔-->
+                <!--include file="../commonForm/opte/ext_form.ascx"--><!--案件主檔-->
             </div>
         </td>
     </tr>
@@ -139,7 +142,7 @@
 	    <Tr>
 		    <TD align=center class=lightbluetable width="18%"><font color="red">退回原因</font></TD>
 		    <TD class=lightbluetable>
-			    <textarea ROWS="5" style="width:82%" align="left" id=Preject_reason name=Preject_reason ></textarea>
+			    <textarea ROWS="5" style="width:82%" id=Preject_reason name=Preject_reason ></textarea>
 		    </TD>
 	    </tr>
     </table>
@@ -212,7 +215,7 @@
         attent_form.init();
         apcust_re_form.init();
         case_form.init();
-        dmt_form.init();
+        ext_form.init();
         tran_form.init();
         brupload_form.init();
     }
