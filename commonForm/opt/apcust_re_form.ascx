@@ -221,7 +221,7 @@
         $("#tabap_re>thead tr").each(function (i) {
             copyStr += "<tr>" + $(this).html().replace(/##/g, nRow) + "</tr>"
         });
-        $("#tabap_re>tbody").append("<tr id='tr_ap_" + nRow + "' class='sfont9'><td><table border='0' class='bluetable' cellspacing='1' cellpadding='2' width='100%'>" + copyStr + "</table></tr></td>");
+        $("#tabap_re>tbody").append("<tr id='tr_ap_" + nRow + "' class='sfont9'><td><table border='0' class='bluetable' cellspacing='1' cellpadding='2' width='100%'>" + copyStr + "</table></td></tr>");
         $("#apnum").val(nRow);
     }
 
