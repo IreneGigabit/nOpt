@@ -188,6 +188,9 @@
                 $("#trap_sql_" + nRow).hide();
             }
         });
+
+        var jOpt = br_opt.opt[0];
+        $("#tfz1_ap_remark").val(jOpt.ap_remark);//'*申請人使用說明
     }
     
     //增加一筆申請人
