@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="prior_form" %>
+﻿<%@ Control Language="C#" ClassName="prior_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -18,7 +18,7 @@
 </script>
 
 <%=Sys.GetAscxPath(this, MapPathSecure(TemplateSourceDirectory))%>
-<input type=text id=priornum name=priornum value=0><!--筆數-->
+<input type=hidden id=priornum name=priornum value=0><!--筆數-->
 <table border="0" id=tabprior class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<THEAD>
 	<TR class=whitetablebg align=center>

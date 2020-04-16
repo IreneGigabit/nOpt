@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -290,7 +290,7 @@
     }
     #endregion
     
-    #region GetArcaseItem 其他費用案性
+    #region GetArcaseItem 優先權
     private DataTable GetOptePrior(string pOptSqlno, string pCaseNo, string pBranch) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select * from caseopte_prior ";

@@ -1,5 +1,7 @@
-<%@ Control Language="C#" ClassName="ext_form" %>
+﻿<%@ Control Language="C#" ClassName="ext_form" %>
 <%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
+<%@ Register Src="~/commonForm/opte/extgoodform.ascx" TagPrefix="uc1" TagName="extgoodform" %>
+
 
 
 <script runat="server">
@@ -240,6 +242,7 @@
 		</tr>	
 		<tr>
 			<td colspan=8>
+                <uc1:extgoodform runat="server" ID="extgoodform" />
                 <!--include file="../commonForm/opte/extgoodform.ascx"--><!--商品畫面-->
 			</td>
 		</tr>	

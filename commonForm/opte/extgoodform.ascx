@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="ext_form_good" %>
+﻿<%@ Control Language="C#" ClassName="ext_form_good" %>
 <%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
 
 
@@ -63,32 +63,20 @@
         var good = br_opt.opte_good;
         var classCount = good.length;
         if (classCount == 0) classCount = 1;//至少有1筆
-        $("#tfzr_class_count").val(good.length == 0 ? "" : classCount);//共N類
+        $("#tfz1_class_count").val(good.length == 0 ? "" : classCount);//共N類
         ext_form_good.Add_button(classCount);//產生類別清單
 
         if (good.length!=0){
             $.each(good, function (i, item) {
                 var nRow = i + 1;
-                $("#class1_" + nRow).val(item.class);
-                $("#good_count1_" + nRow).val(item.dmt_goodcount);
-                $("#grp_code1_" + nRow).val(item.dmt_grp_code);
-                $("#good_name1_" + nRow).val(item.dmt_goodname);
+                $("#class_" + nRow).val(item.class);
+                $("#good_count_" + nRow).val(item.dmt_goodcount);
+                $("#grp_code_" + nRow).val(item.dmt_grp_code);
+                $("#good_name_" + nRow).val(item.dmt_goodname);
             });
         }
         //類別串接
-        $("#tfzr_class").val($("#goodllist>tbody input[id^='class1_']").map(function () { return $(this).val(); }).get().join(','));
-
-        //reg.tfz1_Class.value = "<%=P_class%>"					'*類別
-        //'	msgbox reg.tfz1_class.value
-        //reg.tfz1_class_count.value = "<%=class_count%>"
-        //if reg.tfz1_class_count.value<>empty then
-        //reg.ctrlcount1.value=1
-        //if cint(reg.tfz1_class_count.value) > 1 then
-        //add_button_EP0(cint(reg.tfz1_class_count.value))
-        //end if   
-        //'****商品內容
-        //    getcasegood "<%=case_no%>","<%=opt_sqlno%>"  
-        //end if
+        $("#tfzr_class").val($("#goodllist>tbody input[id^='class_']").map(function () { return $(this).val(); }).get().join(','));
     }
     
     ext_form_good.Add_button = function (classCount) {
