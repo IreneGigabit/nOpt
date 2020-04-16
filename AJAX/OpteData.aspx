@@ -38,8 +38,9 @@
         DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch, country);//交辦費用
         DataTable dt_arcase = GetArcase(arcase_type,ar_form);//委辦案性
         DataTable dt_arcaseItem = GetArcaseItem(ar_form);//其他費用案性
+        DataTable dt_optePrior = GetOptePrior(opt_sqlno, case_no, branch);//優先權
         //DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
-        //DataTable dt_casegood = GetCaseGood(opt_sqlno, case_no, branch);//類別
+        DataTable dt_opteGood = GetOpteGood(opt_sqlno, case_no);//類別
         //DataTable dt_tran = GetTran(opt_sqlno);//異動
         //DataTable dt_tran_mod_client = GetTranModClient(case_no, opt_sqlno);//關係人
         //DataTable dt_tran_mod_dmt = GetTranModDmt(case_no, opt_sqlno);
@@ -65,8 +66,9 @@
         Response.Write(",\"casefee\":" + JsonConvert.SerializeObject(dt_casefee, settings).ToUnicode() + "\n");
         Response.Write(",\"arcase\":" + JsonConvert.SerializeObject(dt_arcase, settings).ToUnicode() + "\n");
         Response.Write(",\"arcase_item\":" + JsonConvert.SerializeObject(dt_arcaseItem, settings).ToUnicode() + "\n");
+        Response.Write(",\"opte_prior\":" + JsonConvert.SerializeObject(dt_optePrior, settings).ToUnicode() + "\n");
         //Response.Write(",\"arcase_other\":" + JsonConvert.SerializeObject(dt_arcaseOther, settings).ToUnicode() + "\n");
-        //Response.Write(",\"casegood\":" + JsonConvert.SerializeObject(dt_casegood, settings).ToUnicode() + "\n");
+        Response.Write(",\"opte_good\":" + JsonConvert.SerializeObject(dt_opteGood, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran\":" + JsonConvert.SerializeObject(dt_tran, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran_mod_client\":" + JsonConvert.SerializeObject(dt_tran_mod_client, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran_mod_dmt\":" + JsonConvert.SerializeObject(dt_tran_mod_dmt, settings).ToUnicode() + "\n");
@@ -287,7 +289,20 @@
         }
     }
     #endregion
+    
+    #region GetArcaseItem 其他費用案性
+    private DataTable GetOptePrior(string pOptSqlno, string pCaseNo, string pBranch) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select * from caseopte_prior ";
+            SQL += "where opt_sqlno='" + pOptSqlno + "' and case_no='" + pCaseNo + "' and branch='" + pBranch + "'";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
 
+            return dt;
+        }
+    }
+    #endregion
+    
     #region GetArcaseOther 轉帳費用案性
     private DataTable GetArcaseOther(string pType) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
@@ -304,10 +319,10 @@
     }
     #endregion
 
-    #region GetCaseGood 類別
-    private DataTable GetCaseGood(string pOptSqlno,string pCaseNo,string pBranch) {
+    #region GetOpteGood 類別
+    private DataTable GetOpteGood(string pOptSqlno, string pCaseNo) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select * from  caseopt_good  where opt_sqlno='" + pOptSqlno + "' and case_no= '" + pCaseNo + "' and branch='" + pBranch + "'";
+            SQL = "select * from caseopte_good where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' order by class ";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
