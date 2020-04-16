@@ -169,7 +169,7 @@ public static class SHtml
 					txt = txt.Replace(match.Value, dr.SafeRead(match.Result("$1"), ""));
 				}
 
-				rtnStr += string.Format("<label><radio id='{0}{1}' name='{0}' value='{1}'>{2}</label>\n",objName,val,txt);
+				rtnStr += string.Format("<label><input type='radio' id='{0}{1}' name='{0}' value='{1}'>{2}</label>\n",objName,val,txt);
 			}
 		}
 		return rtnStr;
@@ -199,7 +199,7 @@ public static class SHtml
 				txt = txt.Replace(match.Value, dt.Rows[r][match.Result("$1")].ToString());
 			}
 
-			rtnStr += string.Format("<label><radio id='{0}{1}' name='{0}' value='{1}'>{2}</label>\n", objName, val, txt);
+			rtnStr += string.Format("<label><input type='radio' id='{0}{1}' name='{0}' value='{1}'>{2}</label>\n", objName, val, txt);
 		}
 		return rtnStr;
 	}
