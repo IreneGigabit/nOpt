@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_form" %>
+<%@ Control Language="C#" ClassName="ext_form" %>
 <%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
 <%@ Register Src="~/commonForm/opte/extgoodform.ascx" TagPrefix="uc1" TagName="extgoodform" %>
 
@@ -40,14 +40,14 @@
 	<tr >
 		<td class=lightbluetable align=right>區所案件編號：</td>
 		<td class=whitetablebg  id=DelayCase>
-				<input type=hidden name=tfzb_seq id=tfzb_seq>
-				<input type=hidden name=tfzb_seq1 id=tfzb_seq1>
-				<input type=hidden name=zold_seq id=zold_seq>
-				<input type=hidden name=zold_seq1 id=zold_seq1>
-				<input type=hidden name=zoldseq_end_date id=zoldseq_end_date>
-				<input type=hidden name=zoldseq_ext_seq id=zoldseq_ext_seq>
-				<input type=hidden name=zoldseq_ext_seq1 id=zoldseq_ext_seq1>
-				<input type=hidden name=kind id=kind><!--傳入之作業種類-->
+				<input type=text name=tfzb_seq id=tfzb_seq>
+				<input type=text name=tfzb_seq1 id=tfzb_seq1>
+				<input type=text name=zold_seq id=zold_seq>
+				<input type=text name=zold_seq1 id=zold_seq1>
+				<input type=text name=zoldseq_end_date id=zoldseq_end_date>
+				<input type=text name=zoldseq_ext_seq id=zoldseq_ext_seq>
+				<input type=text name=zoldseq_ext_seq1 id=zoldseq_ext_seq1>
+				<input type=text name=kind id=kind><!--傳入之作業種類-->
 				<INPUT TYPE=text id=Branch name=Branch SIZE=1 MAXLENGTH=1  class="Lock">-
 				<INPUT TYPE=text id=old_seq name=old_seq SIZE=5 MAXLENGTH=5 onblur="mainseqChange('old_seq')" class="QLock">
                 -<INPUT TYPE=text id=old_seq1 name=old_seq1 SIZE=1 MAXLENGTH=1 value="_" onblur="mainseqChange('old_seq')" class="QLock">	
@@ -168,20 +168,20 @@
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">申請日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_apply_date"  id="tfzd_apply_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_apply_date"  id="tfzd_apply_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock"></TD>
 		<td class="lightbluetable" align="right">註冊日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_issue_date" id="tfzd_issue_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_issue_date" id="tfzd_issue_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock"></TD>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">延展日期：</td>
-		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_renewal_date"  id="tfzd_renewal_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock"></TD>
+		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_renewal_date"  id="tfzd_renewal_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock"></TD>
 		<td class="lightbluetable" align="right">延展號碼：</td>
 		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_renewal_no" id="tfzd_renewal_no" SIZE="20" class="QLock"></TD>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">結案日期：</td>
 		<td class="whitetablebg" colspan="3">
-            <input TYPE="text" NAME="tfzd_end_date" id="tfzd_end_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock">
+            <input TYPE="text" NAME="tfzd_end_date" id="tfzd_end_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock">
 		</TD>
 		<td class="lightbluetable" align="right">結案代碼：</td>
 		<td class="whitetablebg" colspan="3">
@@ -191,8 +191,8 @@
 	<tr>
 		<td class=lightbluetable align=right>專用期限：</td>
 		<td class=whitetablebg colspan=3>
-            <INPUT TYPE=text NAME=tfzd_ext_term1 id=tfzd_ext_term1 SIZE=10 onblur="chkdate_onblur(this.id)" class="QLock">~
-			<INPUT TYPE=text NAME=tfzd_ext_term2 id=tfzd_ext_term2 SIZE=10 onblur="chkdate_onblur(this.id)" class="QLock">
+            <INPUT TYPE=text NAME=tfzd_ext_term1 id=tfzd_ext_term1 SIZE=10 onblur="ext_form.chkdate(this.id)" class="QLock">~
+			<INPUT TYPE=text NAME=tfzd_ext_term2 id=tfzd_ext_term2 SIZE=10 onblur="ext_form.chkdate(this.id)" class="QLock">
 		</TD>
 		<td class="lightbluetable" align="right">延展次數：</td>
 		<td class="whitetablebg" colspan="3"><input TYPE="text" NAME="tfzd_renewal" id="tfzd_renewal" SIZE="2" class="QLock"></TD>
@@ -209,11 +209,11 @@
 	<tr>
 		<td class="lightbluetable" align="right" rowspan="2">使用日(使用主義)：</td>
 		<td class="lightbluetable" align="right">申請國最早使用日：
-		<td class="whitetablebg" colspan="6"><input TYPE="text" id="tfzd_Af_date" NAME="tfzd_Af_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock"></TD>
+		<td class="whitetablebg" colspan="6"><input TYPE="text" id="tfzd_Af_date" NAME="tfzd_Af_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock"></TD>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right">世界最早使用日：
-		<td class="whitetablebg" colspan="2"><input TYPE="text" id="tfzd_Wf_date" NAME="tfzd_Wf_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock">
+		<td class="whitetablebg" colspan="2"><input TYPE="text" id="tfzd_Wf_date" NAME="tfzd_Wf_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock">
 		<td class="lightbluetable" align="right">世界最早使用國：
 		<td class="whitetablebg" colspan="3">
             <select id="tfzd_wf_country" NAME="tfzd_wf_country" class="QLock"><%#tfzy_country%></select>
@@ -229,18 +229,18 @@
 	<tr>
 		<td class="lightbluetable" align="right">註冊日：
 		<td class="whitetablebg" colspan="2">
-			<input TYPE="text" id="tfzd_bissue_date" NAME="tfzd_bissue_date" SIZE="10" onblur="chkdate_onblur(this.id)" class="QLock">
+			<input TYPE="text" id="tfzd_bissue_date" NAME="tfzd_bissue_date" SIZE="10" onblur="ext_form.chkdate(this.id)" class="QLock">
 		</TD>
 		<td class="lightbluetable" align="right">註冊號：
 		<td class="whitetablebg" colspan="3"><input TYPE="text" id="tfzd_bissue_no" NAME="tfzd_bissue_no" SIZE="30" class="QLock"></TD>
 	</tr>
-		<tr>
+		<tr class='sfont9'>
 			<td colspan=8>
                 <uc1:brtPriorForm runat="server" ID="brtPriorForm" />
                 <!--include file="../commonForm/opte/brtPriorForm.ascx"--><!--優先權畫面-->
 			</td>
 		</tr>	
-		<tr>
+		<tr class='sfont9'>
 			<td colspan=8>
                 <uc1:extgoodform runat="server" ID="extgoodform" />
                 <!--include file="../commonForm/opte/extgoodform.ascx"--><!--商品畫面-->
@@ -332,7 +332,7 @@
         ext_form_prior.init();
 
         //商品
-
+        ext_form_good.init();
     }
     
     ext_form.Add_button = function (classCount) {
@@ -343,6 +343,10 @@
                 $("#goodllist>tbody").append(strLine1);
             });
         }
+    }
+
+    ext_form.chkdate=function(pobj){
+        ChkDate($("#" + pobj)[0]);
     }
 
     //重新抓取區所案件主檔資料
