@@ -356,7 +356,6 @@
         $("#nfy_Discount").val(jCase.discount);
         $("#Discount").val(jCase.discount + "%");
         $("#tfy_invoice_chk").val(jCase.invoice_chk);
-        $("#tfy_last_date").val(dateReviver(jCase.last_date, "yyyy/M/d"));
         $("#code_type").val(jCase.arcase_type);
     }
 </script>
