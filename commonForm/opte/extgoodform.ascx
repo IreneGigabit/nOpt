@@ -1,6 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_form_good" %>
-<%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
-
+<%@ Control Language="C#" ClassName="ext_form_good" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -70,13 +68,15 @@
             $.each(good, function (i, item) {
                 var nRow = i + 1;
                 $("#class_" + nRow).val(item.class);
-                $("#good_count_" + nRow).val(item.dmt_goodcount);
-                $("#grp_code_" + nRow).val(item.dmt_grp_code);
-                $("#good_name_" + nRow).val(item.dmt_goodname);
+                $("#good_name_" + nRow).val(item.ext_goodname);
+                $("#good_count_" + nRow).val(item.ext_goodcount);
+                $("#egood_name_" + nRow).val(item.ext_egoodname);
+                $("#egood_count_" + nRow).val(item.ext_egoodcount);
+                $("#goodcount_" + nRow).val(item.goodcount);
             });
         }
         //類別串接
-        $("#tfzr_class").val($("#goodllist>tbody input[id^='class_']").map(function () { return $(this).val(); }).get().join(','));
+        $("#tfz1_class").val($("#goodllist>tbody input[id^='class_']").map(function () { return $(this).val(); }).get().join(','));
     }
     
     ext_form_good.Add_button = function (classCount) {
