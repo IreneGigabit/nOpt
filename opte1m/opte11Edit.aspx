@@ -1,15 +1,11 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opte/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
 <%@ Register Src="~/commonForm/opte/BrtAPcust_Form.ascx" TagPrefix="uc1" TagName="BrtAPcust_Form" %>
 <%@ Register Src="~/commonForm/opte/case_extform.ascx" TagPrefix="uc1" TagName="case_extform" %>
 <%@ Register Src="~/commonForm/opte/Ext_Form.ascx" TagPrefix="uc1" TagName="Ext_Form" %>
-
-
-
-
-
+<%@ Register Src="~/commonForm/opte/E9ZForm.ascx" TagPrefix="uc1" TagName="E9ZForm" %>
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -109,27 +105,28 @@
         <td>
             <div class="tabCont" id="#cust">
                 <uc1:cust_form runat="server" ID="cust_form" />
-                <!--include file="../commonForm/opte/cust_form.ascx"--><!--案件客戶-->
+                <!--include file="commonForm/opte/cust_form.ascx"--><!--案件客戶-->
             </div>
             <div class="tabCont" id="#attent">
                 <uc1:attent_form runat="server" ID="attent_form" />
-                <!--include file="../commonForm/opte/attent_form.ascx"--><!--案件聯絡人-->
+                <!--include file="commonForm/opte/attent_form.ascx"--><!--案件聯絡人-->
             </div>
             <div class="tabCont" id="#apcust_re">
                 <uc1:BrtAPcust_Form runat="server" ID="BrtAPcust_Form" />
-                <!--include file="../commonForm/opte/BrtAPcust_Form.ascx"--><!--案件申請人-->
+                <!--include file="commonForm/opte/BrtAPcust_Form.ascx"--><!--案件申請人-->
             </div>
             <div class="tabCont" id="#case">
                 <uc1:case_extform runat="server" ID="case_extform" />
-                <!--include file="../commonForm/opte/case_extform.ascx"--><!--收費與接洽事項-->
+                <!--include file="commonForm/opte/case_extform.ascx"--><!--收費與接洽事項-->
             </div>
             <div class="tabCont" id="#ext">
                 <uc1:Ext_Form runat="server" ID="Ext_Form" />
-                <!--include file="../commonForm/opte/ext_form.ascx"--><!--案件主檔-->
+                <!--include file="commonForm/opte/ext_form.ascx"--><!--案件主檔-->
             </div>
             <div class="tabCont" id="#tran">
-                <!--include file="../commonForm/opte/ext_form.ascx"--><!--案件主檔-->
-                <!--include file="../commonForm/opte/ext_form.ascx"--><!--案件主檔-->
+                <uc1:E9ZForm runat="server" id="E9ZForm" />
+                <!--include file="commonForm/opte/E9ZForm.ascx"--><!--交辦內容欄位畫面-->
+                <!--include file="commonForm/opte/brext_upload_form.ascx"--><!--區所上傳欄位畫面-->
             </div>
         </td>
     </tr>
@@ -216,7 +213,7 @@
         apcust_re_form.init();
         case_form.init();
         ext_form.init();
-        tran_form.init();
+        e9z_form.init();
         brupload_form.init();
     }
 
