@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opte/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -172,7 +172,7 @@
         this_init();
     });
 
-    var br_opt = {};
+    var br_opte = {};
     //初始化
     function this_init() {
         settab("#tran");
@@ -200,14 +200,14 @@
                     toastr.warning("無案件資料可載入！");
                     return false;
                 }
-                br_opt = JSONdata;
+                br_opte = JSONdata;
             },
             error: function () { 
                 toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
 
-        $("#sseq").html(br_opt.opt[0].fseq);
+        $("#sseq").html(br_opte.opte[0].fseq);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();

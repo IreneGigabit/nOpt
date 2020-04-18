@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="ext_form" %>
+﻿<%@ Control Language="C#" ClassName="ext_form" %>
 <%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
 <%@ Register Src="~/commonForm/opte/extgoodform.ascx" TagPrefix="uc1" TagName="extgoodform" %>
 
@@ -255,7 +255,7 @@
         $("input[name='tfzd_s_mark']").addClass("QLock");
         $("input[name='tfzd_s_type']").addClass("QLock");
 
-        var jOpt = br_opt.opt[0];
+        var jOpt = br_opte.opte[0];
         $("#opt_no").val(jOpt.opt_no);
         $("#Branch").val(jOpt.branch);
 

@@ -69,7 +69,7 @@
 <script language="javascript" type="text/javascript">
     var attent_form = {};
     attent_form.init = function () {
-        var jAttList = br_opt.att_list;
+        var jAttList = br_opte.att_list;
         $("#tfy_att_sql").getOption({//聯絡人清單
             dataList: jAttList,
             valueFormat: "{att_sql}",
@@ -77,7 +77,7 @@
         });
 
         $.each(jAttList, function (idx, obj) {
-            if (obj.att_sql == br_opt.opt[0].att_sql) {
+            if (obj.att_sql == br_opte.opte[0].att_sql) {
                 $("#tfy_cust_area").val(obj.cust_area);
                 $("#tfy_cust_seq").val(obj.cust_seq);
                 $("#tfy_att_sql").val(obj.att_sql);

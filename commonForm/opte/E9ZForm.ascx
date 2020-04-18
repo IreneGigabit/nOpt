@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="e9z_form" %>
+﻿<%@ Control Language="C#" ClassName="e9z_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -7,13 +7,14 @@
     protected string opt_sqlno = "";
 
     protected string tfy_end_type = "";
+    public string main_branch = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
 
         tfy_end_type = Funcs.getcust_code_mul("Tend_type", "", "sortfld").Option("{cust_code}", "{code_name}");
-        
+
         this.DataBind();
     }
 </script>
@@ -79,7 +80,7 @@
 <script language="javascript" type="text/javascript">
     var e9z_form = {};
     e9z_form.init = function () {
-        var jCase = br_opt.opt[0];
+        var jCase = br_opte.opte[0];
         $("#tfz1_remark1").val(jCase.remark1);
         $("#tfz1_remark2").val(jCase.remarkb);
         $("#tfy_last_date").val(dateReviver(jCase.last_date, "yyyy/M/d"));

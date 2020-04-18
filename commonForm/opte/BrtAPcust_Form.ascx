@@ -149,7 +149,7 @@
 <script language="javascript" type="text/javascript">
     var apcust_re_form={};
     apcust_re_form.init = function () {
-        var jCaseap = br_opt.caseap;
+        var jCaseap = br_opte.caseap;
         $.each(jCaseap, function (i, item) {
             //增加一筆
             $("#AP_Add_button").click();
@@ -189,7 +189,7 @@
             }
         });
 
-        var jOpt = br_opt.opt[0];
+        var jOpt = br_opte.opte[0];
         $("#tfz1_ap_remark").val(jOpt.ap_remark);//'*申請人使用說明
     }
     

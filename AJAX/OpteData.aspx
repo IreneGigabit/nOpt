@@ -31,7 +31,7 @@
         branch = Request["branch"];
         opt_sqlno = Request["opt_sqlno"];
 
-        DataTable dt_opt = GetBROpt(branch, opt_sqlno);//案件資料
+        DataTable dt_opte = GetBROpte(branch, opt_sqlno);//案件資料
         DataTable dt_cust = GetBRCust(cust_area, cust_seq);//客戶
         DataTable dt_attList = GetBRAtt(cust_area, cust_seq);//聯絡人清單
         DataTable dt_ap = GetBRAP(case_no);//申請人
@@ -59,7 +59,7 @@
         };
 
         Response.Write("{");
-        Response.Write("\"opt\":" + JsonConvert.SerializeObject(dt_opt, settings).ToUnicode() + "\n");
+        Response.Write("\"opte\":" + JsonConvert.SerializeObject(dt_opte, settings).ToUnicode() + "\n");
         Response.Write(",\"cust\":" + JsonConvert.SerializeObject(dt_cust, settings).ToUnicode() + "\n");
         Response.Write(",\"att_list\":" + JsonConvert.SerializeObject(dt_attList, settings).ToUnicode() + "\n");
         Response.Write(",\"caseap\":" + JsonConvert.SerializeObject(dt_ap, settings).ToUnicode() + "\n");
@@ -126,7 +126,7 @@
     }
 
     #region GetBROpt 案件資料
-    private DataTable GetBROpt(string pBranch,string pOptSqlno) {
+    private DataTable GetBROpte(string pBranch,string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "Select *,''fseq,''drfile from vbr_opte where opt_sqlno='" + pOptSqlno + "' ";
             DataTable dt = new DataTable();

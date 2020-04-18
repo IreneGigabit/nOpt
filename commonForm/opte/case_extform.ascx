@@ -274,18 +274,18 @@
     var case_form = {};
     case_form.init = function () {
         $("#tfg_item_Arcase0").getOption({//案性
-            dataList: br_opt.arcase,
+            dataList: br_opte.arcase,
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
         $("select[id='tfg_item_Arcase_##']").getOption({//其他費用
-            dataList: br_opt.arcase_item,
+            dataList: br_opte.arcase_item,
             valueFormat: "{rs_code}",
             textFormat: "{rs_code}---{rs_detail}"
         });
 
         //案性/案源
-        var jCase = br_opt.opt[0];
+        var jCase = br_opte.opte[0];
         $("#tfz1_country").val(jCase.country);
         $("#F_tscode").val(jCase.in_scode);
         $("#tfy_Arcase").val(jCase.arcase);
@@ -315,7 +315,7 @@
         }
 
         //費用
-        $.each(br_opt.casefee, function (i, item) {
+        $.each(br_opte.casefee, function (i, item) {
             if (item.item_sql == "0") {
                 $("#tfg_item_Arcase0").val(item.item_arcase == "" ? "0" : item.item_arcase);
                 $("#tfg_Service0").val(item.item_service == "" ? "0" : item.item_service);

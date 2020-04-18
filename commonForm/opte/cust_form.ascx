@@ -168,12 +168,12 @@
 <script language="javascript" type="text/javascript">
     var cust_form={};
     cust_form.init = function () {
-        //if (br_opt.cust.length == 0) {
+        //if (br_opte.cust.length == 0) {
         //    toastr.error("「案件客戶」載入失敗！<BR>請聯繫資訊人員！");
         //    return false;
         //}
-        var jCust = br_opt.cust[0];
-        if (br_opt.cust.length > 0) {
+        var jCust = br_opte.cust[0];
+        if (br_opte.cust.length > 0) {
             $("#F_cust_area").val(jCust.cust_area);
             $("#F_cust_seq").val(jCust.cust_seq);
             $("#F_ap_country").val(jCust.ap_country);

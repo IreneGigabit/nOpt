@@ -61,7 +61,7 @@
     var ext_form_prior = {};
     ext_form_prior.init = function () {
         //優先權
-        var jPrior = br_opt.opte_prior;
+        var jPrior = br_opte.opte_prior;
         $.each(jPrior, function (i, item) {
             //增加一筆
             $("#prior_Add_button").click();
