@@ -6,6 +6,8 @@
 <%@ Register Src="~/commonForm/opt/case_form.ascx" TagPrefix="uc1" TagName="case_form" %>
 <%@ Register Src="~/commonForm/opt/dmt_form.ascx" TagPrefix="uc1" TagName="dmt_form" %>
 <%@ Register Src="~/commonForm/opt/brdmt_upload_Form.ascx" TagPrefix="uc1" TagName="brdmt_upload_Form" %>
+<%@ Register Src="~/commonForm/opt/Descript.ascx" TagPrefix="uc1" TagName="Descript" %>
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -86,7 +88,8 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 <body>
-<table cellspacing="1" cellpadding="0" width="98%" border="0">
+    <uc1:Descript runat="server" ID="Descript" />
+    <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
             <font color="blue">區所案件編號：<span id="sseq"></span></font>

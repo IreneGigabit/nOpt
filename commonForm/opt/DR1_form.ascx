@@ -35,7 +35,7 @@
 		</td>
 	</tr>	
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" width="20%" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Appl_name)">
+		<td class="lightbluetable" colspan="8" valign="top" width="20%" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(r1Appl_name)">
             <strong>壹、<u>廢止標的（你要廢止的標章）</u></strong>
 		</td>
 	</tr>
@@ -91,7 +91,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(O1Rapcust)"><strong>肆、<u>註冊人：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(o1Rapcust)"><strong>肆、<u>註冊人：</u></strong></td>
 	</tr>
 	<tr class='sfont9'>
 		<td colspan="8">
@@ -137,7 +137,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1New_no)"><strong>伍、<u>廢止聲明：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(r1New_no)"><strong>伍、<u>廢止聲明：</u></strong></td>
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right valign=top></td>
@@ -156,7 +156,7 @@
 		<td class=whitetablebg colspan=7>指定使用於商標法施行細則第<INPUT TYPE=text NAME=P4mod_pul_new_no id=P4mod_pul_new_no SIZE=3 MAXLENGTH=10 class="PLock">條第<INPUT TYPE=text NAME=P4mod_pul_mod_dclass id=P4mod_pul_mod_dclass SIZE=3 MAXLENGTH=3 class="PLock">類<INPUT TYPE=text NAME=P4mod_pul_ncname1 id=P4mod_pul_ncname1 SIZE=30 MAXLENGTH=50 class="PLock">商品／服務之商標權應予廢止。</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Other_item1)"><strong>陸、<u>主張法條及據以廢止商標／標章：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(r1Other_item1)"><strong>陸、<u>主張法條及據以廢止商標／標章：</u></strong></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" valign="top">一、主張條款：</td>
@@ -171,7 +171,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Tran_remark1)"><strong>柒、<u>事實及理由：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(r1Tran_remark1)"><strong>柒、<u>事實及理由：</u></strong></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=100 id=Ptran_remark1 name=Ptran_remark1 class="PLock"></textarea></td>
@@ -183,13 +183,13 @@
 		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=100 id=Ptran_remark4 name=Ptran_remark4 class="PLock"></textarea></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(ZAttechD)"><strong>捌、<u>證據(附件)內容：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(zAttechd)"><strong>捌、<u>證據(附件)內容：</u></strong></td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" colspan="8" valign="top"><textarea rows=9 cols=100 id=Ptran_remark2 name=Ptran_remark2 class="PLock"></textarea></td>
 	</tr>
 	<tr>
-		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(R1Other_item)"><strong>玖、<u>相關聯案件：</u></strong></td>
+		<td class="lightbluetable" colspan="8" valign="top" STYLE="cursor:pointer;COLOR:BLUE" onclick="PMARK(r1Other_item)"><strong>玖、<u>相關聯案件：</u></strong></td>
 	</tr>
 	<TR>
 		<TD class=lightbluetable align=right></TD>
