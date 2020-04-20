@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -93,10 +93,10 @@
                                 SQL += ",s_type='" + dr.SafeRead("s_type", "").Trim() + "'";
                                 SQL += ",class='" + dr.SafeRead("class", "").Trim() + "'";
                                 SQL += ",class_count=" + Util.dbzero(dr.SafeRead("class_count", "0"));
-                                SQL += ",in_date='" + dr.SafeRead("in_date", "").Trim() + "'";
-                                SQL += ",apply_date=" + Util.dbnull(dr.SafeRead("apply_date", ""));
+                                SQL += ",in_date=" + Util.dbdate(dr.SafeRead("in_date", ""), "yyyy/M/d HH:mm:ss");
+                                SQL += ",apply_date=" + Util.dbdate(dr.SafeRead("apply_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",apply_no='" + dr.SafeRead("apply_no", "").Trim() + "'";
-                                SQL += ",issue_date=" + Util.dbnull(dr.SafeRead("issue_date", ""));
+                                SQL += ",issue_date=" + Util.dbdate(dr.SafeRead("issue_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",issue_no='" + dr.SafeRead("issue_no", "").Trim() + "'";
                                 SQL += ",appl_name='" + dr.SafeRead("appl_name", "").Trim() + "'";
                                 SQL += ",cappl_name='" + dr.SafeRead("cappl_name", "").Trim() + "'";
@@ -111,22 +111,22 @@
                                 SQL += ",color_content='" + dr.SafeRead("color_content", "").Trim() + "'";
                                 SQL += ",agt_no='" + dr.SafeRead("agt_no", "").Trim() + "'";
                                 SQL += ",agt_no1='" + dr.SafeRead("agt_no1", "").Trim() + "'";
-                                SQL += ",end_date=" + Util.dbnull(dr.SafeRead("end_date", ""));
+                                SQL += ",end_date=" + Util.dbdate(dr.SafeRead("end_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",end_code='" + dr.SafeRead("end_code", "").Trim() + "'";
                                 SQL += ",ext_term1=" + Util.dbnull(dr.SafeRead("ext_term1", ""));
                                 SQL += ",ext_term2=" + Util.dbnull(dr.SafeRead("ext_term2", ""));
-                                SQL += ",renewal_date=" + Util.dbnull(dr.SafeRead("renewal_date", ""));
+                                SQL += ",renewal_date=" + Util.dbdate(dr.SafeRead("renewal_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",renewal_no='" + dr.SafeRead("renewal_no", "").Trim() + "'";
                                 SQL += ",renewal_agt_no='" + dr.SafeRead("renewal_agt_no", "").Trim() + "'";
                                 SQL += ",renewal_agt_no1='" + dr.SafeRead("renewal_agt_no1", "").Trim() + "'";
                                 SQL += ",renewal=" + Util.dbzero(dr.SafeRead("renewal", "0"));
                                 SQL += ",apply_base='" + dr.SafeRead("apply_base", "").Trim() + "'";
-                                SQL += ",af_date=" + Util.dbnull(dr.SafeRead("af_date", ""));
-                                SQL += ",wf_date=" + Util.dbnull(dr.SafeRead("wf_date", ""));
+                                SQL += ",af_date=" + Util.dbdate(dr.SafeRead("af_date", ""), "yyyy/M/d HH:mm:ss");
+                                SQL += ",wf_date=" + Util.dbdate(dr.SafeRead("wf_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",wf_country='" + dr.SafeRead("wf_country", "").Trim() + "'";
                                 SQL += ",bissue_coun='" + dr.SafeRead("bissue_coun", "").Trim() + "'";
                                 SQL += ",bissue_no='" + dr.SafeRead("bissue_no", "").Trim() + "'";
-                                SQL += ",bissue_date=" + Util.dbnull(dr.SafeRead("bissue_date", ""));
+                                SQL += ",bissue_date=" + Util.dbdate(dr.SafeRead("bissue_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",remark1='" + dr.SafeRead("remark1", "").Trim() + "'";
                                 SQL += ",remark2='" + dr.SafeRead("remark2", "").Trim() + "'";
                                 SQL += ",tr_date=getdate()";
@@ -252,7 +252,7 @@
                             if (dr.Read()) {
                                 //入opte_detail_log
                                 Funcs.insert_log_table(conn, "U", prgid, "opte_detail", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
-                                SQL = "update opte_detail set cust_area='" + dr.SafeRead("remark1", "").Trim() + "'";
+                                SQL = "update opte_detail set remark1='" + dr.SafeRead("remark1", "").Trim() + "'";
                                 SQL += ",remarkb='" + dr.SafeRead("remarkb", "").Trim() + "'";
                                 SQL += " where opt_sqlno=" + opt_sqlno;
                                 conn.ExecuteNonQuery(SQL);
