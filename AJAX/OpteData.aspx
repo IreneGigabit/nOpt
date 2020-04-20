@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -50,7 +50,7 @@
         //DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
         //DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
         //DataTable dt_brdmt_attach = GetBRDmtAttach(case_no);
-        //DataTable dt_opt_attach = GetOptAttach(opt_sqlno);
+        DataTable dt_opte_attach = GetOpteAttach(opt_sqlno);
 
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
@@ -78,7 +78,7 @@
         //Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
         //Response.Write(",\"brdmt_attach\":" + JsonConvert.SerializeObject(dt_brdmt_attach, settings).ToUnicode() + "\n");
-        //Response.Write(",\"opt_attach\":" + JsonConvert.SerializeObject(dt_opt_attach, settings).ToUnicode() + "\n");
+        Response.Write(",\"opte_attach\":" + JsonConvert.SerializeObject(dt_opte_attach, settings).ToUnicode() + "\n");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
@@ -116,6 +116,7 @@
     }
 
     private string showBRDmtFile(string pBranch, string pFile, string tname) {
+        //抓區所商標圖server主機名稱(iis)
         string servername = Sys.webservername(pBranch);
 
         if (pFile.IndexOf(".") > -1) {//路徑包含檔案
@@ -482,17 +483,22 @@
     }
     #endregion
 
-    #region GetOptAttach
-    private DataTable GetOptAttach(string pOptSqlno) {
+    #region GetOpteAttach
+    private DataTable GetOpteAttach(string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select * ";
-            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm ";
-            SQL += " from attach_opt ";
-            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D' ";
+            SQL = "select *,''preview_path ";
+            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm";
+            SQL += ",(select form_name from cust_code where code_type='osername' and cust_code=attach_opte.branch) as uploadservername ";
+            SQL += " from attach_opte ";
+            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
+            SQL += " and source='br' ";
             SQL += " order by opt_sqlno,attach_no ";
-
+    
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
+            }
 
             return dt;
         }
