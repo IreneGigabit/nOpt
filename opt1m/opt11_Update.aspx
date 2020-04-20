@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -52,6 +52,9 @@
             SQL="select max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
             object objResult = conn.ExecuteScalar(SQL);
             string opt_no = (objResult == DBNull.Value || objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
+
+            //入br_opt_log
+            Funcs.insert_log_table(conn, "U", prgid, "br_opt", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
 
             //抓前一todo的流水號
             string pre_sqlno = "";
@@ -107,6 +110,9 @@
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(Request["chkTest"] == "TEST");
         try {
+            //入br_opt_log
+            Funcs.insert_log_table(conn, "U", prgid, "br_opt", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+
             SQL = "update br_opt set mark='B' ";
             SQL += " where opt_sqlno='" + opt_sqlno + "' ";
             conn.ExecuteNonQuery(SQL);
