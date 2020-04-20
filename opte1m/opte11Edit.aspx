@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opte/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -6,6 +7,8 @@
 <%@ Register Src="~/commonForm/opte/case_extform.ascx" TagPrefix="uc1" TagName="case_extform" %>
 <%@ Register Src="~/commonForm/opte/Ext_Form.ascx" TagPrefix="uc1" TagName="Ext_Form" %>
 <%@ Register Src="~/commonForm/opte/E9ZForm.ascx" TagPrefix="uc1" TagName="E9ZForm" %>
+<%@ Register Src="~/commonForm/opte/brext_upload_Form.ascx" TagPrefix="uc1" TagName="brext_upload_Form" %>
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -27,11 +30,12 @@
     protected string RLock = "true";//承辦內容的控制
     protected string P1Lock = "true";//控制show圖檔
 
+    public string xx = "xx";
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
-
+            
         submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
@@ -48,7 +52,6 @@
 
     private void PageLayout() {
     }
-
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -81,10 +84,12 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="hidden" name="case_no" value="<%=case_no%>">
-	<input type="hidden" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="hidden" name="submittask">
-	<input type="hidden" name="prgid" value="<%=prgid%>">
+    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="text" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
+	<input type="text" id="bstep_grade" name="bstep_grade">
+	<input type="text" id="submittask" name="submittask">
+	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -126,6 +131,7 @@
             <div class="tabCont" id="#tran">
                 <uc1:E9ZForm runat="server" id="E9ZForm" />
                 <!--include file="commonForm/opte/E9ZForm.ascx"--><!--交辦內容欄位畫面-->
+                <uc1:brext_upload_Form runat="server" ID="brext_upload_Form" />
                 <!--include file="commonForm/opte/brext_upload_form.ascx"--><!--區所上傳欄位畫面-->
             </div>
         </td>
@@ -149,18 +155,20 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td align="center">
-        <input type=button value ="收件確認" class="cbutton" id="btnsearchSubmit">
-        <input type=button value ="退回區所" class="redbutton" id="btnback1Submit">
+        <input type=button value="收件確認" class="cbutton" id="btnsearchSubmit">
+        <input type=button value="退回區所" class="redbutton" id="btnback1Submit">
+        <input type=button value="通知區所修正資料" id="tobrbutton"  name="tobrbutton" class="c1button" onClick="tobrbutton_email()" >
     </td>
 </tr>
 <tr id="tr_button2" style="display:none">
     <td align="center">
-        <input type=button value ="退回" class="redbutton" id="btnbackSubmit">
-        <input type=button value ="取消" class="c1button" id="btnresetSubmit">
+        <input type=button value="退回" class="redbutton" id="btnbackSubmit">
+        <input type=button value="取消" class="c1button" id="btnresetSubmit">
     </td>
 </tr>
 </table>
 
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -170,6 +178,10 @@
             window.parent.tt.rows = "20%,80%";
         }
         this_init();
+    });
+
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
     });
 
     var br_opte = {};
@@ -208,6 +220,7 @@
         });
 
         $("#sseq").html(br_opte.opte[0].fseq);
+        $("#bstep_grade").html(br_opte.opte[0].bstep_grade);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();
@@ -242,6 +255,7 @@
         $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
         reg.submit();
     });
 
@@ -267,6 +281,7 @@
 
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
         reg.submit();
     });
 
@@ -276,4 +291,53 @@
         $("#tr_button2,#tabreject").hide();
         $("#btnsearchSubmit").unlock();
     });
+
+    //資料有誤通知區所修正
+    function tobrbutton_email(tcgrs){
+        <%
+        List<string> strTo = new List<string>();////收件者
+        List<string> strCC = new List<string>();//副本
+        string Sender=Sys.GetSession("scode");//寄件者
+        string branch_name=Sys.bName(branch);//區所名稱
+        switch (Sys.Host) {
+            case "web08":
+                strTo.Add(Session["scode"] + "@saint-island.com.tw");
+                break;
+            case "web10":
+                strTo.Add(Session["scode"] + "@saint-island.com.tw");
+                break;
+            default:
+                ////通知區所承辦、程序
+                using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
+                    string SQL = "select in_scode from todo_opte where sqlno='" + todo_sqlno + "' ";
+                    object objResult0 = conn.ExecuteScalar(SQL);
+                    if(objResult0 != DBNull.Value && objResult0 != null){
+                        strTo.Add(objResult0.ToString() + "@saint-island.com.tw");
+                    }
+
+                    SQL = "select scode from sysctrl.dbo.scode_group where grpclass='" + branch + "' and grpid='T220' and grptype='F'";
+                    object objResult1 = conn.ExecuteScalar(SQL);
+                    if(objResult1 != DBNull.Value && objResult1 != null){
+                        strTo.Add(objResult1.ToString() + "@saint-island.com.tw");
+                    }
+                }
+                break;
+        }
+        strCC.Add("m802@saint-island.com.tw");
+        %>
+
+        var StrToList="<%=string.Join(";", strTo.ToArray())%>";  //收件者
+        var CCtoList="<%=string.Join(";", strCC.ToArray())%>";  //副本
+        tsubject = "出口爭救案系統－資料修正通知（區所編號: "+br_opte.opte[0].fseq+" ）";
+
+        var tbody = "致: <%=branch_name%> 程序、承辦%0A%0A";
+        tbody += "【通 知 日 期 】: "+(new Date()).format("yyyy/M/d");
+        tbody += "%0A【區所編號】:"+br_opte.opte[0].fseq+"，交辦單號：<%=case_no%> ";
+        tbody += "%0A 檢核資料有誤 ，煩請確認，如有資料修正，請更正後通知。";
+        tbody += "%0A【檢核項目】";
+        tbody += "%0A法定期限";
+        tbody += "%0A上傳文件";
+	
+        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&cc= "+CCtoList+"&body="+tbody;
+    }
 </script>
