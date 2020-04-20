@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="cust_form" %>
+<%@ Control Language="C#" ClassName="cust_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -216,10 +216,12 @@
     }
 
 
-    $("#GetBranch_cust_button").blur(function () {
+    $("#GetBranch_cust_button").click(function () {
         if (confirm("是否確定重新取得區所案件客戶及聯絡人資料？")) {
-            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=cust&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + "&opt_sqlno=" + $("#opt_sqlno").val();
-            window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=cust&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() +
+                "&opt_sqlno=" + $("#opt_sqlno").val() + "&chkTest=" + $("#chkTest:checked").val();
+            //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            ActFrame.location.href = url;
         }
 	});
 </script>
