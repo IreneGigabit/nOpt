@@ -172,7 +172,7 @@ public class Funcs {
                 usql += wsql;
                 break;
             case "step_ext":
-				usql = "insert into " + table + "_log(ud_flag,ud_date,ud_scode,ud_prgid," + tfield_str + ")";
+				usql = "insert into " + table + "_log(ud_flag,log_date,log_scode,prgid," + tfield_str + ")";
                 usql += " SELECT " + Util.dbnull(ud_flag) + ",GETDATE()," + Util.dbnull(Sys.GetSession("scode")) + "," + Util.dbnull(prgid) + "," + tfield_str;
                 usql += " FROM " + table;
                 usql += " WHERE 1=1 ";
