@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="e9z_form" %>
+<%@ Control Language="C#" ClassName="e9z_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -118,9 +118,10 @@
     //重新抓取區所交辦資料
     $("#GetBranch_remark_button").click(function () { 
         if (confirm("是否確定重新取得區所交辦說明資料？")) {
-            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=remark&branch=" + $("#Branch").val() + 
-            "&case_no=" + $("#case_no").val() + "&opt_sqlno=" + $("#opt_sqlno").val()+"&step_grade="+$("#bstep_grade").val()+"&seq="+$("#tfzb_seq").val()+"&seq1="+$("#tfzb_seq1").val();
-            window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=remark&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + 
+                "&opt_sqlno=" + $("#opt_sqlno").val() + "&step_grade=" + $("#bstep_grade").val() + "&seq=" + $("#tfzb_seq").val() + "&seq1=" + $("#tfzb_seq1").val() + "&chkTest=" + $("#chkTest:checked").val();
+            //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            ActFrame.location.href = url;
         }
     });
 </script>
