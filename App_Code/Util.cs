@@ -359,7 +359,7 @@ public static class Util
     public static string dbdate(string iStr,string format) {
         if (iStr == null || iStr == "") return "null";
 
-		iStr = DateTime.ParseExact(iStr, "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
+		iStr = DateTime.ParseExact(iStr.Trim(), "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
         return "'" + iStr + "'";
     }
     #endregion
