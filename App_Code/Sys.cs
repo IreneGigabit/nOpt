@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -110,6 +110,18 @@ public class Sys
 			}
 		}
 	}
+
+    /// <summary>
+    /// 區所名稱
+    /// </summary>
+    public static string bName(string pBranch) {
+        string rtnStr = "";
+		if (pBranch.ToUpper() == "N") rtnStr = "台北所";
+		if (pBranch.ToUpper() == "C") rtnStr = "台中所";
+		if (pBranch.ToUpper() == "S") rtnStr = "台南所";
+		if (pBranch.ToUpper() == "K") rtnStr = "高雄所";
+		return rtnStr;
+    }
 
     /// <summary>
     /// 區所案件資料庫名稱
