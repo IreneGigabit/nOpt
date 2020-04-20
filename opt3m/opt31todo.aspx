@@ -151,6 +151,7 @@
         var JSONdata = $.parseJSON("<%#json_data%>");
         $("#noData").showFor(JSONdata.length == 0);
 
+        $("#dataList>tbody").empty();
         $.each(JSONdata, function (i, item) {
             var nRow = i + 1;
             //複製一筆

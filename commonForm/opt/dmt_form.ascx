@@ -218,20 +218,6 @@
 <script language="javascript" type="text/javascript">
     var dmt_form = {};
     dmt_form.init = function () {
-        /*
-        $("#tfzy_Zname_type,#tfzy_prior_country").getOption({//語文別/優先權首次申請國家
-            url: "../ajax/_GetSqlDataCnn.aspx",
-            data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
-            valueFormat: "{coun_code}",
-            textFormat: "{coun_code}-{coun_c}"
-        });
-        $("#tfzy_end_code").getOption({//結案代碼
-            url: "../ajax/_GetSqlDataBranch.aspx",
-            data: { branch: "<%#branch%>", sql: "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld" },
-            valueFormat: "{chrelno}",
-            textFormat: "{chrelname}"
-        });
-        */
         var jOpt = br_opt.opt[0];
         $("#opt_no").val(jOpt.opt_no);
         $("#Branch").val(jOpt.branch);
@@ -280,6 +266,7 @@
         $("#tfzr_class_count").val(good.length == 0 ? "" : classCount);//共N類
         dmt_form.Add_button(classCount);//產生類別清單
 
+        $("#goodllist>tbody").empty();
         if (good.length!=0){
             $.each(good, function (i, item) {
                 var nRow = i + 1;

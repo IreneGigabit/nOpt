@@ -94,6 +94,7 @@
         $("#tabfileopt_file>tbody tr").remove();
 
         $("#" + fld + "_attach_cnt").val(br_opt.opt_attach.length);
+        $("#tabfileopt_file>tbody").empty();
         $.each(br_opt.opt_attach, function (i, item) {
             //增加一筆
             upload_form.appendFile(fld);

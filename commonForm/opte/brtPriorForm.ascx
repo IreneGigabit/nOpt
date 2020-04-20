@@ -62,6 +62,7 @@
     ext_form_prior.init = function () {
         //優先權
         var jPrior = br_opte.opte_prior;
+        $("#tabprior>tbody").empty();
         $.each(jPrior, function (i, item) {
             //增加一筆
             $("#prior_Add_button").click();

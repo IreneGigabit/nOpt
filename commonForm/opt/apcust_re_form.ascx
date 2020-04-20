@@ -163,6 +163,7 @@
         });
         */
         var jCaseap = br_opt.caseap;
+        $("#tabap_re>tbody").empty();
         $.each(jCaseap, function (i, item) {
             //增加一筆
             $("#AP_Add_button").click();

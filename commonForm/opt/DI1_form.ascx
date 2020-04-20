@@ -316,10 +316,11 @@
 
         //註冊人
         var jMod = br_opt.tran_mod_ap;
+        $("#DI1_tabap>tbody").empty();
         if (jMod.length > 0) {
             $.each(jMod, function (i, item) {
                 //增加一筆
-                tran_form.appendModAp()
+                tran_form.appendModAp();
                 //填資料
                 var nRow = $("#apnum").val();
                 $("#ttg3_mod_ap_ncname1_" + nRow).val(item.ncname1);
@@ -384,6 +385,7 @@
             }
         }
         //據以評定商標/標章
+        $("#DI1_tabapre>tbody").empty();
         if (jOpt.mod_aprep == "Y") {
             $.each(br_opt.tran_mod_aprep, function (i, item) {
                 $("#Pmod_aprep_mod_count").val(item.mod_count).trigger("change");

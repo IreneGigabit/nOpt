@@ -70,6 +70,7 @@
 <script language="javascript" type="text/javascript">
     var brupload_form = {};
     brupload_form.init = function () {
+        $("#tabfile>tbody").empty();
         $.each(br_opt.brdmt_attach, function (i, item) {
             //增加一筆
             brupload_form.appendFile();

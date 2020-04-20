@@ -64,6 +64,7 @@
         $("#tfz1_class_count").val(good.length == 0 ? "" : classCount);//共N類
         ext_form_good.Add_button(classCount);//產生類別清單
 
+        $("#goodllist>tbody").empty();
         if (good.length!=0){
             $.each(good, function (i, item) {
                 var nRow = i + 1;

@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="apcust_re_form" %>
+﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -150,6 +150,7 @@
     var apcust_re_form={};
     apcust_re_form.init = function () {
         var jCaseap = br_opte.caseap;
+        $("#tabap_re>tbody").empty();
         $.each(jCaseap, function (i, item) {
             //增加一筆
             $("#AP_Add_button").click();

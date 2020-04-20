@@ -150,6 +150,7 @@
 
         //對造人
         var jMod = br_opt.tran_mod_client;
+        $("#DE1_tabap>tbody").empty();
         if (jMod.length > 0) {
             $.each(jMod, function (i, item) {
                 //增加一筆

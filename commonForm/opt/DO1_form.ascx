@@ -291,6 +291,7 @@
 
         //被異議人
         var jMod = br_opt.tran_mod_ap;
+        $("#DO1_tabap>tbody").empty();
         if (jMod.length > 0) {
             $.each(jMod, function (i, item) {
                 //增加一筆
@@ -337,6 +338,7 @@
         }
         //主張法條/據以異議商標/標章
         $("#Pother_item1").val(jOpt.other_item1);
+        $("#DO1_tabapre>tbody").empty();
         if (jOpt.mod_aprep == "Y") {
             $.each(br_opt.tran_mod_aprep, function (i, item) {
                 $("#Pmod_aprep_mod_count").val(item.mod_count).trigger("change");
