@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="apcust_re_form" %>
+<%@ Control Language="C#" ClassName="apcust_re_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -217,8 +217,10 @@
     //重新抓取區所申請人資料
     $("#GetBranch_AP_button").click(function () { 
         if (confirm("是否確定重新取得區所案件申請人資料？")) {
-            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=apcust&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + "&opt_sqlno=" + $("#opt_sqlno").val();
-            window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=apcust&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() +
+                "&opt_sqlno=" + $("#opt_sqlno").val() + "&chkTest=" + $("#chkTest:checked").val();
+            //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            ActFrame.location.href = url;
         }
     });
 </script>
