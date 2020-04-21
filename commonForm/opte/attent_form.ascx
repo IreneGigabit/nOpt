@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Classname="attent_form" %>
+<%@ Control Language="C#" Classname="ext_attent_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
