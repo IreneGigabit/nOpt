@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -130,7 +130,7 @@
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
 		<td align="center">
             <span id="todoBack_{{nRow}}">
-                <a href="../opt3m/opt31todo.aspx?Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&opt_sqlno={{opt_sqlno}}&fseq={{fseq}}&scode_name={{scode_name}}" title="查詢退回紀錄" target="Eblank">
+                <a href="../opte3m/opte31todo.aspx?Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&opt_sqlno={{opt_sqlno}}&fseq={{fseq}}&scode_name={{scode_name}}" title="查詢退回紀錄" target="Eblank">
                     <img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle" border="0">
                 </a>
             </span>{{opt_no}}
@@ -141,9 +141,9 @@
 		<td align="center">{{confirm_date}}</td>
 		<td align="center">{{last_date}}</td>
 		<td align="center">
-			<a id="tr_edit_{{nRow}}" href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
-			<a id="tr_editA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
-			<a id="tr_delA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=DEL" target="Eblank">[刪除分案]</a>
+			<a id="tr_edit_{{nRow}}" href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&Case_no={{Case_no}}&Branch={{Branch}}&arcase={{arcase}}&todo_sqlno={{todo_sqlno}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[分案]</a>
+			<a id="tr_editA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&todo_sqlno={{todo_sqlno}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=U" target="Eblank">[分案]</a>
+			<a id="tr_delA_{{nRow}}" href="<%#HTProgPrefix%>EditA.aspx?opt_sqlno={{opt_sqlno}}&Branch={{Branch}}&arcase={{arcase}}&todo_sqlno={{todo_sqlno}}&prgid=<%=prgid%>&prgname=<%#HTProgCap%>&SubmitTask=DEL" target="Eblank">[刪除分案]</a>
 		</td>
 	</tr>
 	</tfoot>
@@ -251,6 +251,7 @@
                         strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
                         strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
+                        strLine1 = strLine1.replace(/{{todo_sqlno}}/g, item.todo_sqlno);
 
                         $("#dataList>tbody").append(strLine1);
                         $("#todoBack_" + nRow).showFor(item.bstat_code.Right(1) == "X");
