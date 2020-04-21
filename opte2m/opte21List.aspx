@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -18,8 +18,9 @@
         myToken.CheckMe(false,true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq ";
-            isql += "from vbr_opt a ";
+		    isql = "select a.*,b.sqlno as todo_sqlno,''fseq ";
+		    isql += " from vbr_opte a ";
+            isql += " inner join todo_opte b on a.opt_sqlno=b.opt_sqlno and b.dowhat='BR' and b.job_status='NN' ";
             isql += "where a.Bstat_code like 'R%' and Bmark='N' ";
 
             if ((Request["qryopt_no"] ?? "") != "") {
@@ -59,12 +60,12 @@
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
                 //組本所編號
-                page.pagedTable.Rows[i]["fseq"]=Funcs.formatSeq(
+                page.pagedTable.Rows[i]["fseq"] = Funcs.formatSeq(
                     page.pagedTable.Rows[i].SafeRead("Bseq", "")
-                    ,page.pagedTable.Rows[i].SafeRead("Bseq1", "")
-                    ,""
-                    ,page.pagedTable.Rows[i].SafeRead("Branch", "")
-                    ,Sys.GetSession("dept"));
+                    , page.pagedTable.Rows[i].SafeRead("Bseq1", "")
+                    , page.pagedTable.Rows[i].SafeRead("country", "")
+                    , page.pagedTable.Rows[i].SafeRead("Branch", "")
+                    , Sys.GetSession("dept") + "E");
 
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(30);
