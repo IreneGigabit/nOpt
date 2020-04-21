@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
@@ -17,7 +17,7 @@
     protected string case_no = "";
 
     protected string QLock = "true";//工作資料的控制
-    protected string QHide = "true";
+    protected string QHide = "false";
     protected string RLock = "true";//承辦內容的控制
     protected string CLock = "true";
     protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
@@ -45,8 +45,11 @@
             HTProgCap += "‧<b style='color:Red'>新增</b>";
             RLock = "false";
             QLock = "false";
-        } else if (submitTask == "U") {
+        } else if (submitTask == "Q") {
+            QHide = "true";
+        }else if (submitTask == "U") {
             RLock = "false";
+            QHide = "true";
         }
 
     }
