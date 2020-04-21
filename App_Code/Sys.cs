@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -47,7 +47,7 @@ public class Sys
 	/// </summary>  
 	public static string GetAscxPath(object page, string dir) {
 		if (IsDebug()) {
-			return string.Format("<hr class='style-one'/>\\{0}\\{1}.ascx", dir, page.GetType().ToString().Replace("ASP.", ""))
+			return string.Format("\\{0}\\{1}.ascx<hr class='style-one'/>", dir, page.GetType().ToString().Replace("ASP.", ""))
 				.Replace(HttpContext.Current.Server.MapPath("/"), "");
 		} else {
 			return "";
