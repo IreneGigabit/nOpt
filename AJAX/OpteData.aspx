@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -150,6 +150,12 @@
                 dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
                 dt.Rows[0]["send_dept"] = dt.Rows[0].SafeRead("send_dept", "B");
 
+                //承辦案性版本
+                if (dt.Rows[0].SafeRead("pr_rs_type", "").Trim() == "") {
+                    SQL = "select cust_code from cust_code where code_type='bjtrs_type'";
+                    object objResult = conn.ExecuteScalar(SQL);
+                    dt.Rows[0]["pr_rs_type"] = (objResult == DBNull.Value || objResult == null) ? "bjt96" : objResult.ToString();
+                }
             }
 
             return dt;
