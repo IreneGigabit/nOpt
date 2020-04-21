@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -19,9 +19,17 @@
         type = (Request["type"] ?? "").ToString().ToLower();
         DataTable rtn = new DataTable();
 
-        //抓取爭議組承辦人員
-        if (type == "getprscode") rtn = Funcs.GetPrTermALL(submitTask);
-
+        if (type == "getprscode") {
+            string pr_branch=(Request["pr_branch"] ?? "").ToString().ToUpper();
+            if (pr_branch == "" || pr_branch == "B") {
+                //抓取爭議組承辦人員
+                rtn = Funcs.GetPrTermALL(submitTask);
+            } else {
+                //抓北京聖島承辦人員
+                rtn = Funcs.GetBJPrTermALL(submitTask);
+            }
+        }
+        
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
             ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
