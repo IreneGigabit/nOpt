@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="case_extform" %>
+﻿<%@ Control Language="C#" ClassName="case_extform" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼

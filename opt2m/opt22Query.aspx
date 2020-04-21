@@ -212,7 +212,7 @@
             data: $("#reg").serialize(),
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                if (!JSONdata.totrow) {
+                if (JSONdata.totrow===undefined) {
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }

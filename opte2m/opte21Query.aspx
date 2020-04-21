@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -199,7 +199,7 @@
             data: $("#reg").serialize(),
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                if (!JSONdata.totrow) {
+                if (JSONdata.totrow===undefined) {
                     toastr.error("資料載入失敗（" + JSONdata.msg + "）");
                     return false;
                 }
