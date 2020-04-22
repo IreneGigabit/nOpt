@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_formA" %>
+<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -159,13 +159,13 @@
             $("#dfy_last_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
             $("#remark").val(jOpt.remark);
             $("#apply_no").val(jOpt.apply_no);
-            $("#apply_date").val(jOpt.apply_date);
+            $("#apply_date").val(dateReviver(jOpt.apply_date, "yyyy/M/d"));
             $("#issue_no").val(jOpt.issue_no);
-            $("#issue_date").val(jOpt.issue_date);
+            $("#issue_date").val(dateReviver(jOpt.issue_date, "yyyy/M/d"));
             $("#rej_no").val(jOpt.rej_no);
-            $("#open_date").val(jOpt.open_date);
-            $("#dmt_term1").val(jOpt.dmt_term1);
-            $("#dmt_term2").val(jOpt.dmt_term2);
+            $("#open_date").val(dateReviver(jOpt.open_date, "yyyy/M/d"));
+            $("#dmt_term1").val(dateReviver(jOpt.dmt_term1, "yyyy/M/d"));
+            $("#dmt_term2").val(dateReviver(jOpt.dmt_term2, "yyyy/M/d"));
             $("#apsqlno").val(jOpt.apsqlno);
             $("#ap_ename").val(jOpt.ap_ename);
             if($("#ctrl_date").val()==""){
@@ -266,7 +266,7 @@
             if (Adate < (new Date())){
                 $("#ctrl_date").val($("#dfy_last_date").val());
             }else{
-                $("#ctrl_date").val(Adate);
+                $("#ctrl_date").val(Adate.format("yyyy/M/d"));
             }
         }
     });
