@@ -90,7 +90,7 @@
             if (Adate < (new Date()))
                 $("#ctrl_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
             else
-                $("#ctrl_date").val(Adate);
+                $("#ctrl_date").val(Adate.format("yyyy/M/d"));
         }
     }
 </script>
