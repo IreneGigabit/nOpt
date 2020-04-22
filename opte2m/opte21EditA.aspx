@@ -1,6 +1,8 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
+<%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+
 
 
 <script runat="server">
@@ -94,6 +96,7 @@
         <td>
             <uc1:BR_formA runat="server" ID="BR_formA" />
             <!--include file="../commonForm/opte/BR_formA.ascx"--><!--承辦內容-->
+            <uc1:BR_form runat="server" ID="BR_form" />
             <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
         </td>
     </tr>
@@ -176,13 +179,16 @@
 
 
         br_formA.init();
-        //br_form.init();
+        br_form.init();
 
         if ($("#submittask").val() != "ADD") {
             br_formA.loadOpt();
+            br_form.loadOpt();
             $("#btnBseq").click();
+            $("#span_last_date0").showFor($("#span_last_date").html()!= "");
         } else {
             $("#Bseq1").val("_");
+            $("#span_last_date0").hide();
         }
     }
 
@@ -216,7 +222,8 @@
         errFlag = $("#dfy_last_date").chkRequire() || errFlag;
         errFlag = $("#ctrl_date").chkRequire() || errFlag;
         errFlag = $("#pr_scode").chkRequire() || errFlag;
-        errFlag = $("#Arcase").chkRequire() || errFlag;
+        errFlag = $("#pr_rs_class").chkRequire() || errFlag;
+        errFlag = $("#pr_rs_code").chkRequire() || errFlag;
 
         if (($("#Bseq").val()!=$("#oldBseq").val()
             ||$("#Bseq1").val()!=$("#oldBseq1").val()
