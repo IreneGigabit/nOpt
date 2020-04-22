@@ -1,4 +1,5 @@
-﻿using System.Data;
+using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -128,6 +129,20 @@ public class Funcs {
         }
     }
     #endregion
+
+	#region GetBJRsType - 出口案目前承辦案性的版本
+	/// <summary>  
+	/// 出口案目前承辦案性的版本
+	/// </summary>  
+	public static string GetBJRsType() {
+		using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+			string SQL = "select cust_code from cust_code where code_type='bjtrs_type'";
+			object objResult = conn.ExecuteScalar(SQL);
+			return (objResult == DBNull.Value || objResult == null) ? "bjt96" : objResult.ToString();
+		}
+	}
+	#endregion
+
 
     #region insert_log_table
     /// <summary>
