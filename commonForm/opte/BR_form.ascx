@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_form" %>
+<%@ Control Language="C#" ClassName="ext_br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -9,6 +9,7 @@
     protected string case_no = "";
 
     protected string pr_branch = "";
+    protected string pr_rs_type = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
@@ -17,13 +18,13 @@
         submitTask = Request["submitTask"] ?? "";
 
         pr_branch = Funcs.getcust_code("OEBranch", "", "sortfld").Option("{cust_code}", "{code_name}", false);
-
+        pr_rs_type = Funcs.GetBJRsType();
         this.DataBind();
     }
 </script>
 
 <%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
-<input type="hidden" name="br_source" id="br_source" value="<%=br_source%>"><!--記錄分案來源-->		
+<input type="text" name="br_source" id="br_source"><!--記錄分案來源-->		
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
 		<TD align=center colspan=4 class=lightbluetable1><font color="white">分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;案&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;設&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</font></TD>
@@ -40,7 +41,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right">承辦單位別 :</td>
 		  <td class="whitetablebg"  align="left">
-			<Select id="pr_branch" name="pr_branch" class="Lock"><%#pr_branch%></Select>
+			<Select id="pr_branch" name="pr_branch" class="RLock"><%#pr_branch%></Select>
 		</td>
 		<td class="lightbluetable"  align="right">承辦人員 :</td>
 		  <td class="whitetablebg"  align="left">
@@ -49,45 +50,18 @@
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">承辦案性 :</td>
-		  <td class="whitetablebg"  align="left" colspan=3>結構分類：
-				<span id=spanpr_rs_class>
-			    <select name="pr_rs_class" id="pr_rs_class" <%=Rdisabled%> onchange="vbscript:pr_rsclass_onchange()" >
-				<%
-				
-				  SQL = "SELECT Cust_code, Code_name,form_name" 
-			      SQL = SQL & " FROM Cust_code" 
-				  SQL = SQL & " WHERE Code_type = '" & pr_rs_type & "' "
-				  if strpr_rs_class<>"" then
-				     SQL = SQL & " and cust_code in ('" & replace(strpr_rs_class,",","','") & "') "
-				  end if
-				  SQL = SQL & " order by sortfld " 
-				
-				response.write sql&"<br>"
-				call ShowSelect3(conn,SQL,true,pr_rs_class)%>			
-			</select>
-			</span>
-			 	案性：<span id=spanpr_rs_code>
-			 	<select TYPE=text NAME=pr_rs_code SIZE=1 <%=Rdisabled%> onchange="vbscript:getrsclassData">
-							
-							
-				<%SQL="select cust_code,code_name,form_name from cust_code where code_type='bjtrs_code' and ref_code = '" & pr_rs_type & "' "
-				  SQL = SQL & " and (end_date is null or end_date = '' or end_date > getdate())"	
-				  if pr_rs_class<>"" then
-				     SQL = SQL & " and form_name= '" & pr_rs_class & "' "
-				  end if				
-				  SQL =  SQL & " order by sortfld"
-				  'response.write sql&"<br>"
-				call ShowSelect3(conn,SQL,true,pr_rs_code)%>
-				</select>
-				</span>
-				<input type="hidden" id="pr_rs_type" name="pr_rs_type" value="<%=pr_rs_type%>">
-				
+		  <td class="whitetablebg"  align="left" colspan=3>
+            結構分類：
+            <select name="pr_rs_class" id="pr_rs_class" class="RLock" ></select>
+            案性：
+            <select id=pr_rs_code NAME=pr_rs_code class="RLock"></select>
+            <input type="text" id="pr_rs_type" name="pr_rs_type" value="<%#pr_rs_type %>">
 		</td>
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right">分案說明 :</td>
 		<TD class=lightbluetable colspan=3>
-			<textarea ROWS="6" style="width:90%" id=Br_remark name="Br_remark" class="RLock"><%=Br_remark%></textarea>
+			<textarea ROWS="6" style="width:90%" id=Br_remark name="Br_remark" class="RLock"></textarea>
 		</TD>
 	</tr>
 </table>
@@ -96,27 +70,25 @@
 <script language="javascript" type="text/javascript">
     var br_form = {};
     br_form.init = function () {
-        if ("<%#case_no%>" != "") {
-            br_form.loadOpt();
-        }
-        $("#span_last_date0").showFor($("#span_last_date").html()!= "");
+        br_form.getPrScode();
+        br_form.getRsClass();
+        $("#pr_rs_class").triggerHandler("change");//依結構分類帶案性代碼
     }
 
     br_form.loadOpt = function () {
-        var jOpt = br_opt.opt[0];
+        var jOpt = br_opte.opte[0];
         $("#pr_branch").val(jOpt.pr_branch || "B");
         br_form.getPrScode();
         $("#pr_scode").val(jOpt.pr_scode);
         $("#ctrl_date").val(dateReviver(jOpt.ctrl_date, "yyyy/M/d"));
         $("#span_last_date").html(dateReviver(jOpt.last_date, "yyyy/M/d"));
+        $("#Br_remark").val(jOpt.br_remark);
 
-        if (jOpt.ctrl_date == "") {
-            var Adate = dateConvert(jOpt.last_date).addDays(-1);
-            if (Adate < (new Date()))
-                $("#ctrl_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
-            else
-                $("#ctrl_date").val(Adate);
-        }
+        $("#pr_rs_type").val(jOpt.pr_rs_type);
+        br_form.getRsClass();
+        $("#pr_rs_class").val(jOpt.pr_rs_class);
+        $("#pr_rs_class").triggerHandler("change");//依結構分類帶案性代碼
+        $("#pr_rs_code").val(jOpt.pr_rs_code);
     }
 
     br_form.getPrScode = function () {
@@ -126,4 +98,31 @@
             textFormat: "{scode}_{sc_name}"
         });
     }
+
+    //取得結構分類
+    br_form.getRsClass = function () {
+        $("#pr_rs_class").getOption({
+            url: "../ajax/bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val(),
+            valueFormat: "{rs_class}",
+            textFormat: "{rs_class}_{rs_class_name}",
+        });
+    }
+
+    //依結構分類帶案性
+    $("#pr_rs_class").change(function () {
+        $("#pr_rs_code").getOption({//案性
+            url: "../ajax/bjtrs_code.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_class="+$("#pr_rs_class").val(),
+            valueFormat: "{cust_code}",
+            textFormat: "{cust_code}_{code_name}"
+        });
+    });
+
+    //依案性帶結構分類
+    $("#pr_rs_code").change(function () {
+        $("#pr_rs_class").getOption({//結構分類
+            url: "../ajax/bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_code=" + $("#pr_rs_code").val(),
+            valueFormat: "{cust_code}",
+            textFormat: "{cust_code}_{code_name}"
+        });
+    });
 </script>
