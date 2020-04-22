@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_formA" %>
+<%@ Control Language="C#" ClassName="ext_br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -65,7 +65,7 @@
 			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq NAME=ext_seq SIZE=5 MAXLENGTH=5 class="sedit" readonly>-<INPUT TYPE=text id=ext_seq1 NAME=ext_seq1 SIZE=3 MAXLENGTH=3  class="sedit" readonly value="_">	
 			<td class=lightbluetable align=right>對方號：</td>
 			<td class=whitetablebg ><INPUT TYPE=text id=your_no NAME=your_no SIZE=20 MAXLENGTH=20 >	
-			<input type="button" value="查詢" class="cbutton QHide" name="btnyour_no">
+			<input type="button" value="查詢" class="cbutton QHide" id="btnyour_no" name="btnyour_no">
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right >代理人編號：</td>
@@ -117,6 +117,11 @@
 			<textarea ROWS="6" style="width:90%" id=remark name="remark" class="RLock"></textarea>
 		</TD>
 	</tr>
+    <Tr>
+		<td class="lightbluetable" colspan="4">
+            <table id="br_aptab"></table>
+		</td>
+	</Tr>
 </table>
 
 <script language="javascript" type="text/javascript">
@@ -144,7 +149,7 @@
 
         $("#Branch").val("<%#branch%>");
 
-        $("#tr_Popt_show1").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
+        //$("#tr_Popt_show1").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
         //$(".unlockADD").unlock($("#submittask").val()=="ADD");//新增分案解鎖
         //$(".showADD").showFor($("#submittask").val()=="ADD");//新增分案顯示
     }
@@ -183,9 +188,6 @@
             $("#ext_term2").val(dateReviver(jOpt.ext_term2, "yyyy/M/d"));
             $("#cust_name").val(jOpt.cust_name);
             $("#ap_ename").val(jOpt.ap_ename);
-            if ($("#ctrl_date").val() == "") {
-                $("#dfy_last_date").blur();
-            }
         }
     };
 
@@ -264,6 +266,7 @@
                 }
 
                 var jAp = JSONdata.ext_ap;
+                $("#br_aptab").empty();
                 $.each(jAp, function (i, item) {
                     var nRow = i + 1;
                     var trHTML = "";
@@ -275,7 +278,7 @@
                     trHTML += "<input type=text id='ap_ename_" + nRow + "' name='ap_ename_" + nRow + "' value='"+item.ap_ename+"'>";
                     trHTML += "<input type=text id='ap_ename1_" + nRow + "' name='ap_ename1_" + nRow + "' value='"+item.ap_ename1+"'>";
                     trHTML += "<input type=text id='ap_ename2_" + nRow + "' name='ap_ename2_" + nRow + "' value='"+item.ap_ename2+"'>";
-                    $("#br_tab").append("<tr><td colspan=4>"+trHTML+"</td></tr>");
+                    $("#br_aptab").append("<tr><td colspan=4>" + trHTML + "</td></tr>");
                 });
 
                 $("#btnBseq").prop("disabled", true);
@@ -294,8 +297,24 @@
             if (Adate < (new Date())){
                 $("#ctrl_date").val($("#dfy_last_date").val());
             }else{
-                $("#ctrl_date").val(Adate);
+                $("#ctrl_date").val(Adate.format("yyyy/M/d"));
             }
         }
+    });
+
+    //---查詢對方號
+    $("#btnyour_no").click(function (e) {
+        if ($("#Branch").val() == "") {
+            alert("區所別未輸入!!!");
+            $("#Branch").focus();
+            return false;
+        }
+        if ($("#your_no").val() == "") {
+            alert("對方號未輸入!!!(可輸入關鍵字)");
+            $("#your_no").focus();
+            return false;
+        }
+        var tlink = getRootPath() + "/opte2m/ext_yournolist.aspx?branch=" + $("#Branch").val() + "&your_no=" + $("#your_no").val() + "&prgid=<%=prgid%>";
+        window.open(tlink, "mywindow", "width=700,height=480,toolbar=yes,menubar=yes,resizable=yes,scrollbars=yes,status=0,top=50,left=80");
     });
 </script>
