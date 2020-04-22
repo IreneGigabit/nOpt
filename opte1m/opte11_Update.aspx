@@ -53,7 +53,7 @@
             //產生案件編號
             SQL = "select max(substring(opt_no,2,9))+1 from br_opte where substring(opt_no,2,4)=(year(getdate()))";
             object objResult = conn.ExecuteScalar(SQL);
-            string opt_no = (objResult == DBNull.Value || objResult == null ? ("E"+DateTime.Now.Year + "000001") : "E"+objResult.ToString());
+            string opt_no = (objResult == DBNull.Value || objResult == null ? ("E"+DateTime.Now.Year + "00001") : "E"+objResult.ToString());
 
             //入br_opte_log
             Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
