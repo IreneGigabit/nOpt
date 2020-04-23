@@ -70,8 +70,8 @@
 <script language="javascript" type="text/javascript">
     var br_form = {};
     br_form.init = function () {
-        br_form.getPrScode();
-        br_form.getRsClass();
+        br_form.getPrScode();//取得承辦人員
+        br_form.getRsClass();//取得結構分類
         $("#pr_rs_class").triggerHandler("change");//依結構分類帶案性代碼
     }
 
@@ -113,16 +113,20 @@
         $("#pr_rs_code").getOption({//案性
             url: "../ajax/bjtrs_code.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_class="+$("#pr_rs_class").val(),
             valueFormat: "{cust_code}",
-            textFormat: "{cust_code}_{code_name}"
+            textFormat: "{cust_code}_{code_name}",
+            attrFormat: "val1='{form_name}'"
         });
     });
 
     //依案性帶結構分類
     $("#pr_rs_code").change(function () {
-        $("#pr_rs_class").getOption({//結構分類
-            url: "../ajax/bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_code=" + $("#pr_rs_code").val(),
-            valueFormat: "{cust_code}",
-            textFormat: "{cust_code}_{code_name}"
-        });
+        //if ($("#pr_rs_class").val() == "") {
+        //    $("#pr_rs_class").getOption({//結構分類
+        //        url: "../ajax/bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_code=" + $("#pr_rs_code").val(),
+        //        valueFormat: "{rs_class}",
+        //        textFormat: "{rs_class}_{rs_class_name}",
+        //    });
+        //}
+        $("#pr_rs_class").val($(':selected',this).attr("val1"));
     });
 </script>
