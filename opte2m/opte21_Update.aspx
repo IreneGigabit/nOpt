@@ -56,14 +56,14 @@
             Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
 
             SQL = "update br_opte set in_scode='" + Session["scode"] + "'";
-            SQL += ",in_date='" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
+            SQL += ",in_date='" + DateTime.Now.ToString("yyyy/M/d") + "'";
             //2014/3/26修改，若自行新增分案可修改法定期限
             if (case_no == "")
                 SQL += ",last_date='" + Request["dfy_last_date"] + "'";
             SQL += ",ctrl_date='" + Request["ctrl_date"] + "'";
             SQL += ",pr_branch='" + Request["pr_branch"] + "'";
             SQL += ",pr_scode='" + Request["pr_scode"] + "'";
-            SQL += ",br_remark='" + Request["Br_remark"].ToBig5() + "'";
+            SQL += ",br_remark='" + Request["Br_remark"].ToBig5().Trim() + "'";
             SQL += ",stat_code='NN'";
             SQL += ",pr_rs_type='" + Request["pr_rs_type"] + "'";
             SQL += ",pr_rs_class='" + Request["pr_rs_class"] + "'";
@@ -114,10 +114,10 @@
             SQL = "insert into br_opte(opt_no,br_source,branch,Bseq,Bseq1,Bcase_date,Last_date";
             SQL += ",in_scode,in_date,ctrl_date,pr_branch,pr_scode,br_remark,stat_code,mark,pr_rs_type,pr_rs_class,pr_rs_code,confirm_date) values (";
             SQL += "'" + opt_no + "','opte','" + Request["branch"] + "'," + Request["Bseq"] + ",'" + Request["Bseq1"] + "'";
-            SQL += ",'" + DateTime.Now.ToString("yyyy/MM/dd") + "'," + Util.dbnull(Request["dfy_last_date"]) + ",'" + Session["scode"] + "','" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
+            SQL += ",'" + DateTime.Now.ToString("yyyy/M/d") + "'," + Util.dbnull(Request["dfy_last_date"]) + ",'" + Session["scode"] + "','" + DateTime.Now.ToString("yyyy/M/d") + "'";
             SQL += "," + Util.dbnull(Request["ctrl_date"]) + ",'" + Request["pr_branch"] + "','" + Request["pr_scode"] + "'";
-            SQL += ",'" + Request["br_remark"].ToBig5() + "','NN','N','" + Request["pr_rs_type"] + "'";
-            SQL += ",'" + Request["pr_rs_class"] + "','" + Request["pr_rs_code"] + "','" + DateTime.Now.ToString("yyyy/MM/dd") + "')";
+            SQL += ",'" + Request["br_remark"].ToBig5().Trim() + "','NN','N','" + Request["pr_rs_type"] + "'";
+            SQL += ",'" + Request["pr_rs_class"] + "','" + Request["pr_rs_code"] + "','" + DateTime.Now.ToString("yyyy/M/d") + "')";
             conn.ExecuteNonQuery(SQL);
 
             //抓insert後的流水號
@@ -148,7 +148,7 @@
             //新增接洽案件申請人檔
             for (int apnum = 1; apnum <= Convert.ToInt32(Request["br_apnum"]); apnum++) {
                 SQL = " insert into caseopte_ap(opt_sqlno,branch,apsqlno,apcust_no,ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,tran_date,tran_scode) values ";
-                SQL += "('" + opt_sqlno + "','" + Request["branch"] + "','" + Request["apsqlno_" + apnum] + "'";
+                SQL += "('" + opt_sqlno + "','" + Request["branch"] + "','" + Request["apsqlno_" + apnum] + "','" + Request["apcust_no_" + apnum] + "'";
                 SQL += ",'" + Request["ap_cname_" + apnum].ToBig5() + "','" + Request["ap_cname1_" + apnum].ToBig5() + "','" + Request["ap_cname2_" + apnum].ToBig5() + "'";
                 SQL += ",'" + Request["ap_ename_" + apnum].ToBig5() + "','" + Request["ap_ename1_" + apnum].ToBig5() + "'";
                 SQL += ",'" + Request["ap_ename2_" + apnum].ToBig5() + "',getdate(),'" + Session["scode"] + "')";
@@ -233,6 +233,6 @@
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
-        window.parent.Etop.goSearch();
+        window.parent.parent.Etop.goSearch();
     }
 </script>
