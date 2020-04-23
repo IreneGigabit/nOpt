@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -188,7 +188,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%> <%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%><%=HTProgCap%>】
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
             <input type=button value ="區所交辦資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
@@ -471,7 +471,7 @@
         }
 	    
         $("select,textarea,input").unlock();
-        $("#tr_button1 input:button").lock();
+        $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -599,7 +599,7 @@
         
         reg.prgid.value="opt31";
         $("select,textarea,input").unlock();
-        $("#tr_button1 input:button").lock();
+        $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
@@ -632,7 +632,7 @@
                 $("#Preject_reason").focus();
                 return false;
             }
-            $("#btnBackSubmit,#btnResetSubmit").lock();
+            $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
 
             reg.submittask.value = "B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
