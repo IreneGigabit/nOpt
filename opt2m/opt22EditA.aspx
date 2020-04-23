@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -282,7 +282,7 @@
         }
         
         $("select,textarea,input").unlock();
-        $("#tr_button1 input:button").lock();
+        $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
@@ -307,7 +307,7 @@
             $("#Preject_reason").focus();
             return false;
         }
-        $("#btnBackSubmit,#btnResetSubmit").lock();
+        $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
 
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
