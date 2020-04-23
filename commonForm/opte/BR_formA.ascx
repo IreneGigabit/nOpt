@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="ext_br_formA" %>
+﻿<%@ Control Language="C#" ClassName="ext_br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
