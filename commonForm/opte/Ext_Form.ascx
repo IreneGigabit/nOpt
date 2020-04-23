@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_form" %>
+<%@ Control Language="C#" ClassName="ext_form" %>
 <%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
 <%@ Register Src="~/commonForm/opte/extgoodform.ascx" TagPrefix="uc1" TagName="extgoodform" %>
 
@@ -18,8 +18,8 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
 
         tfzy_country = Funcs.getcountry().Option("{coun_code}", "{coun_code}_{coun_c}");
-        s_mark_html = Funcs.getcust_code_mul("Tes_mark", "", "sortfld").Radio("tfzd_s_mark", "{cust_code}", "{code_name}");
-        s_type_html = Funcs.getcust_code_mul("Tes_type", "", "sortfld").Radio("tfzd_s_type", "{cust_code}", "{code_name}");
+        s_mark_html = Funcs.getcust_code_mul("Tes_mark", "", "sortfld").Radio("tfzd_s_mark", "{cust_code}", "{code_name}", "class='QLock'");
+        s_type_html = Funcs.getcust_code_mul("Tes_type", "", "sortfld").Radio("tfzd_s_type", "{cust_code}", "{code_name}", "class='QLock'");
         using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
             tfzy_end_code = SHtml.Option(connB, "SELECT chrelno, chrelname FROM relation where ChRelType = 'ENDCODE' ORDER BY sortfld", "{chrelno}", "{chrelname}");
         }
@@ -252,9 +252,6 @@
 <script language="javascript" type="text/javascript">
     var ext_form = {};
     ext_form.init = function () {
-        $("input[name='tfzd_s_mark']").addClass("QLock");
-        $("input[name='tfzd_s_type']").addClass("QLock");
-
         var jOpt = br_opte.opte[0];
         $("#opt_no").val(jOpt.opt_no);
         $("#Branch").val(jOpt.branch);
