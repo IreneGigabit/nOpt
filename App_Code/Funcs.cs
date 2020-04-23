@@ -60,7 +60,7 @@ public class Funcs {
     /// 抓取抓取區所cust_code
     /// </summary>  
     public static DataTable getcust_code_mul(string code_type, string pwh2, string sortField) {
-        using (DBHelper conn = new DBHelper(Conn.OptB("K"), false)) {
+        using (DBHelper connB = new DBHelper(Conn.OptB("K"), false)) {
             string SQL = "select cust_code,code_name from cust_code ";
             SQL += " where code_type='" + code_type + "' " + pwh2;
             if (sortField == "")
@@ -68,7 +68,7 @@ public class Funcs {
             else
                 SQL += " order by " + sortField;
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+            connB.DataTable(SQL, dt);
 
             return dt;
         }
@@ -100,10 +100,10 @@ public class Funcs {
     /// 抓取國籍
     /// </summary>  
     public static DataTable getcountry() {
-        using (DBHelper conn = new DBHelper(Conn.Sysctrl, false)) {
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false)) {
             string SQL = "select coun_code,coun_c from country where markb<>'X' or markb is null order by coun_code";
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+			cnn.DataTable(SQL, dt);
 
             return dt;
         }
@@ -143,6 +143,18 @@ public class Funcs {
 	}
 	#endregion
 
+	#region GerArcaseType - 國內案目前交辦案性的版本
+	/// <summary>  
+	/// 國內案目前交辦案性的版本
+	/// </summary>  
+	public static string GerArcaseType() {
+		using (DBHelper connB = new DBHelper(Conn.OptB("K"), false)) {
+			string SQL = "select cust_code from cust_code where code_type='ters_type'";
+			object objResult = connB.ExecuteScalar(SQL);
+			return (objResult == DBNull.Value || objResult == null) ? "TE95" : objResult.ToString();
+		}
+	}
+	#endregion
 
     #region insert_log_table
     /// <summary>
