@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -45,7 +45,7 @@
             if ((Request["SetOrder"] ?? "") != "") {
                 isql += " order by " + Request["SetOrder"];
             }else{
-                isql += " order by a.opt_sqlno";
+                isql += " order by a.opt_no";
             }
 
             DataTable dt = new DataTable();
@@ -75,7 +75,7 @@
             {
                 Formatting = Formatting.Indented,
                 ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
-                Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+                Converters = new List<JsonConverter> { new DBNullCreationConverter(), new TrimCreationConverter() }//dbnull轉空字串且trim掉
             };
             Response.Write(JsonConvert.SerializeObject(page, settings).ToUnicode());
             Response.End();
