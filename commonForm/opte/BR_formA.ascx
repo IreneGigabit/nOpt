@@ -6,11 +6,13 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string submitTask = "";
+    protected string arcase_type = "";
     
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         submitTask = Request["submitTask"] ?? "";
+        arcase_type = Funcs.GerArcaseType();
         
         this.DataBind();
     }
@@ -62,20 +64,20 @@
 	</TR>
 	<tr>
 			<td class=lightbluetable align=right>國外所案號：</td>
-			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq NAME=ext_seq SIZE=5 MAXLENGTH=5 class="sedit" readonly>-<INPUT TYPE=text id=ext_seq1 NAME=ext_seq1 SIZE=3 MAXLENGTH=3  class="sedit" readonly value="_">	
+			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq name=ext_seq SIZE=5 MAXLENGTH=5 class="sedit" readonly>-<INPUT TYPE=text id=ext_seq1 name=ext_seq1 SIZE=3 MAXLENGTH=3  class="sedit" readonly value="_">	
 			<td class=lightbluetable align=right>對方號：</td>
-			<td class=whitetablebg ><INPUT TYPE=text id=your_no NAME=your_no SIZE=20 MAXLENGTH=20 >	
+			<td class=whitetablebg ><INPUT TYPE=text id=your_no name=your_no SIZE=20 MAXLENGTH=20 >	
 			<input type="button" value="查詢" class="cbutton QHide" id="btnyour_no" name="btnyour_no">
 	</tr>
 	<tr>
 		<td class=lightbluetable align=right >代理人編號：</td>
 		<td class=whitetablebg colspan=3>
 		    <font color=blue>案件代理人</font>
-            <input type="text" NAME="agt_no" SIZE="4" maxlength="4" class="sedit" readonly>
-            <input type="text" NAME="agt_no1" SIZE="1" maxlength="1" class="sedit" readonly><span id="span_agent_name"></span>
+            <input type="text" id="agt_no" name="agt_no" SIZE="4" maxlength="4" class="sedit" readonly>
+            <input type="text" id="agt_no1" name="agt_no1" SIZE="1" maxlength="1" class="sedit" readonly><span id="span_agent_name"></span>
 		    <font color=blue>延展代理人</font>
-            <input type="text" NAME="renewal_agt_no" SIZE="4" maxlength="4" class="sedit" readonly>
-            <input type="text" NAME="renewal_agt_no1" SIZE="1" maxlength="1" class="sedit" readonly><span id="span_renewal_agent_name"></span>
+            <input type="text" id="renewal_agt_no" name="renewal_agt_no" SIZE="4" maxlength="4" class="sedit" readonly>
+            <input type="text" id="renewal_agt_no1" name="renewal_agt_no1" SIZE="1" maxlength="1" class="sedit" readonly><span id="span_renewal_agent_name"></span>
 		</td>
 	</tr>	
 	<TR>
@@ -93,16 +95,16 @@
 		    <input type="text" id="att_sql" name="att_sql">
 		</td>
 	</TR>
-	<TR style="display:none">
+	<TR style="display:">
 		<td class="lightbluetable"  align="right">交辦案性 :</td>
 		  <td class="whitetablebg"  align="left" colspan=3>結構分類：
-			    <select id="rs_class" name="rs_class" class="QLock" onchange='rs_class_onchange()'></select>
+			    <select id="rs_class" name="rs_class" class="QLock"></select>
 			 	案性：
                 <span id=span_rs_code>
-			 	<select id=Arcase NAME=Arcase SIZE=1 class="QLock" onchange="getArcaseData()"></select>
+			 	<select id=Arcase NAME=Arcase SIZE=1 class="QLock"></select>
 				</span>
-				<input type="hidden" id="arcase_type" name="arcase_type" >
-				<input type="hidden" id="arcase_class" name="arcase_class" >
+				<input type="text" id="arcase_type" name="arcase_type" value="<%#arcase_type %>">
+				<input type="text" id="arcase_class" name="arcase_class" >
 		</td>
 	</TR>
 	<TR>
@@ -295,11 +297,12 @@
         if ($("#dfy_last_date").val() != "") {
             var Adate = (new Date($("#dfy_last_date").val())).addDays(-5);
             if (Adate < (new Date())){
-                $("#ctrl_date").val($("#dfy_last_date").val());
+                Adate = (new Date($("#dfy_last_date").val()));
             }else{
-                $("#ctrl_date").val(Adate.format("yyyy/M/d"));
+                Adate = (new Date());
             }
         }
+        //$("#ctrl_date").val(Adate.format("yyyy/M/d")); //不給預設值
     });
 
     //---查詢對方號
