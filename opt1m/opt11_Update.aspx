@@ -233,6 +233,6 @@
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
-        window.parent.Etop.goSearch();
+        window.parent.parent.Etop.goSearch();
     }
 </script>
