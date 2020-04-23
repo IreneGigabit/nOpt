@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -59,7 +59,7 @@
             Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
             
             SQL = "update br_opte set confirm_scode='" + Session["scode"] + "'";
-            SQL += ",confirm_date='" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
+            SQL += ",confirm_date='" + DateTime.Now.ToString("yyyy/M/d") + "'";
             SQL += ",stat_code='RR'";
             SQL += ",opt_no='" + opt_no + "'";
             SQL += " where opt_sqlno='" + opt_sqlno + "'";
@@ -75,7 +75,7 @@
             conn.ExecuteNonQuery(SQL);
 
             //入流程控制檔
-            SQL = " insert into todo_opte(pre_sqlno,syscode,apcode,from_flag,opt_no,opt_sqlno ";
+            SQL = " insert into todo_opte(pre_sqlno,syscode,apcode,from_flag,opt_no,opt_sqlno";
             SQL += ",branch,case_no,in_scode,in_date,dowhat,job_status) values (";
             SQL+="'" + todo_sqlno +"','"+ Session["Syscode"] +"','"+ prgid +"','pr','" + opt_no + "',"+ opt_sqlno +",'"+ branch +"','"+ case_no + "'";
             SQL+=",'"+ Session["scode"] +"',getdate(),'BR','NN')" ;
@@ -229,6 +229,6 @@
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
-        window.parent.Etop.goSearch();
+        window.parent.parent.Etop.goSearch();
     }
 </script>
