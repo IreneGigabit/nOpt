@@ -232,7 +232,7 @@
 		}
 
         $("select,textarea,input").unlock();
-        $("#btnsearchSubmit1,#btnsearchSubmit2").lock();
+        $("#btnsearchSubmit1,#btnsearchSubmit2").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.target = "ActFrame";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
