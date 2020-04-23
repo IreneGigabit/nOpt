@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -30,7 +30,6 @@
     protected string RLock = "true";//承辦內容的控制
     protected string P1Lock = "true";//控制show圖檔
 
-    public string xx = "xx";
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
@@ -252,7 +251,7 @@
 
     //收件確認
     $("#btnsearchSubmit").click(function () {
-        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
@@ -277,7 +276,7 @@
             $("#Preject_reason").focus();
             return false;
         }
-        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
 
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
