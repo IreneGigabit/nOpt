@@ -16,6 +16,7 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
+    protected string todo_sqlno = "";
 
     protected string RLock = "true";//承辦內容的控制
     protected string CLock = "true";
@@ -30,6 +31,7 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
+        todo_sqlno = Request["todo_sqlno"] ?? "";
         submitTask = Request["submitTask"] ?? "";
 
         Token myToken = new Token(HTProgCode);
@@ -88,6 +90,7 @@
 <form id="reg" name="reg" method="post">
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
 	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
@@ -214,16 +217,23 @@
 
     //分　　案/新增分案
     function formSearchSubmit(dowhat) {
-        var errFlag = false;
+        if ($("#Branch").val()==""){
+            alert("區所別未輸入！");
+            $("#Branch").focus();
+            return false;
+        }
 
-        errFlag = $("#Branch").chkRequire() || errFlag;
-        errFlag = $("#Bseq").chkRequire() || errFlag;
-        errFlag = $("#Bseq1").chkRequire() || errFlag;
-        errFlag = $("#dfy_last_date").chkRequire() || errFlag;
-        errFlag = $("#ctrl_date").chkRequire() || errFlag;
-        errFlag = $("#pr_scode").chkRequire() || errFlag;
-        errFlag = $("#pr_rs_class").chkRequire() || errFlag;
-        errFlag = $("#pr_rs_code").chkRequire() || errFlag;
+        if ($("#Bseq").val()==""){
+            alert("區所編號未輸入！");
+            $("#Bseq").focus();
+            return false;
+        }
+
+        if ($("#Bseq１").val()==""){
+            alert("區所編號副碼未輸入！");
+            $("#Bseq１").focus();
+            return false;
+        }
 
         if (($("#Bseq").val()!=$("#oldBseq").val()
             ||$("#Bseq1").val()!=$("#oldBseq1").val()
@@ -231,16 +241,37 @@
             &&$("#oldBseq").val()!=""&&$("#oldBseq1").val()&&$("#oldBranch").val()
             ){
             alert("區所案件編號變動過，請按[確定]按鈕，重新抓取資料!!!");
-            errFlag=true;
+            $("#btnBseq").focus();
+            return false;
+        }
+        if ($("#dfy_last_date").val()==""){
+            alert("請輸入法定期限！！");
+            $("#dfy_last_date").focus();
+            return false;
+        }
+        if ($("#ctrl_date").val()==""){
+            alert("請輸入預計完成日期！！");
+            $("#ctrl_date").focus();
+            return false;
+        }
+        if ($("#pr_scode").val()==""){
+            alert("請輸入承辦人員！！");
+            $("#pr_scode").focus();
+            return false;
+        }
+        if ($("#pr_rs_class").val()==""){
+            alert("請輸入承辦案性之「結構分類」！");
+            $("#pr_rs_class").focus();
+            return false;
+        }
+        if ($("#pr_rs_code").val()==""){
+            alert("請輸入承辦案性之「案性」！");
+            $("#pr_rs_code").focus();
+            return false;
         }
 
-        if (errFlag) {
-		    alert("輸入的資料有誤,請檢查!!");
-		    return false;
-		}
-
         $("select,textarea,input").unlock();
-        $("#btnsearchSubmit1,#btnsearchSubmit2").lock();
+        $("#btnsearchSubmit1,#btnsearchSubmit2").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.target = "ActFrame";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
