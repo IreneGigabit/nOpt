@@ -112,7 +112,7 @@
             {
                 Formatting = Formatting.Indented,
                 ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
-                Converters = new List<JsonConverter> { new DBNullCreationConverter() }//dbnull轉空字串
+                Converters = new List<JsonConverter> { new DBNullCreationConverter(), new TrimCreationConverter() }//dbnull轉空字串且trim掉
             };
             Response.Write(JsonConvert.SerializeObject(page, settings).ToUnicode());
             Response.End();
