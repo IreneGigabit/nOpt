@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -183,6 +183,7 @@
 </tr>
 </table>
 
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -192,6 +193,10 @@
             window.parent.tt.rows = "20%,80%";
         }
         this_init();
+    });
+
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
     });
 
     var br_opt = {};
@@ -263,8 +268,9 @@
 
     //收件確認
     $("#btnsearchSubmit").click(function () {
-        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
+        reg.target = "ActFrame";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.submit();
     });
@@ -287,9 +293,10 @@
             $("#Preject_reason").focus();
             return false;
         }
-        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock();
+        $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
 
         reg.submittask.value = "B";
+        reg.target = "ActFrame";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.submit();
     });
