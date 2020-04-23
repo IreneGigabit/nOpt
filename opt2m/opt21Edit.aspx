@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -174,6 +174,7 @@
 </tr>
 </table>
 
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -184,6 +185,10 @@
     if (!(window.parent.tt === undefined)) {
         window.parent.tt.rows = "0%,100%";
     }
+
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
+    });
 
     $(function () {
         this_init();
@@ -269,9 +274,10 @@
 		}
 
         $("select,textarea,input").unlock();
-        $("#btnsearchSubmit").lock();
+        $("#btnsearchSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
         reg.submit();
     });
 </script>
