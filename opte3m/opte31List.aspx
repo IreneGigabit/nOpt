@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -15,32 +15,39 @@
 
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(HTProgCode);
-        myToken.CheckMe(false,true);
+        myToken.CheckMe(false, true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq,''optap_cname ";
-            isql += "from vbr_opt a ";
-            isql += "where (a.Bstat_code like 'NN%' or a.Bstat_code like 'NX%') and Bmark='N' ";
+            isql = "select a.*,b.sqlno as todo_sqlno,''fseq,''optap_cname ";
+            isql += " from vbr_opte a ";
+            isql += " inner join todo_opte b on b.opt_sqlno=a.opt_sqlno and b.dowhat='PR' and b.job_status='NN' ";
+            isql += " where (a.Bstat_code like 'NN%' or a.Bstat_code like 'NX%') and a.Bmark='N'";
 
+            if ((Request["qrypr_branch"] ?? "") != "") {
+                isql += " and a.pr_branch='" + Request["qrypr_branch"] + "'";
+            }
             if ((Request["qryPr_scode"] ?? "") != "") {
-                isql += " and a.Pr_scode='" + Request["qryPr_scode"] + "'";
+                isql += " and a.bPr_scode='" + Request["qryPr_scode"] + "'";
             }
             if ((Request["qryopt_no"] ?? "") != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
-            if ((Request["qryBranch"]??"")!=""){
-                isql+=" and a.Branch='"+Request["qryBranch"]+"'";
+            if ((Request["qryBranch"] ?? "") != "") {
+                isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBSeq"]??"")!=""){
-                isql+=" and a.Bseq='"+Request["qryBSeq"]+"'";
+            if ((Request["qryBSeq"] ?? "") != "") {
+                isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
             }
-            if ((Request["qryBSeq1"]??"")!=""){
-                isql+=" and a.Bseq1='"+Request["qryBSeq1"]+"'";
+            if ((Request["qryBSeq1"] ?? "") != "") {
+                isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
+            }
+            if ((Request["qryyour_no"] ?? "") != "") {
+                isql += " and a.your_no like '%" + Request["qryyour_no"] + "%'";
             }
 
             if ((Request["qryOrder"] ?? "") != "") {
                 isql += " order by " + Request["qryOrder"];
-            }else{
+            } else {
                 isql += " order by a.confirm_date";
             }
 
@@ -52,16 +59,16 @@
             int PerPageSize = Convert.ToInt32(Request["PerPage"] ?? "10"); //每頁筆數
             Paging page = new Paging(nowPage, PerPageSize, string.Join(";", conn.exeSQL.ToArray()));
             page.GetPagedTable(dt);
-            
+
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
                 //組本所編號
                 page.pagedTable.Rows[i]["fseq"] = Funcs.formatSeq(
                     page.pagedTable.Rows[i].SafeRead("Bseq", "")
                     , page.pagedTable.Rows[i].SafeRead("Bseq1", "")
-                    , ""
+                    , page.pagedTable.Rows[i].SafeRead("country", "")
                     , page.pagedTable.Rows[i].SafeRead("Branch", "")
-                    , Sys.GetSession("dept"));
+                    , Sys.GetSession("dept") + "E");
 
                 isql = "select ap_cname from caseopt_ap where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
                 string ap_cname = "";
@@ -87,6 +94,4 @@
             Response.End();
         }
     }
-
-
 </script>
