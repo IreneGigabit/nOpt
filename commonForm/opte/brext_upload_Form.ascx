@@ -71,7 +71,7 @@
     var brupload_form = {};
     brupload_form.init = function () {
         $("#tabfile>tbody").empty();
-        $.each(br_opte.opte_attach, function (i, item) {
+        $.each(br_opte.brdmt_attach, function (i, item) {
             //增加一筆
             brupload_form.appendFile();
             //填資料
