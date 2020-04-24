@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -8,8 +8,12 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
+    protected string PrScode_html = "";
+    protected string BJPrScode_html = "";
+    protected string BJPrScode_html2="";
     protected string qryPr_scode = "";
     protected string qrypr_branch = "";
+    
     protected string QLock = "true";
  
     private void Page_Load(System.Object sender, System.EventArgs e) {
@@ -24,10 +28,10 @@
             this.DataBind();
         }
     }
-    
+
     private void QueryPageLayout() {
-        if((HTProgRight & 128)!=0){
-            qryPr_scode="";
+        if ((HTProgRight & 128) != 0) {
+            qryPr_scode = "";
             QLock = "false";
         } if ((HTProgRight & 64) != 0) {
             qryPr_scode = Sys.GetSession("scode");
@@ -35,7 +39,10 @@
         } else {
             qryPr_scode = Sys.GetSession("scode");
         }
-        qrypr_branch = Funcs.getcust_code("OEBranch", "", "").Option("{cust_code}", "{code_name}", false);
+        qrypr_branch = Funcs.getcust_code("OEBranch", "", "").Option("{cust_code}", "{code_name}");
+        PrScode_html = Funcs.GetPrTermALL("A").Option("{scode}", "{scode}_{sc_name}").Replace("\n", "");
+        BJPrScode_html = Funcs.GetBJPrTermALL("A").Option("{scode}", "{scode}_{sc_name}").Replace("\n", "");//顯示"請選擇"
+        BJPrScode_html2 = Funcs.GetBJPrTermALL("A").Option("{scode}", "{scode}_{sc_name}", false).Replace("\n", "");//不要顯示"請選擇"
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -75,7 +82,7 @@
         <tr>
 	        <td class="text9">
 		        ◎承辦單位別 :
-		        <Select id="qrypr_branch" name="qrypr_branch" onchange="prbranch_onclick(this.value)" class="QLock"><%#qrypr_branch %></Select>
+		        <Select id="qrypr_branch" name="qrypr_branch" class="QLock"><%#qrypr_branch %></Select>
            </td>
            <td class="text9">
 		        ◎對方號:	<input type="text" id="qryyour_no" name="qryyour_no" size="20" maxlength="30">
@@ -83,7 +90,7 @@
         </tr>
         <tr>
 	        <td class="text9">
-		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode"></Select>	
+		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode" class="QLock"></Select>	
 	        </td>
 	        <td class="text9">
 		        ◎案件編號:
@@ -164,8 +171,8 @@
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
 		<td align="center">
             <span id="todoBack_{{nRow}}">
-                <a href="../opt3m/opt31todo.aspx?Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&opt_sqlno={{opt_sqlno}}&fseq={{fseq}}&scode_name={{scode_name}}" title="查詢退回紀錄" target="Eblank">
-                    <img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle" border="0">
+                <a href="../opte3m/opte31todo.aspx?Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&opt_sqlno={{opt_sqlno}}&fseq={{fseq}}&scode_name={{scode_name}}" title="查詢退回紀錄" target="Eblank">
+                    <img src="../images/alarm.gif" align="absmiddle" border="0">
                 </a>
             </span>{{opt_no}}
 		</td>
@@ -198,8 +205,8 @@
 </TABLE>
 <br>
 備註:<br>
-1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">退回</font>狀態，可按下該圖示查詢相關退回紀錄
-
+1.案件編號前的「<img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle"  border="0" WIDTH="14" HEIGHT="11">」表示被<font color="red">退回</font>狀態，可按下該圖示查詢相關退回紀錄<br>
+2.承辦人顯示「BJ-」表示分案給北京聖島，但尚未輸入北京聖島承辦人員，不能執行結辦。
 </body>
 </html>
 
@@ -207,12 +214,6 @@
 <script language="javascript" type="text/javascript">
     $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
     $(document).ajaxStop(function () { $.maskStop(); });
-
-    $("#qryPr_scode").getOption({//爭議組承辦人員
-        url: "../ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
-        valueFormat: "{scode}",
-        textFormat: "{scode}_{sc_name}"
-    })
 
     $("#qryBranch").getOption({//區所別
         url: "../ajax/_GetSqlDataCnn.aspx",
@@ -226,6 +227,8 @@
         //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $(".QLock").lock(<%#QLock%>);
+        $("#qrypr_branch").trigger("change");
+        $("#qrypr_scode").trigger("<%#qryPr_scode%>");
 
         $("#btnSrch").click();
     });
@@ -296,6 +299,7 @@
 
                         strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
                         strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
+                        strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
                         strLine1 = strLine1.replace(/{{ap_cname}}/g, item.optap_cname);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
@@ -309,6 +313,7 @@
                         strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
                         strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
+                        strLine1 = strLine1.replace(/{{todo_sqlno}}/g, item.todo_sqlno);
 
                         $("#dataList>tbody").append(strLine1);
                         $("#todoBack_" + nRow).showFor(item.bstat_code.Right(1) == "X");
@@ -362,6 +367,17 @@
         }
     });
     //////////////////////
+    $("#qrypr_branch").change(function (e) {
+        $("#qryPr_scode").empty();
+        if($(this).val()=="B"){
+            $("#qryPr_scode").append("<%#PrScode_html%>");
+        }else if($(this).val()=="BJ"){
+            $("#qryPr_scode").append("<%#BJPrScode_html%>");
+        }else{
+            $("#qryPr_scode").append("<%#PrScode_html%>");
+            $("#qryPr_scode").append("<%#BJPrScode_html2%>");
+        }
+    });
 
     $("#qryopt_no").blur(function (e) {
         chkNum1($(this)[0], "案件編號");
