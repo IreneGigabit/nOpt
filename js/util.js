@@ -115,6 +115,7 @@ Date.prototype.format = function (fmt) {
         "M+": this.getMonth() + 1,
         "d+": this.getDate(),
         "h+": this.getHours(),
+        "H+": this.getHours()%12,
         "m+": this.getMinutes(),
         "s+": this.getSeconds(),
         "q+": Math.floor((this.getMonth() + 3) / 3),
@@ -122,6 +123,9 @@ Date.prototype.format = function (fmt) {
     };
     if (/(y+)/.test(fmt)) {
         fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(t+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getHours() >= 12 ? '下午' : '上午'));
     }
     for (var k in o) {
         if (new RegExp("(" + k + ")").test(fmt)) {
