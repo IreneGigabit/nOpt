@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -49,9 +49,9 @@
         //DataTable dt_tran_mod_aprep = GetTranModAprep(case_no, opt_sqlno);
         //DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
         //DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
-        //DataTable dt_brdmt_attach = GetBRDmtAttach(case_no);
+        DataTable dt_brdmt_attach = GetBRDmtAttach(opt_sqlno);
         DataTable dt_opte_attach = GetOpteAttach(opt_sqlno);
-
+            
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
             ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
@@ -77,7 +77,7 @@
         //Response.Write(",\"tran_mod_aprep\":" + JsonConvert.SerializeObject(dt_tran_mod_aprep, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
         //Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
-        //Response.Write(",\"brdmt_attach\":" + JsonConvert.SerializeObject(dt_brdmt_attach, settings).ToUnicode() + "\n");
+        Response.Write(",\"brdmt_attach\":" + JsonConvert.SerializeObject(dt_brdmt_attach, settings).ToUnicode() + "\n");
         Response.Write(",\"opte_attach\":" + JsonConvert.SerializeObject(dt_opte_attach, settings).ToUnicode() + "\n");
         Response.Write("}");
 
@@ -105,8 +105,8 @@
             string rtnStr = "";
             if (pFile.IndexOf("\\") > -1) {//絕對路徑
                 string a = pFile.Replace("\\", "/").ToLower();//斜線改方向
-                //擷取『/XT/』後(含)的字串
-                rtnStr = "http://" + uploadserver_name + "/btbrt" + a.Substring(a.IndexOf("/" + branch + "t/", StringComparison.OrdinalIgnoreCase));
+                //擷取『/XTE/』後(含)的字串
+                rtnStr = "http://" + uploadserver_name + "/btbrt" + a.Substring(a.IndexOf("/" + branch + "te/", StringComparison.OrdinalIgnoreCase));
             } else {
                 rtnStr = "http://" + uploadserver_name + pFile;
             }
@@ -472,14 +472,17 @@
 
     #region GetBRDmtAttach
     private DataTable GetBRDmtAttach(string pCaseNo) {
-        using (DBHelper connB = new DBHelper(strConnB, false)) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "select *,''preview_path ";
-            SQL += "from dmt_attach ";
-            SQL += "where case_no='" +pCaseNo+ "' and source='case' and attach_flag<>'D' and attach_branch='B' ";
-            SQL += " order by attach_sqlno ";
+            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm";
+            SQL += ",(select form_name from cust_code where code_type='osername' and cust_code=attach_opte.branch) as uploadservername ";
+            SQL += " from attach_opte ";
+            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
+            SQL += " and source='br' ";
+            SQL += " order by opt_sqlno,attach_no ";
 
             DataTable dt = new DataTable();
-            connB.DataTable(SQL,dt);
+            conn.DataTable(SQL, dt);
             for (int i = 0; i < dt.Rows.Count; i++) {
                 dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
             }
@@ -497,7 +500,7 @@
             SQL += ",(select form_name from cust_code where code_type='osername' and cust_code=attach_opte.branch) as uploadservername ";
             SQL += " from attach_opte ";
             SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
-            SQL += " and source='br' ";
+            SQL += " and source='pr' ";
             SQL += " order by opt_sqlno,attach_no ";
     
             DataTable dt = new DataTable();
