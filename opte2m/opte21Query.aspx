@@ -131,7 +131,7 @@
 		<td align="center">
             <span id="todoBack_{{nRow}}">
                 <a href="../opte3m/opte31todo.aspx?Case_no={{Case_no}}&Branch={{Branch}}&prgid=<%=prgid%>&opt_sqlno={{opt_sqlno}}&fseq={{fseq}}&scode_name={{scode_name}}" title="查詢退回紀錄" target="Eblank">
-                    <img src="../images/alarm.gif" style="cursor:pointer" align="absmiddle" border="0">
+                    <img src="../images/alarm.gif" align="absmiddle" border="0">
                 </a>
             </span>{{opt_no}}
 		</td>
