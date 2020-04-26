@@ -51,17 +51,7 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
         opt_no = Request["opt_no"] ?? "";
         case_no = Request["case_no"] ?? "";
-
-        Token myToken = new Token(HTProgCode);
-        HTProgRight = myToken.CheckMe();
-        if (HTProgRight >= 0) {
-            PageLayout();
-            this.DataBind();
-        }
-    }
-
-    private void PageLayout() {
-        //欄位開關
+        
         if (prgid == "opt22") {
             HTProgCap = "爭救案判行作業";
             SLock = "false";
@@ -77,6 +67,15 @@
             }
         }
 
+        Token myToken = new Token(HTProgCode);
+        HTProgRight = myToken.CheckMe();
+        if (HTProgRight >= 0) {
+            PageLayout();
+            this.DataBind();
+        }
+    }
+
+    private void PageLayout() {
         //決定要不要顯示案件主檔畫面
         if (",DO1,DI1,DR1,".IndexOf(","+Request["arcase"]+",")>-1) {
             dmt_show_flag = "N";
@@ -128,7 +127,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%> <%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">

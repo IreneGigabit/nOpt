@@ -30,7 +30,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <TABLE border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%">
 <TR>
 	<td class="lightbluetable" align=right>洽案營洽 :</td>

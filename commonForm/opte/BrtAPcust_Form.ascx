@@ -20,7 +20,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <input type=hidden id=apnum name=apnum value=0><!--筆數-->
 <table border="0" id=tabap_re class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<THEAD>

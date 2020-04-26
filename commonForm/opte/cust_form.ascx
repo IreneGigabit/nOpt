@@ -21,7 +21,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 <TR>
 	<TD class=lightbluetable align="right">客戶編號：</TD>

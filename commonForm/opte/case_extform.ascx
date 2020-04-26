@@ -31,7 +31,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <input type=hidden name=hcountry value="">
 <input type=hidden id="nfy_tot_num" name="nfy_tot_num">	
 <input type=hidden id="spe_ctrl2" name="spe_ctrl2"><!--判斷是否為權利異動-->

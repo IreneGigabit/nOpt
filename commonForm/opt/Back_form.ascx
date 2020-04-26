@@ -14,7 +14,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <table id=tabreject class="bluetable" border="0" cellspacing="1" cellpadding="2" width="100%">
 	<Tr align="center">
 	    <TD align="center" colspan="3" class=lightbluetable><font color=red>退&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;處&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;理</font></TD>

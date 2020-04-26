@@ -47,17 +47,7 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
         opt_no = Request["opt_no"] ?? "";
         case_no = Request["case_no"] ?? "";
-
-        Token myToken = new Token(HTProgCode);
-        HTProgRight = myToken.CheckMe();
-        if (HTProgRight >= 0) {
-            PageLayout();
-            this.DataBind();
-        }
-    }
-
-    private void PageLayout() {
-        //欄位開關
+        
         if (prgid == "opt22") {
             HTProgCap = "爭救案判行作業";
             SLock = "false";
@@ -72,6 +62,15 @@
             }
         }
 
+        Token myToken = new Token(HTProgCode);
+        HTProgRight = myToken.CheckMe();
+        if (HTProgRight >= 0) {
+            PageLayout();
+            this.DataBind();
+        }
+    }
+
+    private void PageLayout() {
         //品質評分欄位要不要show的flag
         using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
             string SQL = "select ref_code from cust_code where code_type='T92' and cust_code='" + Request["arcase"] + "'";
@@ -103,7 +102,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%> <%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">

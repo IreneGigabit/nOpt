@@ -21,7 +21,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <table border="0" id=tabSend class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
 		<TD align=center colspan=6 class=lightbluetable1><font color="white">發&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font></TD>

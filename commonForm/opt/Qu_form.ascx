@@ -14,7 +14,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <table id=tabQu class="bluetable" border="0" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
 	    <TD align="center" colspan="4" class=lightbluetable1><font color="white">品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;質&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;評&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分</font></TD>

@@ -20,7 +20,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <input type="hidden" id="brdmt_maxAttach_no" name="brdmt_maxAttach_no" value=""><!--目前table裡最大值-->
 <input type="hidden" id="brdmt_attach_cnt" name="brdmt_attach_cnt" value=""><!--目前table裡有效筆數-->
 <input type="hidden" id="brdmt_filenum" name="brdmt_filenum" value="0">

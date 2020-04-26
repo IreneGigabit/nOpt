@@ -19,7 +19,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this, MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <input type=hidden id=tfz1_main_flag name=tfz1_main_flag value="Y1"><!--記錄用案件申請人或異動資料update ext_apcust-->
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr>

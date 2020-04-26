@@ -22,7 +22,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr id=tr_opt_show style="display:none">			
 		<td class=lightbluetable align=right >爭救案案件編號：</td>

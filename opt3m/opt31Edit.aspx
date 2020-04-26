@@ -59,6 +59,18 @@
         case_no = Request["case_no"] ?? "";
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
+        
+        if (prgid == "opt31") {
+            HTProgCap = "爭救案承辦內容維護";
+            End_flag = "N";
+        } else if (prgid == "opt31_1") {
+            HTProgCap = "爭救案結辦作業";
+            HTProgCode = "opt31";
+            End_flag = "Y";
+        } else {
+            HTProgCap = "爭救案承辦內容查詢";
+            submitTask = "Q";
+        }
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
@@ -81,18 +93,6 @@
                         "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opt31' " +
                         "Order By C.scode ";
             opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
-        }
-
-        if (prgid == "opt31") {
-            HTProgCap = "爭救案承辦內容維護";
-            End_flag = "N";
-        } else if (prgid == "opt31_1") {
-            HTProgCap = "爭救案結辦作業";
-            HTProgCode = "opt31";
-            End_flag = "Y";
-        } else {
-            HTProgCap = "爭救案承辦內容查詢";
-            submitTask = "Q";
         }
 
         //欄位開關
@@ -188,13 +188,13 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%><%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
             <input type=button value ="區所交辦資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a id="btnEnd" href="javascript:void(0);" onclick="formSaveSubmit('U','opt31_1')" >[結辦處理]</a>
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <a class="imgCls" href="javascript:void(0);" >[返回清單]</a>
         </td>
     </tr>
     <tr>

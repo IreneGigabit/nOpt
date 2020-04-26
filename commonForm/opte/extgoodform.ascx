@@ -14,7 +14,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this, MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <TABLE border=0 id="goodllist" class="bluetable" cellspacing=1 cellpadding=2 width="100%">
     <thead>
 	    <tr>

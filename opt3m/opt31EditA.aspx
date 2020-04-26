@@ -57,6 +57,18 @@
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
 
+        //欄位開關
+        if (prgid == "opt31") {
+            HTProgCap = "爭救案承辦內容維護";
+        } else if (prgid == "opt31_1") {
+            HTProgCap = "爭救案結辦作業";
+            HTProgCode = "opt31";
+            End_flag = "Y";
+        } else {
+            HTProgCap = "爭救案承辦內容查詢";
+            submitTask = "Q";
+        }
+
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -78,18 +90,6 @@
                         "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opt31' " +
                         "Order By C.scode ";
             opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
-        }
-        
-        //欄位開關
-        if (prgid == "opt31") {
-            HTProgCap = "爭救案承辦內容維護";
-        } else if (prgid == "opt31_1") {
-            HTProgCap = "爭救案結辦作業";
-            HTProgCode = "opt31";
-            End_flag = "Y";
-        } else {
-            HTProgCap = "爭救案承辦內容查詢";
-            submitTask = "Q";
         }
 
         //判行內容/品質評分欄位要不要顯示
@@ -160,13 +160,13 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%><%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
             <input type=button value ="區所案件資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a id="btnEnd" href="opt31EditA.aspx?prgid=opt31_1&opt_sqlno=<%=opt_sqlno%>&opt_no=<%#opt_sqlno%>&branch=<%#branch%>">[結辦處理]</a>
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <a class="imgCls" href="javascript:void(0);" >[返回清單]</a>
         </td>
     </tr>
     <tr>

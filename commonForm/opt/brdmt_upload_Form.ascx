@@ -20,7 +20,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <TABLE id='tabfile' border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
     <thead>
 	    <TR>

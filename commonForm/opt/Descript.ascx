@@ -4,7 +4,7 @@
 
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 
 <script language=javascript>
 //*****顯示說明

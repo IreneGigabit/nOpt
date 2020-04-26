@@ -16,7 +16,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <input type="hidden" id="apply_no" name="apply_no">
 <input type="hidden" id="apply_date" name="apply_date">
 <input type="hidden" id="issue_no" name="issue_no">

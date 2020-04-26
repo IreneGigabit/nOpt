@@ -43,12 +43,13 @@ public class Sys
 	}
 
 	/// <summary>  
-	/// 取得ASCX在伺服器上的目錄
+	/// 取得ASCX在伺服器上的路徑
 	/// </summary>  
-	public static string GetAscxPath(object page, string dir) {
+    public static string GetAscxPath(System.Web.UI.Control control) {
 		if (IsDebug()) {
-			return string.Format("\\{0}\\{1}.ascx<hr class='style-one'/>", dir, page.GetType().ToString().Replace("ASP.", ""))
-				.Replace(HttpContext.Current.Server.MapPath("/"), "");
+            //return string.Format("\\{0}\\{1}.ascx<hr class='style-one'/>", dir, control.GetType().ToString().Replace("ASP.", ""))
+			//	.Replace(HttpContext.Current.Server.MapPath("/"), "");
+            return string.Format("{0}/{1}.ascx<hr class='style-one'/>", control.TemplateSourceDirectory, control.TemplateControl.ID);
 		} else {
 			return "";
 		}

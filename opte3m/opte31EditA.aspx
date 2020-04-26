@@ -1,18 +1,9 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
-<%@ Import Namespace = "System.Collections.Generic"%>
 
-<%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
-<%@ Register Src="~/commonForm/opte/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
-<%@ Register Src="~/commonForm/opte/BrtAPcust_Form.ascx" TagPrefix="uc1" TagName="BrtAPcust_Form" %>
-<%@ Register Src="~/commonForm/opte/case_extform.ascx" TagPrefix="uc1" TagName="case_extform" %>
-<%@ Register Src="~/commonForm/opte/Ext_Form.ascx" TagPrefix="uc1" TagName="Ext_Form" %>
-<%@ Register Src="~/commonForm/opte/E9ZForm.ascx" TagPrefix="uc1" TagName="E9ZForm" %>
-<%@ Register Src="~/commonForm/opte/brext_upload_Form.ascx" TagPrefix="uc1" TagName="brext_upload_Form" %>
+<%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
-<%@ Register Src="~/commonForm/opte/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
-<%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
-<%@ Register Src="~/commonForm/opte/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
-<%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -39,6 +30,7 @@
     protected string PHide = "true";//交辦內容的控制
     protected string RLock = "true";//承辦內容_分案的控制
     protected string BLock = "true";//承辦內容_承辦的控制
+    protected string CLock = "true";//承辦內容_承辦的控制
     protected string SLock = "true";//承辦內容_發文的控制
     protected string SELock = "true";
     protected string ALock = "true";//承辦內容_判行的控制
@@ -48,7 +40,7 @@
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
-        
+
         submitTask = Request["submitTask"] ?? "";
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
@@ -69,7 +61,7 @@
             HTProgCap = "出口爭救案承辦內容查詢";
             submitTask = "Q";
         }
-        
+
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -109,6 +101,7 @@
             }
         }
     }
+
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -126,14 +119,15 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
+
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
-            <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
+            <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a id="btnEnd" href="javascript:void(0);" onclick="formSaveSubmit('U','opte31_1')" >[結辦處理]</a>
+            <a id="btnEnd" href="opte31EditA.aspx?prgid=opte31_1&opt_sqlno=<%=opt_sqlno%>&opt_no=<%#opt_no%>&todo_sqlno=<%#todo_sqlno%>&branch=<%#branch%>">[結辦處理]</a>
             <a class="imgCls" href="javascript:void(0);" >[返回清單]</a>
         </td>
     </tr>
@@ -143,76 +137,23 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
-	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="text" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
-	<input type="text" id="bstep_grade" name="bstep_grade">
-	<input type="text" id="submittask" name="submittask">
-    <input type="text" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
-    <input type="text" id="End_flag" name="End_flag" value="<%=End_flag%>">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
-	<input type="text" id="progid" name="progid">
+    <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
+	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td>
-        <table border="0" cellspacing="0" cellpadding="0">
-            <tr id="CTab">
-                <td class="tab" href="#cust">案件客戶</td>
-                <td class="tab" href="#attent">案件聯絡人</td>
-                <td class="tab" href="#apcust_re">申請人</td>
-                <td class="tab" href="#case">收費與接洽事項</td>
-                <td class="tab" href="#ext">案件主檔</td>
-                <td class="tab" href="#tran">交辦內容</td>
-                <td class="tab" href="#br">承辦內容</td>
-            </tr>
-        </table>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="tabCont" id="#cust">
-                <uc1:cust_form runat="server" ID="cust_form" />
-                <!--include file="commonForm/opte/cust_form.ascx"--><!--案件客戶-->
-            </div>
-            <div class="tabCont" id="#attent">
-                <uc1:attent_form runat="server" ID="attent_form" />
-                <!--include file="commonForm/opte/attent_form.ascx"--><!--案件聯絡人-->
-            </div>
-            <div class="tabCont" id="#apcust_re">
-                <uc1:BrtAPcust_Form runat="server" ID="BrtAPcust_Form" />
-                <!--include file="commonForm/opte/BrtAPcust_Form.ascx"--><!--案件申請人-->
-            </div>
-            <div class="tabCont" id="#case">
-                <uc1:case_extform runat="server" ID="case_extform" />
-                <!--include file="commonForm/opte/case_extform.ascx"--><!--收費與接洽事項-->
-            </div>
-            <div class="tabCont" id="#ext">
-                <uc1:Ext_Form runat="server" ID="Ext_Form" />
-                <!--include file="commonForm/opte/ext_form.ascx"--><!--案件主檔-->
-            </div>
-            <div class="tabCont" id="#tran">
-                <uc1:E9ZForm runat="server" id="E9ZForm" />
-                <!--include file="commonForm/opte/E9ZForm.ascx"--><!--交辦內容欄位畫面-->
-                <uc1:brext_upload_Form runat="server" ID="brext_upload_Form" />
-                <!--include file="commonForm/opte/brext_upload_form.ascx"--><!--區所上傳欄位畫面-->
-            </div>
-            <div class="tabCont" id="#br">
-                <uc1:BR_form runat="server" ID="BR_form" />
-                <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
-                <uc1:PR_form runat="server" ID="PR_form" />
-                <!--include file="../commonForm/opte/PR_form.ascx"--><!--承辦內容-->
-                <uc1:opte_upload_Form runat="server" ID="opte_upload_Form" />
-                <!--include file="../commonForm/opte/opte_upload_Form.ascx"--><!--上傳文件-->
-                <uc1:Send_form runat="server" ID="Send_form" />
-                <!--include file="../commonForm/opte/Send_form.ascx"--><!--回稿交辦事項-->
-                <uc1:Back_form runat="server" ID="Back_form" />
-                <!--include file="../commonForm/opte/Back_form.ascx"--><!--退回原因-->
-           </div>
+            <uc1:BR_formA runat="server" ID="BR_formA" />
+            <!--include file="../commonForm/opte/BR_formA.ascx"--><!--承辦內容-->
+            <uc1:BR_form runat="server" ID="BR_form" />
+            <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
         </td>
     </tr>
     </table>
-	<table id='tabjob' border="0" width="98%" cellspacing="0" cellpadding="0">
+    <table id='tabjob' border="0" width="98%" cellspacing="0" cellpadding="0">
 		<tr><td>&nbsp;</td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr >
@@ -234,7 +175,7 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td width="100%" align="center">
-		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opte31')" id="btnSaveSubmit">
+		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
 		<input type=button value="結辦" class="cbutton" onClick="formEndSubmit('U')" id="btnEndSubmit">
 		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">
     </td>
@@ -259,12 +200,12 @@
         window.parent.tt.rows = "0%,100%";
     }
 
-    $(function () {
-        this_init();
-    });
-
     $("#chkTest").click(function (e) {
         $("#ActFrame").showFor($(this).prop("checked"));
+    });
+
+    $(function () {
+        this_init();
     });
 
     var br_opte = {};
@@ -318,21 +259,9 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-        $("#sopt_no").html(br_opte.opte[0].opt_no);
-        $("#bstep_grade").html(br_opte.opte[0].bstep_grade);
-        cust_form.init();
-        attent_form.init();
-        apcust_re_form.init();
-        case_form.init();
-        ext_form.init();
-        e9z_form.init();
-        brupload_form.init();
+
+        br_formA.init();
         br_form.init();
-        br_form.loadOpt();
-        pr_form.init();
-        upload_form.init();
-        send_form.init();
-        back_form.init();
     }
 
     // 切換頁籤

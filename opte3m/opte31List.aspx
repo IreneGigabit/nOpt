@@ -70,7 +70,7 @@
                     , page.pagedTable.Rows[i].SafeRead("Branch", "")
                     , Sys.GetSession("dept") + "E");
 
-                isql = "select ap_cname from caseopt_ap where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
+                isql = "select ap_cname from caseopte_ap where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
                 string ap_cname = "";
                 using (SqlDataReader dr = conn.ExecuteReader(isql)) {
                     while (dr.Read()) {

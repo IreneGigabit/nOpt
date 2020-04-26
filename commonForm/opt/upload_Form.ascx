@@ -24,7 +24,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <TABLE id='tabfileopt_file' border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
     <thead>
 	    <TR>
@@ -228,7 +228,7 @@
         var popt_no = $("#opt_no").val().Left(4);
         var topt_no = $("#opt_no").val().substr(4);
         var tfolder = "attach" + "/" + popt_no + "/" + topt_no;
-        var url = "../sub/display_file.aspx?type=doc&folder_name=" + tfolder + "&draw_file=" + $("#" + fld + "_" + nRow).val() + "&gs_date=" +$("#GS_date").val() 
+        var url = "../sub/display_file.aspx?type=doc&folder_name=" + tfolder + "&draw_file=" + $("#" + fld + "_" + nRow).val() + "&gs_date=" + ($("#GS_date").val() || "");
         window.open(url, "window", "width=700,height=600,toolbar=yes,menubar=yes,resizable=yes,scrollbars=yes,status=0,top=50,left=80");
 	}
 

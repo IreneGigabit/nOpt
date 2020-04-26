@@ -23,7 +23,7 @@
     }
 </script>
 
-<%=Sys.GetAscxPath(this,MapPathSecure(TemplateSourceDirectory))%>
+<%=Sys.GetAscxPath(this)%>
 <input type="text" name="br_source" id="br_source"><!--記錄分案來源-->		
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
@@ -79,7 +79,7 @@
         var jOpt = br_opte.opte[0];
         $("#pr_branch").val(jOpt.pr_branch || "B");
         br_form.getPrScode();
-        $("#pr_scode").val(jOpt.pr_scode);
+        $("#pr_scode").val(jOpt.bpr_scode);
         $("#ctrl_date").val(dateReviver(jOpt.ctrl_date, "yyyy/M/d"));
         $("#span_last_date").html(dateReviver(jOpt.last_date, "yyyy/M/d"));
         $("#Br_remark").val(jOpt.br_remark);
