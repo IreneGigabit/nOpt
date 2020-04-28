@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -264,7 +264,7 @@
                     datasource_name = "案件主檔及申請人檔";
                     using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(Request["chkTest"] == "TEST")) {
                         SQL = "select cust_area,cust_seq,att_sql,class,class_count,apply_date,apply_no,issue_date,issue_no";
-                        SQL = ",appl_name,agt_no,agt_no1,renewal_agt_no,renewal_agt_no1,ext_seq,ext_seq1,your_no,scode from ext ";
+                        SQL += ",appl_name,agt_no,agt_no1,renewal_agt_no,renewal_agt_no1,ext_seq,ext_seq1,your_no,scode from ext ";
                         SQL += " where seq=" + seq + " and seq1='" + seq1 + "'";
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.Read()) {
@@ -353,8 +353,9 @@
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
         if (!(window.parent.parent.tt === undefined)) {
+            window.parent.this_init();
             window.parent.parent.tt.rows = "100%,0%";
-        }else{
+        } else {
             window.opener.this_init();
             window.close();
         }
