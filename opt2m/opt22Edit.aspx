@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -233,7 +233,7 @@
 
 <script language="javascript" type="text/javascript">
     if (!(window.parent.tt === undefined)) {
-        window.parent.tt.rows = "20%,80%";
+        window.parent.tt.rows = "0%,100%";
     }
 
     $("#chkTest").click(function (e) {
