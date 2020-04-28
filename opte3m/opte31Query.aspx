@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -180,7 +180,7 @@
 		<td>{{your_no}}</td>
 		<td>{{ap_cname}}</td>
 		<td>{{appl_name}}</td>
-		<td nowrap>{{arcase_name}}</td>
+		<td nowrap>{{pr_rs_code_name}}</td>
 		<td align="center">{{opt_in_date}}</td>
 		<td align="center">{{pr_scode_name}}</td>
 		<td align="center">{{confirm_date}}</td>
@@ -302,7 +302,7 @@
                         strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
                         strLine1 = strLine1.replace(/{{ap_cname}}/g, item.optap_cname);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
-                        strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
+                        strLine1 = strLine1.replace(/{{pr_rs_code_name}}/g, item.pr_rs_code_name);
                         strLine1 = strLine1.replace(/{{opt_in_date}}/g, dateReviver(item.opt_in_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
                         strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
