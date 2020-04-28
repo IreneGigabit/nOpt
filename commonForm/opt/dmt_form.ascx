@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="dmt_form" %>
+<%@ Control Language="C#" ClassName="dmt_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -264,9 +264,9 @@
         var classCount = good.length;
         if (classCount == 0) classCount = 1;//至少有1筆
         $("#tfzr_class_count").val(good.length == 0 ? "" : classCount);//共N類
-        dmt_form.Add_button(classCount);//產生類別清單
-
         $("#goodllist>tbody").empty();
+
+        dmt_form.Add_button(classCount);//產生類別清單
         if (good.length!=0){
             $.each(good, function (i, item) {
                 var nRow = i + 1;
