@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="case_extform" %>
+<%@ Control Language="C#" ClassName="case_extform" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -14,7 +14,7 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
 
-        tfz1_country = Funcs.getcountry().Option("{coun_code}", "{coun_c}");
+        tfz1_country = Funcs.getcountry().Option("{coun_code}", "{coun_code}_{coun_c}");
         using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
             tfy_oth_code = SHtml.Option(cnn, "SELECT branch,branchname FROM branch_code WHERE class = 'branch'", "{branch}", "{branch}_{branchname}");
         }
