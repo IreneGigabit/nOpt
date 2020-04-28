@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_form" %>
+<%@ Control Language="C#" ClassName="ext_br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -77,6 +77,7 @@
 
     br_form.loadOpt = function () {
         var jOpt = br_opte.opte[0];
+        $("#br_source").val(jOpt.br_source);
         $("#pr_branch").val(jOpt.pr_branch || "B");
         br_form.getPrScode();
         $("#pr_scode").val(jOpt.bpr_scode);
