@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_form" %>
+<%@ Control Language="C#" ClassName="ext_form" %>
 <%@ Register Src="~/commonForm/opte/brtPriorForm.ascx" TagPrefix="uc1" TagName="brtPriorForm" %>
 <%@ Register Src="~/commonForm/opte/extgoodform.ascx" TagPrefix="uc1" TagName="extgoodform" %>
 
@@ -40,14 +40,14 @@
 	<tr >
 		<td class=lightbluetable align=right>區所案件編號：</td>
 		<td class=whitetablebg  id=DelayCase>
-				<input type=text name=tfzb_seq id=tfzb_seq>
-				<input type=text name=tfzb_seq1 id=tfzb_seq1>
-				<input type=text name=zold_seq id=zold_seq>
-				<input type=text name=zold_seq1 id=zold_seq1>
-				<input type=text name=zoldseq_end_date id=zoldseq_end_date>
-				<input type=text name=zoldseq_ext_seq id=zoldseq_ext_seq>
-				<input type=text name=zoldseq_ext_seq1 id=zoldseq_ext_seq1>
-				<input type=text name=kind id=kind><!--傳入之作業種類-->
+				<input type=hidden name=tfzb_seq id=tfzb_seq>
+				<input type=hidden name=tfzb_seq1 id=tfzb_seq1>
+				<input type=hidden name=zold_seq id=zold_seq>
+				<input type=hidden name=zold_seq1 id=zold_seq1>
+				<input type=hidden name=zoldseq_end_date id=zoldseq_end_date>
+				<input type=hidden name=zoldseq_ext_seq id=zoldseq_ext_seq>
+				<input type=hidden name=zoldseq_ext_seq1 id=zoldseq_ext_seq1>
+				<input type=hidden name=kind id=kind><!--傳入之作業種類-->
 				<INPUT TYPE=text id=Branch name=Branch SIZE=1 MAXLENGTH=1  class="Lock">-
 				<INPUT TYPE=text id=old_seq name=old_seq SIZE=5 MAXLENGTH=5 onblur="mainseqChange('old_seq')" class="QLock">
                 -<INPUT TYPE=text id=old_seq1 name=old_seq1 SIZE=1 MAXLENGTH=1 value="_" onblur="mainseqChange('old_seq')" class="QLock">	
@@ -118,9 +118,9 @@
 		<td class=whitetablebg colspan=7>
 			<input TYPE="hidden" id="file1" name="file1">
 			<input TYPE="text" id="tfzd_Draw_file" name="Draw_file1" SIZE="50" maxlength="50" class="Lock">	    
-			<input type="button" class="cbutton QLock" id="butUpload"   name="butUpload"  value="商標圖檔上傳" onclick="UploadAttach_photo()">
-			<input type="button" class="redbutton QLock" id="btnDelAtt" name="btnDelAtt"  value="商標圖檔刪除" onclick="DelAttach_photo()">
-			<input type="button" class="cbutton" id="btnDisplay"  name="btnDisplay" value="商標圖檔檢視" onclick="PreviewAttach_photo()" >
+			<input type="button" class="cbutton QLock" id="butUpload"   name="butUpload"  value="商標圖檔上傳" onclick="ext_form.UploadAttach_photo()">
+			<input type="button" class="redbutton QLock" id="btnDelAtt" name="btnDelAtt"  value="商標圖檔刪除" onclick="ext_form.DelAttach_photo()">
+			<input type="button" class="cbutton" id="btnDisplay"  name="btnDisplay" value="商標圖檔檢視" onclick="ext_form.PreviewAttach_photo()" >
 		    <input type="hidden" name="draw_attach_file" id="draw_attach_file"> 
 		</TD>
 	</tr>	
@@ -148,7 +148,7 @@
 		<td class="whitetablebg" colspan="7">
             <input TYPE="radio" id="tfzd_colorB" NAME="tfzd_color" value="B" class="QLock">墨色
 			<input TYPE="radio" id="tfzd_colorC" NAME="tfzd_color" value="C" class="QLock">彩色：請聲明組成顏色：
-            <input type="text" id="tfzd_color_content" name="tfzd_color_content" size=50 alt="『色彩描述』" maxlength=100 onblur="fDataLen(this.value,this.maxLength,this.alt)">
+            <input type="text" id="tfzd_color_content" name="tfzd_color_content" size=50 alt="『色彩描述』" class="QLock" maxlength=100 onblur="fDataLen(this.value,this.maxLength,this.alt)">
 		</td>
 	</tr>
 	<tr>
@@ -355,4 +355,13 @@
             ActFrame.location.href = url;
         }
     });
+
+    //檢視圖檔
+    ext_form.PreviewAttach_photo = function () {
+        if ($("#draw_attach_file").val() == "" || $("#draw_attach_file").val() === undefined) {
+            alert("請先上傳圖檔 !!");
+            return false;
+        }
+        window.open($("#draw_attach_file").val());
+    }
 </script>
