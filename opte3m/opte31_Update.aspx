@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -50,7 +50,7 @@
                 Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
             }
             Response.Write("<HR>");
-
+            
             if (submitTask == "U") {//承辦結辦
                 doConfirm();
             } else if (submitTask == "B") {//退回分案
@@ -104,15 +104,15 @@
                     }
                     string thref = "";
                     if (ReqVal.TryGet("progid", "") != "") {
-                        thref = "opte31Edit.asp?prgid=" + Request["progid"] + "&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno=" + todo_sqlno;
+                        thref = "opte31Edit.aspx?prgid=" + Request["progid"] + "&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno=" + todo_sqlno;
                     } else {
-                        thref = "opte31Edit.asp?prgid=opte31&opt_sqlno" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno" + todo_sqlno;
+                        thref = "opte31Edit.aspx?prgid=opte31&opt_sqlno" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno" + todo_sqlno;
                     }
                     if (ReqVal.TryGet("from_prgid", "") == "opte23") {
-                        thref = "../opte2m/opte23List.asp?prgid=" + Request["from_prgid"];
+                        thref = "../opte2m/opte23List.aspx?prgid=" + Request["from_prgid"];
                     }
                     if (ReqVal.TryGet("from_prgid", "") == "opte25") {
-                        thref = "../opte2m/opte25List.asp?prgid=" + Request["from_prgid"];
+                        thref = "../opte2m/opte25List.aspx?prgid=" + Request["from_prgid"];
                     }
 
                     if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.href='" + thref + "';");
@@ -157,7 +157,7 @@
             SQL += " where opt_sqlno='" + opt_sqlno + "'";
             conn.ExecuteNonQuery(SQL);
 
-            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "' ";
+            SQL = "update todo_opte set approve_scode='" + Session["scode"] + "' ";
             SQL += ",approve_desc='" + ReqVal.TryGet("Preject_reason", "").ToBig5() + "' ";
             SQL += ",resp_date=getdate() ";
             SQL += ",job_status='XX' ";
@@ -204,8 +204,8 @@
 
         SQL = "update br_opte set pr_hour=" + Util.dbzero(ReqVal.TryGet("pr_hour", "0")) + "";
         SQL += ",pr_per=" + Util.dbzero(ReqVal.TryGet("pr_per", "0")) + "";
-        SQL += ",pr_remark='" + ReqVal.TryGet("pr_remark", "") + "'";
-        SQL += ",send_dept=" + Util.dbnull(ReqVal.TryGet("send_dept", null)) + "";
+        SQL += ",pr_remark=N'" + ReqVal.TryGet("pr_remark", "") + "'";
+        SQL += ",send_dept=" + Util.dbnull(branch) + "";
         SQL += ",send_remark='" + ReqVal.TryGet("send_remark", "") + "'";
         if (end_flag == "Y") {//結辦處理
             SQL += ",pr_date=" + Util.dbnull(ReqVal.TryGet("pr_date", null)) + "";
