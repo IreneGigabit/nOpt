@@ -1,7 +1,15 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+<%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+<%@ Register Src="~/commonForm/opte/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
+<%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
+<%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
+
+
+
+
 
 
 
@@ -125,6 +133,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
+			<input type=button value ="重新抓取區所案件主檔資料(含申請人)" class="cbutton P1Lock" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a id="btnEnd" href="opte31EditA.aspx?prgid=opte31_1&opt_sqlno=<%=opt_sqlno%>&opt_no=<%#opt_no%>&todo_sqlno=<%#todo_sqlno%>&branch=<%#branch%>">[結辦處理]</a>
@@ -150,6 +159,14 @@
             <!--include file="../commonForm/opte/BR_formA.ascx"--><!--承辦內容-->
             <uc1:BR_form runat="server" ID="BR_form" />
             <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
+            <uc1:Back_form runat="server" ID="Back_form" />
+            <!--include file="../commonForm/opte/Back_form.ascx"--><!--退回原因-->
+            <uc1:PR_form runat="server" ID="PR_form" />
+            <!--include file="../commonForm/opte/PR_form.ascx"--><!--承辦內容-->
+            <uc1:opte_upload_Form runat="server" ID="opte_upload_Form" />
+            <!--include file="../commonForm/opte/opte_upload_Form.ascx"--><!--上傳文件-->
+            <uc1:AP_form runat="server" ID="AP_form" />
+            <!--include file="../commonForm/opte/AP_form.ascx"--><!--判行資料-->
         </td>
     </tr>
     </table>
@@ -374,4 +391,14 @@
             $("#job_scode2").unlock();
         }
     });
+
+    //重新抓取區所案件主檔資料(含申請人)
+    function GetBranchData(){
+        if (confirm("是否確定重新取得區所案件主檔資料？")) {
+            var url="../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=seq_ext&branch="  $("#Branch").val() + 
+            "&seq=" +$("#Bseq").val() + "&seq1=" + $("#Bseq1").val()+"&opt_sqlno="+ $("#opt_sqlno").val() + "&chkTest=" + $("#chkTest:checked").val();
+            //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            ActFrame.location.href = url;
+        }
+    }
 </script>
