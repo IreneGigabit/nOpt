@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -78,6 +78,11 @@
     }
 
     private void PageLayout() {
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
+        }
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -119,6 +124,7 @@
 	<input type="text" id="submittask" name="submittask">
 	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 	<input type="text" id="progid" name="progid">
+	<input type="text" id="stat_code" name="stat_code" value="<%=stat_code%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -275,6 +281,15 @@
         upload_form.init();
         send_form.init();
         back_form.init();
+
+        if($("#send_dept").val()==""){
+            $("#send_dept").val("<%=branch%>");
+        }
+
+        if($("#prgid").val()=="opte24" && $("#stat_code").val()=="YY"){
+            $("#btnSaveSubmitU,#btnBack1Submit").hide();//判行/退回承辦
+            $("#btnSaveSubmitS").show();//編修存檔
+        }
     }
 
     // 切換頁籤
@@ -300,34 +315,6 @@
     //判行
     function formSaveSubmit(dowhat){
         settab("#br");
-
-        if($("#code_br_agt_no").val()!=""&&$("#Pagt_no").val()!=""){
-            if($("#code_br_agt_no").val()!=$("#Pagt_no").val()){
-                var msg="交辦時出名代理人("+$("#Pagt_no").val()+"_" +$( "#Pagt_no option:selected" ).text()+ ")與官發出名代理人("+$("#code_br_agt_no").val()+"_"+$("#code_br_agt_nonm").val()+")不同，是否確認結辦？";
-                if(!confirm(msg)) return false;
-            }
-            $("#rs_agt_no").val($("#Pagt_no").val());
-        }else{
-            if($("#Pagt_no").val()!=""){
-                $("#rs_agt_no").val($("#Pagt_no").val());
-            }else{
-                $("#rs_agt_no").val($("#code_br_agt_no").val());
-            }
-        }
-
-        if($("input[name='score_flag']:eq(0)").prop("checked")){
-            if ($("#Score").val()==""){
-                alert("請輸入接洽得分！");
-                $("#Score").focus();
-                return false;
-            }
-        }
-
-        if ($("#opt_Remark").val()==""){
-            alert("請輸入案件缺失及評語！");
-            $("#opt_Remark").focus();
-            return false;
-        }
 
         if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
             if(!confirm("是否確定不輸入核准時數？？")) {
