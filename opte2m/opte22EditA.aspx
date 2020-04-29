@@ -5,6 +5,8 @@
 <%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
 <%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 <%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+<%@ Register Src="~/commonForm/opte/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
+
 
 
 
@@ -129,6 +131,8 @@
             <!--include file="../commonForm/opte/BR_formA.ascx"--><!--承辦內容-->
             <uc1:BR_form runat="server" ID="BR_form" />
             <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
+            <uc1:PR_form runat="server" ID="PR_form" />
+            <!--include file="../commonForm/opte/PR_form.ascx"--><!--承辦內容-->
             <uc1:opte_upload_Form runat="server" ID="opte_upload_Form" />
             <!--include file="../commonForm/opte/opte_upload_Form.ascx"--><!--上傳文件-->
             <uc1:AP_form runat="server" ID="AP_form" />
@@ -223,6 +227,7 @@
         br_formA.loadDmt();
         br_form.init();
         br_form.loadOpt();
+        pr_form.init();
         upload_form.init();
     }
 
