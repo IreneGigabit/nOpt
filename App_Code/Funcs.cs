@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -163,6 +163,28 @@ public class Funcs {
     /// <param name="ud_flag">log_flag(U/D)</param>
     /// <param name="prgid">執行異動的prgid</param>
     /// <param name="table">執行異動的table,ex:要新增至 attach_opt_log 則傳入 attach_opt</param>
+    /// <param name="pKey_field">key值欄位名稱,用;分隔</param>
+    /// <param name="pKey_value">key值欄位值,用;分隔</param>
+    public static void insert_log_table(DBHelper conn, string ud_flag, string prgid, string table, string key_field, string key_value) {
+        Dictionary<string, string> pKey = new Dictionary<string, string>();
+
+        if (key_field.IndexOf(";") != 0) {
+            string[] arr_key_field = key_field.Split(';');
+            string[] arr_key_value = key_value.Split(';');
+
+            for (int i = 0; i < arr_key_field.Length; i++) {
+                pKey.Add(arr_key_field[i], arr_key_value[i]);
+            }
+        }
+        insert_log_table(conn, ud_flag, prgid, table, pKey);
+    }
+
+    /// <summary>
+    /// 寫入 Log 檔，適用於 log table 中有 ud_flag、ud_date、ud_scode、prgid 這些欄位者
+    /// </summary>
+    /// <param name="ud_flag">log_flag(U/D)</param>
+    /// <param name="prgid">執行異動的prgid</param>
+    /// <param name="table">執行異動的table,ex:要新增至 attach_opt_log 則傳入 attach_opt</param>
     /// <param name="pKey">key 值欄位名稱&值</param>
     public static void insert_log_table(DBHelper conn, string ud_flag, string prgid, string table, Dictionary<string, string> pKey) {
         string SQL = "";
@@ -215,6 +237,7 @@ public class Funcs {
         }
         conn.ExecuteNonQuery(usql);
     }
+
     #endregion
 
 }
