@@ -52,8 +52,7 @@
             SQL += ",''now_arcasenm,''now_rsclass,''renewal_agtname ";
             SQL += ",(select sc_name from sysctrl.dbo.scode s where s.scode=d.scode) scodename ";
             SQL += ",(select code_name from cust_code c where code_type='tcase_stat' and c.cust_code=d.now_stat) now_statnm ";
-            SQL += ",(select rs_detail from code_br b where cr='Y' and dept='" + Session["dept"] + "' and b.rs_type = d.arcase_type and b.rs_code=d.arcase) arcase ";
-            
+            SQL += ",(select rs_detail from code_br b where cr='Y' and dept='" + Session["dept"] + "' and b.rs_type = d.arcase_type and b.rs_code=d.arcase) arcase ";       
             SQL += ",(select rmark_code from custz z where z.cust_area=d.cust_area and z.cust_seq=d.cust_seq) rmarkcode ";
             SQL += "from ext d ";
             SQL += "where d.seq='" + pSeq + "' and d.seq1='" + pSeq1 + "' ";

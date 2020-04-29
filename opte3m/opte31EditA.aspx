@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -6,12 +6,6 @@
 <%@ Register Src="~/commonForm/opte/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
 <%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
 <%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
-
-
-
-
-
-
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -21,6 +15,8 @@
     protected int HTProgRight = 0;
 
     protected string opt_job_scode1 = "", opt_job_scode2 = "";
+
+    protected string btnEnd = "";
 
     protected string submitTask = "";
     protected string branch = "";
@@ -43,6 +39,8 @@
     protected string SELock = "true";
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
+    protected string show_ap_form = "N";//控制顯示判行內容欄位
+    protected string sameap_flag = "N";//判行和承辦人員是否為同一人
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -93,6 +91,29 @@
             opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
         }
 
+        //判行內容/品質評分欄位要不要顯示
+        if (End_flag == "Y") {
+            string dojob_scode = "";
+            using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false).Debug(Request["chkTest"] == "TEST")) {
+                string SQL = "select DISTINCT C.scode from scode_roles As C " +
+                "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' " +
+                "And C.prgid = 'opte31' " +
+                "Order By C.scode ";
+                object objResult = cnn.ExecuteScalar(SQL);
+                dojob_scode = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim().ToLower() : "";
+            }
+            //當為結案時,如果承辦人如為林雪貞
+            //則結辦後即可執行發文作業,
+            //所以判行須輸入的資料要出來
+            if (Sys.GetSession("scode").ToLower() == dojob_scode) {
+                //判行內容欄位要不要show的flag
+                show_ap_form = "Y";
+                //判行和承辦人員是否為同一人
+                sameap_flag = "Y";
+            }
+        }
+        
         //欄位開關
         if (prgid.IndexOf("opte31") > -1) {
             if (Back_flag != "B") {//不是退回
@@ -149,8 +170,11 @@
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
 	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
+    <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
+	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -192,7 +216,7 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td width="100%" align="center">
-		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
+		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opte31')" id="btnSaveSubmit">
 		<input type=button value="結辦" class="cbutton" onClick="formEndSubmit('U')" id="btnEndSubmit">
 		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">
     </td>
@@ -232,6 +256,10 @@
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
+        $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
+        $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
+        $("#tr_Popt_show1").show();
+
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
@@ -247,7 +275,6 @@
         $("#btnSaveSubmit").showFor($("#prgid").val()=="opte31");//[編修存檔]
         $("#btnEndSubmit").showFor($("#prgid").val()=="opte31_1");//[結辦]
         $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()!="opte31_1");//[結辦處理]
-        $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
 
         if($("#Back_flag").val() == "B"){
             settab("#br");
@@ -276,9 +303,20 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-
         br_formA.init();
         br_form.init();
+        back_form.init();
+        pr_form.init();
+        upload_form.init();
+        ap_form.init();
+
+        var jOpt = br_opte.opte[0];
+        $("#sopt_no").html(jOpt.opt_no);
+        //$("#Bseq").val(jOpt.bseq);
+        //$("#Bseq1").val(jOpt.bseq1);
+        //$("#btnBseq").click();
+        //$("#dfy_last_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
+        //$("#remark").val(jOpt.remark);
     }
 
     // 切換頁籤
@@ -395,7 +433,7 @@
     //重新抓取區所案件主檔資料(含申請人)
     function GetBranchData(){
         if (confirm("是否確定重新取得區所案件主檔資料？")) {
-            var url="../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=seq_ext&branch="  $("#Branch").val() + 
+            var url="../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=seq_ext&branch="+  $("#Branch").val() + 
             "&seq=" +$("#Bseq").val() + "&seq1=" + $("#Bseq1").val()+"&opt_sqlno="+ $("#opt_sqlno").val() + "&chkTest=" + $("#chkTest:checked").val();
             //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
             ActFrame.location.href = url;

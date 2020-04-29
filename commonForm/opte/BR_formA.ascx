@@ -95,7 +95,7 @@
 		    <input type="text" id="att_sql" name="att_sql">
 		</td>
 	</TR>
-	<TR style="display:">
+	<TR style="display:none">
 		<td class="lightbluetable"  align="right">交辦案性 :</td>
 		  <td class="whitetablebg"  align="left" colspan=3>結構分類：
 			    <select id="rs_class" name="rs_class" class="QLock"></select>
@@ -151,7 +151,12 @@
 
         $("#Branch").val("<%#branch%>");
 
-        //$("#tr_Popt_show1").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
+        if ("<%#submitTask%>" != "ADD") {
+            br_formA.loadOpt();
+            $("#btnBseq").click();
+        }
+
+        $("#tr_Popt_show1").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
         //$(".unlockADD").unlock($("#submittask").val()=="ADD");//新增分案解鎖
         //$(".showADD").showFor($("#submittask").val()=="ADD");//新增分案顯示
     }
@@ -164,7 +169,6 @@
             $("#Opt_no").val(jOpt.opt_no);
             $("#Bseq,#oldBseq").val(jOpt.bseq);
             $("#country").val(jOpt.country);
-            $("#Bseq1,#oldBseq1").val(jOpt.bseq1);
             $("#Bseq1,#oldBseq1").val(jOpt.bseq1);
             $("#in_scode").val(jOpt.in_scode);
             $("#scode_name").val(jOpt.scode_name);

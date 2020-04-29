@@ -246,6 +246,9 @@
 </html>
 
 <script language="javascript" type="text/javascript">
+    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
+    $(document).ajaxStop(function () { $.maskStop(); });
+
     if (!(window.parent.tt === undefined)) {
         window.parent.tt.rows = "0%,100%";
     }
@@ -253,10 +256,6 @@
     $("#chkTest").click(function (e) {
         $("#ActFrame").showFor($(this).prop("checked"));
     });
-
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
 
     $(function () {
         this_init();

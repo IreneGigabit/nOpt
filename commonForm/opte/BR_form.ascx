@@ -73,6 +73,8 @@
         br_form.getPrScode();//取得承辦人員
         br_form.getRsClass();//取得結構分類
         $("#pr_rs_class").triggerHandler("change");//依結構分類帶案性代碼
+
+        br_form.loadOpt();
     }
 
     br_form.loadOpt = function () {
