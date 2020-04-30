@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -185,9 +185,9 @@
         br_form.init();
 
         if ($("#submittask").val() != "ADD") {
-            br_formA.loadOpt();
-            br_form.loadOpt();
-            $("#btnBseq").click();
+            //br_formA.loadOpt();
+            //br_form.loadOpt();
+            //$("#btnBseq").click();
             $("#span_last_date0").showFor($("#span_last_date").html()!= "");
         } else {
             $("#Bseq1").val("_");
@@ -292,6 +292,7 @@
 
     //刪除分案(2)
     $("#btnDelSubmit").click(function () {
+        $("select,textarea,input").unlock();
         reg.submittask.value = "DEL";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
