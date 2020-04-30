@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_form" %>
+<%@ Control Language="C#" ClassName="ext_br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -74,7 +74,9 @@
         br_form.getRsClass();//取得結構分類
         $("#pr_rs_class").triggerHandler("change");//依結構分類帶案性代碼
 
-        br_form.loadOpt();
+        if ("<%#submitTask%>" != "ADD") {
+            br_form.loadOpt();
+        }
     }
 
     br_form.loadOpt = function () {
