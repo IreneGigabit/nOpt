@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Net.Mail"%>
@@ -392,7 +392,7 @@
     //Email通知承辦被退回
     private void Sendmail_back(DBHelper conn, string opt_sqlno, string pr_scode) {
         string Subject = "國內所商標爭救案件管理系統－爭救案件判行退回通知";
-        string strFrom = Session["scode"] + "@saint-island.com.tw";
+        string strFrom = Session["sc_name"] + "<" + Session["scode"] + "@saint-island.com.tw>";
         List<string> strTo = new List<string>();
         List<string> strCC = new List<string>();
         List<string> strBCC = new List<string>();
@@ -400,12 +400,12 @@
             case "web08":
                 strTo.Add(Session["scode"] + "@saint-island.com.tw");
                 strCC.Add(Session["scode"] + "@saint-island.com.tw");
-                Subject = "(web08測試)" + Subject;
+                Subject = Subject + "(web08測試)";
                 break;
             case "web10":
                 strTo.Add(Session["scode"] + "@saint-island.com.tw");
                 strCC.Add(Session["scode"] + "@saint-island.com.tw");
-                Subject = "(web10測試)" + Subject;
+                Subject = Subject + "(web10測試)";
                 break;
             default:
                 strTo.Add(pr_scode + "@saint-island.com.tw");
@@ -414,8 +414,8 @@
 
         string fseq = "", in_scode = "", in_scode_name = "";
         string ap_cname = "", appl_name = "", arcase_name = "", last_date = "";
-        SQL = "select Bseq,Bseq1,branch,in_scode,scode_name ";
-        SQL += ",appl_name,arcase_name,Last_date,ap_cname ";
+        SQL = "select Bseq,Bseq1,branch,country,in_scode,scode_name ";
+        SQL += ",appl_name,arcase_name,Last_date ";
         SQL += "from vbr_opte where opt_sqlno='" + opt_sqlno + "'";
         using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
             if (dr.Read()) {
@@ -424,7 +424,7 @@
                 in_scode_name = dr.SafeRead("scode_name", "");
                 appl_name = dr.SafeRead("appl_name", "");
                 arcase_name = dr.SafeRead("arcase_name", "");
-                last_date = dr.SafeRead("last_date", "");
+                last_date = Util.parsedate(dr.SafeRead("last_date", ""), "yyyy/M/d");
             }
         }
 
