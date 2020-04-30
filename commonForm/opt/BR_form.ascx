@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_form" %>
+<%@ Control Language="C#" ClassName="br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -72,9 +72,9 @@
             textFormat: "{scode}_{sc_name}"
         });
 
-        if ("<%#case_no%>" != "") {
-            br_form.loadOpt();
-        }
+        //if ("<%#case_no%>" != "") {
+            //br_form.loadOpt();
+        //}
         $("#span_last_date0").showFor($("#span_last_date").html()!= "");
     }
 
