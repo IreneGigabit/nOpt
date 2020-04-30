@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -361,6 +361,14 @@ public static class Util
 
 		iStr = DateTime.ParseExact(iStr.Trim(), "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
         return "'" + iStr + "'";
+    }
+    #endregion
+
+    #region parsedate - 將db讀出之日期(ex:2014/12/29 上午 12:00:00)轉成指定格式
+    public static string parsedate(string iStr, string format) {
+        if (iStr == null || iStr == "") return "";
+
+        return DateTime.ParseExact(iStr.Trim(), "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
     }
     #endregion
 
