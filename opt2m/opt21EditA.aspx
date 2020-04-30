@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
@@ -183,6 +183,11 @@
 
         br_formA.init();
         br_form.init();
+
+        if ($("#submittask").val() != "ADD") {
+            br_formA.loadOpt();
+            br_form.loadOpt();
+        }
     }
 
     // 切換頁籤
@@ -253,6 +258,7 @@
 
     //刪除分案(2)
     $("#btnDelSubmit").click(function () {
+        $("select,textarea,input").unlock();
         reg.submittask.value = "DEL";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
