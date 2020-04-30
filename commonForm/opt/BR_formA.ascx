@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_formA" %>
+<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -36,7 +36,7 @@
 	<tr id="tr_Popt_show1" style="display:none">
 		<td class="lightbluetable" valign="top"  align="right"><strong>案件編號：</strong></td>
 		<td class="whitetablebg" colspan="7" valign="top">
-			<input type="text" size="11" id="Opt_no" name="Opt_no" class="QLock" maxLength="10">
+			<input type="text" size="11" id="opt_no" name="opt_no" class="QLock" maxLength="10">
 		</td>
 	</tr>
 	<TR>
