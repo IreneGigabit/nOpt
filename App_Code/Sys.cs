@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -235,8 +235,9 @@ public class Sys
         MailMsg.BodyEncoding = Encoding.UTF8;
         MailMsg.IsBodyHtml = true;//郵件格式為HTML
 
-		SmtpClient client = new SmtpClient("192.192.10.30");
+		//SmtpClient client = new SmtpClient("192.192.10.30");
 		//SmtpClient client = new SmtpClient("sin22.saint-island.com.tw");
+        SmtpClient client = new SmtpClient("sin30.saint-island.com.tw");
         try {
             //client.ServicePoint.MaxIdleTime = 2;//連線可閒置時間(毫秒)
             //client.ServicePoint.ConnectionLimit = 1;//允許最大連線數
