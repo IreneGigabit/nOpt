@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -329,6 +329,7 @@
                 return false;
             }
         }
+
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
@@ -355,8 +356,9 @@
             $("#Preject_reason").focus();
             return false;
         }
-        $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
 
+        $("select,textarea,input").unlock();
+        $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
