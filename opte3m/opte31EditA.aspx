@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -171,10 +171,11 @@
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
 	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
-	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
     <input type="hidden" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
     <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="progid" name="progid">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -267,6 +268,7 @@
         $(".PLock").lock(<%#PLock%>);
         $(".PHide").lock(<%#PHide%>);
         $(".RLock").lock(<%#RLock%>);
+        $(".CLock").lock(<%#CLock%>);
         $(".BLock").lock(<%#BLock%>);
         $(".SLock").lock(<%#SLock%>);
         $(".SELock").lock(<%#SELock%>);
@@ -283,6 +285,10 @@
         }else{
             $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
             $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
+        }
+
+        if ($("#sameap_flag").val()=="Y"){
+            $("#btnSaveSubmit,#btnEndSubmit").val("結辦暨判行");
         }
 
         //取得案件資料
@@ -312,6 +318,7 @@
 
         var jOpt = br_opte.opte[0];
         $("#sopt_no").html(jOpt.opt_no);
+        //br_form.loadOpt();
         //$("#Bseq").val(jOpt.bseq);
         //$("#Bseq1").val(jOpt.bseq1);
         //$("#btnBseq").click();
@@ -345,7 +352,7 @@
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
         reg.target = "ActFrame";
         reg.submit();
     }
@@ -370,7 +377,7 @@
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
         reg.target = "ActFrame";
         reg.submit();
     }
@@ -401,8 +408,9 @@
                 $("#Preject_reason").focus();
                 return false;
             }
-            $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
 
+            $("select,textarea,input").unlock();
+            $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
             reg.submittask.value = "B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
             reg.target = "ActFrame";
