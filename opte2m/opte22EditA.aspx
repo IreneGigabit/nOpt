@@ -1,17 +1,11 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
-<%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
-<%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 <%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
 <%@ Register Src="~/commonForm/opte/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
-
-
-
-
-
-
+<%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
+<%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -26,7 +20,6 @@
     protected string opt_no = "";
     protected string case_no = "";
     protected string todo_sqlno = "";
-    protected string stat_code = "";
 
     protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
     protected string QLock = "true";//收費與接洽事項的控制
@@ -57,17 +50,17 @@
             HTProgCap = "出口爭救案判行作業";
             SLock = "false";
             ALock = "false";
-        } else if (prgid == "opte24") {
-            HTProgCap = "出口爭救案已判行維護作業";
-            if (stat_code == "YY") {//承辦內容_已判行未回稿確認的控制
-                SLock = "false";
-                ALock = "false";
-            }
         } else {
             HTProgCap = "出口爭救案內容查詢";
             submitTask = "Q";
         }
-        
+        //欄位開關
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
+        }
+
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -77,11 +70,6 @@
     }
 
     private void PageLayout() {
-        if (submitTask != "Q") {
-            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
-                SELock = "false";
-            }
-        }
     }
 
 </script>
@@ -121,8 +109,9 @@
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
 	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="progid" name="progid">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -149,7 +138,7 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td width="100%" align="center">
-		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U')" id="btnSaveSubmitU">
+		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U')" id="btnSaveSubmit">
 		<input type=button value="退回承辦" class="redbutton" id="btnBack1Submit">
     </td>
 </tr>
@@ -188,6 +177,10 @@
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
+        $("#tr_Popt_show1").show();
+        $("#tr_button1,#tr_button2").showFor($("#submittask").val()!="Q");//按鈕
+        $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
+
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
@@ -195,14 +188,12 @@
         $(".PLock").lock(<%#PLock%>);
         $(".PHide").lock(<%#PHide%>);
         $(".RLock").lock(<%#RLock%>);
+        $(".CLock").lock(<%#CLock%>);
         $(".BLock").lock(<%#BLock%>);
         $(".SLock").lock(<%#SLock%>);
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
-
-        $("#tr_button1,#tr_button2").showFor($("#submittask").val()!="Q");//按鈕
-        $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
 
         //取得案件資料
         $.ajax({
@@ -222,13 +213,14 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-
         br_formA.init();
-        br_formA.loadDmt();
         br_form.init();
-        br_form.loadOpt();
+        back_form.init();
         pr_form.init();
         upload_form.init();
+        ap_form.init();
+
+        $("#sopt_no").html(br_opte.opte[0].opt_no);
     }
 
     // 切換頁籤
@@ -253,18 +245,6 @@
 
     //判行
     function formSaveSubmit(dowhat){
-        settab("#br");
-
-        if (dowhat=="U"){
-            //若由北京聖島承辦，則必須要有對方號，才能判行
-            if ($("#pr_branch").val()=="BJ"){
-                if($("#tfzd_your_no").val()==""){
-                    alert("無對方號，請重新抓取區所案件主檔資料或自行補入對方號!");
-                    return false;
-                }
-            }
-        }
-
         if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
             if(!confirm("是否確定不輸入核准時數？？")) {
                 $("#PRY_hour").focus();
@@ -278,6 +258,7 @@
                 return false;
             }
         }
+        
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
@@ -286,58 +267,38 @@
         reg.submit();
     }
 
-    //退回分案(1)
+    //退回承辦(1)
     $("#btnBack1Submit").click(function () {
-        settab("#br");
-
-        if (confirm("是否確定退回重新分案？？")) {
-            $("#tr_button1,#tabpr,#tabSend").hide();
+        if (confirm("是否確定退回重新承辦？？")) {
+            $("#tr_button1,#tabAP").hide();
             $("#tr_button2,#tabreject").show();
         }else{
-            $("#tr_button1,#tabpr,#tabSend").show();
+            $("#tr_button1,#tabAP").show();
             $("#tr_button2,#tabreject").hide();
         }
     });
 
     //退回(2)
     $("#btnBackSubmit").click(function () {
-        var doback=true;
-        if ($("#Back_flag").val() == "B"){
-            doback=confirm("是否確定退回重新分案？？");
+        if ($("#Preject_reason").val() == "") {
+            alert("請輸入退回原因！");
+            $("#Preject_reason").focus();
+            return false;
         }
 
-        if (doback){
-            if ($("#Preject_reason").val() == "") {
-                alert("請輸入退回原因！");
-                $("#Preject_reason").focus();
-                return false;
-            }
-            $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
-
-            reg.submittask.value = "B";
-            reg.action = "<%=HTProgPrefix%>_Update.aspx";
-            reg.target = "ActFrame";
-            reg.submit();
-        }
+        $("select,textarea,input").unlock();
+        $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
+        reg.submittask.value = "B";
+        reg.action = "<%=HTProgPrefix%>_Update.aspx";
+        reg.target = "ActFrame";
+        reg.submit();
     });
 
     //取消
     $("#btnResetSubmit").click(function () {
-        if($("#Back_flag").val() != "B"){//不是退回作業才開關
-            $("#tabPR,#tabSend,#tr_button1").show();
-            $("#tr_button2,#tabreject").hide();
-        }
+        $("select,textarea,input").unlock();
+        $("#tr_button1,#tabAP").show();
+        $("#tr_button2,#tabreject").hide();
         $("#tr_button1 input:button").unlock();
-    });
-
-    //簽核人員
-    $("input[name='ap_type']").click(function () {
-        if($("input[name='ap_type']:checked").val()=="1"){
-            $("#job_scode1").unlock();
-            $("#job_scode2").lock();
-        }else{
-            $("#job_scode1").lock();
-            $("#job_scode2").unlock();
-        }
     });
 </script>
