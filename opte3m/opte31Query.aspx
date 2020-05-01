@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -94,7 +94,7 @@
 	        </td>
 	        <td class="text9">
 		        ◎案件編號:
-			        <input type="text" name="qryopt_no" id="qryopt_no" size="10" maxLength="10">
+			        <input type="text" name="qryopt_no" id="qryopt_no" size="11" maxLength="10">
 	        </td>
 	        <td class="text9">
 		        ◎區所案件編號:
