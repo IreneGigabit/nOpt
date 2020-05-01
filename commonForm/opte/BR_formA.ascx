@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_formA" %>
+<%@ Control Language="C#" ClassName="ext_br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -168,7 +168,7 @@
         var jOpt = br_opte.opte[0];
         if (jOpt!=null) {
             $("#Branch,#oldBranch").val(jOpt.branch);
-            $("#Opt_no").val(jOpt.opt_no);
+            $("#opt_no").val(jOpt.opt_no);
             $("#Bseq,#oldBseq").val(jOpt.bseq);
             $("#country").val(jOpt.country);
             $("#Bseq1,#oldBseq1").val(jOpt.bseq1);
