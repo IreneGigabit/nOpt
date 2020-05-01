@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
-    protected string HTProgCap = "爭救案官發作業‧-入檔";//功能名稱
+    protected string HTProgCap = "區所抽件確認作業‧-入檔";//功能名稱
     protected string HTProgPrefix = "opt51";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -84,11 +84,17 @@
                     conn.ExecuteNonQuery(SQL);
 
                     //[區所]
+                    //抓區所承辦
+                    SQL = "select pr_scode from step_dmt ";
+                    SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
+                    object objResult = connB.ExecuteScalar(SQL);
+                    string pr_scode = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim().ToLower() : "";
+
                     SQL = "update step_dmt set opt_stat='D' where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     connB.ExecuteNonQuery(SQL);
 
                     //通知區所抽件完成
-                    CreateMail(conn, pre_sqlno, todo_scode, ReqVal.TryGet("case_no" + i, ""), ReqVal.TryGet("branch" + i, ""));
+                    CreateMail(conn, pr_scode, ReqVal.TryGet("case_no" + i, ""), ReqVal.TryGet("branch" + i, ""));
 
                     //發完mail才能更新註記,否則找不到
                     SQL = "Update case_opt Set mark='D'";
@@ -121,7 +127,7 @@
     }
 
 
-    private void CreateMail(DBHelper conn, string pre_sqlno, string todo_scode,string case_no,string branch) {
+    private void CreateMail(DBHelper conn, string pr_scode, string case_no, string branch) {
         string fseq = "", in_scode = "", in_scode_name = "", cust_area = "", cust_seq = "";
         string ap_cname = "", appl_name = "", arcase_name = "", last_date = "";
         SQL = "select Bseq,Bseq1,branch,in_scode,scode_name,cust_area,cust_seq ";
@@ -129,7 +135,6 @@
         SQL += "from vbr_opt where case_no='" + case_no + "' and branch='" + branch + "' ";
         using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
             if (dr.Read()) {
-                Response.Write("**111**<HR>");
                 fseq = Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
                 in_scode = dr.SafeRead("in_scode", "");
                 in_scode_name = dr.SafeRead("scode_name", "");
@@ -139,8 +144,6 @@
                 appl_name = dr.SafeRead("appl_name", "");
                 arcase_name = dr.SafeRead("arcase_name", "");
                 last_date = dr.SafeRead("last_date", "");
-            } else {
-                Response.Write("**222**<HR>");
             }
         }
 
@@ -161,7 +164,7 @@
                 Subject = "(web10)" + Subject;
                 break;
             default:
-                strTo.Add(todo_scode + "@saint-island.com.tw");
+                strTo.Add(pr_scode + "@saint-island.com.tw");
                 strCC.Add(in_scode + "@saint-island.com.tw");
                 strCC.Add(Session["scode"] + "@saint-island.com.tw");
                 break;
