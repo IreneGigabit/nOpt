@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -13,6 +13,8 @@
 <%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
 <%@ Register Src="~/commonForm/opte/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
 <%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+<%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -121,7 +123,7 @@
 	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
 	<input type="text" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
 	<input type="text" id="bstep_grade" name="bstep_grade">
-	<input type="text" id="submittask" name="submittask">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 	<input type="text" id="progid" name="progid">
 	<input type="text" id="stat_code" name="stat_code" value="<%=stat_code%>">
@@ -179,6 +181,8 @@
                 <!--include file="../commonForm/opte/opte_upload_Form.ascx"--><!--上傳文件-->
                 <uc1:Send_form runat="server" ID="Send_form" />
                 <!--include file="../commonForm/opte/Send_form.ascx"--><!--回稿交辦事項-->
+                <uc1:AP_form runat="server" ID="AP_form" />
+                <!--include file="../commonForm/opte/AP_form.ascx"--><!--判行資料-->
                 <uc1:Back_form runat="server" ID="Back_form" />
                 <!--include file="../commonForm/opte/Back_form.ascx"--><!--退回原因-->
            </div>
@@ -280,6 +284,7 @@
         pr_form.init();
         upload_form.init();
         send_form.init();
+        ap_form.init();
         back_form.init();
 
         if($("#send_dept").val()==""){
