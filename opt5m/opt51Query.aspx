@@ -176,23 +176,19 @@
 
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
-    $("#qryBranch").getOption({//區所別
-        url: "../ajax/_GetSqlDataCnn.aspx",
-        data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
-        valueFormat: "{branch}",
-        textFormat: "{branch}_{branchname}"
-    });
-
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
-    });
-
     $(function () {
+        $("#qryBranch").getOption({//區所別
+            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
+            valueFormat: "{branch}",
+            textFormat: "{branch}_{branchname}"
+        });
+
         $("input.dateField").datepick();
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
 
         $("#btnSrch").click();
     });

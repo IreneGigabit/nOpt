@@ -168,19 +168,14 @@
 </html>
 
 <script language="javascript" type="text/javascript">
-    if (!(window.parent.tt === undefined)) {
-        window.parent.tt.rows = "20%,80%";
-    }
-
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
-    });
-
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
-
     $(function () {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "20%,80%";
+        }
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
+
         this_init();
     });
 
@@ -211,7 +206,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/json/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

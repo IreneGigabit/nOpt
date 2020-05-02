@@ -42,18 +42,21 @@ public class Sys
 		return HttpContext.Current.Request.ApplicationPath;
 	}
 
-	/// <summary>  
-	/// 取得ASCX在伺服器上的路徑
-	/// </summary>  
+    /// <summary>  
+    /// 取得ASCX在伺服器上的路徑
+    /// </summary>  
     public static string GetAscxPath(System.Web.UI.Control control) {
-		if (IsDebug()) {
+        if (IsDebug()) {
             //return string.Format("\\{0}\\{1}.ascx<hr class='style-one'/>", dir, control.GetType().ToString().Replace("ASP.", ""))
-			//	.Replace(HttpContext.Current.Server.MapPath("/"), "");
-            return string.Format("{0}/{1}.ascx<hr class='style-one'/>", control.TemplateSourceDirectory, control.TemplateControl.ID);
-		} else {
-			return "";
-		}
-	}
+            //	.Replace(HttpContext.Current.Server.MapPath("/"), "");
+            if ((control.TemplateControl.ID??"") != "")
+                return string.Format("{0}/{1}.ascx<hr class='style-one'/>", control.TemplateSourceDirectory, control.TemplateControl.ID);
+            else
+                return string.Format("{0}/{1}.ascx<hr class='style-one'/>", control.TemplateSourceDirectory, control.GetType().ToString().Replace("ASP.", ""));
+        } else {
+            return "";
+        }
+    }
 
 	public static bool IsAdmin() {
 		bool b = (GetSession("scode").ToLower() == "admin" || GetSession("LoginGrp").ToLower().IndexOf("admin") > -1);

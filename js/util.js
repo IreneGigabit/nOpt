@@ -304,3 +304,5 @@ function showBlockUI(param) {
     }
     //#endregion
 })(jQuery);
+$(document).ajaxStart(function () { $.maskStart("資料載入中"); });
+$(document).ajaxStop(function () { $.maskStop(); });

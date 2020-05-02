@@ -176,11 +176,11 @@
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "20%,80%";
         }
-        this_init();
-    });
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
 
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
+        this_init();
     });
 
     var br_opte = {};
@@ -201,7 +201,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/json/OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

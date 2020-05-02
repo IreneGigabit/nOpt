@@ -148,20 +148,6 @@
 <script language="javascript" type="text/javascript">
     var apcust_re_form={};
     apcust_re_form.init = function () {
-        /*
-        $("select[id='apclass_##']").getOption({//申請人種類
-            url: "../ajax/_GetSqlDataBranch.aspx",
-            data: { branch: "<%#branch%>", sql: "Select cust_code,code_name from cust_code where code_type='apclass' order by sortfld" },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}"
-        });
-        $("select[id='ap_country_##']").getOption({//申請人國籍
-            url: "../ajax/_GetSqlDataCnn.aspx",
-            data: { sql: "SELECT coun_code, coun_c FROM country where markb<>'X' ORDER BY coun_code" },
-            valueFormat: "{coun_code}",
-            textFormat: "{coun_c}"
-        });
-        */
         var jCaseap = br_opt.caseap;
         $("#tabap_re>tbody").empty();
         $.each(jCaseap, function (i, item) {

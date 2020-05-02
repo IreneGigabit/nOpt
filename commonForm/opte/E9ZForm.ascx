@@ -23,8 +23,9 @@
 <input type=hidden id=tfz1_main_flag name=tfz1_main_flag value="Y1"><!--記錄用案件申請人或異動資料update ext_apcust-->
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
-		<TD align=center colspan=8 class=lightbluetable1><font color=white>交&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;說&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="button" value="重新抓取區所交辦說明資料" class="c1button ALock"  id="GetBranch_remark_button" name="GetBranch_remark_button">
+		<TD align=center colspan=8 class=lightbluetable1>
+            <font color=white>交&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;說&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;明</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		    <input type="button" value="重新抓取區所交辦說明資料" class="c1button ALock"  id="GetBranch_remark_button" name="GetBranch_remark_button">
 		</TD>
 	</tr>
 	<tr>
@@ -118,7 +119,7 @@
     //重新抓取區所交辦資料
     $("#GetBranch_remark_button").click(function () { 
         if (confirm("是否確定重新取得區所交辦說明資料？")) {
-            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=remark&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + 
+            var url = getRootPath() + "/json/get_branchdata.aspx?prgid=<%=prgid%>&datasource=remark&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + 
                 "&opt_sqlno=" + $("#opt_sqlno").val() + "&step_grade=" + $("#bstep_grade").val() + "&seq=" + $("#tfzb_seq").val() + "&seq1=" + $("#tfzb_seq1").val() + "&chkTest=" + $("#chkTest:checked").val();
             //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
             ActFrame.location.href = url;

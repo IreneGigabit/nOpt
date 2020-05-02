@@ -165,25 +165,21 @@
 
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
-    $("#qryPr_scode").getOption({//爭議組承辦人員
-        url: "../ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
-        valueFormat: "{scode}",
-        textFormat: "{scode}_{sc_name}"
-    })
-
-    $("#qryBranch").getOption({//區所別
-        url: "../ajax/_GetSqlDataCnn.aspx",
-        data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
-        valueFormat: "{branch}",
-        textFormat: "{branch}_{branchname}"
-    });
-
     $(function () {
+        $("#qryPr_scode").getOption({//爭議組承辦人員
+            url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
+            valueFormat: "{scode}",
+            textFormat: "{scode}_{sc_name}"
+        })
+
+        $("#qryBranch").getOption({//區所別
+            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
+            valueFormat: "{branch}",
+            textFormat: "{branch}_{branchname}"
+        });
+
         $("input.dateField").datepick();
-        //get_ajax_selection("select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort")
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
 
         $("#btnSrch").click();

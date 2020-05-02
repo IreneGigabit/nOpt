@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -246,18 +246,14 @@
 </html>
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
-    if (!(window.parent.tt === undefined)) {
-        window.parent.tt.rows = "0%,100%";
-    }
-
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
-    });
-
     $(function () {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "0%,100%";
+        }
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
+
         this_init();
     });
 
@@ -306,7 +302,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/json/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

@@ -104,20 +104,6 @@
 <script language="javascript" type="text/javascript">
     var send_form = {};
     send_form.init = function () {
-        /*
-        $("#send_cl,#send_cl1").getOption({//發文對象/單位副本
-            url: "../ajax/_GetSqlDataBranch.aspx",
-            data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_CL'" },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}"
-        });
-        $("#send_sel").getOption({//官方號碼
-            url: "../ajax/_GetSqlDataBranch.aspx",
-            data: { branch: "<%#branch%>", sql: "select cust_code,code_name from cust_code where code_type='SEND_SEL'" },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}"
-        });*/
-
         send_form.loadOpt();
         //$(".LockB").lock($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");
     }
@@ -126,7 +112,7 @@
         var jOpt = br_opt.opt[0];
 
         $("#rs_class").getOption({//結構分類
-            url: "../ajax/_GetSqlDataBranch.aspx",
+            url: getRootPath() + "/json/_GetSqlDataBranch.aspx",
             data: {
                 branch: "<%#branch%>"
                 , sql: "select cust_code,code_name from cust_code where code_type='" + jOpt.rs_type + "' and mark is null and mark1='B' " +
@@ -137,7 +123,7 @@
         });
 
         $("#rs_code").getOption({//案性
-            url: "../ajax/_GetSqlDataBranch.aspx",
+            url: getRootPath() + "/json/_GetSqlDataBranch.aspx",
             data: {
                 branch: "<%#branch%>"
 				, sql: "select rs_code,rs_detail,rs_class from code_br where dept='<%#Session["Dept"]%>' and gs='Y' " +
@@ -163,7 +149,7 @@
         if (jOpt.rs_code !="") sql+= " and a.rs_code = '" +jOpt.rs_code + "' ";
         sql+=" order by c.sql";
         $("#act_code").getOption({
-            url: "../ajax/_GetSqlDataBranch.aspx",
+            url: getRootPath() + "/json/_GetSqlDataBranch.aspx",
             data: {
                 branch: "<%#branch%>"
 				, sql: sql
@@ -242,7 +228,7 @@
     //依結構分類帶案性代碼
     $("#rs_class").change(function () {
         $("#rs_code").getOption({//案性代碼
-            url: "../ajax/RsCode.aspx",
+            url: getRootPath() + "/json/RsCode.aspx",
             data: { branch: "<%#branch%>", cgrs: "GR", rs_class: $("#rs_class").val() },
             valueFormat: "{rs_code}",
             textFormat: "{rs_detail}",
@@ -253,7 +239,7 @@
     //依案性帶處理事項/規費收費標準
     $("#rs_code").change(function () {
         $("#act_code").getOption({//處理事項
-            url: "../ajax/ActCode.aspx",
+            url: getRootPath() + "/json/ActCode.aspx",
             data: { branch: "<%#branch%>", cgrs: "GS", rs_class: $("#rs_class").val(), rs_code: $("#rs_code").val() },
             valueFormat: "{act_code}",
             textFormat: "{act_code_name}",
@@ -263,7 +249,7 @@
         //規費收費標準
         $.ajax({
             type: "get",
-            url: getRootPath() + "/ajax/Fee.aspx",
+            url: getRootPath() + "/json/Fee.aspx",
             data: { branch: "<%#branch%>", country: "T", arcase: $("#rs_code").val(), type: "Fee" },
             async: false,
             cache: false,
@@ -318,7 +304,7 @@
     send_form.getcode_br_agt_no=function(){
         $.ajax({
             type: "get",
-            url: getRootPath() + "/ajax/rsagt_no.aspx",
+            url: getRootPath() + "/json/rsagt_no.aspx",
             data: { branch: "<%#branch%>", cgrs: "GS", rs_type:$("#rs_type").val(),rs_class: $("#rs_class").val(),rs_code: $("#rs_code").val() },
             async: false,
             cache: false,

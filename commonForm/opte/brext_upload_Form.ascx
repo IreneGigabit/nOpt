@@ -115,7 +115,7 @@
     //重新抓取區所上傳文件
     $("#GetBranch_attach_button").click(function () {
         if (confirm("是否確定重新取得區所上傳文件資料？")) {
-            var url = "../AJAX/get_branchdata.aspx?prgid=<%=prgid%>&datasource=attach&branch=" + $("#Branch").val() +
+            var url = getRootPath() + "/json/get_branchdata.aspx?prgid=<%=prgid%>&datasource=attach&branch=" + $("#Branch").val() +
                 "&case_no=" + $("#case_no").val() + "&opt_sqlno=" + $("#opt_sqlno").val() + "&chkTest=" + $("#chkTest:checked").val();
             //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
             ActFrame.location.href = url;

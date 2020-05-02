@@ -23,7 +23,9 @@
 <%=Sys.GetAscxPath(this)%>
 <table border="0" id="tabPR" class="bluetable" cellspacing="1" cellpadding="2" style="font-size: 9pt" width="100%">		
 	<Tr>
-		<TD align=center colspan=4 class=lightbluetable1><font color="white">承&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;內&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;容</font></TD>
+		<TD align=center colspan=4 class=lightbluetable1>
+            <font color="white">承&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;內&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;容</font>
+		</TD>
 	</TR>
 	<TR id="tr_pr_date">
 		<td class="lightbluetable"  align="right" nowrap>承辦完成日期 :</td>

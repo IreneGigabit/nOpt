@@ -18,7 +18,7 @@
     protected string seq = "";
     protected string seq1 = "";
 
-    //http://web08/nOpt/AJAX/OptData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
+    //http://web08/nOpt/json/OptData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
 
     protected void Page_Load(object sender, EventArgs e) {
         strConnB = Conn.OptB(Request["branch"]);

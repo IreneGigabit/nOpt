@@ -207,9 +207,6 @@
 </html>
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
     $(function () {
         this_init();
     });

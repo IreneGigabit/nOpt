@@ -1,4 +1,4 @@
-<%@ Control Language="C#" ClassName="ext_br_formA" %>
+﻿<%@ Control Language="C#" ClassName="ext_br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -35,7 +35,9 @@
 <input type="text" id=br_apnum name=br_apnum value=0><!--進度筆數-->
 <table id=br_tab border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
-		<TD align=center colspan=4 class=lightbluetable1><font color="white">工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font></TD>
+		<TD align=center colspan=4 class=lightbluetable1>
+            <font color="white">工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font>
+		</TD>
 	</TR>
 	<tr id="tr_Popt_show1" style="display:none">
 		<td class="lightbluetable" valign="top"  align="right"><strong>案件編號：</strong></td>
@@ -130,19 +132,19 @@
     var br_formA = {};
     br_formA.init = function () {
         $("#Branch").getOption({//區所別
-            url: "../ajax/_GetSqlDataCnn.aspx",
+            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
             data: { sql: "select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort" },
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"
         });
         $("#agt_no").getOption({//出名代理人
-            url: "../ajax/LookupDataBranch.aspx",
+            url: getRootPath() + "/json/LookupDataBranch.aspx",
             data: { type: "getagtdata", branch: "<%#branch%>" },
             valueFormat: "{agt_no}",
             textFormat: "{strcomp_name}{agt_name}"
         });
         $("#Arcase").getOption({//交辦案性
-            url: "../ajax/LookupDataBranch.aspx",
+            url: getRootPath() + "/json/LookupDataBranch.aspx",
             data: { type: "getarcasedata", branch: "<%#branch%>" },
             valueFormat: "{rs_code}",
             textFormat: "{rs_codenm}---{rs_detail}",
@@ -211,7 +213,7 @@
         //取得區所案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/ExtData.aspx?branch=" + $("#Branch").val() + "&seq=" + $("#Bseq").val() + "&seq1=" + $("#Bseq1").val(),
+            url: getRootPath() + "/json/ExtData.aspx?branch=" + $("#Branch").val() + "&seq=" + $("#Bseq").val() + "&seq1=" + $("#Bseq1").val(),
             async: false,
             cache: false,
             success: function (json) {

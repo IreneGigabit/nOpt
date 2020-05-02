@@ -57,24 +57,15 @@
 <script language="javascript" type="text/javascript">
     var br_form = {};
     br_form.init = function () {
-        /*
-        $("#pr_branch").getOption({//承辦區所別
-            url: "../ajax/_GetSqlData.aspx",
-            data: { sql: "select cust_code,code_name from cust_code where code_type='OBranch'" },
-            valueFormat: "{cust_code}",
-            textFormat: "{code_name}",
-            showEmpty: false,
-            setValue: "B"
-        });*/
         $("#pr_scode").getOption({//爭議組承辦人員
-            url: "../ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
+            url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}"
         });
 
-        //if ("<%#case_no%>" != "") {
-            //br_form.loadOpt();
-        //}
+        if ("<%#submitTask%>" != "ADD") {
+            br_form.loadOpt();
+        }
         $("#span_last_date0").showFor($("#span_last_date").html()!= "");
     }
 

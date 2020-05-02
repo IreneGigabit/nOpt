@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -212,11 +212,8 @@
 
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
     $("#qryBranch").getOption({//區所別
-        url: "../ajax/_GetSqlDataCnn.aspx",
+        url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
         data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
         valueFormat: "{branch}",
         textFormat: "{branch}_{branchname}"

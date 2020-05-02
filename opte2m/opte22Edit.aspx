@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -214,19 +214,15 @@
 </html>
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
-    if (!(window.parent.tt === undefined)) {
-        window.parent.tt.rows = "0%,100%";
-    }
-
     $(function () {
-        this_init();
-    });
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "0%,100%";
+        }
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
 
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
+        this_init();
     });
 
     var br_opte = {};
@@ -255,7 +251,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/json/OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

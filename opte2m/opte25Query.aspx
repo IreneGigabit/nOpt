@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -63,6 +63,7 @@
 		        ◎作業選項:
                 <label><input type="radio" name="qrytodo" value="copy" checked>未複製</label>
 		         <label><input type="radio" name="qrytodo" value="recopy">已複製</label>
+		        <input type="button" id="btnSrch" value ="查詢" class="cbutton" />
 	        </td>
         </tr>
         <tr>
@@ -72,21 +73,11 @@
 			    <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
 	        </td>
 	        <td class="text9">
-		        ◎交辦註銷日期:
-                <input type="text" name="qryinput_dateS" id="qryinput_dateS" class="dateField" value="" size="10" /> ~
-                <input type="text" name="qryinput_dateE" id="qryinput_dateE" class="dateField" value="" size="10" />
-	        </td>
-	        <td class="text9">
 		        ◎分案日期:
                 <input type="text" name="qryopt_in_dateS" id="qryopt_in_dateS" class="dateField" size="10" maxLength="10"> ~
                 <input type="text" name="qryopt_in_dateE" id="qryopt_in_dateE" class="dateField" size="10" maxLength="10">
 	        </td>
         </tr>
-        <tr>
-	        <td class="text9">
-		        <input type="button" id="btnSrch" value ="查詢" class="cbutton" />
-	        </td>
-        </tr>	
         </table>
     </div>
 
@@ -187,23 +178,19 @@
 
 
 <script language="javascript" type="text/javascript">
-    $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
-    $(document).ajaxStop(function () { $.maskStop(); });
-
-    $("#qryBranch").getOption({//區所別
-        url: "../ajax/_GetSqlDataCnn.aspx",
-        data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
-        valueFormat: "{branch}",
-        textFormat: "{branch}_{branchname}"
-    });
-
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
-    });
-
     $(function () {
+        $("#qryBranch").getOption({//區所別
+            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
+            valueFormat: "{branch}",
+            textFormat: "{branch}_{branchname}"
+        });
+
         $("input.dateField").datepick();
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
 
         $("#btnSrch").click();
     });

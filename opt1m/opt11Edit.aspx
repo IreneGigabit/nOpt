@@ -171,14 +171,14 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td align="center">
-        <input type=button value ="收件確認" class="cbutton" id="btnsearchSubmit">
-        <input type=button value ="退回區所" class="redbutton" id="btnback1Submit">
+        <input type=button value="收件確認" class="cbutton" id="btnsearchSubmit">
+        <input type=button value="退回區所" class="redbutton" id="btnback1Submit">
     </td>
 </tr>
 <tr id="tr_button2" style="display:none">
     <td align="center">
-        <input type=button value ="退回" class="redbutton" id="btnbackSubmit">
-        <input type=button value ="取消" class="c1button" id="btnresetSubmit">
+        <input type=button value="退回" class="redbutton" id="btnbackSubmit">
+        <input type=button value="取消" class="c1button" id="btnresetSubmit">
     </td>
 </tr>
 </table>
@@ -192,11 +192,11 @@
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "20%,80%";
         }
-        this_init();
-    });
+        $("#chkTest").click(function (e) {
+            $("#ActFrame").showFor($(this).prop("checked"));
+        });
 
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
+        this_init();
     });
 
     var br_opt = {};
@@ -219,7 +219,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/AJAX/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/json/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {

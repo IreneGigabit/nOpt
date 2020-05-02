@@ -19,7 +19,9 @@
 <%=Sys.GetAscxPath(this)%>
 <table border="0" id=tabSend class="bluetable" cellspacing="1" cellpadding="2" width="100%">		
 	<Tr>
-		<TD align=center colspan=6 class=lightbluetable1><font color="white">回&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;稿&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;事&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;項</font></TD>
+		<TD align=center colspan=6 class=lightbluetable1>
+            <font color="white">回&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;稿&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;事&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;項</font>
+		</TD>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>回稿代碼 :</td>
@@ -39,7 +41,7 @@
     var send_form = {};
     send_form.init = function () {
         $("#send_code").getOption({//回稿代碼
-            url: "../ajax/_GetSqlData.aspx",
+            url: getRootPath() + "/json/_GetSqlData.aspx",
             data: { branch: "<%#branch%>", sql: "Select tf_code,tf_name from tfcode_opt where tf_class='send_br' order by tf_code" },
             valueFormat: "{tf_code}",
             textFormat: "{tf_name}"
@@ -60,7 +62,7 @@
         //規費收費標準
         $.ajax({
             type: "get",
-            url: getRootPath() + "/ajax/_GetSqlData.aspx",
+            url: getRootPath() + "/json/_GetSqlData.aspx",
             data: { sql:searchSql},
             async: false,
             cache: false,
