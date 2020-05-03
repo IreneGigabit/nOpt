@@ -95,10 +95,10 @@
 
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
-                //檔案路徑
-                page.pagedTable.Rows[i]["pdf_path"] = page.pagedTable.Rows[i].SafeRead("attach_path", "");
+                //檢視檔案路徑session("webservername") & trim(RSreg("attach_path"))
+                page.pagedTable.Rows[i]["pdf_path"] = Sys.Host+ page.pagedTable.Rows[i].SafeRead("attach_path", "").Replace("\\","/").Replace("/opt/","/nopt/");
                 //檔案大小
-                page.pagedTable.Rows[i]["pdfsize"] = (Convert.ToInt32("0" + page.pagedTable.Rows[i].SafeRead("attach_path", "")) / 1024) + 1;
+                page.pagedTable.Rows[i]["pdfsize"] = (Convert.ToInt32("0" + page.pagedTable.Rows[i].SafeRead("attach_size", "")) / 1024) + 1;
 
                 if((Request["qrytodo"] ?? "") == "recopy") {
                     if(Util.parsedate(page.pagedTable.Rows[i].SafeRead("attach_datebj", ""), "yyyy/M/d") == DateTime.Today.ToString("yyyy/M/d")) {

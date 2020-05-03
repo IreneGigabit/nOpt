@@ -58,6 +58,13 @@ function NulltoEmpty(s) {
 }
 //#endregion
 
+//#region 四捨五入
+function roundX(val, pos) {
+    return Math.round(val * Math.pow(10, pos)) / Math.pow(10, pos);
+    //return Math.round(Math.round(val * Math.pow(10, (pos || 0) + 1)) / 10) / Math.pow(10, (pos || 0));
+}
+//#endregion
+
 //#region dateReviver
 //json日期格式返回new Date格式
 //dateConvert(jOpt.last_date);

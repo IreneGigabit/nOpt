@@ -226,7 +226,7 @@
 	        <input type="radio" id="Contract_no_Type_M" name="Contract_no_Type" value="M" class="QLock">總契約書
 		    <span id="span_btn_contract" style="display:none">
 			    <INPUT TYPE=text id=Mcontract_no NAME=Mcontract_no SIZE=10 MAXLENGTH=10 class="gsedit">
-			    <input type=button class="sgreenbutton QLock" name="btn_contract" value="查詢總契約書">
+			    <input type=button class="greenbutton QLock" name="btn_contract" value="查詢總契約書">
 			    +客戶案件委辦書
 		    </span>
 		</TD>

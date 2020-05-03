@@ -470,7 +470,15 @@ input.rbutton {
 	border-color: #8df #009 #009 #8df;
 	filter:progid:DXImageTransform.Microsoft.Gradient (GradientType=0,StartColorStr='#ffdd2200',EndColorStr='#ff662200');
 }
-
+input.greenbutton {
+	color:#eaf9f5;
+    cursor: pointer;
+	font: small 84% Verdana, Arial;
+    padding: 3px 4px 1px 4px;
+	background-color:#006666;
+	border: solid 1px;
+	border-color: #8df #009 #009 #8df;
+}
 input.redbutton
 {
 	color:white;
