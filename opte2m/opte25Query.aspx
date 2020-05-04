@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -111,14 +111,13 @@
 	    <font color="red">=== 目前無資料，請先輸入區所案件編號再查詢 ===</font>
     </div>
 
-    <input type="text" id="submittask" name="submittask">
+    <input type="hidden" id="submittask" name="submittask">
     <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	    <thead>
           <Tr>
-
             <td class="lightbluetable" nowrap align="center" style="cursor: pointer;" Onclick="checkall()">
 			    <span id="chk_text">全選</span>
-			    <input type="text" id="chk_flag" name="chk_flag" value=""><!--記載下次狀態為「全選」或「全不選」-->
+			    <input type="hidden" id="chk_flag" name="chk_flag" value=""><!--記載下次狀態為「全選」或「全不選」-->
 	        </td>
 	        <td  class="lightbluetable" nowrap align="center">案件編號</td>
 	        <td  class="lightbluetable" nowrap align="center">區所案件編號</td>
@@ -132,45 +131,44 @@
          </tr>
 	    </thead>
 	    <tfoot style="display:none">
-	    <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-		    <td class="whitetablebg" align="center">
-                <input type=checkbox id="ckbox_{{nRow}}" name="ckbox_{{nRow}}" onclick="chkclick('{{nRow}}')">
-                <input type="text" id="hchk_flag_{{nRow}}" name="hchk_flag_{{nRow}}" value="N">
-		        <input type="text" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
-		        <input type="text" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
-		        <input type="text" id="attach_sqlno_{{nRow}}" name="attach_sqlno_{{nRow}}" value="{{attach_sqlno}}">
-		        <input type="text" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
-		        <input type="text" id="Bseq_{{nRow}}" name="Bseq_{{nRow}}" value="{{bseq}}">
-		        <input type="text" id="Bseq1_{{nRow}}" name="Bseq1_{{nRow}}" value="{{bseq1}}">
-		        <input type="text" id="attach_path_{{nRow}}" name="attach_path_{{nRow}}" value="{{attach_path}}">
-		        <input type="text" id="attach_name_{{nRow}}" name="attach_name_{{nRow}}" value="{{attach_name}}">
-		    </td>
-		    <td class="whitetablebg" align="center">{{opt_no}}</td>
-		    <td class="whitetablebg" align="center">{{fseq}}<br>
-                <a id="tr_edit_{{nRow}}" href="../opte3m/opte31Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&Case_no={{case_no}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
-			    <a id="tr_editA_{{nRow}}" href="../opte3m/opte31EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
-		    </td>
-		    <td class="whitetablebg" align="center">{{your_no}}</td>
-		    <td class="whitetablebg" align="center"><font color="darkblue" style="cursor:pointer" onclick="pdf_onclick('{{pdf_path}}')">{{attach_name}}</font>({{pdfsize}}KB)</td>
-		    <td class="whitetablebg" align="center">{{attach_desc}}</td>
-		    <td class="whitetablebg">{{appl_name}}</td>
-		    <td class="whitetablebg" nowrap>{{pr_rs_code_name}}</td>
-		    <td class="whitetablebg" align="center">{{opt_in_date}}</td>
-		    <td class="whitetablebg" align="center">{{pr_scode_name}}</td>
-
-	    </tr>
+	        <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
+		        <td class="whitetablebg" align="center">
+                    <input type=checkbox id="ckbox_{{nRow}}" name="ckbox_{{nRow}}" onclick="chkclick('{{nRow}}')">
+                    <input type="hidden" id="hchk_flag_{{nRow}}" name="hchk_flag_{{nRow}}" value="N">
+		            <input type="hidden" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
+		            <input type="hidden" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
+		            <input type="hidden" id="attach_sqlno_{{nRow}}" name="attach_sqlno_{{nRow}}" value="{{attach_sqlno}}">
+		            <input type="hidden" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
+		            <input type="hidden" id="Bseq_{{nRow}}" name="Bseq_{{nRow}}" value="{{bseq}}">
+		            <input type="hidden" id="Bseq1_{{nRow}}" name="Bseq1_{{nRow}}" value="{{bseq1}}">
+		            <input type="text" id="attach_path_{{nRow}}" name="attach_path_{{nRow}}" value="{{attach_path}}">
+		            <input type="text" id="attach_name_{{nRow}}" name="attach_name_{{nRow}}" value="{{attach_name}}">
+		        </td>
+		        <td class="whitetablebg" align="center">{{opt_no}}</td>
+		        <td class="whitetablebg" align="center">{{fseq}}<br>
+                    <a id="tr_edit_{{nRow}}" href="../opte3m/opte31Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&Case_no={{case_no}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
+			        <a id="tr_editA_{{nRow}}" href="../opte3m/opte31EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
+		        </td>
+		        <td class="whitetablebg" align="center">{{your_no}}</td>
+		        <td class="whitetablebg" align="center"><font color="darkblue" style="cursor:pointer" onclick="pdf_onclick('{{pdf_path}}')">{{attach_name}}</font>({{pdfsize}}KB)</td>
+		        <td class="whitetablebg" align="center">{{attach_desc}}</td>
+		        <td class="whitetablebg">{{appl_name}}</td>
+		        <td class="whitetablebg" nowrap>{{pr_rs_code_name}}</td>
+		        <td class="whitetablebg" align="center">{{opt_in_date}}</td>
+		        <td class="whitetablebg" align="center">{{pr_scode_name}}</td>
+	        </tr>
 	    </tfoot>
 	    <tbody>
 	    </tbody>
     </TABLE>
     <br>
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
-    <table border="0" cellspacing="1" cellpadding="2" width="98%">
+    <table border="0" cellspacing="1" cellpadding="2" width="98%" id="formBtn">
     <tr align=center>
 	    <td class="text9">
-		    <input type="button" class="greenbutton" name="btnsubmit" value="檔案複製至北京專區暨通知資訊部">&nbsp;&nbsp;&nbsp;&nbsp;
-	        <input type="text" id="count" name="count"><!--checkbox數量-->
-	        <input type="text" id="recopy_flag" name="recopy_flag"><!--是否同天複製-->
+		    <input type="button" class="greenbutton" id="btnSubmit" name="btnSubmit" value="檔案複製至北京專區暨通知資訊部">&nbsp;&nbsp;&nbsp;&nbsp;
+	        <input type="hidden" id="count" name="count"><!--checkbox數量-->
+	        <input type="hidden" id="recopy_flag" name="recopy_flag"><!--是否同天複製-->
 	    </td>
     </tr>
     </table>
@@ -219,7 +217,7 @@
     //執行查詢
     function goSearch() {
         window.parent.tt.rows = '100%,0%';
-        $("#divPaging,#noData,#dataList").hide();
+        $("#divPaging,#noData,#dataList,#formBtn").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
 
@@ -241,6 +239,7 @@
                 if (totRow > 0) {
                     $("#divPaging").show();
                     $("#dataList").show();
+                    $("#formBtn").show();
                 } else {
                     $("#noData").show();
                 }
@@ -287,7 +286,7 @@
                         strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
                         strLine1 = strLine1.replace(/{{pdf_path}}/g, item.pdf_path);
                         strLine1 = strLine1.replace(/{{attach_name}}/g, item.attach_name);
-                        strLine1 = strLine1.replace(/{{pdfsize}}/g, roundX(item.pdfsize,0));
+                        strLine1 = strLine1.replace(/{{pdfsize}}/g, xRound(item.pdfsize,0));
                         strLine1 = strLine1.replace(/{{attach_desc}}/g, item.attach_desc);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{pr_rs_code_name}}/g, item.pr_rs_code_name);
