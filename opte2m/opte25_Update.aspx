@@ -1,7 +1,8 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
+<%@ Import Namespace = "System.IO"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -16,6 +17,7 @@
 
     string submitTask = "";
     int count = 0;
+    int filenum=0;//複製的筆數
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected StringBuilder strOut = new StringBuilder();
@@ -38,84 +40,89 @@
             }
             Response.Write("<HR>");
 
-            if (submitTask == "U") {//發文確認
-                doConfirm();
-            }
+            doCopy();
 
             this.DataBind();
         }
     }
-    private void doConfirm() {
-        int pno=0;//最後一筆勾選的，作抓取案件分案資料
-        int filenum=0;//複製的筆數
-        for (int i = 1; i <= count; i++) {
-            DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
-            DBHelper connB = new DBHelper(Conn.OptB(ReqVal.TryGet("Branch" + i, ""))).Debug(Request["chkTest"] == "TEST");
-            try {
-               
-                if (ReqVal.TryGet("hchk_flag" + i, "") == "Y") {
-                    //copy_attach_opte(i);
-                    //update_attach_opte(i);
-                    
+    private void doCopy() {
+        int pno = 0;//最後一筆勾選的，作抓取案件分案資料
+        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+
+        try {
+            for (int i = 1; i <= count; i++) {
+                if (ReqVal.TryGet("hchk_flag_" + i, "") == "Y") {
+                    copy_attach_opte(i);
+                    update_attach_opte(conn, i);
+
                     pno = i;
-				    filenum+=1;
-
-                    //複製完成通知資訊部網管組
-                    //CreateMail(conn, pno, filenum);
-                 
-                    //connB.Commit();
-                    //conn.Commit();
-                    connB.RollBack();
-                    conn.RollBack();
+                    filenum += 1;
                 }
+            }
 
-                msg = "出口爭救案抽件成功";
+            if (Request["qrytodo"] == "copy"){
+                msg = "複製作業完成!!";
+            } else if (Request["qrytodo"] == "recopy") {
+                msg = "重新複製作業完成!!";
             }
-            catch (Exception ex) {
-                connB.RollBack();
-                conn.RollBack();
-                Sys.errorLog(ex, conn.exeSQL, prgid);
-                msg = "出口爭救案抽件失敗";
 
-                throw new Exception(msg, ex);
-            }
-            finally {
-                connB.Dispose();
-                conn.Dispose();
-            }
+            //複製完成通知資訊部網管組
+            Sendmail(conn, pno, filenum);
+
+            //conn.Commit();
+            conn.RollBack();
         }
+        catch (Exception ex) {
+            conn.RollBack();
+            Sys.errorLog(ex, conn.exeSQL, prgid);
+            msg = "複製作業失敗";
+
+            throw new Exception(msg, ex);
+        }
+        finally {
+            conn.Dispose();
+        }
+
         strOut.AppendLine("alert('" + msg + "');");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
     }
 
-    private bool copy_attach_opte(int pno){
-        string branch=ReqVal.TryGet("branch" + pno, "");
-        string bseq=ReqVal.TryGet("branch" + pno, "");
-        string bseq1=ReqVal.TryGet("branch" + pno, "");
-        string attach_name = ReqVal.TryGet("attach_name" + pno, "");
-        string strpath = ReqVal.TryGet("attach_path" + pno, "");
+    private bool copy_attach_opte(int pno) {
+        string branch = ReqVal.TryGet("branch_" + pno, "");
+        string bseq = ReqVal.TryGet("Bseq_" + pno, "");
+        string bseq1 = ReqVal.TryGet("Bseq1_" + pno, "");
+
+        string attach_name = ReqVal.TryGet("attach_name_" + pno, "");
+        string strpath = ReqVal.TryGet("attach_path_" + pno, "");
+        
+        //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
+        strpath = strpath.Replace(@"\opt\", @"\nopt\");
 
         //建第一層目錄：區所案號+日期，如NTE12345-_-20160810
         string tfoldername = String.Format("{0}-{1}-{2}"
-            , branch +  Sys.GetSession("dept")+"E"+bseq
-            ,bseq1
+            , branch + Sys.GetSession("dept") + "E" + bseq
+            , bseq1
             , DateTime.Now.ToString("yyyyMMdd"));
-	   
-        if (Request["task"]=="recopy" && Request["recopy_flag"]=="Y"){
-            tfoldername+="/重新複製";
-        }
-        
-        //測試環境放置測試目錄下
-                if (Sys.Host.IndexOf("web")>-1){
-            tfoldername="測試/"+tfoldername;
+
+        if (Request["qrytodo"] == "recopy" && Request["recopy_flag"] == "Y") {
+            tfoldername += "/重新複製";
         }
 
-        Check_CreateFolder_virtual(tfoldername);
-        
+        //測試環境放置測試目錄下
+        if (Sys.Host.IndexOf("web") > -1) {
+            tfoldername = "測試/" + tfoldername;
+        }
+
         //要將檔案copy至sin07/ToBJ
-        string sendt_path="/" + tfoldername;
-        //copyFile(strpath,sendt_path,attach_name)         
-		
+        string sendt_path = Sys.BJDir + "/" + tfoldername;
+        Check_CreateFolder_virtual(sendt_path);
+
+        if (Request["chkTest"] == "TEST") {
+            Response.Write("copy1..<BR>" + strpath + "→" + sendt_path + attach_name + "<HR>");
+            Response.Write("copy2..<BR>" + Server.MapPath(strpath) + "→" + Server.MapPath(sendt_path +"/" +attach_name) + "<HR>");
+        }
+        System.IO.File.Copy(Server.MapPath(strpath), Server.MapPath(sendt_path +"/" +attach_name), true);
+
         return true;
     }
 
@@ -128,84 +135,88 @@
     }
     
     //修改上傳文件之複製狀態
-    //private bool update_attach_opte(DBHelper conn) {
-    //    dim isql
-	
-    //    //入cust_step_log
-    //    call insert_log_table(conn,"U",prgid,"attach_opte","attach_sqlno",request("attach_sqlno"&pno))
-	
-    //    //更新上傳檔案複製註記
-    //    isql = "update attach_opte set attach_datebj=getdate() "
-    //    if request("task")="copy" then
-    //        isql = isql & ", attach_flagbj = 'Y'"
-    //    end if	
-    //    isql = isql & ",tran_date=getdate()"
-    //    isql = isql & ",tran_scode='" & session("se_scode") & "'"
-    //    isql = isql & " where attach_sqlno = '" & request("attach_sqlno"&pno) & "'"
-    //    conn.execute isql
-    //    if err.number=0 and conn.errors.count=0 then
-    //        update_attach_opte=true
-    //    else
-    //        msg="修改上傳檔案" & request("opt_sqlno"&pno) & "-" & request("attach_sqlno"&pno) & "複製狀態失敗" & chr(10) & err.Description	
-    //        update_attach_opte=false
-    //    end if
-    //}
-    
-    private void CreateMail(DBHelper conn, string opt_sqlno, string pr_scode, string case_no, string branch) {
-        string fseq = "", in_scode = "", in_scode_name = "", cust_area = "", cust_seq = "";
-        string ap_cname = "", appl_name = "", arcase_name = "", last_date = "";
-        SQL = "select Bseq,Bseq1,branch,in_scode,scode_name,cust_area,cust_seq ";
-        SQL += ",appl_name,arcase_name,Last_date ";
-        SQL += "from vbr_opte where case_no='" + case_no + "' and branch='" + branch + "' ";
-        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-            if (dr.Read()) {
-                fseq = Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), dr.SafeRead("country", ""), dr.SafeRead("Branch", ""), Sys.GetSession("dept") + "E");
-                in_scode = dr.SafeRead("in_scode", "");
-                in_scode_name = dr.SafeRead("scode_name", "");
-                cust_area = dr.SafeRead("cust_area", "");
-                cust_seq = dr.SafeRead("cust_seq", "");
-                appl_name = dr.SafeRead("appl_name", "");
-                arcase_name = dr.SafeRead("arcase_name", "");
-                last_date = dr.SafeRead("last_date", "");
-            }
-        }
+    private bool update_attach_opte(DBHelper conn,int pno) {
+        //入attach_opte_log
+        Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno",ReqVal.TryGet("attach_sqlno_" + pno, ""));
 
-        //抓取申請人名稱
-        SQL = "select ap_cname from caseopte_ap where opt_sqlno=" + opt_sqlno;
-        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-            while (dr.Read()) {
-                ap_cname += (ap_cname != "" ? "、" : "") + dr.SafeRead("ap_cname", "").Trim();
-            }
+        //更新上傳檔案複製註記
+        SQL = "update attach_opte set attach_datebj=getdate() ";
+        if (Request["qrytodo"]=="copy"){
+            SQL+= ", attach_flagbj = 'Y'";
         }
+        SQL+= ",tran_date=getdate()";
+        SQL+= ",tran_scode='" + Session["scode"] + "'";
+        SQL+= " where attach_sqlno = '"+ReqVal.TryGet("attach_sqlno_" + pno, "")+  "'";
+        conn.ExecuteNonQuery(SQL);
         
-        string Subject = "專案室出口爭救案件抽件完成通知";
-        string strFrom = Session["scode"] + "@saint-island.com.tw";
+        return true;
+    }
+
+    private void Sendmail(DBHelper conn, int pno, int filenum) {
+        string Subject = "";
+        string strFrom = Session["sc_name"] + "<" + Session["scode"] + "@saint-island.com.tw>";
         List<string> strTo = new List<string>();
         List<string> strCC = new List<string>();
         List<string> strBCC = new List<string>();
         switch (Sys.Host) {
             case "web08":
                 strTo.Add(Session["scode"] + "@saint-island.com.tw");
-                strCC.Add(Session["scode"] + "@saint-island.com.tw");
-                Subject = "(web08)" + Subject;
+                Subject = "(web08測試信)";
                 break;
             case "web10":
                 strTo.Add(Session["scode"] + "@saint-island.com.tw");
-                strCC.Add(Session["scode"] + "@saint-island.com.tw");
-                Subject = "(web10)" + Subject;
+                Subject = "(web10測試信)";
                 break;
             default:
-                strTo.Add(pr_scode + "@saint-island.com.tw");
-                strCC.Add(in_scode + "@saint-island.com.tw");
-                strCC.Add(Session["scode"] + "@saint-island.com.tw");
+                SQL = "Select a.cust_code from cust_code a inner join sysctrl.dbo.scode b on a.cust_code=b.scode ";
+                SQL += " where a.code_type='oetobj' ";
+                SQL += " and (b.end_date is null or b.end_date>=getdate()) ";
+                SQL += " order by a.sortfld ";
+                using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                    while (dr.Read()) {
+                        strTo.Add(dr.SafeRead("cust_code", "") + "@saint-island.com.tw");
+                    }
+                }
                 break;
         }
 
-        string body = "【區所案件編號】 : <B>" + fseq + "</B><br>" +
-            "【營洽】 : <B>" + in_scode + "-" + in_scode_name + "</B><br>" +
-            "【申請人】 : <B>" + ap_cname + "</B><br>" +
-            "【案件名稱】 : <B>" + appl_name + "</B><br>" +
-            "【案性】 : <B>" + arcase_name + "</B><Br><Br><p>";
+        string fseq = "", appl_name = "", arcase_name = "";
+        SQL = "select Bseq,Bseq1,branch,in_scode,scode_name,cust_area,cust_seq";
+        SQL += " ,appl_name,arcase_name,Last_date,country";
+        SQL += " from vbr_opte where opt_sqlno='" + ReqVal.TryGet("opt_sqlno_" + pno, "") + "' and branch='" + ReqVal.TryGet("branch_" + pno, "") + "'";
+        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+            if (dr.Read()) {
+                fseq = Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), dr.SafeRead("country", ""), dr.SafeRead("Branch", ""), Sys.GetSession("dept") + "E");
+                appl_name = dr.SafeRead("appl_name", "");
+                arcase_name = dr.SafeRead("arcase_name", "");
+            }
+        }
+
+        //目錄
+        string branch = ReqVal.TryGet("branch_" + pno, "");
+        string bseq = ReqVal.TryGet("Bseq_" + pno, "");
+        string bseq1 = ReqVal.TryGet("Bseq1_" + pno, "");
+        string tfoldername = String.Format("{0}-{1}-{2}"
+            , branch + Sys.GetSession("dept") + "E" + bseq
+            , bseq1
+            , DateTime.Now.ToString("yyyyMMdd"));
+
+        Subject += "爭救案複製至北京專區通知(區所案號：" + fseq + "，通知日期：" + DateTime.Now.ToString("yyyy/M/d") + ")";
+        if (Request["qrytodo"] == "recopy" && Request["recopy_flag"] == "Y") {
+            Subject += "-重新複製";
+        }
+
+        string body = "致 資訊部人員：<br><br>" +
+                    "   煩請至北京專區資料夾協助將下列檔案目錄之檔案複製到北京主機之相同目錄，並於拷貝完成後回覆，以便爭議組承辦通知北京人員。謝謝！<br><br>" +
+                    "【區所案件編號】 : " + fseq + "<br>" +
+                    "【案件名稱】 : " + appl_name + "<br>" +
+                    "【案性】 : " + arcase_name + "<br><Br>";
+        if (Request["qrytodo"] == "recopy" && Request["recopy_flag"] == "Y") {
+            body += "【檔案目錄】 :<B> ToBJ\\" + tfoldername + "\\重新複製</B><Br>";
+        } else {
+            body += "【檔案目錄】 :<B> ToBJ\\" + tfoldername + "</B><Br>";
+        }
+        body += "【檔案個數】 :<B> 共" + filenum + "個</B><Br><p>";
 
         Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
     }
