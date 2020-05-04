@@ -43,7 +43,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>‧<b style="color:Red">尚未分案通知</b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
@@ -61,21 +61,34 @@
         <tr>
 	        <td class="text9">
 		        ◎作業選項:
-                <label><input type="radio" name="qrytodo" value="copy" checked>未複製</label>
-		         <label><input type="radio" name="qrytodo" value="recopy">已複製</label>
+                <label><input type="radio" name="qrytodo" value="send" checked>尚未寄出確認</label>
+		         <label><input type="radio" name="qrytodo" value="update">已寄出補入承辦</label>
 	        </td>
         </tr>
         <tr>
 	        <td class="text9">
+		        ◎案件編號:<input type="text" name="qryOpt_no" id="qryOpt_no" size="11" maxLength="10">
+	        </td>
+	        <td class="text9">
 		        ◎區所案件編號:
 			    <Select id="qryBranch" name="qryBranch"></Select>
 			    <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
-                <input type="button" id="btnSrch" value ="查詢" class="cbutton" />
 	        </td>
 	        <td class="text9">
-		        ◎分案日期:
-                <input type="text" name="qryopt_in_dateS" id="qryopt_in_dateS" class="dateField" size="10" maxLength="10"> ~
-                <input type="text" name="qryopt_in_dateE" id="qryopt_in_dateE" class="dateField" size="10" maxLength="10">
+		        ◎對方號:<input type=text id="qryyour_no" name="qryyour_no" size=20>
+	        </td>
+	        <td class="text9">
+		        ◎排序: <select id="qryOrder" name="qryOrder">
+			        <option value="" selected>請選擇</option>
+			        <option value="a.confirm_date">收文日期</option>
+			        <option value="a.opt_in_date">分案日期</option>
+			        <option value="a.ctrl_date">承辦期限</option>
+			        <option value="a.last_date">法定期限</option>
+			        <option value="a.opt_no">案件編號</option>
+			        </select>
+	        </td>
+	        <td class="text9">
+                <input type="button" id="btnSrch" value ="查詢" class="cbutton" />
 	        </td>
         </tr>
         </table>
@@ -108,7 +121,7 @@
     </div>
 
     <div align="center" id="noData" style="display:none">
-	    <font color="red">=== 目前無資料，請先輸入區所案件編號再查詢 ===</font>
+	    <font color="red">=== 目前無資料 ===</font>
     </div>
 
     <input type="hidden" id="submittask" name="submittask">
@@ -122,40 +135,40 @@
 	        <td  class="lightbluetable" nowrap align="center">案件編號</td>
 	        <td  class="lightbluetable" nowrap align="center">區所案件編號</td>
 	        <td  class="lightbluetable" nowrap align="center">對方號</td>
-	        <td  class="lightbluetable" nowrap align="center">附件檔名</td>
-	        <td  class="lightbluetable" nowrap align="center">附件說明</td> 
+	        <td  class="lightbluetable" nowrap align="center">國外所案號</td>
 	        <td  class="lightbluetable" nowrap align="center">案件名稱</td> 
 	        <td  class="lightbluetable" nowrap align="center">案性</td> 
 	        <td  class="lightbluetable" nowrap align="center">分案日期</td> 
 	        <td  class="lightbluetable" nowrap align="center">承辦人</td> 
+	        <td  class="lightbluetable" nowrap align="center">收文日期</td>
+	        <td  class="lightbluetable" nowrap align="center">承辦期限</td> 
+	        <td  class="lightbluetable" nowrap align="center">法定期限</td>
+	        <td  class="lightbluetable" nowrap align="center">作業</td>
          </tr>
 	    </thead>
 	    <tfoot style="display:none">
 	        <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
 		        <td class="whitetablebg" align="center">
                     <input type=checkbox id="ckbox_{{nRow}}" name="ckbox_{{nRow}}" onclick="chkclick('{{nRow}}')">
-                    <input type="hidden" id="hchk_flag_{{nRow}}" name="hchk_flag_{{nRow}}" value="N">
-		            <input type="hidden" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
-		            <input type="hidden" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
-		            <input type="hidden" id="attach_sqlno_{{nRow}}" name="attach_sqlno_{{nRow}}" value="{{attach_sqlno}}">
-		            <input type="hidden" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
-		            <input type="hidden" id="Bseq_{{nRow}}" name="Bseq_{{nRow}}" value="{{bseq}}">
-		            <input type="hidden" id="Bseq1_{{nRow}}" name="Bseq1_{{nRow}}" value="{{bseq1}}">
-		            <input type="text" id="attach_path_{{nRow}}" name="attach_path_{{nRow}}" value="{{attach_path}}">
-		            <input type="text" id="attach_name_{{nRow}}" name="attach_name_{{nRow}}" value="{{attach_name}}">
+                    <input type="text" id="email_cnt_{{nRow}}" name="email_cnt_{{nRow}}" value="{{email_cnt}}">
+		            <input type="text" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
+		            <input type="text" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
+                    <input type="text" id="email_sqlno_{{nRow}}" name="email_sqlno_{{nRow}}" value="{{email_sqlno}}">
+                    <input type="text" id="maxemail_sqlno_{{nRow}}" name="maxemail_sqlno_{{nRow}}" value="{{maxemail_sqlno}}">
 		        </td>
+
+
 		        <td class="whitetablebg" align="center">{{opt_no}}</td>
-		        <td class="whitetablebg" align="center">{{fseq}}<br>
-                    <a id="tr_edit_{{nRow}}" href="../opte3m/opte31Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&Case_no={{case_no}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
-			        <a id="tr_editA_{{nRow}}" href="../opte3m/opte31EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
-		        </td>
+		        <td class="whitetablebg" align="center">{{fseq}}</td>
 		        <td class="whitetablebg" align="center">{{your_no}}</td>
-		        <td class="whitetablebg" align="center"><font color="darkblue" style="cursor:pointer" onclick="pdf_onclick('{{pdf_path}}')">{{attach_name}}</font>({{pdfsize}}KB)</td>
-		        <td class="whitetablebg" align="center">{{attach_desc}}</td>
+		        <td class="whitetablebg" align="center">{{fext_seq}}</td>
 		        <td class="whitetablebg">{{appl_name}}</td>
 		        <td class="whitetablebg" nowrap>{{pr_rs_code_name}}</td>
 		        <td class="whitetablebg" align="center">{{opt_in_date}}</td>
 		        <td class="whitetablebg" align="center">{{pr_scode_name}}</td>
+		        <td class="whitetablebg" align="center">{{confirm_date}}/td>
+		        <td class="whitetablebg" align="center">{{ctrl_date}}</td>
+		        <td class="whitetablebg" align="center">{{last_date}}</td>
 	        </tr>
 	    </tfoot>
 	    <tbody>
@@ -275,23 +288,25 @@
                         strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
                         strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
                         strLine1 = strLine1.replace(/{{attach_sqlno}}/g, item.attach_sqlno);
+                        strLine1 = strLine1.replace(/{{email_cnt}}/g, item.email_cnt);
+                        strLine1 = strLine1.replace(/{{maxemail_sqlno}}/g, item.maxemail_sqlno);
+
                         strLine1 = strLine1.replace(/{{branch}}/g, item.branch);
                         strLine1 = strLine1.replace(/{{bseq}}/g, item.bseq);
                         strLine1 = strLine1.replace(/{{bseq1}}/g, item.bseq1);
-                        strLine1 = strLine1.replace(/{{attach_path}}/g, item.attach_path);
-                        strLine1 = strLine1.replace(/{{attach_name}}/g, item.attach_name);
                         strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
+                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fseq);
                         strLine1 = strLine1.replace(/{{case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
                         strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
-                        strLine1 = strLine1.replace(/{{pdf_path}}/g, item.pdf_path);
-                        strLine1 = strLine1.replace(/{{attach_name}}/g, item.attach_name);
-                        strLine1 = strLine1.replace(/{{pdfsize}}/g, xRound(item.pdfsize,0));
-                        strLine1 = strLine1.replace(/{{attach_desc}}/g, item.attach_desc);
+                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fext_seq);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{pr_rs_code_name}}/g, item.pr_rs_code_name);
                         strLine1 = strLine1.replace(/{{opt_in_date}}/g, dateReviver(item.opt_in_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
+                        strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{ctrl_date}}/g, dateReviver(item.ctrl_date, "yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date, "yyyy/M/d"));
 
                         $("#dataList>tbody").append(strLine1);
                         $("#tr_edit_"+nRow).showFor(item.br_source=="br");
