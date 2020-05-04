@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -207,6 +207,15 @@ public class Sys
 		return rtnStr;
 	}
 
+	/// <summary>
+	/// 爭救案北京專區檔案目錄
+	/// </summary>
+	public static string BJDir {
+		get {
+			return "/nopt/ToBJ";
+		}
+	}
+
     /// <summary>
     /// 發送郵件
     /// </summary>
@@ -244,8 +253,7 @@ public class Sys
         try {
             //client.ServicePoint.MaxIdleTime = 2;//連線可閒置時間(毫秒)
             //client.ServicePoint.ConnectionLimit = 1;//允許最大連線數
-			//client.Credentials = new System.Net.NetworkCredential("siiplo", "Jean212");
-			//client.Credentials = new System.Net.NetworkCredential("m1570", "mkfpk");
+            //client.Credentials = new System.Net.NetworkCredential("siiplo", "Jean212");
             client.Send(MailMsg);//發送郵件
         }
         catch {
