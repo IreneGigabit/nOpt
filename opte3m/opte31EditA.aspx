@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -26,6 +26,7 @@
     protected string todo_sqlno = "";
     protected string Back_flag = "";//退回flag
     protected string End_flag = "";//結辦flag
+    protected string from_prgid = "";
 
     protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
     protected string QLock = "true";//收費與接洽事項的控制
@@ -55,6 +56,7 @@
         todo_sqlno = Request["todo_sqlno"] ?? "";
         Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
         End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
+        from_prgid = Request["from_prgid"] ?? "";
 
         if (prgid == "opte31") {
             HTProgCap = "出口爭救案承辦內容維護";
@@ -175,6 +177,7 @@
     <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="from_prgid" name="from_prgid" value="<%=from_prgid%>">
 	<input type="hidden" id="progid" name="progid">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
@@ -272,7 +275,7 @@
         $(".P1Lock").lock(<%#P1Lock%>);
         $("#btnSaveSubmit").showFor($("#prgid").val()=="opte31");//[編修存檔]
         $("#btnEndSubmit").showFor($("#prgid").val()=="opte31_1");//[結辦]
-        $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()!="opte31_1");//[結辦處理]
+        $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()=="opte31"&&$("#from_prgid").val()!="opte23"&&$("#from_prgid").val()!="opte25");//[結辦處理]
 
         if($("#Back_flag").val() == "B"){
             settab("#br");
