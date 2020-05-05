@@ -1,12 +1,13 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "opte25";//程式檔名前綴
+    protected string HTProgPrefix = "opte23";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string tf_code_html = "", BJPrScode_html="";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -22,6 +23,10 @@
     }
     
     private void QueryPageLayout() {
+        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
+            tf_code_html = SHtml.Option(conn, "select tf_code,tf_name from tfcode_opt where tf_class='BJ' and (end_date is null or end_date>getdate()) order by tf_code", "{tf_code}", "{tf_name}");
+            BJPrScode_html = Funcs.GetBJPrTermALL("A").Option("{scode}", "{scode}_{sc_name}");
+        }
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -59,7 +64,7 @@
     <div id="id-div-slide">
         <table border="0" cellspacing="1" cellpadding="2" width="98%" align="center">
         <tr>
-	        <td class="text9">
+	        <td class="text9" colspan="2">
 		        ◎作業選項:
                 <label><input type="radio" name="qrytodo" value="send" checked>尚未寄出確認</label>
 		         <label><input type="radio" name="qrytodo" value="update">已寄出補入承辦</label>
@@ -153,10 +158,12 @@
                     <input type="text" id="email_cnt_{{nRow}}" name="email_cnt_{{nRow}}" value="{{email_cnt}}">
 		            <input type="text" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
 		            <input type="text" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
+		            <input type="text" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
                     <input type="text" id="email_sqlno_{{nRow}}" name="email_sqlno_{{nRow}}" value="{{email_sqlno}}">
                     <input type="text" id="maxemail_sqlno_{{nRow}}" name="maxemail_sqlno_{{nRow}}" value="{{maxemail_sqlno}}">
+                    <input type="text" id="task_{{nRow}}" name="task_{{nRow}}" value="{{task}}">
+                    <input type="text" id="mail_status_{{nRow}}" name="mail_status_{{nRow}}" value="{{mail_status}}">
 		        </td>
-
 
 		        <td class="whitetablebg" align="center">{{opt_no}}</td>
 		        <td class="whitetablebg" align="center">{{fseq}}</td>
@@ -166,9 +173,37 @@
 		        <td class="whitetablebg" nowrap>{{pr_rs_code_name}}</td>
 		        <td class="whitetablebg" align="center">{{opt_in_date}}</td>
 		        <td class="whitetablebg" align="center">{{pr_scode_name}}</td>
-		        <td class="whitetablebg" align="center">{{confirm_date}}/td>
+		        <td class="whitetablebg" align="center">{{confirm_date}}</td>
 		        <td class="whitetablebg" align="center">{{ctrl_date}}</td>
 		        <td class="whitetablebg" align="center">{{last_date}}</td>
+		        <td class="whitetablebg" nowrap align="center">
+                    <span id="todo_send_{{nRow}}">
+			            定稿：<select name="tf_code_{{nRow}}" id="tf_code_{{nRow}}"><%#tf_code_html%></select>
+			            <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkblue" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
+			                [{{todoname}}]
+			            </span>
+				        (<span onclick="open_email('{{opt_sqlno}}','{{opt_no}}')" title="檢視發文信函" style="cursor:pointer;color:red" onmouseover="this.style.color='darkblue'" onmouseout="this.style.color='red'">
+                            {{email_cnt}}
+				        </span>)
+				        <span id="span_copymail">
+				            <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkgreen" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
+				            [複製E-mail]
+				            </span>
+				        </span>
+			            <br>
+                        <a id="tr_edit_{{nRow}}" href="../opte3m/opte31Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&Case_no={{case_no}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
+			            <a id="tr_editA_{{nRow}}" href="../opte3m/opte31EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
+                    </span>
+                    <span id="todo_update_{{nRow}}">
+		                承辦人員:<select name="pr_scode_{{nRow}}" id="pr_scode_{{nRow}}" >
+				             <%=BJPrScode_html%>
+		                </select><br>
+		                <input type="hidden" id="pr_branch_{{nRow}}" name="pr_branch_{{nRow}}" value="BJ">
+		                <span id="span_your_no_{{nRow}}">
+		                對方號:<input type="text" name="your_no_{{nRow}}" id="your_no_{{nRow}}" size=20 maxlength=50>
+		                </span>
+                    </span>
+		        </td>
 	        </tr>
 	    </tfoot>
 	    <tbody>
@@ -176,12 +211,19 @@
     </TABLE>
     <br>
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <table border="0" cellspacing="1" cellpadding="2" width="98%" id="formSend">
+    <tr align=center>
+	    <td nowrap align="center">
+	   	    寄出日期:
+		    <input type="text" id="mail_date" name="mail_date" size="10" maxlength="10" class="dateField" onblur="chkdateformat(this)" value="<%#DateTime.Today.ToShortDateString()%>" >
+	    </td>
+    </tr>
+    </table>
     <table border="0" cellspacing="1" cellpadding="2" width="98%" id="formBtn">
     <tr align=center>
 	    <td class="text9">
-		    <input type="button" class="greenbutton" id="btnSubmit" name="btnSubmit" value="檔案複製至北京專區暨通知資訊部">&nbsp;&nbsp;&nbsp;&nbsp;
+		    <input type="button" class="greenbutton" id="btnSubmit" name="btnSubmit" value="確　認">&nbsp;&nbsp;&nbsp;&nbsp;
 	        <input type="hidden" id="count" name="count"><!--checkbox數量-->
-	        <input type="hidden" id="recopy_flag" name="recopy_flag"><!--是否同天複製-->
 	    </td>
     </tr>
     </table>
@@ -230,7 +272,7 @@
     //執行查詢
     function goSearch() {
         window.parent.tt.rows = '100%,0%';
-        $("#divPaging,#noData,#dataList,#formBtn").hide();
+        $("#divPaging,#noData,#dataList,#formSend,#formBtn").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
 
@@ -252,6 +294,7 @@
                 if (totRow > 0) {
                     $("#divPaging").show();
                     $("#dataList").show();
+                    $("#formSend").showFor($("input[name='qrytodo']:checked").val()=="send");
                     $("#formBtn").show();
                 } else {
                     $("#noData").show();
@@ -289,7 +332,10 @@
                         strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
                         strLine1 = strLine1.replace(/{{attach_sqlno}}/g, item.attach_sqlno);
                         strLine1 = strLine1.replace(/{{email_cnt}}/g, item.email_cnt);
+                        strLine1 = strLine1.replace(/{{email_sqlno}}/g, item.email_sqlno);
                         strLine1 = strLine1.replace(/{{maxemail_sqlno}}/g, item.maxemail_sqlno);
+                        strLine1 = strLine1.replace(/{{task}}/g, item.task);
+                        strLine1 = strLine1.replace(/{{mail_status}}/g, item.mail_status);
 
                         strLine1 = strLine1.replace(/{{branch}}/g, item.branch);
                         strLine1 = strLine1.replace(/{{bseq}}/g, item.bseq);
@@ -307,6 +353,8 @@
                         strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{ctrl_date}}/g, dateReviver(item.ctrl_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date, "yyyy/M/d"));
+                        //strLine1 = strLine1.replace(/{{urlmail}}/g, item.urlmail);
+                        strLine1 = strLine1.replace(/{{todoname}}/g, item.todoname);
 
                         $("#dataList>tbody").append(strLine1);
                         $("#tr_edit_"+nRow).showFor(item.br_source=="br");
@@ -388,9 +436,30 @@
             $("#hchk_flag_"+nRow).val("N");
     }
 
-    //檢視PDF
-    function pdf_onclick(pdfpath){
-        window.open("http://"+pdfpath,"","width=800 height=600 top=40 left=80 toolbar=no, menubar=yes, location=no, directories=no resizable=yes status=no scrollbars=yes");
+    //Email發送
+    function formemail(pnum){
+        //檢查新增email時要選擇定稿，才能Email，草稿Email及複製Email不用選定稿
+        if($("#email_sqlno_"+pnum).val()=="0" &&$("#maxemail_sqlno_"+pnum).val()=="0"){
+            if($("#tf_code_"+pnum).val()==""){
+                alert("案件" +$("#opt_no_"+pnum).val()+"尚未選擇定稿，不可執行E-mail發送！");
+                return false;
+            }
+        }
+
+        var purl="opte23_mailpreview.aspx?submittask=" + $("#task_"+pnum).val() +
+                 "&branch=" + $("#branch_"+pnum).val() +
+                 "&opt_sqlno=" + $("#opt_sqlno_"+pnum).val() +
+                 "&email_sqlno=" + $("#email_sqlno_"+pnum).val() + 
+                 "&mail_status=" + $("#mail_status_"+pnum).val() +
+                 "&recordnum=" + pnum+
+                 "&tf_code=" +$("#tf_code_"+pnum).val()+
+                 "&prgid=" +$("#prgid").val();
+        window.open(purl,"mailsendN", "width=900 height=800 top=10 left=10 toolbar=no, menubar=no, location=no, directories=no resizable=Yes status=no scrollbars=yes");
+    }
+
+    //檢視發送Email
+    function open_email(pjob_sqlno,ptfsend_no){
+        window.open("mailframe.aspx?prgid="+$("#prgid").val()+"&source=BJ_email&job_sqlno=" + pjob_sqlno + "&tfsend_no=" + ptfsend_no,"MyMailWindow");
     }
 
     //入檔
@@ -422,12 +491,4 @@
     $("#qryBSeq").blur(function (e) {
         chkNum1($(this)[0], "區所案件編號");
     });
-
-    $("#qryinput_dateS").blur(function (e) {
-        ChkDate($("#qryinput_dateS")[0]);
-    });
-    $("#qryinput_dateE").blur(function (e) {
-        ChkDate($("#qryinput_dateE")[0]);
-    });
-
 </script>
