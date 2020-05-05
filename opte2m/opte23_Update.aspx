@@ -7,7 +7,7 @@
 
 <script runat="server">
     protected string HTProgCap = "爭救檔案複製至北京專區‧-入檔";//功能名稱
-    protected string HTProgPrefix = "opte25";//程式檔名前綴
+    protected string HTProgPrefix = "opte23";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
