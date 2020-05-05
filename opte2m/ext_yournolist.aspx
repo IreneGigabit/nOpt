@@ -14,12 +14,12 @@
 
     protected string SQL = "";
     protected string json_data = "";
+    protected string json = "";
 
     protected string branch = "";
     protected string your_no = "";
     protected string seq = "";
     protected string seq1 = "";
-    protected string json = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
