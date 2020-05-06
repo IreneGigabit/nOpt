@@ -1,9 +1,10 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
-<%@ Register Src="~/opte2m/opte23_email_form.ascx" TagPrefix="uc1" TagName="opte23_email_form" %>
 
+<%@ Register Src="~/opte2m/opte23_email_form.ascx" TagPrefix="uc1" TagName="opte23_email_form" %>
 
 <script runat="server">
     protected string HTProgCap = "交辦北京承辦作業(Email預覽)";//功能名稱
@@ -13,13 +14,14 @@
     protected int HTProgRight = 0;
 
     protected string SQL = "";
-    protected Dictionary<string, object> SvrVal = new Dictionary<string, object>();
+    protected Dictionary<string, object> vbr_opte = new Dictionary<string, object>();
     
     protected string submitTask = "";
     protected string mail_status = "";
     protected string opt_sqlno = "";
     protected string email_sqlno = "";
     protected string tf_code = "";
+    protected string log_flag = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -45,16 +47,89 @@
             SQL = "select a.opt_no,a.branch,a.bseq,a.bseq1,a.country,a.ext_seq,a.ext_seq1,a.your_no,a.appl_name,a.apply_no";
             SQL += ",a.issue_no,a.class,a.arcase_name,a.ctrl_date,a.last_date,a.remarkb,a.pr_rs_code_name";
             SQL += " from vbr_opte a  ";
-            SQL += " where a.opt_sqlno='" +opt_sqlno+ "'";
+            SQL += " where a.opt_sqlno='" + opt_sqlno + "'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
-            SvrVal = dt.ToDictionary().FirstOrDefault();
-            opte23_email_form.SvrVal = SvrVal;
+            vbr_opte = dt.ToDictionary().FirstOrDefault();
+            opte23_email_form.vbr_opte = vbr_opte;
 
             //foreach (KeyValuePair<string, object> p in SvrVal) {
             //    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
             //}
             //Response.Write("<HR>");
+
+            SQL = "select att_name,to_email,email_title,content,from_email,log_flag ";
+            SQL += "from opt_email_log ";
+            SQL += "where email_sqlno=" + email_sqlno;
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    //收件者email
+                    opte23_email_form.att_email = dr.SafeRead("to_email", "").Trim();
+                    //收件者姓名
+                    opte23_email_form.att_name = dr.SafeRead("att_name", "").Trim();
+                    //Email主旨
+                    opte23_email_form.tf_subject = dr.SafeRead("email_title", "").Trim();
+                    //Email內容
+                    opte23_email_form.tf_content = dr.SafeRead("content", "").Trim();
+                    //寄件者Email
+                    opte23_email_form.from_email = dr.SafeRead("from_email", "").Trim();
+                    log_flag = dr.SafeRead("log_flag", "").Trim();
+                } else {
+                    dr.Close();
+                    //抓取定稿內容,2015/4/15因張總經理改為楊總經理，於tfcode_opt增加tf_att_name收件者姓名，日後只要修改定稿即可
+                    SQL = "select tf_title as tf_subject,tf_content,tf_email,tf_class,tf_att_name ";
+                    SQL += "from tfcode_opt ";
+                    SQL += "where tf_code='" + tf_code + "'";
+                    using (SqlDataReader dr1 = conn.ExecuteReader(SQL)) {
+                        if (dr1.Read()) {
+                            //收件者email
+                            opte23_email_form.att_email = dr1.SafeRead("tf_email", "").Trim();
+                            //收件者姓名
+                            opte23_email_form.att_name = dr1.SafeRead("tf_att_name", "").Trim();
+                            //Email主旨
+                            opte23_email_form.tf_subject = dr1.SafeRead("tf_subject", "").Trim();
+                            //Email內容
+                            opte23_email_form.tf_content = dr1.SafeRead("tf_content", "").Trim();
+                            //寄件者Email
+                            opte23_email_form.from_email = "siiplo@mail.saint-island.com.tw";
+                            opte23_email_form.tf_class = dr1.SafeRead("tf_class", "").Trim();
+                        }
+                    }
+                }
+            }
+
+            //設定收件者
+            switch (Sys.Host) {
+                case "web08":
+                    opte23_email_form.att_email = "vecijoy@my6mail.com";
+                    opte23_email_form.bcc_email = Session["scode"] + "@saint-island.com.tw";
+                    break;
+                case "web10":
+                    opte23_email_form.att_email = Session["scode"] + "@saint-island.com.tw";
+                    opte23_email_form.bcc_email = "m802@saint-island.com.tw";
+                    break;
+                default:
+                    if (Sys.GetSession("scode") == "m1583") {
+                        opte23_email_form.att_email = "vecijoy@my6mail.com";
+                        opte23_email_form.bcc_email = "m1583@saint-island.com.tw";
+                    } else {
+                        List<string> bcc_email = new List<string>();
+                        bcc_email.Add(Session["scode"] + "@saint-island.com.tw");
+                            
+                        //抓取密件副本收件者
+                        SQL = "select cust_code from cust_code where code_type='oebcc_bj' and end_date is null order by sortfld ";
+                        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                            while (dr.Read()) {
+                                bcc_email.Add(dr.SafeRead("cust_code", "").Trim() + "@saint-island.com.tw");
+                            }
+                        }
+                        bcc_email.Add("sib_sendk@saint-island.com.tw");
+
+                        //先Distinct再轉成字串
+                        opte23_email_form.bcc_email = string.Join(";", bcc_email.Distinct().ToArray());
+                    }
+                    break;
+            }
         }
     }
 </script>
@@ -74,13 +149,14 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/ckeditor/ckeditor.js")%>"></script>
 </head>
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <%--<a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>--%>
         </td>
     </tr>
     <tr>
@@ -89,10 +165,10 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
-    <INPUT TYPE="text" id="submittask" name="submittask" value="<%=submitTask%>">
-    <INPUT TYPE="text" id="mail_status" name="mail_status" value="<%=mail_status%>">
-    <INPUT TYPE="text" id="log_flag" name="log_flag" value="%=log_flag%>">
+	<input type="text" id="prgid" name="prgid" value="<%#prgid%>">
+    <INPUT TYPE="text" id="submittask" name="submittask" value="<%#submitTask%>">
+    <INPUT TYPE="text" id="mail_status" name="mail_status" value="<%#mail_status%>">
+    <INPUT TYPE="text" id="log_flag" name="log_flag" value="<%#log_flag%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
 	<tr>
@@ -139,6 +215,8 @@
 
     //初始化
     function this_init() {
+        $(".Lock").lock();
+
         $("#span_btn1,#span_btn2").hide();
 
         if (($("#submittask").val()=="A" && <%#HTProgRight%> & 4)
@@ -147,6 +225,10 @@
 
         if ($("#mail_status").val()=="draft" && <%#HTProgRight%> & 16)
             $("#span_btn2").show();
+
+        $("#work_scode").val("<%#Session["scode"]%>");
+
+        CKEDITOR.replace('tf_content', { height: 600,width: '100%' });
     }
 
     //關閉視窗
