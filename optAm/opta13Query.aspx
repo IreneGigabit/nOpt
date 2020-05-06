@@ -143,7 +143,7 @@
         </tr>
         <tr>
             <td class=whitetablebg align="center" colspan="4">
-	    	    <table border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%">
+	    	    <table border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%" id="tbwordA">
                     <thead>
 	    	            <tr>
 	    	              <td class=lightbluetable align="center" width="50%">
@@ -155,10 +155,10 @@
 	    	               </td>
 	    	            </tr>
                     </thead>
-                    <tfoot>
+                    <tfoot style="display:none;">
                         <tr id="law_##">
-                            <td class=lightbluetable align="center" style="color:green">
-                                <font color='#000000'>(</font>OR<font color='#000000'>)</font>包含條件##
+                            <td class=lightbluetable align="center" style="color:green" id="td_wordA_##">
+                                {{lawOR}}包含條件##
                             </td>
                             <td class=whitetablebg align="left">&nbsp;
                             內容:<input type=text size=10 name="f_wordA_##_1">
@@ -167,12 +167,13 @@
                             </td>
                         </tr>
                     </tfoot>
+                    <tbody></tbody>
 	    	    </table>
 	        </td>
         </tr>
         <tr>
             <td class=whitetablebg align="center" colspan="4">
-	    	    <table border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%">
+	    	    <table border=0 class=bluetable cellspacing=1 cellpadding=2 width="100%" id="tbwordB">
                     <thead>
 	    	            <tr>
 	    	              <td class=lightbluetable align="center" width="50%">
@@ -184,10 +185,10 @@
 	    	              </td>
 	    	            </tr>
                     </thead>
-                    <tfoot>
+                    <tfoot style="display:none;">
                         <tr id="lawNot_##">
-                            <td class=lightbluetable align="center" style="color:red">
-                                <font color='#000000'>(</font>OR<font color='#000000'>)</font>不包含條件##
+                            <td class=lightbluetable align="center" style="color:red" id="td_wordB_##">
+                                {{lawOR}}不包含條件##
                             </td>
                             <td class=whitetablebg align="left">&nbsp;
                             內容:<input type=text size=10 name="f_wordB_##_1">
@@ -196,6 +197,7 @@
                             </td>
                         </tr>
                     </tfoot>
+                    <tbody></tbody>
 	    	    </table>
 	        </td>
         </tr>
@@ -231,6 +233,17 @@
             </td>
         </tr>
     </table>
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="100%" align="center">
+            <input type=text id="law_count" name="law_count" value="0">
+	        <input type=text id="law_CNot" name="law_CNot" value="0">
+            <input type="button" value="查　詢" class="cbutton" onClick="formSearchSubmit()">
+            <input type="button" value="重　填" class="cbutton" onClick="resetForm()">
+            </td>
+        </tr>
+    </table>
+
     </div>
 
     <div id="divPaging" style="display:none">
@@ -310,19 +323,28 @@
         });
 
         $("#Class_Add_button_law").click();
+        //預設10個條件
+        tbword_init();
 
         $("input.dateField").datepick();
         $(".Lock").lock();
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
     });
 
+    //[重填]
+    function resetForm(){
+        reg.reset();
+        $("#law_count").val(tcount);
+        $("#law_CNot").val(tcountn);
+    }
+
     //[查詢]
-    $("#btnSrch").click(function (e) {
+    function formSearchSubmit() {
         $("#dataList>thead tr .setOdr span").remove();
         $("#SetOrder").val("");
 
         goSearch();
-    });
+    }
 
     //執行查詢
     function goSearch() {
@@ -333,7 +355,7 @@
 
         $.ajax({
             url: "<%#HTProgPrefix%>List.aspx",
-            type: "get",
+            type: "post",
             async: false,
             cache: false,
             data: $("#reg").serialize(),
@@ -461,6 +483,86 @@
         }
     });
     //////////////////////
+
+    var tcount=2;				//包含的條件列表最少二個
+    var tcountn=2;				//不包含的條件列表最少二個
+    var Maxfcount=10;	        //可用條件數
+
+    function tbword_init(){
+        for(var nRow=1;nRow<=Maxfcount;nRow++){
+            var copyStr = "";
+            $("#tbwordA>tfoot").each(function (i) {
+                copyStr += $(this).html().replace(/##/g, nRow);
+                if(nRow>1){
+                    copyStr=copyStr.replace(/{{lawOR}}/g, "<font color='#000000'>(</font>OR<font color='#000000'>)</font> ");
+                }else{
+                    copyStr=copyStr.replace(/{{lawOR}}/g, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                }
+            });
+            $("#tbwordA>tbody").append(copyStr);
+            if(nRow>tcount){
+                $("#law_"+nRow).hide();
+            }
+
+            copyStr = "";
+            $("#tbwordB>tfoot").each(function (i) {
+                copyStr += $(this).html().replace(/##/g, nRow);
+                if(nRow>1){
+                    copyStr=copyStr.replace(/{{lawOR}}/g, "<font color='#000000'>(</font>OR<font color='#000000'>)</font> ");
+                }else{
+                    copyStr=copyStr.replace(/{{lawOR}}/g, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                }
+            });
+            $("#tbwordB>tbody").append(copyStr);
+
+            if(nRow>tcountn){
+                $("#lawNot_"+nRow).hide();
+            }
+        }
+        $("#law_count").val(tcount);
+        $("#law_CNot").val(tcountn);
+    }
+
+    //設定畫面是否顯示f_col(包含(Add)或不包含(Del)欄位,增加(in)或減少(not))   
+    function f_col(x,y){
+        if (x=="Add"){
+            if (y=="in"){//包含條件增加
+                if (tcount >= Maxfcount){
+                    alert("條件超過10筆!");
+                    return false;
+                }
+                tcount+=1;
+                $("#law_"+tcount).show();
+            }else if (y=="not"){//包含條件減少
+                if (tcountn >= Maxfcount){
+                    alert("條件超過10筆!");
+                    return false;
+                }
+                tcountn+=1;
+                $("#lawNot_"+tcountn).show();
+            }
+        }else if( x=="Del"){
+            if (y == "in"){//包含條件滅少
+                if (tcount <= 0 ){
+                    alert("條件少於0筆!");
+                    return false;
+                }
+                $("#law_"+tcount).hide();
+                $("input",$("#law_"+tcount)).val("");
+                tcount-=1;
+            }else if (y=="not"){//不包含條件減少
+                if (tcountn <= 0 ){
+                    alert("條件少於0筆!");
+                    return false;
+                }
+                $("#lawNot_"+tcountn).hide();
+                $("input",$("#lawNot_"+tcountn)).val("");
+                tcountn-=1;
+            }
+        }
+        $("#law_count").val(tcount);
+        $("#law_CNot").val(tcountn);
+    }
 
     //增加一筆法條搜尋
     $("#Class_Add_button_law").click(function () { 
