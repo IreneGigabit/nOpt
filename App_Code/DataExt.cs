@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -88,7 +88,7 @@ public static class DataExt
     /// </summary>
     public static IEnumerable<Dictionary<string, object>> ToDictionary(this DataTable table) {
         return table.Select().Select(x => x.ItemArray.Select((a, i) => new { Name = table.Columns[i].ColumnName, Value = a })
-                        .ToDictionary(a => a.Name, a => a.Value));
+                .ToDictionary(a => a.Name, a => a.Value, StringComparer.OrdinalIgnoreCase));
     }
     /*
     public static void ToDictionary(this DataTable table,Dictionary<string, object> RtnVal) {
