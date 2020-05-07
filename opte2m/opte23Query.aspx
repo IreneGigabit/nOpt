@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -182,14 +182,17 @@
 			            <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkblue" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
 			                [{{todoname}}]
 			            </span>
-				        (<span onclick="open_email('{{opt_sqlno}}','{{opt_no}}')" title="檢視發文信函" style="cursor:pointer;color:red" onmouseover="this.style.color='darkblue'" onmouseout="this.style.color='red'">
-                            {{email_cnt}}
-				        </span>)
-				        <span id="span_copymail">
-				            <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkgreen" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
-				            [複製E-mail]
-				            </span>
-				        </span>
+
+				        <span id="span_openmail_{{nRow}}">
+				            (<span onclick="open_email('{{opt_sqlno}}','{{opt_no}}')" title="檢視發文信函" style="cursor:pointer;color:red" onmouseover="this.style.color='darkblue'" onmouseout="this.style.color='red'">
+                                {{email_cnt}}
+				                <span id="span_copymail_{{nRow}}">
+				                    <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkgreen" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
+				                    [複製E-mail]
+				                    </span>
+				                </span>
+				            </span>)
+                        </span>
 			            <br>
                         <a id="tr_edit_{{nRow}}" href="../opte3m/opte31Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&Case_no={{case_no}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
 			            <a id="tr_editA_{{nRow}}" href="../opte3m/opte31EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
@@ -357,9 +360,16 @@
                         strLine1 = strLine1.replace(/{{todoname}}/g, item.todoname);
 
                         $("#dataList>tbody").append(strLine1);
+
                         $("#tr_edit_"+nRow).showFor(item.br_source=="br");
                         $("#tr_editA_" + nRow).showFor(item.br_source == "opte");
-                        $("#recopy_flag").val(item.recopy_flag);
+                        if($("#email_sqlno_"+nRow).val()!="0"){
+                            $("#span_copymail_"+nRow).hide();
+                        }
+                        $("#span_openmail_"+nRow).hide();
+                        if(parseInt(item.email_cnt, 10)>0){
+                            $("#span_openmail_"+nRow).show();
+                        }
                     });
                 });
             },
