@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -343,6 +343,15 @@ public static class Util
         if (iStr == null || iStr == "") return "null";
 
         iStr = iStr.Replace("'", "''");
+        return "'" + iStr + "'";
+    }
+    #endregion
+
+    #region dbchar - 寫入db用,若有單引號則改為’
+    public static string dbchar(string iStr) {
+        if (iStr == null || iStr == "") return "''";
+
+        iStr = iStr.Replace("'", "’").Trim();
         return "'" + iStr + "'";
     }
     #endregion
