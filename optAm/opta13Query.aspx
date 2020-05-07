@@ -315,7 +315,7 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        $("select[name='law_type1_##'],select[name='law_type2_##'],select[name='law_type3_##']").getOption({//區所別
+        $("select[name='law_type1_##'],select[name='law_type2_##'],select[name='law_type3_##']").getOption({//法條搜尋內容
             url: getRootPath() + "/json/Law.aspx",
             data:{},
             valueFormat: "{law_sqlno}",

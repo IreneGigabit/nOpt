@@ -25,7 +25,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
-    <meta http-equiv="x-ua-compatible" content="IE=9">
+    <meta http-equiv="x-ua-compatible" content="ie=10">
     <%--<meta name="viewport" content="width=device-width" />--%>
     <title></title>
     <link href="<%=ResolveClientUrl("~/inc/setmenu.css")%>" rel="stylesheet" />

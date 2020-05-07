@@ -14,40 +14,103 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
+    protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
+
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe(false, true);
 
+        ReqVal = Request.Form.ToDictionary();
+        
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,b.sqlno as todo_sqlno,''fseq,''fext_seq,''optap_cname";
-            isql += ",0 email_sqlno,0 maxemail_sqlno,''task,''todoname,''mail_status,''urlmail";
-		    isql+= " from vbr_opte a ";
-		    isql+= " inner join todo_opte b on b.opt_sqlno=a.opt_sqlno and b.dowhat='PR' and b.job_status='NN' ";
-		    isql+= " where (a.Bstat_code like 'NN%' or a.Bstat_code like 'NX%') and a.Bmark='N'";
-		    isql+= " and a.pr_branch='BJ' ";
-            if ((Request["qrytodo"] ?? "") == "send") {
-		       isql+= " and a.email_date is null ";
-		    }else if ((Request["qrytodo"] ?? "") == "update") {
-		       isql+= " and a.email_date is not null ";
-		       isql+= " and (a.bpr_scode is null or a.bpr_scode='') ";
+            isql = "SELECT * FROM law_opt where 1=1 ";
+
+            if ((Request["qry_opt_no"] ?? "") != "") {
+                isql += " AND opt_no = '" + Request["qry_opt_no"] + "' ";
 		    }
+            if ((Request["qry_BJTbranch"] ?? "") != "") {
+                isql += " and BJTbranch='" + Request["qry_BJTbranch"] + "'";
+            }
+            if ((Request["qry_BJTSeq"] ?? "") != "") {
+                isql += " AND BJTSeq='" + Request["qry_BJTSeq"] + "'";
+            }
+            if ((Request["qry_BJTSeq1"] ?? "") != "") {
+                isql += " AND BJTSeq1='" + Request["qry_BJTSeq1"] + "'";
+            }
+            if ((Request["qry_branch"] ?? "") != "") {
+                isql += " AND branch='" + Request["qry_branch"] + "'";
+            }
+            if ((Request["qry_BSeq"] ?? "") != "") {
+                isql += " and Bseq='" + Request["qry_BSeq"] + "'";
+            }
+            if ((Request["qry_BSeq1"] ?? "") != "") {
+                isql += " and Bseq1='" + Request["qry_BSeq1"] + "'";
+            }
+            if ((Request["qry_pr_no"] ?? "") != "") {
+                isql += " and pr_no='" + Request["qry_pr_no"] + "'";
+            }
+            if ((Request["qry_opt_comfirm"] ?? "") != "") {
+                isql += " and opt_comfirm='" + Request["qry_opt_comfirm"] + "'";
+            }
+            if ((Request["qry_opt_check"] ?? "") != "") {
+                isql += " and opt_check='" + Request["qry_opt_check"] + "'";
+            }
+            if ((Request["qry_opt_class"] ?? "") != "") {
+                string[] arr_opt_class = ReqVal.TryGet("qry_opt_class", "").Split(',');
+                isql += " AND (";
+                for (int i = 0; i < arr_opt_class.Length; i++) {
+                    isql += (i > 0 ? " OR" : "");
+                    isql += " ','+opt_class+',' like '%," + arr_opt_class[i] + ",%'";
+                }
+                isql += " ) ";
+            }
 
-            if ((Request["qryopt_no"] ?? "") != "") {
-                isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
-            }
-            if ((Request["qryBranch"] ?? "") != "") {
-                isql += " and a.Branch='" + Request["qryBranch"] + "'";
-            }
-            if ((Request["qryBSeq"] ?? "") != "") {
-            isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
-            }
-            if ((Request["qryBSeq1"] ?? "") != "") {
-                isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
-            }
-            if ((Request["qryyour_no"] ?? "") != "") {
-                isql += " and a.your_no='" + Request["qryyour_no"] + "'";
+            if ((Request["No_date"] ?? "") != "Y") {
+                if ((Request["qry_pr_date_B"] ?? "") != "") {
+                    isql += " and pr_date>='" + Request["qry_pr_date_B"] + "'";
+                }
+                if ((Request["qry_pr_date_E"] ?? "") != "") {
+                    isql += " and pr_date<='" + Request["qry_pr_date_E"] + "'";
+                }
             }
 
+            //法條搜尋條件
+            bool first_check=false;//判斷有無填寫條件
+            for (int i = 0; i < int.Parse(ReqVal.TryGet("class_num","0")); i++) {
+                if ((Request["law_type1_"+i] ?? "") != ""
+                    ||(Request["law_type2_"+i] ?? "") != ""
+                    ||(Request["law_type3_"+i] ?? "") != "") {
+                    first_check=true;
+                    break;
+                }
+            }
+            if (first_check) {
+                isql += "  AND ( ";
+                for (int i = 0; i < int.Parse(ReqVal.TryGet("class_num", "0")); i++) {
+                    isql += (i == 0 ? " ( " : " OR ( ");
+                    if ((Request["law_type1_" + i] ?? "") != "") {
+                        isql += " ','+ref_law+',' like '%," + Request["law_type1_" + i] + ",%' ";
+                    }
+                    if ((Request["law_type2_" + i] ?? "") != "") {
+                        isql += " AND ','+ref_law+',' like '%," + Request["law_type2_" + i] + ",%' ";
+                    }
+                    if ((Request["law_type3_" + i] ?? "") != "") {
+                        isql += " AND ','+ref_law+',' like '%," + Request["law_type3_" + i] + ",%' ";
+                    }
+                    isql += " ) ";
+                }
+                isql += "  ) ";
+            }
+
+            
+            for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count","0")); i++) {
+            }
+            for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot","0")); i++) {
+            }
+            
+
+            
+                
             if ((Request["qryOrder"] ?? "") != "") {
                 isql += " order by " + Request["qryOrder"];
             } else {
