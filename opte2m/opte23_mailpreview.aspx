@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
@@ -51,7 +51,7 @@
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
             vbr_opte = dt.ToDictionary().FirstOrDefault();
-            opte23_email_form.vbr_opte = vbr_opte;
+            opte23_email_form.RS = vbr_opte;
 
             //foreach (KeyValuePair<string, object> p in SvrVal) {
             //    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
@@ -186,12 +186,12 @@
 	<tr>
 		<td width="100%" align="center">
 			<span id="span_btn1">
-				<input type=button name="button3" value=" 暫 存 郵 件 " class="c1button" onClick="formSaveSubmit">
-				<input type=button name="button1" value=" 傳 送 郵 件 " class="cbutton" onClick="formAddSubmit">
-				<input type=button name="button2" value=" 重 填 " class="cbutton" onClick="formReset">
+				<input type=button name="button3" value=" 暫 存 郵 件 " class="c1button" onClick="formSaveSubmit()">
+				<input type=button name="button1" value=" 傳 送 郵 件 " class="cbutton" onClick="formAddSubmit()">
+				<input type=button name="button2" value=" 重 填 " class="cbutton" onClick="formReset()">
 			</span>
 			<span id="span_btn2">
-				<input type=button name="button4" value=" 刪 除 暫 存 郵 件 " class="redbutton" onClick="formDelSubmit">
+				<input type=button name="button4" value=" 刪 除 暫 存 郵 件 " class="redbutton" onClick="formDelSubmit()">
 			</span>
 		</td>
 	</tr>
@@ -215,8 +215,9 @@
 
     //初始化
     function this_init() {
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        
         $(".Lock").lock();
-
         $("#span_btn1,#span_btn2").hide();
 
         if (($("#submittask").val()=="A" && <%#HTProgRight%> & 4)
@@ -227,6 +228,8 @@
             $("#span_btn2").show();
 
         $("#work_scode").val("<%#Session["scode"]%>");
+
+        email_form.init();
 
         CKEDITOR.replace('tf_content', { height: 600,width: '100%' });
     }
@@ -240,37 +243,23 @@
         }
     })
 
-    //分　　案
-    $("#btnsearchSubmit").click(function () {
-        if ($("#ctrl_date").val()==""){
-            alert("請輸入預計完成日期！！");
-            $("#ctrl_date").focus();
-            return false;
+    //暫存
+    function formSaveSubmit(){
+        if(confirm("注意！\n你確定先暫存郵件嗎？")){
+            $("select,textarea,input").unlock();
+            reg.action = "opte23_mailsave.aspx";
+            reg.target = "ActFrame";
+            reg.submit();
         }
-        //'承辦單位為專案室才需檢查承辦人員，因北京聖島需分案通知後才會知道承辦人員
-        if ($("#pr_branch").val()=="B"){
-            if ($("#pr_scode").val()==""){
-                alert("請輸入承辦人員！！");
-                $("#pr_scode").focus();
-                return false;
-            }
-        }
-        if ($("#pr_rs_class").val()==""){
-            alert("請輸入承辦案性之「結構分類」！");
-            $("#pr_rs_class").focus();
-            return false;
-        }
-        if ($("#pr_rs_code").val()==""){
-            alert("請輸入承辦案性之「案性」！");
-            $("#pr_rs_code").focus();
-            return false;
-        }
+    }
 
-        $("select,textarea,input").unlock();
-        $("#btnsearchSubmit").lock(!$("#chkTest").prop("checked"));
-        reg.submittask.value = "U";
-        reg.target = "ActFrame";
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
-        reg.submit();
-    });
+    //刪除
+    function formDelSubmit(){
+        if(confirm("注意！\n你確定刪除嗎？")){
+            reg.submittask.value="D";
+            reg.action = "opte23_mailsave.aspx";
+            reg.target = "ActFrame";
+            reg.submit();
+        }
+    }
 </script>
