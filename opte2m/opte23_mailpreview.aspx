@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
@@ -101,7 +101,7 @@
             //設定收件者
             switch (Sys.Host) {
                 case "web08":
-                    opte23_email_form.att_email = "vecijoy@my6mail.com";
+                    opte23_email_form.att_email = "wixigag567@jupiterm.com";
                     opte23_email_form.bcc_email = Session["scode"] + "@saint-island.com.tw";
                     break;
                 case "web10":
@@ -110,7 +110,7 @@
                     break;
                 default:
                     if (Sys.GetSession("scode") == "m1583") {
-                        opte23_email_form.att_email = "vecijoy@my6mail.com";
+                        opte23_email_form.att_email = "wixigag567@jupiterm.com";
                         opte23_email_form.bcc_email = "m1583@saint-island.com.tw";
                     } else {
                         List<string> bcc_email = new List<string>();
@@ -165,10 +165,10 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-	<input type="text" id="prgid" name="prgid" value="<%#prgid%>">
-    <INPUT TYPE="text" id="submittask" name="submittask" value="<%#submitTask%>">
-    <INPUT TYPE="text" id="mail_status" name="mail_status" value="<%#mail_status%>">
-    <INPUT TYPE="text" id="log_flag" name="log_flag" value="<%#log_flag%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%#prgid%>">
+    <INPUT TYPE="hidden" id="submittask" name="submittask" value="<%#submitTask%>">
+    <INPUT TYPE="hidden" id="mail_status" name="mail_status" value="<%#mail_status%>">
+    <INPUT TYPE="hidden" id="log_flag" name="log_flag" value="<%#log_flag%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
 	<tr>
@@ -243,7 +243,7 @@
         }
     })
 
-    //暫存
+    //暫存郵件
     function formSaveSubmit(){
         if(confirm("注意！\n你確定先暫存郵件嗎？")){
             $("select,textarea,input").unlock();
@@ -253,11 +253,33 @@
         }
     }
 
-    //刪除
+    //刪除暫存郵件
     function formDelSubmit(){
         if(confirm("注意！\n你確定刪除嗎？")){
             reg.submittask.value="D";
             reg.action = "opte23_mailsave.aspx";
+            reg.target = "ActFrame";
+            reg.submit();
+        }
+    }
+
+    //傳送郵件
+    function formAddSubmit(){
+        if($("#att_email").val()==""){
+            alert("收件者Email必須輸入!!");
+            return false;
+        }
+
+        if($("#tf_content").val()==""){
+            alert("信函內容必須輸入!!");
+            return false;
+        }
+        
+        if(email_form.get_file_size()) return false;
+        
+        if(confirm("注意！\n你確定寄送此封Email嗎？")){
+            $("select,textarea,input").unlock();
+            reg.action = "opte23_mailsend.aspx";
             reg.target = "ActFrame";
             reg.submit();
         }
