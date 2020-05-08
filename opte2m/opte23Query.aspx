@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -155,14 +155,14 @@
 	        <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
 		        <td class="whitetablebg" align="center">
                     <input type=checkbox id="ckbox_{{nRow}}" name="ckbox_{{nRow}}" onclick="chkclick('{{nRow}}')">
-                    <input type="text" id="email_cnt_{{nRow}}" name="email_cnt_{{nRow}}" value="{{email_cnt}}">
-		            <input type="text" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
-		            <input type="text" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
-		            <input type="text" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
-                    <input type="text" id="email_sqlno_{{nRow}}" name="email_sqlno_{{nRow}}" value="{{email_sqlno}}">
-                    <input type="text" id="maxemail_sqlno_{{nRow}}" name="maxemail_sqlno_{{nRow}}" value="{{maxemail_sqlno}}">
-                    <input type="text" id="task_{{nRow}}" name="task_{{nRow}}" value="{{task}}">
-                    <input type="text" id="mail_status_{{nRow}}" name="mail_status_{{nRow}}" value="{{mail_status}}">
+                    <input type="hidden" id="email_cnt_{{nRow}}" name="email_cnt_{{nRow}}" value="{{email_cnt}}">
+		            <input type="hidden" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
+		            <input type="hidden" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
+		            <input type="hidden" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
+                    <input type="hidden" id="email_sqlno_{{nRow}}" name="email_sqlno_{{nRow}}" value="{{email_sqlno}}">
+                    <input type="hidden" id="maxemail_sqlno_{{nRow}}" name="maxemail_sqlno_{{nRow}}" value="{{maxemail_sqlno}}">
+                    <input type="hidden" id="task_{{nRow}}" name="task_{{nRow}}" value="{{task}}">
+                    <input type="hidden" id="mail_status_{{nRow}}" name="mail_status_{{nRow}}" value="{{mail_status}}">
 		        </td>
 
 		        <td class="whitetablebg" align="center">{{opt_no}}</td>
@@ -234,14 +234,19 @@
 
 <br />
 作業備註:<br>
-<font color=blue>◎作業選項：未複製</font><br>
-1.指檔案尚未複製到北京專區。<br>
-2.請以案件為單位，勾選需複製檔案再點選「檔案複製至北京專區暨通知資訊部」。<br>
-3.系統會預設抓取區所上傳文件，若還有文件需提供北京聖島，煩請先點選[承辦文件上傳]將檔案上傳後，再重新執行本項作業。<br>
-<font color=blue>◎作業選項：已複製</font><br>
-1.指檔案已複製到北京專區，但檔案內容修改需重新複製。<br>
-2.請先勾選需重新複製檔案。<br>
-    <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
+<font color=blue>◎作業選項：尚未寄出確認</font><br>
+1.請先選擇定稿再點選[E-mail]執行Email寄發。<br>
+2.待確定Email寄出(寄件人員會收到副本通知)，再勾選案件並執行寄出確認。<br>
+3.系統會預設抓取區所上傳文件，若還有文件需提供北京聖島，煩請先點選[承辦文件上傳]將檔案上傳後，再執行Email寄發。<br>
+<font color=blue>◎作業選項：已寄出補入承辦</font><br>
+1.已寄出分案通知，輸入北京聖島承辦人員及北京聖島案號(新立案)。<br>
+2.請先選擇承辦人員或輸入北京聖島案號，再勾選案件並執行確認。<br>
+3.已分案未結辦前才能由此輸入承辦人員。<br>
+<font color=blue>欄位備註:</font><br>
+1.對方號：大陸案為北京聖島案號。<br>
+2.收文日期：指收件確認日期，空白表自行新增分案。<br>
+
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
 </html>
 
@@ -344,7 +349,6 @@
                         strLine1 = strLine1.replace(/{{bseq}}/g, item.bseq);
                         strLine1 = strLine1.replace(/{{bseq1}}/g, item.bseq1);
                         strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fseq);
                         strLine1 = strLine1.replace(/{{case_no}}/g, item.case_no);
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
                         strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
@@ -363,12 +367,25 @@
 
                         $("#tr_edit_"+nRow).showFor(item.br_source=="br");
                         $("#tr_editA_" + nRow).showFor(item.br_source == "opte");
-                        if($("#email_sqlno_"+nRow).val()!="0"){
-                            $("#span_copymail_"+nRow).hide();
-                        }
+
+                        //判斷作業種類
+                        $("#todo_send_"+nRow).showFor($("input[name='qrytodo']:checked").val()=="send");
+                        $("#todo_update_"+nRow).showFor($("input[name='qrytodo']:checked").val()=="update");
+
+                        //檢視發文信函
                         $("#span_openmail_"+nRow).hide();
                         if(parseInt(item.email_cnt, 10)>0){
                             $("#span_openmail_"+nRow).show();
+                            //複製e-mail
+                            if($("#email_sqlno_"+nRow).val()!="0"){
+                                $("#span_copymail_"+nRow).hide();
+                            }
+                        }
+
+                        //對方號
+                        $("#span_your_no_"+nRow).hide();
+                        if((item.ext_seq||"")==""){
+                            $("#span_your_no_"+nRow).show();
                         }
                     });
                 });
@@ -478,7 +495,49 @@
         
         var check=$("input[name^='ckbox_']:checked").length;
         if (check==0){
-            errMsg+="請勾選您要複製的檔案!!\n";
+            alert("尚未勾選任何資料項目!!");
+            return false;
+        }
+
+        var totnum=0;
+        var task=$("input[name='qrytodo']:checked").val();
+        var count = parseInt($("#count").val(), 10);
+        if (task=="send"){//寄出確認
+            for(var i=1;i<=count;i++){
+                if($("#ckbox_"+i).prop("checked")){
+                    if($("#email_cnt_"+i).val()=="0"){
+                        alert("案件" + $("#opt_no_"+i).val()+ "尚無Email寄出記錄，不可勾選且不可執行寄出確認作業！");
+                        $("#ckbox_"+i).focus();
+                        return false;
+                    }
+
+                    totnum+=1;
+                }
+            }
+
+            if (chkNull("寄出日期", $("#mail_date")[0])) return false;
+            var mail_date=new Date(Date.parse($("#mail_date").val()));
+            if(mail_date>(new Date())){
+                alert("寄出日期不得大於今日！");
+                $("#mail_date").focus();
+                return false;
+            }
+        }else if(task=="update"){//補入承辦人員
+            for(var i=1;i<=count;i++){
+                if($("#ckbox_"+i).prop("checked")){
+                    if($("#pr_scode_"+i).val()=="" && $("#your_no_"+i).val()==""){
+                        alert("案件" + $("#opt_no_"+i).val()+ "皆無輸入承辦人員或對方號，不可勾選且不需執行確認修改作業！");
+                        $("#ckbox_"+i).focus();
+                        return false;
+                    }
+                    totnum+=1;
+                }
+            }
+        }
+
+        if (totnum==0){
+            alert("請勾選您要確認的資料項目!!");
+            return false;
         }
 
         if (errMsg!="") {
@@ -486,9 +545,9 @@
             return false;
         }
     
-        if(confirm("注意！\n你確定要執行複製作業嗎？")){
+        if(confirm("注意！\n你確定要執行確認作業嗎？")){
             $("btnSubmit").lock(!$("#chkTest").prop("checked"));
-            reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.action = "<%=HTProgPrefix%>_updall.aspx?task="+task;
             reg.target = "ActFrame";
             reg.submit();
         }
