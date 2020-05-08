@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Classname="opte23_email_form" %>
+<%@ Control Language="C#" Classname="opte23_email_form" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
@@ -9,8 +9,8 @@
     public string tf_class = "";//?
     public string tf_subject = "";//Email主旨
     public string tf_content = "";//Email內容
-    public string att_name = "";//收件者姓名
     public string from_email = "";//寄件者Email
+    public string att_name = "";//收件者姓名
     public string att_email = "";//收件者Email
     public string cc_email = "";//副本Email
     public string bcc_email = "";//密件副本Email
@@ -143,23 +143,23 @@
 </script>
 
 <%=Sys.GetAscxPath(this)%>
-<input type="text" name="send_scode" value="<%#Session["scode"]%>"> 
-<input type="text" name="source_server" value="<%#Sys.Host%>">
-<INPUT TYPE="text" name="agt_comp" value="I">
-<INPUT TYPE="text" name="sendrs_kind" value="TE">
-<INPUT TYPE="text" name="sendseq" value="<%#RS.TryGet("bseq","")%>">
-<INPUT TYPE="text" name="sendseq1" value="<%#RS.TryGet("bseq1","")%>">
-<INPUT TYPE="text" name="job_sqlno" value="<%#ReqVal.TryGet("opt_sqlno","")%>">
-<INPUT TYPE="text" name="recordnum" value="<%#ReqVal.TryGet("recordnum","")%>">
-<INPUT TYPE="text" name="tf_code" value="<%#ReqVal.TryGet("tf_code","")%>">
-<INPUT TYPE="text" name="tf_class" value="<%#tf_class%>">
-<INPUT TYPE="text" id="email_sqlno" name="email_sqlno" value="<%#ReqVal.TryGet("email_sqlno","0")%>">
+<input type="hidden" id="send_scode" name="send_scode" value="<%#Session["scode"]%>"> 
+<input type="hidden" id="source_server" name="source_server" value="<%#Sys.Host%>">
+<INPUT TYPE="hidden" id="agt_comp" name="agt_comp" value="I">
+<INPUT TYPE="hidden" id="sendrs_kind" name="sendrs_kind" value="TE">
+<INPUT TYPE="hidden" id="sendseq" name="sendseq" value="<%#RS.TryGet("bseq","")%>">
+<INPUT TYPE="hidden" id="sendseq1" name="sendseq1" value="<%#RS.TryGet("bseq1","")%>">
+<INPUT TYPE="hidden" id="job_sqlno" name="job_sqlno" value="<%#ReqVal.TryGet("opt_sqlno","")%>">
+<INPUT TYPE="hidden" id="recordnum" name="recordnum" value="<%#ReqVal.TryGet("recordnum","")%>">
+<INPUT TYPE="hidden" id="tf_code" name="tf_code" value="<%#ReqVal.TryGet("tf_code","")%>">
+<INPUT TYPE="hidden" id="tf_class" name="tf_class" value="<%#tf_class%>">
+<INPUT TYPE="hidden" id="email_sqlno" name="email_sqlno" value="<%#ReqVal.TryGet("email_sqlno","0")%>">
 
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
 		<td class="lightbluetable" align="right" width="20%" nowrap>信函序號：</td>
 		<td class="whitetablebg" align="left" colspan="3">			
-			<INPUT name="tfsend_no" size=11 maxlength=10 value="<%#RS.TryGet("opt_no","")%>" class="Lock">
+			<INPUT id="tfsend_no" name="tfsend_no" size=11 maxlength=10 value="<%#RS.TryGet("opt_no","")%>" class="Lock">
 		</td>
 	</tr>
 	<tr>
@@ -171,61 +171,62 @@
 	<tr>
 		<td class="lightbluetable" align="right" nowrap>寄件者Email：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" name="from_email" size="50" maxlength="100" value="<%#from_email%>" class="Lock">
+			<input type="text" id="from_email" name="from_email" size="50" maxlength="100" value="<%#from_email%>" class="Lock">
 			(若無對外Email，則設定以siiplo為寄件者)
 		</td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right" nowrap>收件者姓名：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" name="att_name" size="50" maxlength="100" value="<%#att_name%>" >
+			<input type="text" id="att_name" name="att_name" size="50" maxlength="100" value="<%#att_name%>" >
 		</td>
 	</tr>		
 	<tr>
 		<td class="lightbluetable" align="right" nowrap>收件者Email：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" name="att_email" size="50" maxlength="100" value="<%#att_email%>" >
+			<input type="text" id="att_email" name="att_email" size="50" maxlength="100" value="<%#att_email%>" >
 		</td>
 	</tr>
 			
 	<tr>
 		<td class="lightbluetable" align="right" nowrap>副本：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" name="cc_email" size="50" maxlength="100" value="<%#cc_email%>" class="Lock">
+			<input type="text" id="cc_email" name="cc_email" size="50" maxlength="100" value="<%#cc_email%>" class="Lock">
 		</td>
 	</tr>
 	<tr style="display:none">
 		<td class="lightbluetable" align="right" nowrap>密件副本：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" name="bcc_email" size="50" maxlength="100" value="<%#bcc_email%>" class="Lock">
+			<input type="text" id="bcc_email" name="bcc_email" size="50" maxlength="100" value="<%#bcc_email%>" class="Lock">
 		</td>
 	</tr>
 	<tr>
 		<td class="lightbluetable" align="right" nowrap>附件：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="checkbox" name="pdf_all" value="Y" style="display:none">
+			<input type="checkbox" id="pdf_all" name="pdf_all" value="Y" style="display:none">
 			<span id="span_pdf_all" style="display:none">全選/全不選<br></span>
 			<asp:Repeater id="attachRepeater" runat="server">
 			<ItemTemplate>
-                <input type="text" id="pdfpath<%#Container.ItemIndex+1%>" name="pdfpath<%#Container.ItemIndex+1%>" value="<%#Eval("pdfpath")%>">
+                <input type="hidden" id="pdfpath<%#Container.ItemIndex+1%>" name="pdfpath<%#Container.ItemIndex+1%>" value="<%#Eval("pdfpath")%>">
 				<input type="hidden" id="pdfname<%#Container.ItemIndex+1%>" name="pdfname<%#Container.ItemIndex+1%>" value="<%#Eval("attach_name")%>">
 				<input type="hidden" id="pdfsize<%#Container.ItemIndex+1%>" name="pdfsize<%#Container.ItemIndex+1+1%>" value="<%#Eval("pdfsize")%>">
 				<input type="hidden" id="pdfbranch<%#Container.ItemIndex+1%>" name="pdfbranch<%#Container.ItemIndex+1%>" value="<%#Eval("upload_branch")%>">
-				<input type="text" id="brupload_server<%#Container.ItemIndex+1%>" name="brupload_server<%#Container.ItemIndex+1%>" value="<%#Eval("upload_branch_server")%>">
+				<input type="hidden" id="brupload_server<%#Container.ItemIndex+1%>" name="brupload_server<%#Container.ItemIndex+1%>" value="<%#Eval("upload_branch_server")%>">
 				<input type="checkbox" id="pdf_send<%#Container.ItemIndex+1%>" name="pdf_send<%#Container.ItemIndex+1%>" value="Y" <%#Eval("checked")%> onclick="email_form.get_file_size()">
-				<font color="darkblue" style="cursor:pointer" onclick="email_form.show_file('<%#((string)Eval("pdfpath")).Replace(@"\", @"\\")%>')" onmouseover="javascript:this.style.color='#ff0000';" onmouseout="javascript:this.style.color='#00008b';"><%#Eval("attach_name")%></font> 
+				<!--font color="darkblue" style="cursor:pointer" onclick="email_form.show_file('<%#((string)Eval("pdfpath")).Replace(@"\", @"\\")%>')" onmouseover="javascript:this.style.color='#ff0000';" onmouseout="javascript:this.style.color='#00008b';"><%#Eval("attach_name")%></font-->
+				<font color="darkblue" style="cursor:pointer" onclick="email_form.show_file('<%#Container.ItemIndex+1%>')" onmouseover="javascript:this.style.color='#ff0000';" onmouseout="javascript:this.style.color='#00008b';"><%#Eval("attach_name")%></font> 
 				(<%#Eval("pdfsize")%>KB)
 				<br>
 			</ItemTemplate>
 			</asp:Repeater>
-			<input type="text"id="pdfcnt" name="pdfcnt" value="<%#attcnt%>">
+			<input type="hidden" id="pdfcnt" name="pdfcnt" value="<%#attcnt%>">
 		</td>
 	</tr>
 
     <tr>
 		<td class="lightbluetable" align="right" nowrap>附件檔案大小：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" id="file_size" name="file_size"> 
+			<input type="hidden" id="file_size" name="file_size"> 
             <span id="span_file_size"></span>&nbsp;KB
 			&nbsp;&nbsp;&nbsp;&nbsp;◎所有附件之檔案大小總和不得超過4MB(4096KB)。
 		</td>				
@@ -233,7 +234,7 @@
 	<tr>
 		<td class="lightbluetable" align="right" nowrap>Email主旨：</td>
 		<td class="whitetablebg" align="left" colspan="3">
-			<input type="text" name="tf_subject" size="80" maxlength="100" value="<%#tf_subject%>">
+			<input type="text" id="tf_subject" name="tf_subject" size="80" maxlength="100" value="<%#tf_subject%>">
 		</td>
 	</tr>				
 	<tr>
@@ -250,8 +251,8 @@
     }
 
     //檢視PDF
-    email_form.show_file = function (pdfpath) {
-        window.open("http://" + pdfpath, "", "width=800 height=600 top=40 left=80 toolbar=no, menubar=yes, location=no, directories=no resizable=yes status=no scrollbars=yes");
+    email_form.show_file = function (i) {
+        window.open("http://" + $("#pdfpath" + i).val(), "", "width=800 height=600 top=40 left=80 toolbar=no, menubar=yes, location=no, directories=no resizable=yes status=no scrollbars=yes");
     }
 
     //檢查附件檔案總和
