@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
+using System.IO;
 
 public class Sys
 {
@@ -220,6 +221,10 @@ public class Sys
     /// 發送郵件
     /// </summary>
     public static void DoSendMail(string Subject, string Msg, string SendFrom, List<string> SendTo, List<string> SendCC, List<string> SendBCC) {
+        DoSendMail(Subject, Msg, SendFrom, SendTo, SendCC, SendBCC, new List<string[]>());
+    }
+
+    public static void DoSendMail(string Subject, string Msg, string SendFrom, List<string> SendTo, List<string> SendCC, List<string> SendBCC, List<string[]> SendAttach) {
         MailMessage MailMsg = new MailMessage();
         MailMsg.From = new MailAddress(SendFrom);//寄件者
         foreach (string to in SendTo)//收件者
@@ -240,6 +245,13 @@ public class Sys
                 MailMsg.Bcc.Add(new MailAddress(bcc));
             }
         }
+        foreach (string[] attach in SendAttach)//附件
+		{
+            if (!string.IsNullOrEmpty(attach[0])) {
+                MemoryStream ms1 = new MemoryStream(File.ReadAllBytes(attach[0]));
+                MailMsg.Attachments.Add(new Attachment(ms1, attach[1]));
+            }
+        }
 
         MailMsg.Subject = Subject;//主旨
         MailMsg.SubjectEncoding = Encoding.UTF8;
@@ -249,7 +261,8 @@ public class Sys
 
 		//SmtpClient client = new SmtpClient("192.192.10.30");
 		//SmtpClient client = new SmtpClient("sin22.saint-island.com.tw");
-        SmtpClient client = new SmtpClient("sin30.saint-island.com.tw");
+        //SmtpClient client = new SmtpClient("sin30.saint-island.com.tw");
+        SmtpClient client = new SmtpClient("sin30");
         try {
             //client.ServicePoint.MaxIdleTime = 2;//連線可閒置時間(毫秒)
             //client.ServicePoint.ConnectionLimit = 1;//允許最大連線數
