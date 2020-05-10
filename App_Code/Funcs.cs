@@ -13,7 +13,7 @@ public class Funcs {
     /// </summary>  
     public static string formatSeq(string seq, string seq1, string country, string branch, string dept) {
         string lseq = branch + dept + "-" + seq;
-        lseq += (seq1 != "_" ? ("-" + seq1) : "");
+        lseq += (seq1 != "_" && seq1 != "" ? ("-" + seq1) : "");
         lseq += (country != "" ? (" " + country.ToUpper()) : "");
         return lseq;
     }

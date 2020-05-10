@@ -110,17 +110,17 @@
 	    <tr>		
 		    <TD class=lightbluetable align=right nowrap>成立狀態：</TD>
 		    <TD class=whitetablebg align=left nowrap >
-			    <input type="radio" name='qry_opt_comfirm' value='1' >全部成立
-	            <input type="radio" name='qry_opt_comfirm' value='2' >部分成立
-	            <input type="radio" name='qry_opt_comfirm' value='3' >全部不成立
-	            <input type="radio" name='qry_opt_comfirm' checked value='' >不指定
+			    <label><input type="radio" name='qry_opt_comfirm' value='1' >全部成立</label>
+	            <label><input type="radio" name='qry_opt_comfirm' value='2' >部分成立</label>
+	            <label><input type="radio" name='qry_opt_comfirm' value='3' >全部不成立</label>
+	            <label><input type="radio" name='qry_opt_comfirm' checked value='' >不指定</label>
 		    </td> 
 		    <TD class=lightbluetable align=right nowrap>生效狀態：</TD>
 		    <TD class=whitetablebg align=left nowrap>
-			    <input type="radio" name='qry_opt_check' value='1' >確定已生效
-	            <input type="radio" name='qry_opt_check' value='2' >確定被推翻
-	            <input type="radio" name='qry_opt_check' value='3' >救濟中或尚未能確定
-	            <input type="radio" name='qry_opt_check' checked value='' >不指定
+			    <label><input type="radio" name='qry_opt_check' value='1' >確定已生效</label>
+	            <label><input type="radio" name='qry_opt_check' value='2' >確定被推翻</label>
+	            <label><input type="radio" name='qry_opt_check' value='3' >救濟中或尚未能確定</label>
+	            <label><input type="radio" name='qry_opt_check' checked value='' >不指定</label>
 		    </td>
 	    </tr>
 	    <tr>
@@ -128,17 +128,17 @@
 		    <td class="whitetablebg" align="left" colspan="3">
 			    <input type="text" name="qry_pr_date_B" size="10" maxLength="10" class="dateField">
 			    <input type="text" name="qry_pr_date_E" size="10" maxLength="10" class="dateField">
-			    <INPUT type="checkbox" name="No_date" value="Y" checked>不指定
+			    <label><INPUT type="checkbox" name="No_date" value="Y" checked>不指定</label>
             </td>
         </tr>	
 	    <tr>
             <td class=lightbluetable width="17%" align="right">全文檢索欄位 : </td>
             <td class=whitetablebg colspan="3">
-		        <INPUT type="checkbox" name="qry_opt_pic" value="Y">商標名稱
-		        <INPUT type="checkbox" name="qry_cust_name" value="Y">客戶名稱
-		        <INPUT type="checkbox" name="qry_opt_class_name" value="Y">商品
-		        <INPUT type="checkbox" name="qry_opt_point" value="Y">判決要旨
-		        <INPUT type="checkbox" name="qry_opt_mark" value="Y">關鍵字
+		        <label><INPUT type="checkbox" name="qry_opt_pic" value="Y">商標名稱</label>
+		        <label><INPUT type="checkbox" name="qry_cust_name" value="Y">客戶名稱</label>
+		        <label><INPUT type="checkbox" name="qry_opt_class_name" value="Y">商品</label>
+		        <label><INPUT type="checkbox" name="qry_opt_point" value="Y">判決要旨</label>
+		        <label><INPUT type="checkbox" name="qry_opt_mark" value="Y">關鍵字</label>
             </td>
         </tr>
         <tr>
@@ -243,7 +243,8 @@
             </td>
         </tr>
     </table>
-
+    <br>
+    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
     </div>
 
     <div id="divPaging" style="display:none">
@@ -292,13 +293,17 @@
 	</thead>
 	<tfoot style="display:none">
 	    <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-            <td nowrap align=left >{{BJTseq}}</td>				
-		    <td nowrap align=left title="{{opt_class_name}}" >{{opt_clas}}</td>
-		    <td nowrap align="left" onclick="attach_click('{{opt_pic_path}}')" style="cursor: pointer;" onmouseover="this.style.color='red'" onmouseout="this.style.color='black'">
-                {{opt_pic")}}<img src="../images/annex.gif" title="{{opt_pic_path}}" >
+            <td nowrap align=left >{{BJTseq}}</td>
+		    <td nowrap align=left title="{{opt_class_name}}" >{{opt_class}}</td>
+		    <td nowrap align="left">
+                <input type="hidden" id="opt_pic_path_{{nRow}}" value="{{opt_pic_path}}" />
+               <span id="opt_pic_A_{{nRow}}" onclick="attach_click('{{nRow}}')" style="cursor: pointer;" onmouseover="this.style.color='red'" onmouseout="this.style.color='black'">
+                   {{opt_pic}}<img src="../images/annex.gif" title="{{opt_pic_path}}" >
+               </span>
+               <span id="opt_pic_B_{{nRow}}">{{opt_pic}}</span>
 		    </td>
 		    <td nowrap align=left title="{{opt_point}}">{{opt_point}}</td>
-            <td nowrap align=left >{{opt_comfirm_string}}/<br>{{opt_check_string}}</td>
+            <td nowrap align=left >{{opt_comfirm_str}}/<br>{{opt_check_str}}</td>
 		    <td nowrap align=left >{{law_detail_no}}</td>	
 		    <td nowrap align=left >{{pr_date}}</td>	
 		    <td nowrap>
@@ -352,10 +357,9 @@
         $("#divPaging,#noData,#dataList").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
-
         $.ajax({
             url: "<%#HTProgPrefix%>List.aspx",
-            type: "post",
+            type: "get",
             async: false,
             cache: false,
             data: $("#reg").serialize(),
@@ -390,7 +394,7 @@
                 nowPage < totPage ? $("#PageDown").show() : $("#PageDown").hide();
                 $("a.pgU").attr("v1", nowPage - 1);
                 $("a.pgD").attr("v1", nowPage + 1);
-                //$("#id-div-slide").slideUp("fast");
+                $("#id-div-slide").slideUp("fast");
 
                 $("#count").val(JSONdata.pagedtable.length);
                 $.each(JSONdata.pagedtable, function (i, item) {
@@ -403,44 +407,33 @@
                         strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
                         strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
 
-                        strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
-                        strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
-                        strLine1 = strLine1.replace(/{{attach_sqlno}}/g, item.attach_sqlno);
-                        strLine1 = strLine1.replace(/{{email_cnt}}/g, item.email_cnt);
-                        strLine1 = strLine1.replace(/{{email_sqlno}}/g, item.email_sqlno);
-                        strLine1 = strLine1.replace(/{{maxemail_sqlno}}/g, item.maxemail_sqlno);
-                        strLine1 = strLine1.replace(/{{task}}/g, item.task);
-                        strLine1 = strLine1.replace(/{{mail_status}}/g, item.mail_status);
-
+                        strLine1 = strLine1.replace(/{{BJTseq}}/g, item.fbjtseq);
+                        strLine1 = strLine1.replace(/{{opt_class_name}}/g, item.opt_class_name);
+                        strLine1 = strLine1.replace(/{{opt_class}}/g, item.opt_class);
+                        strLine1 = strLine1.replace(/{{opt_pic_path}}/g, item.opt_pic_path);
+                        strLine1 = strLine1.replace(/{{opt_pic}}/g, item.opt_pic);
+                        strLine1 = strLine1.replace(/{{opt_point}}/g, item.opt_point.CutData(30));
+                        strLine1 = strLine1.replace(/{{opt_comfirm_str}}/g, item.opt_comfirm_str);
+                        strLine1 = strLine1.replace(/{{opt_check_str}}/g, item.opt_check_str);
+                        strLine1 = strLine1.replace(/{{law_detail_no}}/g, item.law_detail_no);
                         strLine1 = strLine1.replace(/{{branch}}/g, item.branch);
-                        strLine1 = strLine1.replace(/{{bseq}}/g, item.bseq);
-                        strLine1 = strLine1.replace(/{{bseq1}}/g, item.bseq1);
-                        strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{case_no}}/g, item.case_no);
-                        strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
-                        strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
-                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fext_seq);
-                        strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
-                        strLine1 = strLine1.replace(/{{pr_rs_code_name}}/g, item.pr_rs_code_name);
-                        strLine1 = strLine1.replace(/{{opt_in_date}}/g, dateReviver(item.opt_in_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
-                        strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{ctrl_date}}/g, dateReviver(item.ctrl_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date, "yyyy/M/d"));
-                        //strLine1 = strLine1.replace(/{{urlmail}}/g, item.urlmail);
-                        strLine1 = strLine1.replace(/{{todoname}}/g, item.todoname);
+                        strLine1 = strLine1.replace(/{{pr_date}}/g, dateReviver(item.pr_date, "yyyy/M/d"));
+                        strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
 
                         $("#dataList>tbody").append(strLine1);
-                        $("#tr_edit_"+nRow).showFor(item.br_source=="br");
-                        $("#tr_editA_" + nRow).showFor(item.br_source == "opte");
-                        $("#recopy_flag").val(item.recopy_flag);
+                        if(item.opt_pic_path!=""){
+                            $("#opt_pic_A_"+nRow).show();
+                            $("#opt_pic_B_"+nRow).hide();
+                        }else{
+                            $("#opt_pic_A_"+nRow).hide();
+                            $("#opt_pic_B_"+nRow).show();
+                        }
                     });
                 });
             },
             beforeSend: function (jqXHR, settings) {
                 jqXHR.url = settings.url;
-                //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
+                toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
@@ -587,4 +580,9 @@
         $("tr[name='tr_law_" + nRow+"']").remove();
         $("#class_num").val(Math.max(0, nRow - 1));
     });
+
+    function attach_click(pno){
+        var url=$("#opt_pic_path_"+pno).val();
+        window.open(url,"","width=1000 height=600 top=40 left=80 toolbar=no, menubar=yes, location=no, directories=no resizable=yes status=no scrollbars=yes");
+    }
 </script>

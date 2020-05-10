@@ -583,7 +583,7 @@
                     SQL += ") values (";
                     SQL += popt_sqlno + ",'" + psource + "'";
                     SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace("\\nopt\\", "\\opt\\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
@@ -594,7 +594,7 @@
             } else if (dbflag == "U") {
                 Funcs.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
                 SQL = "Update attach_opt set Source='" + psource + "'";
-                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace("\\nopt\\", "\\opt\\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                 SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
                 SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
                 SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
