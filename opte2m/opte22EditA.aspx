@@ -180,7 +180,7 @@
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
-        $(".QHide").lock(<%#QHide%>);
+        $(".QHide").hideFor(<%#QHide%>);
         $(".PLock").lock(<%#PLock%>);
         $(".PHide").lock(<%#PHide%>);
         $(".RLock").lock(<%#RLock%>);
