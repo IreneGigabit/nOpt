@@ -153,7 +153,7 @@
         $("#btnsearchSubmit3").showFor($("#submittask").val()=="DEL");//刪除分案時顯示[刪除分案]
         $(".Lock").lock();
         $(".QLock").lock(<%#QLock%>);
-        $(".QHide").lock(<%#QHide%>);
+        $(".QHide").hideFor(<%#QHide%>);
         $(".RLock").lock(<%#RLock%>);
         $(".CLock").lock(<%#CLock%>);
 
