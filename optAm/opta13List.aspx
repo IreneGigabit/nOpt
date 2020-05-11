@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -20,7 +20,8 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe(false, true);
 
-        ReqVal = Request.Form.ToDictionary();
+        //ReqVal = Request.Form.ToDictionary();
+        ReqVal = Request.QueryString.ToDictionary();
 
         bool first_check = false;//判斷有無填寫條件
         bool last_check = false;//判斷有無填寫條件
@@ -81,7 +82,7 @@
 
             //法條搜尋條件
             first_check=false;//判斷有無填寫條件
-            for (int i = 0; i < int.Parse(ReqVal.TryGet("class_num","0")); i++) {
+            for (int i = 1; i <= int.Parse(ReqVal.TryGet("class_num","0")); i++) {
                 if ((Request["law_type1_"+i] ?? "") != ""
                     ||(Request["law_type2_"+i] ?? "") != ""
                     ||(Request["law_type3_"+i] ?? "") != "") {
@@ -89,11 +90,12 @@
                     break;
                 }
             }
+
             if (first_check) {
                 isql += "  AND ( ";
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("class_num", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("class_num", "0")); i++) {
                     if ((Request["law_type1_" + i] ?? "") != ""|| (Request["law_type2_" + i] ?? "") != ""|| (Request["law_type3_" + i] ?? "") != "") {
-                        isql += (i == 0 ? " ( " : " OR ( ");
+                        isql += (i == 1 ? " ( " : " OR ( ");
                         if ((Request["law_type1_" + i] ?? "") != "") {
                             isql += " ','+ref_law+',' like '%," + Request["law_type1_" + i] + ",%' ";
                         }
@@ -112,7 +114,7 @@
             //全文檢索-商標名稱
             if ((Request["qry_opt_pic"] ?? "") == "Y") {
                 first_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
@@ -123,9 +125,9 @@
                 
                 if (first_check) {
                     isql += "  AND( ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                         if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordA_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_pic like '%" + Request["f_wordA_" + i + "_1"] + "%' ";
                             }
@@ -142,7 +144,7 @@
                 }
 
                 first_check = false;//判斷有無填寫不包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
@@ -152,9 +154,9 @@
                 }
                 if (first_check) {
                     isql += "  AND ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                         if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordB_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_pic NOT like '%" + Request["f_wordB_" + i + "_1"] + "%' ";
                             }
@@ -171,14 +173,14 @@
                 }
 
                 last_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != ""|| (Request["f_wordA_" + i + "_2"] ?? "") != ""|| (Request["f_wordA_" + i + "_3"] ?? "") != "") {
                         last_check = true;
                         break;
                     }
                 }
                 last_CNot_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <=int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
                         last_CNot_check = true;
                         break;
@@ -194,7 +196,7 @@
             //全文檢索-客戶名稱
             if ((Request["qry_cust_name"] ?? "") == "Y") {
                 first_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
@@ -205,9 +207,9 @@
 
                 if (first_check) {
                     isql += "  AND( ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                         if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordA_" + i + "_1"] ?? "") != "") {
                                 isql += " cust_name like '%" + Request["f_wordA_" + i + "_1"] + "%' ";
                             }
@@ -224,7 +226,7 @@
                 }
 
                 first_check = false;//判斷有無填寫不包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
@@ -234,9 +236,9 @@
                 }
                 if (first_check) {
                     isql += "  AND ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                         if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordB_" + i + "_1"] ?? "") != "") {
                                 isql += " cust_name NOT like '%" + Request["f_wordB_" + i + "_1"] + "%' ";
                             }
@@ -253,14 +255,14 @@
                 }
 
                 last_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
                         last_check = true;
                         break;
                     }
                 }
                 last_CNot_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
                         last_CNot_check = true;
                         break;
@@ -275,7 +277,7 @@
             //全文檢索-商品類別名稱
             if ((Request["qry_opt_class_name"] ?? "") == "Y") {
                 first_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
@@ -286,9 +288,9 @@
 
                 if (first_check) {
                     isql += "  AND( ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                         if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1? " ( " : " OR ( ");
                             if ((Request["f_wordA_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_class_name like '%" + Request["f_wordA_" + i + "_1"] + "%' ";
                             }
@@ -305,7 +307,7 @@
                 }
 
                 first_check = false;//判斷有無填寫不包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
@@ -315,9 +317,9 @@
                 }
                 if (first_check) {
                     isql += "  AND ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                         if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordB_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_class_name NOT like '%" + Request["f_wordB_" + i + "_1"] + "%' ";
                             }
@@ -334,14 +336,14 @@
                 }
 
                 last_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
                         last_check = true;
                         break;
                     }
                 }
                 last_CNot_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
                         last_CNot_check = true;
                         break;
@@ -356,7 +358,7 @@
             //全文檢索-判決主旨
             if ((Request["qry_opt_point"] ?? "") == "Y") {
                 first_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
@@ -367,9 +369,9 @@
 
                 if (first_check) {
                     isql += "  AND( ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                         if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordA_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_point like '%" + Request["f_wordA_" + i + "_1"] + "%' ";
                             }
@@ -386,7 +388,7 @@
                 }
 
                 first_check = false;//判斷有無填寫不包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
@@ -396,9 +398,9 @@
                 }
                 if (first_check) {
                     isql += "  AND ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                         if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordB_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_point NOT like '%" + Request["f_wordB_" + i + "_1"] + "%' ";
                             }
@@ -415,14 +417,14 @@
                 }
 
                 last_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
                         last_check = true;
                         break;
                     }
                 }
                 last_CNot_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
                         last_CNot_check = true;
                         break;
@@ -437,7 +439,7 @@
             //全文檢索-關鍵字
             if ((Request["qry_opt_mark"] ?? "") == "Y") {
                 first_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
@@ -448,9 +450,9 @@
 
                 if (first_check) {
                     isql += "  AND( ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                         if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordA_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_mark like '%" + Request["f_wordA_" + i + "_1"] + "%' ";
                             }
@@ -467,7 +469,7 @@
                 }
 
                 first_check = false;//判斷有無填寫不包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_2"] ?? "") != ""
                         || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
@@ -477,9 +479,9 @@
                 }
                 if (first_check) {
                     isql += "  AND ( ";
-                    for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                    for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                         if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
-                            isql += (i == 0 ? " ( " : " OR ( ");
+                            isql += (i == 1 ? " ( " : " OR ( ");
                             if ((Request["f_wordB_" + i + "_1"] ?? "") != "") {
                                 isql += " opt_mark NOT like '%" + Request["f_wordB_" + i + "_1"] + "%' ";
                             }
@@ -496,14 +498,14 @@
                 }
 
                 last_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
                     if ((Request["f_wordA_" + i + "_1"] ?? "") != "" || (Request["f_wordA_" + i + "_2"] ?? "") != "" || (Request["f_wordA_" + i + "_3"] ?? "") != "") {
                         last_check = true;
                         break;
                     }
                 }
                 last_CNot_check = false;//判斷有無填寫包含條件
-                for (int i = 0; i < int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
+                for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_CNot", "0")); i++) {
                     if ((Request["f_wordB_" + i + "_1"] ?? "") != "" || (Request["f_wordB_" + i + "_2"] ?? "") != "" || (Request["f_wordB_" + i + "_3"] ?? "") != "") {
                         last_CNot_check = true;
                         break;
@@ -531,7 +533,6 @@
             Paging page = new Paging(nowPage, PerPageSize, string.Join(";", conn.exeSQL.ToArray()));
             page.GetPagedTable(dt);
 
-            string recopy_flag = "N";
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
 
