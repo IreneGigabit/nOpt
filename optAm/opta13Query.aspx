@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -134,11 +134,11 @@
 	    <tr>
             <td class=lightbluetable width="17%" align="right">全文檢索欄位 : </td>
             <td class=whitetablebg colspan="3">
-		        <label><INPUT type="checkbox" name="qry_opt_pic" value="Y">商標名稱</label>
-		        <label><INPUT type="checkbox" name="qry_cust_name" value="Y">客戶名稱</label>
-		        <label><INPUT type="checkbox" name="qry_opt_class_name" value="Y">商品</label>
-		        <label><INPUT type="checkbox" name="qry_opt_point" value="Y">判決要旨</label>
-		        <label><INPUT type="checkbox" name="qry_opt_mark" value="Y">關鍵字</label>
+		        <label><INPUT type="checkbox" id="qry_opt_pic" name="qry_opt_pic" value="Y">商標名稱</label>
+		        <label><INPUT type="checkbox" id="qry_cust_name" name="qry_cust_name" value="Y">客戶名稱</label>
+		        <label><INPUT type="checkbox" id="qry_opt_class_name" name="qry_opt_class_name" value="Y">商品</label>
+		        <label><INPUT type="checkbox" id="qry_opt_point" name="qry_opt_point" value="Y">判決要旨</label>
+		        <label><INPUT type="checkbox" id="qry_opt_mark" name="qry_opt_mark" value="Y">關鍵字</label>
             </td>
         </tr>
         <tr>
@@ -161,9 +161,9 @@
                                 {{lawOR}}包含條件##
                             </td>
                             <td class=whitetablebg align="left">&nbsp;
-                            內容:<input type=text size=10 name="f_wordA_##_1">
-                            AND <input type=text size=10 name="f_wordA_##_2">
-                            AND <input type=text size=10 name="f_wordA_##_3">
+                            內容:<input type=text size=10 id="f_wordA_##_1" name="f_wordA_##_1">
+                            AND <input type=text size=10 id="f_wordA_##_2" name="f_wordA_##_2">
+                            AND <input type=text size=10 id="f_wordA_##_3" name="f_wordA_##_3">
                             </td>
                         </tr>
                     </tfoot>
@@ -191,9 +191,9 @@
                                 {{lawOR}}不包含條件##
                             </td>
                             <td class=whitetablebg align="left">&nbsp;
-                            內容:<input type=text size=10 name="f_wordB_##_1">
-                            AND <input type=text size=10 name="f_wordB_##_2">
-                            AND <input type=text size=10 name="f_wordB_##_3">
+                            內容:<input type=text size=10 id="f_wordB_##_1" name="f_wordB_##_1">
+                            AND <input type=text size=10 id="f_wordB_##_2" name="f_wordB_##_2">
+                            AND <input type=text size=10 id="f_wordB_##_3" name="f_wordB_##_3">
                             </td>
                         </tr>
                     </tfoot>
@@ -236,8 +236,8 @@
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
         <tr>
             <td width="100%" align="center">
-            <input type=text id="law_count" name="law_count" value="0">
-	        <input type=text id="law_CNot" name="law_CNot" value="0">
+            <input type=hidden id="law_count" name="law_count" value="0">
+	        <input type=hidden id="law_CNot" name="law_CNot" value="0">
             <input type="button" value="查　詢" class="cbutton" onClick="formSearchSubmit()">
             <input type="button" value="重　填" class="cbutton" onClick="resetForm()">
             </td>
@@ -348,6 +348,53 @@
         $("#dataList>thead tr .setOdr span").remove();
         $("#SetOrder").val("");
 
+        for(var i=1;i<=parseInt($("#class_num").val(), 10);i++){
+            if($("#law_type1_"+i).val()==""&&$("#law_type2_"+i).val()!=""&&$("#law_type3_"+i).val()!=""){
+                alert("法條搜尋條件 請先由第一個欄位選擇");
+                $("#law_type1_"+i).focus();
+                return false;
+            }
+        }
+
+        if($("#qry_opt_pic").prop("checked")||$("#qry_cust_name").prop("checked")||$("#qry_opt_class_name").prop("checked")||$("#qry_opt_point").prop("checked")||$("#qry_opt_mark").prop("checked")){
+            var checkA=false;
+            var checkB=false;
+            for(var i=1;i<=parseInt($("#law_count").val(), 10);i++){
+                if($("#f_wordA_"+i+"_1").val()==""&&$("#f_wordA_"+i+"_2").val()!=""&&$("#f_wordA_"+i+"_3").val()!=""){
+                    alert("包 含 條 件 請由第一個欄位開始填寫");
+                    $("#f_wordA_"+i+"_1").focus();
+                    return false;
+                }
+        
+                if($("#f_wordA_"+i+"_1").val()==""&&$("#f_wordA_"+i+"_2").val()==""&&$("#f_wordA_"+i+"_3").val()==""){
+                    checkA=true;
+                }else{
+                    checkA=false;
+                    break;
+                }
+            }
+
+            for(var i=1;i<=parseInt($("#law_CNot").val(), 10);i++){
+                if($("#f_wordB_"+i+"_1").val()==""&&$("#f_wordB_"+i+"_2").val()!=""&&$("#f_wordB_"+i+"_3").val()!=""){
+                    alert("不 包 含 條 件 請由第一個欄位開始填寫");
+                    $("#f_wordB_"+i+"_1").focus();
+                    return false;
+                }
+        
+                if($("#f_wordB_"+i+"_1").val()==""&&$("#f_wordB_"+i+"_2").val()==""&&$("#f_wordB_"+i+"_3").val()==""){
+                    checkB=true;
+                }else{
+                    checkB=false;
+                    break;
+                }
+            }
+            
+            if(checkA&&checkB){
+                alert("請輸入全文檢索條件 ! ");
+                return false;
+            }
+        }
+
         goSearch();
     }
 
@@ -433,7 +480,7 @@
             },
             beforeSend: function (jqXHR, settings) {
                 jqXHR.url = settings.url;
-                toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
+                //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
