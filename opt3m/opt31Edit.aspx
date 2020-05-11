@@ -343,7 +343,7 @@
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
-        $(".QHide").lock(<%#QHide%>);
+        $(".QHide").hideFor(<%#QHide%>);
         $(".PLock").lock(<%#PLock%>);
         $(".RLock").lock(<%#RLock%>);
         $(".BLock").lock(<%#BLock%>);
