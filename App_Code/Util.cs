@@ -144,7 +144,7 @@ public static class Util
 
 	#region CutData
     /// <summary>
-    /// 擷取指定長度
+    /// 擷取指定長度(byte數)
     /// </summary>
     public static string CutData(this string s, int n) {
 		if (n <= 0) return "";

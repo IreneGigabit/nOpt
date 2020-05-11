@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -154,15 +154,15 @@
 	</thead>
 	<tfoot style="display:none">
 	    <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-            <td nowrap align=left >{{law_sqlno}}</td>
+            <td nowrap align=center >{{law_sqlno}}</td>
 		    <td nowrap align=left >{{law_detail_no}}</td>
 		    <td nowrap align=left title="{{law_mark}}" >{{law_mark_str}}</td>
 		    <td nowrap>
                 <span id="edit8_{{nRow}}">
-		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=U&law_sqlno={{law_sqlno}}>" target="Eblank">[維護]</a>
+		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=U&law_sqlno={{law_sqlno}}" target="Eblank">[維護]</a>
                 </span>
                 <span id="edit16_{{nRow}}">
-		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=D&law_sqlno={{law_sqlno}}>" target="Eblank">[停用]</a>
+		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=D&law_sqlno={{law_sqlno}}" target="Eblank">[停用]</a>
                 </span>
 		    </td>
 	    </tr>
@@ -249,27 +249,14 @@
                         strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
                         strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
 
-                        strLine1 = strLine1.replace(/{{BJTseq}}/g, item.fbjtseq);
-                        strLine1 = strLine1.replace(/{{opt_class_name}}/g, item.opt_class_name);
-                        strLine1 = strLine1.replace(/{{opt_class}}/g, item.opt_class);
-                        strLine1 = strLine1.replace(/{{opt_pic_path}}/g, item.opt_pic_path);
-                        strLine1 = strLine1.replace(/{{opt_pic}}/g, item.opt_pic);
-                        strLine1 = strLine1.replace(/{{opt_point}}/g, item.opt_point.CutData(30));
-                        strLine1 = strLine1.replace(/{{opt_comfirm_str}}/g, item.opt_comfirm_str);
-                        strLine1 = strLine1.replace(/{{opt_check_str}}/g, item.opt_check_str);
+                        strLine1 = strLine1.replace(/{{law_sqlno}}/g, item.law_sqlno);
                         strLine1 = strLine1.replace(/{{law_detail_no}}/g, item.law_detail_no);
-                        strLine1 = strLine1.replace(/{{branch}}/g, item.branch);
-                        strLine1 = strLine1.replace(/{{pr_date}}/g, dateReviver(item.pr_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
+                        strLine1 = strLine1.replace(/{{law_mark}}/g, item.law_mark);
+                        strLine1 = strLine1.replace(/{{law_mark_str}}/g, item.law_mark_str);
 
                         $("#dataList>tbody").append(strLine1);
-                        if(item.opt_pic_path!=""){
-                            $("#opt_pic_A_"+nRow).show();
-                            $("#opt_pic_B_"+nRow).hide();
-                        }else{
-                            $("#opt_pic_A_"+nRow).hide();
-                            $("#opt_pic_B_"+nRow).show();
-                        }
+                        $("#edit8_"+nRow).showFor((<%#HTProgRight%> & 8));
+                        $("#edit16_"+nRow).showFor((<%#HTProgRight%> & 16));
                     });
                 });
             },
