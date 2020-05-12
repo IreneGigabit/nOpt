@@ -33,10 +33,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U") {//發文確認
                 doConfirm();
@@ -74,7 +76,7 @@
                             todo_scode = dr.SafeRead("in_scode", "");
                         }
                     }
-                    
+
                     SQL = "update todo_opt set approve_scode='" + Session["scode"] + "'";
                     SQL += ",resp_date=getdate()";
                     SQL += ",job_status='YY'";
@@ -100,7 +102,7 @@
                     SQL = "Update case_opt Set mark='D'";
                     SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     conn.ExecuteNonQuery(SQL);
-                 
+
                     //connB.Commit();
                     //conn.Commit();
                     connB.RollBack();

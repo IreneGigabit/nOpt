@@ -54,10 +54,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U" || submitTask == "P") {//承辦結辦/列印
                 doConfirm();
@@ -207,7 +209,7 @@
                     }
                 }
             }
-            
+
             //conn.Commit();
             conn.RollBack();
 
@@ -324,7 +326,7 @@
             Sys.errorLog(ex, conn.exeSQL, prgid);
             msg = "退回失敗";
             strOut.AppendLine("alert('" + msg + "');");
-            
+
             throw new Exception(msg, ex);
         }
         finally {
@@ -592,7 +594,7 @@
                     conn.ExecuteNonQuery(SQL);
                 }
             } else if (dbflag == "U") {
-                Funcs.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
+                Funcs.insert_log_table(conn, "U", prgid, "attach_opt", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") );
                 SQL = "Update attach_opt set Source='" + psource + "'";
                 SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                 SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
@@ -607,7 +609,7 @@
                 SQL += " Where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
                 conn.ExecuteNonQuery(SQL);
             } else if (dbflag == "D") {
-                Funcs.insert_log_table(conn, "U", prgid, "attach_opt", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
+                Funcs.insert_log_table(conn, "U", prgid, "attach_opt",  "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") );
                 //當attach_sqlno <> empty時,表示db有值,必須刪除data(update attach_flag = 'D')
                 if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
                     SQL = "update attach_opt set attach_flag='D'";

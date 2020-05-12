@@ -53,7 +53,7 @@
             string opt_no = (objResult == DBNull.Value || objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
 
             //入br_opt_log
-            Funcs.insert_log_table(conn, "U", prgid, "br_opt", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+            Funcs.insert_log_table(conn, "U", prgid, "br_opt", "opt_sqlno", opt_sqlno );
 
             //抓前一todo的流水號
             string pre_sqlno = "";
@@ -110,7 +110,7 @@
         DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(Request["chkTest"] == "TEST");
         try {
             //入br_opt_log
-            Funcs.insert_log_table(conn, "U", prgid, "br_opt", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+            Funcs.insert_log_table(conn, "U", prgid, "br_opt", "opt_sqlno", opt_sqlno);
 
             SQL = "update br_opt set mark='B' ";
             SQL += " where opt_sqlno='" + opt_sqlno + "' ";

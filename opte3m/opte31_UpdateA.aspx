@@ -45,10 +45,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U") {//承辦結辦
                 doConfirm();
@@ -78,10 +80,10 @@
             //結辦-流程狀態修改
             if (end_flag == "Y") {
                 //結辦與判行人員相同，修改流程狀態
-		        if( sameap_flag=="Y")
-			        update_bropt_ap(conn);
-		        else
-			        update_bropt_end(conn, Job_Scode);
+                if( sameap_flag=="Y")
+                    update_bropt_ap(conn);
+                else
+                    update_bropt_end(conn, Job_Scode);
             }
 
             //出口案先不提供結辦暨判行
@@ -147,7 +149,7 @@
 
     //修改分案主檔之承辦資料
     private void update_bropt(DBHelper conn, string job_scode) {
-        Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+        Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", opt_sqlno );
 
         SQL = "update br_opte set pr_hour=" + Util.dbzero(ReqVal.TryGet("pr_hour", "0")) + "";
         SQL += ",pr_per=" + Util.dbzero(ReqVal.TryGet("pr_per", "0")) + "";
@@ -200,7 +202,7 @@
         SQL += " and dowhat='PR' and job_status='NN' ";
         conn.ExecuteNonQuery(SQL);
     }
-    
+
     //處理上傳圖檔的部份
     private void upin_attach_opt(DBHelper conn, string popt_sqlno, string psource) {
         //欄位名稱
@@ -230,7 +232,7 @@
                     conn.ExecuteNonQuery(SQL);
                 }
             } else if (dbflag == "U") {
-                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
+                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
                 SQL = "Update attach_opte set Source='" + psource + "'";
                 SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                 SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
@@ -246,7 +248,7 @@
                 SQL += " Where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
                 conn.ExecuteNonQuery(SQL);
             } else if (dbflag == "D") {
-                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", new Dictionary<string, string>() { { "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") } });
+                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") );
                 //當attach_sqlno <> empty時,表示db有值,必須刪除data(update attach_flag = 'D')
                 if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
                     SQL = "update attach_opte set attach_flag='D'";

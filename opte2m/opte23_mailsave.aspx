@@ -17,7 +17,7 @@
 
     string submitTask = "";
     string email_sqlno = "";
-    
+
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected StringBuilder strOut = new StringBuilder();
 
@@ -33,11 +33,13 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            //foreach (KeyValuePair<string, string> p in ReqVal) {
-            //    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
-            //}
-            //Response.Write("<HR>");
-            
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
+            }
+
             if (submitTask == "A") {//新增
                 doAdd();
             } else if (submitTask == "U") {//存檔
@@ -147,7 +149,7 @@
         finally {
             conn.Dispose();
         }
-        
+
         strOut.AppendLine("alert('" + msg + "');");
         if (Request["chkTest"] != "TEST") {
             strOut.AppendLine("window.parent.opener.parent.Etop.goSearch();");

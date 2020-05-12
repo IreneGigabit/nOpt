@@ -60,7 +60,7 @@
                             if (dr.HasRows) {
                                 //先刪除attach_opte.source=br區所上傳文件資料
                                 //入attach_opte_log
-                                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "opt_sqlno", opt_sqlno );
                                 SQL = "delete from attach_opte where opt_sqlno='" + opt_sqlno + "' and source='BR'";
                                 conn.ExecuteNonQuery(SQL);
                                 int k = 0;
@@ -87,7 +87,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.Read()) {
                                 //入opte_detail_log
-                                Funcs.insert_log_table(conn, "U", prgid, "opte_detail", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "opte_detail", "opt_sqlno", opt_sqlno );
                                 SQL = "update opte_detail set s_mark='" + dr.SafeRead("s_mark", "").Trim() + "'";
                                 SQL += ",s_type='" + dr.SafeRead("s_type", "").Trim() + "'";
                                 SQL += ",class='" + dr.SafeRead("class", "").Trim() + "'";
@@ -156,7 +156,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.HasRows) {
                                 //入caseopte_good_log
-                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_good", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_good", "opt_sqlno", opt_sqlno);
                                 SQL = "delete from caseopte_good where opt_sqlno=" + opt_sqlno;
                                 conn.ExecuteNonQuery(SQL);
                                 while (dr.Read()) {
@@ -178,7 +178,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.HasRows) {
                                 //入caseopte_prior_log
-                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_prior", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_prior", "opt_sqlno", opt_sqlno);
                                 SQL = "delete from caseopte_prior where opt_sqlno=" + opt_sqlno;
                                 conn.ExecuteNonQuery(SQL);
                                 while (dr.Read()) {
@@ -203,7 +203,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.HasRows) {
                                 //入caseopte_ap_log
-                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_ap", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_ap", "opt_sqlno", opt_sqlno);
                                 SQL = "delete from caseopte_ap where opt_sqlno=" + opt_sqlno;
                                 conn.ExecuteNonQuery(SQL);
                                 while (dr.Read()) {
@@ -232,7 +232,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.Read()) {
                                 //入case_opte_log
-                                Funcs.insert_log_table(conn, "U", prgid, "case_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "case_opte", "opt_sqlno", opt_sqlno );
                                 SQL = "update case_opte set cust_area='" + dr.SafeRead("cust_area", "").Trim() + "'";
                                 SQL += ",cust_seq=" + dr.SafeRead("cust_seq", "");
                                 SQL += ",att_sql=" + dr.SafeRead("att_sql", "");
@@ -250,7 +250,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.Read()) {
                                 //入opte_detail_log
-                                Funcs.insert_log_table(conn, "U", prgid, "opte_detail", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "opte_detail", "opt_sqlno", opt_sqlno);
                                 SQL = "update opte_detail set remark1='" + dr.SafeRead("remark1", "").Trim() + "'";
                                 SQL += ",remarkb='" + dr.SafeRead("remarkb", "").Trim() + "'";
                                 SQL += " where opt_sqlno=" + opt_sqlno;
@@ -269,7 +269,7 @@
                             if (dr.Read()) {
                                 //修改case_opte營洽及客戶資料
                                 //入case_opte_log
-                                Funcs.insert_log_table(conn, "U", prgid, "case_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "case_opte", "opt_sqlno", opt_sqlno);
                                 SQL = "update case_opte set in_scode='" + dr.SafeRead("scode", "").Trim() + "'";
                                 SQL += ",cust_area='" + dr.SafeRead("cust_area", "").Trim() + "'";
                                 SQL += ",cust_seq=" + dr.SafeRead("cust_seq", "");
@@ -279,7 +279,7 @@
 
                                 //修改opte_detail案件主檔資料
                                 //入opte_detail_log
-                                Funcs.insert_log_table(conn, "U", prgid, "opte_detail", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "opte_detail", "opt_sqlno", opt_sqlno );
                                 SQL = "update opte_detail set class='" + dr.SafeRead("class", "").Trim() + "'";
                                 SQL += ",class_count=" + Util.dbzero(dr.SafeRead("class_count", "0"));
                                 SQL += ",apply_date=" + Util.dbnull(dr.SafeRead("apply_date", ""));
@@ -306,7 +306,7 @@
                         using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
                             if (dr.Read()) {
                                 //入caseopte_ap_log
-                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_ap", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+                                Funcs.insert_log_table(conn, "U", prgid, "caseopte_ap", "opt_sqlno", opt_sqlno );
                                 SQL = "delete from caseopte_ap where opt_sqlno=" + opt_sqlno;
                                 conn.ExecuteNonQuery(SQL);
                                 while (dr.Read()) {

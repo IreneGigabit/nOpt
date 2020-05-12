@@ -50,7 +50,7 @@
             SQL += " where a.opt_sqlno='" + opt_sqlno + "'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
-            vbr_opte = dt.ToDictionary().FirstOrDefault();
+            vbr_opte = dt.ToDictionary().FirstOrDefault() ?? new Dictionary<string, object>();
             opte23_email_form.RS = vbr_opte;
 
             //foreach (KeyValuePair<string, object> p in SvrVal) {

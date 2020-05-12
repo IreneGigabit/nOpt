@@ -35,10 +35,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             doCopy();
 
@@ -94,7 +96,7 @@
 
         string attach_name = ReqVal.TryGet("attach_name_" + pno, "");
         string strpath = ReqVal.TryGet("attach_path_" + pno, "");
-        
+
         //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
         strpath = strpath.Replace(@"\opt\", @"\nopt\");
 
@@ -133,7 +135,7 @@
             System.IO.Directory.CreateDirectory(Server.MapPath(strFolder));
         }
     }
-    
+
     //修改上傳文件之複製狀態
     private bool update_attach_opte(DBHelper conn,int pno) {
         //入attach_opte_log
@@ -148,7 +150,7 @@
         SQL+= ",tran_scode='" + Session["scode"] + "'";
         SQL+= " where attach_sqlno = '"+ReqVal.TryGet("attach_sqlno_" + pno, "")+  "'";
         conn.ExecuteNonQuery(SQL);
-        
+
         return true;
     }
 

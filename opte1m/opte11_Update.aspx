@@ -55,7 +55,7 @@
             string opt_no = (objResult == DBNull.Value || objResult == null ? ("E"+DateTime.Now.Year + "00001") : "E"+objResult.ToString());
 
             //入br_opte_log
-            Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+            Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", opt_sqlno);
             
             SQL = "update br_opte set confirm_scode='" + Session["scode"] + "'";
             SQL += ",confirm_date='" + DateTime.Now.ToString("yyyy/M/d") + "'";
@@ -100,7 +100,7 @@
         DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(Request["chkTest"] == "TEST");
         try {
             //入br_opte_log
-            Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+            Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", opt_sqlno );
 
             SQL = "update br_opte set mark='B'";
             SQL += ",tran_date=getdate(),tran_scode='" + Session["scode"] + "'";

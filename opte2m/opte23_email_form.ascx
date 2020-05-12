@@ -17,20 +17,22 @@
 
     protected string SQL = "";
     protected string work_scode_html = "";//撰寫人
-    
+
     protected int attcnt = 0;//附件數
-    
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         ReqVal = Request.QueryString.ToDictionary();
-        //foreach (KeyValuePair<string, string> p in ReqVal) {
-        //    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
-        //}
-        //Response.Write("<HR>");
+        if (Request["chkTest"] == "TEST") {
+            foreach (KeyValuePair<string, string> p in ReqVal) {
+                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            }
+            Response.Write("<HR>");
+        }
 
         PageLayout();
         this.DataBind();
     }
-    
+
     private void PageLayout() {
         //撰寫人
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
@@ -42,9 +44,9 @@
             SQL += " and a.pr_branch='BJ' and a.email_date is null ";
             SQL += " ORDER BY 3";
             work_scode_html = SHtml.Option(conn, SQL, "{in_scode}", "{scodenm}");
-            
+
             if (ReqVal.TryGet("email_sqlno", "0")=="0"){
-    	        SQL = "select tf_content from tfcode_opt where tf_code = '" +ReqVal.TryGet("tf_code","")+ "' ";
+                SQL = "select tf_content from tfcode_opt where tf_code = '" +ReqVal.TryGet("tf_code","")+ "' ";
             }else{
                 SQL = "select content as tf_content from opt_email_log where email_sqlno = " +ReqVal.TryGet("email_sqlno", "0");
             }
@@ -79,7 +81,7 @@
             conn.DataTable(SQL, dtAttach);
             for (int i = 0; i < dtAttach.Rows.Count; i++) {
                 attcnt += 1;
-                
+
                 //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
                 dtAttach.Rows[i]["pdfpath"] = Sys.Host + dtAttach.Rows[i].SafeRead("attach_path", "").Trim().Replace(@"\opt\", @"\nopt\");
                 dtAttach.Rows[i]["pdfsize"] = (Convert.ToDecimal("0" + dtAttach.Rows[i].SafeRead("attach_size", "")) / 1024) + 1;
@@ -88,7 +90,7 @@
                 } else {
                     dtAttach.Rows[i]["upload_branch_server"] = Sys.uploadservername(dtAttach.Rows[i].SafeRead("upload_branch", "").Trim());
                 }
-                
+
                 //預設勾選,但若有上寄送記錄以寄件記錄為準
                 if (strpdf_name != "") {
                     if (strpdf_name.IndexOf(";" + dtAttach.Rows[i].SafeRead("attach_name", "").Trim() + ";") > -1) {
@@ -136,7 +138,7 @@
             tf_content = tf_content.Replace("/*arcase_name*/", RS.TryGet("pr_rs_code_name", "").ToString());
             tf_content = tf_content.Replace("/*remarkb*/", RS.TryGet("remarkb", "").ToString());
         }
-        
+
         tf_content = tf_content.Replace("<FONT ", "<span ");
         tf_content = tf_content.Replace("</FONT>", "</span>");
     }

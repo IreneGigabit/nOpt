@@ -65,6 +65,7 @@
             foreach (KeyValuePair<string, string> p in SrvrVal) {
                 Response.Write(string.Format("{0} : {1}<br>", p.Key, p.Value));
             }
+            Response.Write("<HR>");
         }
         
         if (submitTask == "UPLOAD")

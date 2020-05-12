@@ -33,10 +33,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U") {//發文確認
                 doConfirm();
@@ -247,10 +249,10 @@
                                 chk_type = "Y";
                             } else {
                                 chk_type = "N";
-                                Dictionary<string, string> cond = new Dictionary<string, string>() { 
-                                    { "branch",Branch }, 
-                                    { "dept",Sys.GetSession("dept") }, 
-                                    { "rs_no",rs_no }, 
+                                Dictionary<string, string> cond = new Dictionary<string, string>() {
+                                    { "branch",Branch },
+                                    { "dept",Sys.GetSession("dept") },
+                                    { "rs_no",rs_no },
                                     {"chk_type","N"}
                                 };
                                 Funcs.insert_log_table(conni, "D", prgid, "plus_temp", cond);
@@ -259,7 +261,7 @@
                                 conni.ExecuteNonQuery(SQL);
                             }
                         }
-                        
+
                         while (dr.Read()) {
                             if (Convert.ToInt32("0" + dr.SafeRead("Bfees", "")) > 0) {
                                 if (chk_type == "N") {

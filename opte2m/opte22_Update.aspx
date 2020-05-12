@@ -9,7 +9,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
-    
+
     protected string SQL = "";
     protected string msg = "";
 
@@ -32,8 +32,8 @@
 
         if (prgid == "opte22") {
             HTProgCap = "出口爭救案已判行維護";
-        } 
-        
+        }
+
         case_no = (Request["case_no"] ?? "").Trim();
         branch = (Request["Branch"] ?? "").Trim();
         opt_no = (Request["opt_no"] ?? "").Trim();
@@ -46,10 +46,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U") {//判行
                 doConfirm();
@@ -260,7 +262,7 @@
             conn.Dispose();
         }
     }
-    
+
     private void doBack() {
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {

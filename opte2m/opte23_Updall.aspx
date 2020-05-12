@@ -34,10 +34,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            //foreach (KeyValuePair<string, string> p in ReqVal) {
-            //    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
-            //}
-            //Response.Write("<HR>");
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
+            }
 
             DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
             try {
@@ -47,7 +49,7 @@
                             update_br_opte(conn,i);
                         }
                     }
-                    
+
                     msg="寄出確認作業完成!!";
                 } else if (ReqVal.TryGet("task", "") == "update") {
                     for (int i = 1; i <= count; i++) {
@@ -62,7 +64,7 @@
                     }
                     msg="補入承辦人員或對方號完成!!";
                 }
-            
+
                 conn.Commit();
                 //conn.RollBack();
             }
@@ -90,7 +92,7 @@
             this.DataBind();
         }
     }
-    
+
     //修改分案主檔之寄出確認狀態
     private void update_br_opte(DBHelper conn, int pno) {
         //入cust_step_log

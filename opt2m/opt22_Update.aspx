@@ -54,10 +54,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U") {//判行
                 doConfirm();
@@ -158,7 +160,7 @@
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
             SQL = "update br_opt set stat_code='NX'";
-	        SQL+=",ap_scode=null";
+            SQL+=",ap_scode=null";
             SQL += " where opt_sqlno='" + opt_sqlno + "'";
             conn.ExecuteNonQuery(SQL);
 
@@ -205,7 +207,7 @@
             Sys.errorLog(ex, conn.exeSQL, prgid);
             msg = "退回失敗";
             strOut.AppendLine("alert('" + msg + "');");
-            
+
             throw new Exception(msg, ex);
         }
         finally {

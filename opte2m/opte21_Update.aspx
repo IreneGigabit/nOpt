@@ -52,7 +52,7 @@
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
             //入br_opte_log
-            Funcs.insert_log_table(conn, "U", prgid, "br_opte", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+            Funcs.insert_log_table(conn, "U", prgid, "br_opte",  "opt_sqlno", opt_sqlno);
 
             SQL = "update br_opte set in_scode='" + Session["scode"] + "'";
             SQL += ",in_date='" + DateTime.Now.ToString("yyyy/M/d") + "'";

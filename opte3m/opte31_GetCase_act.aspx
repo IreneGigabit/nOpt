@@ -36,7 +36,7 @@
     private void doCopy() {
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
-            Funcs.insert_log_table(conn, "U", prgid, "opte_detail", new Dictionary<string, string>() { { "opt_sqlno", opt_sqlno } });
+            Funcs.insert_log_table(conn, "U", prgid, "opte_detail", "opt_sqlno", opt_sqlno );
 
             SQL = "update opte_detail Set your_no='" + your_no + "'";
             SQL += " where opt_sqlno=" + opt_sqlno;

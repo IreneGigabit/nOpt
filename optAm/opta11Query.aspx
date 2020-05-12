@@ -50,9 +50,9 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgAdd" href="optA11edit.aspx?submitTask=A&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[新增]</a>
             <a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
+            <a class="imgAdd" href="optA11edit.aspx?submitTask=A&prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[新增]</a>
         </td>
     </tr>
     <tr>
@@ -176,6 +176,9 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        }
         $(".imgAdd").showFor((<%#HTProgRight%> & 4));//[新增]
 
         $("input.dateField").datepick();

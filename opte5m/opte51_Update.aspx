@@ -33,10 +33,12 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            foreach (KeyValuePair<string, string> p in ReqVal) {
-                Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+            if (Request["chkTest"] == "TEST") {
+                foreach (KeyValuePair<string, string> p in ReqVal) {
+                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                }
+                Response.Write("<HR>");
             }
-            Response.Write("<HR>");
 
             if (submitTask == "U") {//發文確認
                 doConfirm();
@@ -63,12 +65,12 @@
                     SQL+= " where opt_sqlno='"+ ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     SQL+= " and sqlno='"+ ReqVal.TryGet("cancel_sqlno" + i, "") + "'";
                     conn.ExecuteNonQuery(SQL);
-                    
-			        SQL="update todo_opte set approve_scode='"+ Session["scode"] +"'";
-			        SQL+= ",resp_date=getdate()";
-			        SQL+= ",job_status='YY'";
-			        SQL+= " where syscode='" + ReqVal.TryGet("Branch" + i, "") + "TBRT' and opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
-			        SQL+= " and dowhat='DD' and sqlno="+ ReqVal.TryGet("todo_sqlno" + i, "") + " and job_status='NN' ";
+
+                    SQL="update todo_opte set approve_scode='"+ Session["scode"] +"'";
+                    SQL+= ",resp_date=getdate()";
+                    SQL+= ",job_status='YY'";
+                    SQL+= " where syscode='" + ReqVal.TryGet("Branch" + i, "") + "TBRT' and opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
+                    SQL+= " and dowhat='DD' and sqlno="+ ReqVal.TryGet("todo_sqlno" + i, "") + " and job_status='NN' ";
                     conn.ExecuteNonQuery(SQL);
 
                     //[區所]
@@ -80,22 +82,22 @@
                     SQL += " and opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     object objResult = connB.ExecuteScalar(SQL);
                     string pr_scode = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim().ToLower() : "";
-                    
-				    //入step_ext_log
-                    Dictionary<string, string> key = new Dictionary<string, string>() { 
-                        { "branch",ReqVal.TryGet("Branch" + i, "") }, 
-                        { "seq",ReqVal.TryGet("bseq" + i, "") }, 
-                        { "seq1",ReqVal.TryGet("bseq1_" + i, "") }, 
+
+                    //入step_ext_log
+                    Dictionary<string, string> key = new Dictionary<string, string>() {
+                        { "branch",ReqVal.TryGet("Branch" + i, "") },
+                        { "seq",ReqVal.TryGet("bseq" + i, "") },
+                        { "seq1",ReqVal.TryGet("bseq1_" + i, "") },
                         {"opt_sqlno",ReqVal.TryGet("opt_sqlno" + i, "")}
                     };
                     Funcs.insert_log_table(connB, "U", prgid, "step_ext", key);
-				    SQL="update step_ext set opt_stat='D'";
-				    SQL+= " where branch='" +ReqVal.TryGet("Branch" + i, "")+ "'";
+                    SQL="update step_ext set opt_stat='D'";
+                    SQL+= " where branch='" +ReqVal.TryGet("Branch" + i, "")+ "'";
                     SQL+= " and seq=" +ReqVal.TryGet("bseq" + i, "")+ "";
                     SQL+= " and seq1='" +ReqVal.TryGet("bseq1_" + i, "")+ "'";
                     SQL+= " and opt_sqlno='"+ReqVal.TryGet("opt_sqlno" + i, "")+"'";
                     connB.ExecuteNonQuery(SQL);
-                    
+
                     //通知區所抽件完成
                     CreateMail(conn, ReqVal.TryGet("opt_sqlno" + i, ""), pr_scode, ReqVal.TryGet("case_no" + i, ""), ReqVal.TryGet("branch" + i, ""));
 
@@ -105,7 +107,7 @@
                     SQL = "Update case_opte Set mark='D'";
                     SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     conn.ExecuteNonQuery(SQL);
-                 
+
                     //connB.Commit();
                     //conn.Commit();
                     connB.RollBack();
@@ -158,7 +160,7 @@
                 ap_cname += (ap_cname != "" ? "、" : "") + dr.SafeRead("ap_cname", "").Trim();
             }
         }
-        
+
         string Subject = "專案室出口爭救案件抽件完成通知";
         string strFrom = Session["scode"] + "@saint-island.com.tw";
         List<string> strTo = new List<string>();
