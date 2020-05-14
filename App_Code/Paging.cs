@@ -75,4 +75,15 @@ public class Paging
             pagedTable = newdt;
         }
     }
+
+    /// <summary>
+    /// 頁數清單
+    /// </summary>
+    public string GetPageList() {
+        string rtn = "";
+        for (int i = 1; i <= totPage; i++) {
+            rtn += "<option value=\"" + i + "\" " + (nowPage == i ? "selected" : "") + ">" + i + "</option>\n";
+        }
+        return rtn;
+    }
 }

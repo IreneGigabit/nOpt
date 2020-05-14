@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -114,7 +114,7 @@
 	            <td class=whitetablebg align="left" colspan=3>
 		            <input type="text" id="qrysDATE" name="qrysDATE" size="10" maxLength="10" class="dateField">～
 		            <input type="text" id="qryeDATE" name="qryeDATE" size="10" maxLength="10" class="dateField">
-		            <label><input type="checkbox" name=qrydtDATE value="N">不指定</label>
+		            <label><input type="checkbox" id="qrydtDATE" name="qrydtDATE" value="N">不指定</label>
 	            </td>
             </tr>         
             <tr  id='spstat_code'>
@@ -132,6 +132,7 @@
             </tr>         
         </table>
         <br>
+        <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
         <table id="tabBtn" border="0" width="100%" cellspacing="0" cellpadding="0" align="center">
 	        <tr><td width="100%" align="center">
 			    <input type="button" value="查　詢" class="cbutton" id="btnSrch" name="btnSrch">
@@ -170,6 +171,7 @@
         });
 
         $("input.dateField").datepick();
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
 
         $("#tabBtn").showFor((<%#HTProgRight%> & 6)).find("input").prop("checked",true);//[查詢][重填]
 
@@ -226,6 +228,16 @@
     });
 
     //////////////////////
+    //日期不指定
+    $("#qrydtDATE").click(function () {
+        if($(this).prop("checked")){
+            $("#qrysDATE").val("");
+            $("#qryeDATE").val("");
+        }else{
+            $("#qrysDATE").val((new Date()).format("yyyy/M/1"));
+            $("#qryeDATE").val((new Date()).format("yyyy/M/d"));
+        }
+    }); 
     //承辦狀態
     $("input[name='qrySTAT_kind']").click(function () {
         if($(this).val()==""){

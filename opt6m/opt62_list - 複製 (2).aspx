@@ -18,7 +18,6 @@
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected string hiddenText = "";
-    protected Paging page = new Paging(1,10);
         
     protected string submitTask = "";
     protected string your_no = "";
@@ -61,27 +60,18 @@
                 Response.Write("<HR>");
             }
 
-            //if (json == "Y") QueryData();
-            QueryData();
+            if (json == "Y") QueryData();
 
             this.DataBind();
         }
     }
-    private void ListPageLayout() {
-        QueryData();
-    }
-    
+
     private void QueryData() {
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
-            if (prgid == "opt65") {
-                if (ReqVal.TryGet("qryKINDDATE", "") == "PR_DATE") ReqVal["qryKINDDATE"] = "BPR_DATE";
-            }
-    
+        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             SQL = "SELECT Bseq,Bseq1,ap_cname,issue_no,appl_name,Confirm_date";
             SQL += ",last_date,arcase_name,isnull(Bpr_date,'') as Bpr_date";
             SQL += ",ap_date,a.gs_date,a.pr_scode_name,b.code_name";
-            SQL += ",branch,opt_sqlno,opt_no,case_no";
-            SQL += ",''fseq,''optap_cname,''oappl_name,''oBpr_date,''link";
+            SQL += ",branch,opt_sqlno,opt_no,case_no,''fseq,''optap_cname";
             SQL += " FROM VBR_OPT A ";
             SQL += " Left outer join cust_code as b on B.code_type='Ostat_code' and b.cust_code=a.bstat_code";
             SQL += " where 1=1 ";
@@ -98,11 +88,11 @@
                 SQL += " and a.ARCASE='" + Request["qryARCASE"] + "'";
             }
 
-            if (ReqVal.TryGet("qryKINDDATE", "") != "") {
+            if ((Request["qryKINDDATE"] ?? "") != "") {
                 if ((Request["month"] ?? "") != "") {
-                    SQL += " and month(a." + ReqVal.TryGet("qryKINDDATE", "") + ")='" + Request["month"].Trim() + "' ";
+                    SQL += " and month(a." + Request["qryKINDDATE"] + ")='" + Request["month"].Trim() + "' ";
                     if ((Request["qryYear"] ?? "") != "") {
-                        SQL += " and Year(a." + ReqVal.TryGet("qryKINDDATE", "") + ")='" + Request["qryYear"].Trim() + "' ";
+                        SQL += " and Year(a." + Request["qryKINDDATE"] + ")='" + Request["qryYear"].Trim() + "' ";
                     }
                     ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["month"].Trim() + "/1"; //上個月一號
                     ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["month"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
@@ -112,10 +102,10 @@
                         ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["month"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
                     }
                     if (ReqVal.TryGet("qrySdate", "") != "") {
-                        SQL += " and a." + ReqVal.TryGet("qryKINDDATE", "") + ">='" + ReqVal.TryGet("qrySdate", "") + "' ";
+                        SQL += " and a." + Request["qryKINDDATE"] + ">='" + ReqVal.TryGet("qrySdate", "") + "' ";
                     }
                     if (ReqVal.TryGet("qryeDATE", "") != "") {
-                        SQL += " and a." + ReqVal.TryGet("qryKINDDATE", "") + "<='" + ReqVal.TryGet("qryeDATE", "") + "' ";
+                        SQL += " and a." + Request["qryKINDDATE"] + "<='" + ReqVal.TryGet("qryeDATE", "") + "' ";
                     }
                 }
             }
@@ -144,6 +134,7 @@
             } else if ((Request["qryinclude"] ?? "") == "N") {
                 SQL += " and a.ref_code is  null";
             }
+
             if ((Request["qrybranch"] ?? "") != "") {
                 SQL += " and a.branch='" + Request["qrybranch"] + "'";
             }
@@ -160,10 +151,12 @@
             if ((Request["qryin_scode"] ?? "") != "") {
                 SQL += " and a.in_scode='" + Request["qryin_scode"] + "'";
             }
+
             //2014/6/23增加交辦(分案)來源
             if ((Request["qrybr_source"] ?? "") != "") {
                 SQL += " and a.br_source='" + Request["qrybr_source"] + "'";
             }
+
             //刪除
             SQL += " and a.bmark not in ('B','D') ";
             if ((Request["SetOrder"] ?? "") != "") {
@@ -178,7 +171,7 @@
             //處理分頁
             int nowPage = Convert.ToInt32(Request["GoPage"] ?? "1"); //第幾頁
             int PerPageSize = Convert.ToInt32(Request["PerPage"] ?? "10"); //每頁筆數
-            page = new Paging(nowPage, PerPageSize, string.Join(";", conn.exeSQL.ToArray()));
+            Paging page = new Paging(nowPage, PerPageSize, string.Join(";", conn.exeSQL.ToArray()));
             page.GetPagedTable(dt);
 
             //分頁完再處理其他資料才不會虛耗資源
@@ -200,35 +193,20 @@
                 }
 
                 //申請人
-                page.pagedTable.Rows[i]["ap_cname"] = ap_cname;
                 page.pagedTable.Rows[i]["optap_cname"] = ap_cname.CutData(20);
                 //案件名稱
-                page.pagedTable.Rows[i]["oappl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
-                //承辦狀態
-                if (page.pagedTable.Rows[i].SafeRead("code_name", "") == "") {
-                    page.pagedTable.Rows[i]["code_name"] = "未收件";
-                }
-                //完成日期
-                page.pagedTable.Rows[i]["oBpr_date"] = Util.parsedate(page.pagedTable.Rows[i].SafeRead("Bpr_date", ""), "yyyy/M/d");
-                if (page.pagedTable.Rows[i].SafeRead("oBpr_date", "") == "1900/1/1") {
-                    page.pagedTable.Rows[i]["oBpr_date"] = "&nbsp;";
-                }
-                //連結
-                string urlasp = "opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "") +
-                        "&opt_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&branch=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&case_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&prgid=" + prgid + "&Submittask=Q";
-                if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
-                    urlasp = "../opt2m/opt22Edit.aspx?" + urlasp;
-                } else {
-                    urlasp = "../opt2m/opt22EditA.aspx?" + urlasp;
-                }
-                page.pagedTable.Rows[i]["link"] = "<a href='" + urlasp + "' target='Eblank'>";
+                page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
             }
 
-            dataRepeater.DataSource = page.pagedTable;
-            dataRepeater.DataBind();
+            var settings = new JsonSerializerSettings() {
+                Formatting = Formatting.None,
+                ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
+                Converters = new List<JsonConverter> { new DBNullCreationConverter(), new TrimCreationConverter() }//dbnull轉空字串且trim掉
+            };
+
+            Response.Write(JsonConvert.SerializeObject(page, settings).ToUnicode());
+            Response.End();
+            //return JsonConvert.SerializeObject(dt, settings).ToUnicode().Replace("\\", "\\\\").Replace("\"", "\\\"");
         }
     }
 </script>
@@ -266,29 +244,31 @@
         if (String.Compare(p.Key,"GoPage",true)!=0
             &&String.Compare(p.Key,"PerPage",true)!=0
             &&String.Compare(p.Key,"SetOrder",true)!=0)
-        Response.Write(string.Format("<input type=\"hidden\" id=\"{0}\" name=\"{0}\" value=\"{1}\">\n", p.Key, p.Value));
+        Response.Write(string.Format("<input type=\"text\" id=\"{0}\" name=\"{0}\" value=\"{1}\">\n", p.Key, p.Value));
     }
     %>
-    <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
+    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+
+    <div id="divPaging" style="display:none">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
 		    <td colspan=2 align=center class=whitetablebg>
 			    <font size="2" color="#3f8eba">
-				    第<font color="red"><span id="NowPage"><%#page.nowPage%></span>/<span id="TotPage"><%#page.totPage%></span></font>頁
-				    | 資料共<font color="red"><span id="TotRec"><%#page.totRow%></span></font>筆
+				    第<font color="red"><span id="NowPage"></span>/<span id="TotPage"></span></font>頁
+				    | 資料共<font color="red"><span id="TotRec"></span></font>筆
 				    | 跳至第
-				    <select id="GoPage" name="GoPage" style="color:#FF0000"><%#page.GetPageList()%></select>
+				    <select id="GoPage" name="GoPage" style="color:#FF0000"></select>
 				    頁
-				    <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="<%#page.nowPage-1%>">上一頁</a></span>
-				    <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="<%#page.nowPage+1%>">下一頁</a></span>
+				    <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="">上一頁</a></span>
+				    <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="">下一頁</a></span>
 				    | 每頁筆數:
 				    <select id="PerPage" name="PerPage" style="color:#FF0000">
-					    <option value="10" <%#page.perPage==10?"selected":""%>>10</option>
-					    <option value="20" <%#page.perPage==20?"selected":""%>>20</option>
-					    <option value="30" <%#page.perPage==30?"selected":""%>>30</option>
-					    <option value="50" <%#page.perPage==50?"selected":""%>>50</option>
+					    <option value="10" selected>10</option>
+					    <option value="20">20</option>
+					    <option value="30">30</option>
+					    <option value="50">50</option>
 				    </select>
-                    <input type="text" name="SetOrder" id="SetOrder" value="<%#ReqVal.TryGet("SetOrder", "")%>" />
+                    <input type="hidden" name="SetOrder" id="SetOrder" />
 			    </font>
 		    </td>
 	    </tr>
@@ -296,11 +276,11 @@
     </div>
 </form>
 
-<div align="center" id="noData" style="display:<%#page.totRow==0?"":"none"%>">
+<div align="center" id="noData" style="display:none">
 	<font color="red">=== 目前無資料 ===</font>
 </div>
 
-<table style="display:<%#page.totRow==0?"none":""%>" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
+<table style="display:" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	<thead>
         <Tr>
 	        <td class="lightbluetable" nowrap align="center" rowspan="2"><u class="setOdr" v1="bseq,bseq1">區所編號</u></td>
@@ -319,27 +299,25 @@
 	        <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="gs_date">發文日</u></td>
         </tr>
 	</thead>
+	<tfoot style="display:none">
+	    <tr class='{{tclass}}'>
+		    <td rowspan="2" align="center">{{fseq}}</td>
+		    <td rowspan="2">{{ap_cname}}</td>
+		    <td rowspan="2">{{issue_no}}</td>
+		    <td rowspan="2">{{appl_name}}</td>
+		    <td align="center">{{confirm_date}}</td>
+		    <td align="center">{{last_date}}</td>
+		    <td nowrap>{{arcase_name}}</td>
+		    <td rowspan="2" align="center">{{pr_scode_name}}</td>
+		    <td rowspan="2" align="center">{{code_name}}</td>
+        </tr>
+        <Tr class='{{tclass}}'>
+		    <td align="center">{{bpr_date}}</td>
+		    <td align="center">{{ap_date}}</td>
+		    <td align="center">{{gs_date}}</td>
+	    </Tr>
+	</tfoot>
 	<tbody>
-		<asp:Repeater id="dataRepeater" runat="server"> 
-			<ItemTemplate>
- 		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-		            <td rowspan="2" align="center"><%#Eval("link")%><%#Eval("fseq")%></a></td>
-		            <td rowspan="2" title="<%#Eval("ap_cname")%>"><%#Eval("link")%><%#Eval("optap_cname")%></a></td>
-		            <td rowspan="2"><%#Eval("link")%><%#Eval("issue_no")%></a></td>
-		            <td rowspan="2" title="<%#Eval("appl_name")%>"><%#Eval("link")%><%#Eval("oappl_name")%></a></td>
-		            <td align="center"><%#Eval("link")%><%#Eval("confirm_date", "{0:d}")%></a></td>
-		            <td align="center"><%#Eval("link")%><%#Eval("last_date", "{0:d}")%></a></td>
-		            <td align="center" nowrap><%#Eval("link")%><%#Eval("arcase_name")%></a></td>
-		            <td rowspan="2" align="center"><%#Eval("link")%><%#Eval("pr_scode_name")%></a></td>
-		            <td rowspan="2" align="center"><%#Eval("link")%><%#Eval("code_name")%></a></td>
-				</tr>
- 		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-		            <td align="center"><%#Eval("link")%><%#Eval("oBpr_date")%></a></td>
-		            <td align="center"><%#Eval("link")%><%#Eval("ap_date", "{0:d}")%></a></td>
-		            <td align="center"><%#Eval("link")%><%#Eval("gs_date", "{0:d}")%></a></td>
-	            </Tr>
-			</ItemTemplate>
-		</asp:Repeater>
 	</tbody>
 </table>
 <br />
@@ -348,6 +326,8 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
+
         this_init();
     });
 
@@ -361,13 +341,11 @@
             }
         }
 
-        //goSearch();
+        goSearch();
     }
 
     //執行查詢
     function goSearch() {
-        reg.submit();
-        /*
         $("#divPaging,#noData,#dataList").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
@@ -463,7 +441,6 @@
                 toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
-        */
     };
 
     //每頁幾筆
