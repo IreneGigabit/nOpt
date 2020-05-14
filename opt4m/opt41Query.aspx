@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -60,7 +60,7 @@
     <div id="id-div-slide">
         <table border="0" cellspacing="1" cellpadding="2" width="98%" align="center">
         <tr>
-	        <td class="text9">
+	        <td class="text9" colspan="2">
 		        ◎發文方式:
 			        <input type="radio" name="qrysend_dept" id="qrysend_deptB" value="B" checked><label for="qrysend_deptB">專案室發文</label>
 			        <input type="radio" name="qrysend_dept" id="qrysend_deptL" value="L"><label for="qrysend_deptL">轉發法律處</label>
@@ -192,7 +192,7 @@
             textFormat: "{branch}_{branchname}"
         });
 
-        $("input.dateField").datepick();
+        $("#qryBMPDateS,#qryBMPDateE").datepick();
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("#chkTest").click(function (e) {
             $("#ActFrame").showFor($(this).prop("checked"));
@@ -291,9 +291,9 @@
 
                         var urlasp="";
                         if(item.case_no!=""){
-                            urlasp="../opt2m/opt22Edit.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&case_no="+item.case_no+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q"
+                            urlasp="../opt2m/opt22Edit.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&case_no="+item.case_no+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q";
                         }else{
-                            urlasp="../opt2m/opt22EditA.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q"
+                            urlasp="../opt2m/opt22EditA.aspx?opt_sqlno="+item.opt_sqlno+"&opt_no="+item.opt_no+"&branch="+item.branch+"&arcase="+item.arcase+"&prgid="+$("#prgid").val()+"&Submittask=Q";
                         }
                         strLine1 = strLine1.replace(/{{urlasp}}/g, urlasp);
 
@@ -311,7 +311,7 @@
                 toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
-    };
+    }
 
     //每頁幾筆
     $("#PerPage").change(function (e) {
