@@ -234,7 +234,7 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "0%,100%";
+            window.parent.tt.rows = "20%,80%";
         }
         $("#chkTest").click(function (e) {
             $("#ActFrame").showFor($(this).prop("checked"));
