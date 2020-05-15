@@ -923,8 +923,9 @@ input.btn5 {}
 
 /*
 input[type=button]:disabled,input[type=button][disabled] {
-    color: #666 !important;
-    background: #cccccc !important;
+    color: #707070 !important;
+    background: #e7e7e7 !important;
+    border:1px solid #bababa;
 }*/
 
 .errlog {
