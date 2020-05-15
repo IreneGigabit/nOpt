@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -13,17 +13,14 @@
     protected int HTProgRight = 0;
 
     protected string SQL = "";
-    protected string json_data = "";
-    protected string json = "";
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected string hiddenText = "";
     protected Paging page = new Paging(1,10);
-        
+    protected string StrFormBtnTop = "";
+    protected string titleLabel = "";
+    
     protected string submitTask = "";
-    protected string your_no = "";
-    protected string seq = "";
-    protected string seq1 = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -35,9 +32,14 @@
         } else {
             ReqVal = Request.Form.ToDictionary();
         }
-
+        foreach (KeyValuePair<string, string> p in ReqVal) {
+            if (String.Compare(p.Key, "GoPage", true) != 0
+                && String.Compare(p.Key, "PerPage", true) != 0
+                && String.Compare(p.Key, "SetOrder", true) != 0)
+                hiddenText += string.Format("<input type=\"hidden\" id=\"{0}\" name=\"{0}\" value=\"{1}\">\n", p.Key, p.Value);
+        }
+        
         submitTask = Request["submitTask"] ?? "";
-        json = (Request["json"] ?? "").ToString().ToUpper();
 
         switch (prgid) {
             case "opt65":
@@ -61,22 +63,31 @@
                 Response.Write("<HR>");
             }
 
-            //if (json == "Y") QueryData();
             QueryData();
+            ListPageLayout();
 
             this.DataBind();
         }
     }
+
     private void ListPageLayout() {
-        QueryData();
+        if ((Request["homelist"] ?? "") == "homelist") {
+            StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\"  target=\"Etop\">[查詢]</a>";
+        } else {
+            if ((Request["homelist"] ?? "") == "homelist") {
+                StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
+            } else {
+                StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
+            }
+        }
     }
-    
+
     private void QueryData() {
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
             if (prgid == "opt65") {
                 if (ReqVal.TryGet("qryKINDDATE", "") == "PR_DATE") ReqVal["qryKINDDATE"] = "BPR_DATE";
             }
-    
+
             SQL = "SELECT Bseq,Bseq1,ap_cname,issue_no,appl_name,Confirm_date";
             SQL += ",last_date,arcase_name,isnull(Bpr_date,'') as Bpr_date";
             SQL += ",ap_date,a.gs_date,a.pr_scode_name,b.code_name";
@@ -229,6 +240,112 @@
 
             dataRepeater.DataSource = page.pagedTable;
             dataRepeater.DataBind();
+
+
+            //顯示查詢條件
+            string qryinclude_name = "";
+            if ((Request["qryinclude"] ?? "") == "Y") {
+                qryinclude_name = "&nbsp;<font color=blue>◎包含項目：</font>只印附屬案性";
+            } else if ((Request["qryinclude"] ?? "") == "N") {
+                qryinclude_name = "&nbsp;<font color=blue>◎包含項目：</font>不含附屬案性";
+            }
+
+            string qrybranch_name = "";
+            if ((Request["qrybranch"] ?? "") == "N") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台北所";
+            } else if ((Request["qrybranch"] ?? "") == "C") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台中所";
+            } else if ((Request["qrybranch"] ?? "") == "S") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台南所";
+            } else if ((Request["qrybranch"] ?? "") == "K") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>高雄所";
+            }
+
+            string qryBseq_name = "";
+            if ((Request["qryBseq"] ?? "") != "") {
+                qryBseq_name = "&nbsp;<font color=blue>◎區所編號：</font>" + Request["qryBseq"];
+            }
+            if ((Request["qryBseq1"] ?? "") != "" && (Request["qryBseq1"] ?? "") != "_") {
+                qryBseq_name += "-" + Request["qryBseq1"];
+            }
+            
+            string qrycust_area_name = "";
+            if ((Request["qrycust_area"] ?? "") != "") {
+                using (DBHelper connB = new DBHelper(Conn.OptB(ReqVal.TryGet("qrycust_area", ""))).Debug(Request["chkTest"] == "TEST")) {
+                    SQL = "Select RTRIM(ISNULL(ap_cname1, '')) + RTRIM(ISNULL(ap_cname2, '')) as cust_name from apcust as c ";
+                    SQL += " where c.cust_area='" + Request["qrycust_area"] + "' and c.cust_seq='" + Request["qrycust_seq"] + "'";
+                    object objResult = connB.ExecuteScalar(SQL);
+                    string cust_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                    qrycust_area_name = "&nbsp;<font color=blue>◎客戶編號：</font>" + Request["qrycust_area"] + "-" + Request["qrycust_seq"] + "　" + cust_name;
+                }
+            }
+            
+            string qryin_scode_name = "";
+            if ((Request["qryin_scode"] ?? "") != "") {
+                SQL = "select sc_name from sysctrl.dbo.scode where scode='" + Request["qryin_scode"] + "'";
+                object objResult = conn.ExecuteScalar(SQL);
+                qryin_scode_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                qryin_scode_name = "&nbsp;<font color=blue>◎營洽：</font>" + qryin_scode_name;
+            }
+            
+            string qrypr_scode_name = "";
+            if ((Request["qrypr_scode"] ?? "") != "") {
+                SQL = "select sc_name from sysctrl.dbo.scode where scode='" + Request["qrypr_scode"] + "'";
+                object objResult = conn.ExecuteScalar(SQL);
+                qrypr_scode_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                qrypr_scode_name = "&nbsp;<font color=blue>◎承辦人：</font>" + qrypr_scode_name;
+            }
+            
+            string qryARCASE_name = "";
+            if ((Request["qryARCASE"] ?? "") != "") {
+                SQL = "select cust_code+'-'+code_name from cust_code where code_type='T92' and cust_code ='" + Request["qryARCASE"] + "'";
+                object objResult = conn.ExecuteScalar(SQL);
+                qryARCASE_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                qryARCASE_name = "&nbsp;<font color=blue>◎案性：</font>" + qryARCASE_name;
+            }
+            
+            string qryKINDDATE_name = "";
+            if ((Request["qrydtDATE"] ?? "") != "N") {
+                if (ReqVal.TryGet("qryKINDDATE", "") == "CONFIRM_DATE") {
+                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>收文期間";
+                } else if (ReqVal.TryGet("qryKINDDATE", "") == "BPR_DATE") {
+                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>承辦完成期間";
+                } else if (ReqVal.TryGet("qryKINDDATE", "") == "GS_DATE") {
+                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>發文期間";
+                } else if (ReqVal.TryGet("qryKINDDATE", "") == "AP_DATE") {
+                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：判行期間";
+                } else if (ReqVal.TryGet("qryKINDDATE", "") == "BCase_date") {
+                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>交辦期間";
+                }
+            }
+            string qryDATE_name = "";
+            if ((Request["qrySdate"] ?? "") != "" && (Request["qryEdate"] ?? "") != "") {
+                qryDATE_name = "&nbsp;<font color=blue>◎日期範圍：</font>" + Request["qrySdate"] + "~" + Request["qryEdate"];
+            }
+            
+            string qrySTAT_CODE_name = "";
+            if ((Request["qrySTAT_CODE"] ?? "") != "") {
+                qrySTAT_CODE_name = "&nbsp;<font color=blue>◎承辦狀態：</font>";
+                string[] arrSTAT_CODE = ReqVal.TryGet("qrySTAT_CODE", "").Split(';');
+                for (int i = 0; i < arrSTAT_CODE.Length - 1; i++) {
+                    if (i > 0) qrySTAT_CODE_name += "、";
+                    if (arrSTAT_CODE[i] == "NA") {
+                        qrySTAT_CODE_name += "[承辦中(包含未分案)]";
+                    } else if (arrSTAT_CODE[i] == "Y") {
+                        qrySTAT_CODE_name += "[已結辦]";
+                    } else {
+                        SQL = "select code_name from cust_code where code_type='OStat_Code' and cust_code ='" + arrSTAT_CODE[i] + "'";
+                        object objResult = conn.ExecuteScalar(SQL);
+                        string code_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                        qrySTAT_CODE_name += "[" + code_name + "]";
+                    }
+                }
+            }
+
+            titleLabel = "<font color=red>"+qryinclude_name + 
+                qrybranch_name + qryBseq_name + qrycust_area_name + 
+                qryin_scode_name + qrypr_scode_name + qryARCASE_name + 
+                qryKINDDATE_name + qryDATE_name + qrySTAT_CODE_name+"</font>";
         }
     }
 </script>
@@ -252,23 +369,19 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
         <td colspan="2"><hr class="style-one"/></td>
     </tr>
+    <tr>
+        <td colspan="2"><%#titleLabel%></td>
+    </tr>
 </table>
 <br>
-<form id="reg" name="reg" method="post">
-    <%
-    foreach (KeyValuePair<string, string> p in ReqVal) {
-        if (String.Compare(p.Key,"GoPage",true)!=0
-            &&String.Compare(p.Key,"PerPage",true)!=0
-            &&String.Compare(p.Key,"SetOrder",true)!=0)
-        Response.Write(string.Format("<input type=\"hidden\" id=\"{0}\" name=\"{0}\" value=\"{1}\">\n", p.Key, p.Value));
-    }
-    %>
+<form style="margin:0;" id="reg" name="reg" method="post">
+    <%#hiddenText%>
     <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
@@ -279,8 +392,8 @@
 				    | 跳至第
 				    <select id="GoPage" name="GoPage" style="color:#FF0000"><%#page.GetPageList()%></select>
 				    頁
-				    <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="<%#page.nowPage-1%>">上一頁</a></span>
-				    <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="<%#page.nowPage+1%>">下一頁</a></span>
+				    <span id="PageUp" style="display:<%#page.nowPage>1?"":"none"%>">| <a href="javascript:void(0)" class="pgU" v1="<%#page.nowPage-1%>">上一頁</a></span>
+				    <span id="PageDown" style="display:<%#page.nowPage<page.totPage?"":"none"%>">| <a href="javascript:void(0)" class="pgD" v1="<%#page.nowPage+1%>">下一頁</a></span>
 				    | 每頁筆數:
 				    <select id="PerPage" name="PerPage" style="color:#FF0000">
 					    <option value="10" <%#page.perPage==10?"selected":""%>>10</option>
@@ -288,7 +401,7 @@
 					    <option value="30" <%#page.perPage==30?"selected":""%>>30</option>
 					    <option value="50" <%#page.perPage==50?"selected":""%>>50</option>
 				    </select>
-                    <input type="text" name="SetOrder" id="SetOrder" value="<%#ReqVal.TryGet("SetOrder", "")%>" />
+                    <input type="hidden" name="SetOrder" id="SetOrder" value="<%#ReqVal.TryGet("SetOrder", "")%>" />
 			    </font>
 		    </td>
 	    </tr>
@@ -300,27 +413,29 @@
 	<font color="red">=== 目前無資料 ===</font>
 </div>
 
-<table style="display:<%#page.totRow==0?"none":""%>" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
-	<thead>
-        <Tr>
-	        <td class="lightbluetable" nowrap align="center" rowspan="2"><u class="setOdr" v1="bseq,bseq1">區所編號</u></td>
-	        <td class="lightbluetable" nowrap align="center" rowspan="2">申請人</td> 
-	        <td class="lightbluetable" nowrap align="center" rowspan="2">註冊號</td> 
-	        <td class="lightbluetable" nowrap align="center" rowspan="2">案件名稱</td> 
-	        <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="Confirm_date">收文日</u></td>
-	        <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="last_date">法定期限</u></td>
-	        <td class="lightbluetable" nowrap align="center">案性</td> 
-	        <td class="lightbluetable" nowrap align="center" rowspan="2">承辦人</td> 
-	        <td class="lightbluetable" nowrap align="center" rowspan="2">承辦狀態</td> 
-        </tr>
-        <Tr>
-	        <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="Bpr_date">完成日期</u></td>
-	        <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="ap_date">判行日期</u></td>
-	        <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="gs_date">發文日</u></td>
-        </tr>
-	</thead>
-	<tbody>
-		<asp:Repeater id="dataRepeater" runat="server"> 
+<asp:Repeater id="dataRepeater" runat="server">
+<HeaderTemplate>
+    <table style="display:<%#page.totRow==0?"none":""%>" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
+	    <thead>
+            <Tr>
+	            <td class="lightbluetable" nowrap align="center" rowspan="2"><u class="setOdr" v1="bseq,bseq1">區所編號</u></td>
+	            <td class="lightbluetable" nowrap align="center" rowspan="2">申請人</td> 
+	            <td class="lightbluetable" nowrap align="center" rowspan="2">註冊號</td> 
+	            <td class="lightbluetable" nowrap align="center" rowspan="2">案件名稱</td> 
+	            <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="Confirm_date">收文日</u></td>
+	            <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="last_date">法定期限</u></td>
+	            <td class="lightbluetable" nowrap align="center">案性</td> 
+	            <td class="lightbluetable" nowrap align="center" rowspan="2">承辦人</td> 
+	            <td class="lightbluetable" nowrap align="center" rowspan="2">承辦狀態</td> 
+            </tr>
+            <Tr>
+	            <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="Bpr_date">完成日期</u></td>
+	            <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="ap_date">判行日期</u></td>
+	            <td class="lightbluetable" nowrap align="center"><u class="setOdr" v1="gs_date">發文日</u></td>
+            </tr>
+	    </thead>
+	    <tbody>
+</HeaderTemplate>
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
 		            <td rowspan="2" align="center"><%#Eval("link")%><%#Eval("fseq")%></a></td>
@@ -339,133 +454,35 @@
 		            <td align="center"><%#Eval("link")%><%#Eval("gs_date", "{0:d}")%></a></td>
 	            </Tr>
 			</ItemTemplate>
-		</asp:Repeater>
-	</tbody>
-</table>
-<br />
+<FooterTemplate>
+	    </tbody>
+    </table>
+    <br />
+</FooterTemplate>
+</asp:Repeater>
 </body>
 </html>
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        this_init();
-    });
-
-    //初始化
-    function this_init() {
         if (!(window.parent.tt === undefined)) {
-            if ($("submittask").val() == "Q") {
-                window.parent.tt.rows = "30%,70%";
-            } else {
+            if ($("#homelist") == "homelist") {
                 window.parent.tt.rows = "0%,100%";
+            } else {
+                if ($("#submittask").val() == "Q") {
+                    window.parent.tt.rows = "30%,70%";
+                } else {
+                    window.parent.tt.rows = "100%,0%";
+                }
             }
         }
-
-        //goSearch();
-    }
+        theadOdr();//設定表頭排序圖示
+    });
 
     //執行查詢
     function goSearch() {
         reg.submit();
-        /*
-        $("#divPaging,#noData,#dataList").hide();
-        $("#dataList>tbody tr").remove();
-        nRow = 0;
-
-        $.ajax({
-            url: "opt62_list.aspx?json=Y",
-            type: "get",
-            async: false,
-            cache: false,
-            data: $("#reg").serialize(),
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.totrow === undefined) {
-                    toastr.error("資料載入失敗（" + JSONdata.msg + "）");
-                    return false;
-                }
-                if ($("#chkTest").prop("checked")) toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-                //////更新分頁變數
-                var totRow = parseInt(JSONdata.totrow, 10);
-                if (totRow > 0) {
-                    $("#divPaging").show();
-                    $("#dataList").show();
-                } else {
-                    $("#noData").show();
-                }
-
-                var nowPage = parseInt(JSONdata.nowpage, 10);
-                var totPage = parseInt(JSONdata.totpage, 10);
-                $("#NowPage").html(nowPage);
-                $("#TotPage").html(totPage);
-                $("#TotRec").html(totRow);
-                var i = totPage + 1, option = new Array(i);
-                while (--i) {
-                    option[i] = ['<option value="' + i + '">' + i + '</option>'].join("");
-                }
-                $("#GoPage").replaceWith('<select id="GoPage" name="GoPage" style="color:#FF0000">' + option.join("") + '</select>');
-                $("#GoPage").val(nowPage);
-                nowPage > 1 ? $("#PageUp").show() : $("#PageUp").hide();
-                nowPage < totPage ? $("#PageDown").show() : $("#PageDown").hide();
-                $("a.pgU").attr("v1", nowPage - 1);
-                $("a.pgD").attr("v1", nowPage + 1);
-                //$("#id-div-slide").slideUp("fast");
-
-                $.each(JSONdata.pagedtable, function (i, item) {
-                    nRow++;
-                    //複製一筆
-                    $("#dataList>tfoot").each(function (i) {
-                        var strLine1 = $(this).html().replace(/##/g, nRow);
-                        var tclass = "";
-                        if (nRow % 2 == 1) tclass = "sfont9"; else tclass = "lightbluetable3";
-                        strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
-                        strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
-
-                        strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
-                        strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{ap_cname}}/g, item.optap_cname);
-                        strLine1 = strLine1.replace(/{{issue_no}}/g, item.issue_no);
-                        strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
-                        strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
-                        strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
-                        strLine1 = strLine1.replace(/{{code_name}}/g, item.code_name);
-                        strLine1 = strLine1.replace(/{{bpr_date}}/g, dateReviver(item.bpr_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{ap_date}}/g, dateReviver(item.ap_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{gs_date}}/g, dateReviver(item.gs_date, "yyyy/M/d"));
-
-                        strLine1 = strLine1.replace(/{{opt_in_date}}/g, dateReviver(item.opt_in_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{ctrl_date}}/g, dateReviver(item.ctrl_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{opt_sqlno}}/g, item.opt_sqlno);
-                        strLine1 = strLine1.replace(/{{Case_no}}/g, item.case_no);
-                        strLine1 = strLine1.replace(/{{Branch}}/g, item.branch);
-                        strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
-                        strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
-
-                        var urlasp = "";
-                        if (item.case_no != "") {
-                            urlasp = "../opt2m/opt22Edit.aspx?opt_sqlno=" + item.opt_sqlno + "&opt_no=" + item.opt_no + "&branch=" + item.branch + "&case_no=" + item.case_no + "&arcase=" + item.arcase + "&prgid=" + $("#prgid").val() + "&Submittask=Q"
-                        } else {
-                            urlasp = "../opt2m/opt22EditA.aspx?opt_sqlno=" + item.opt_sqlno + "&opt_no=" + item.opt_no + "&branch=" + item.branch + "&arcase=" + item.arcase + "&prgid=" + $("#prgid").val() + "&Submittask=Q"
-                        }
-                        strLine1 = strLine1.replace(/{{urlasp}}/g, urlasp);
-
-                        $("#dataList>tbody").append(strLine1);
-                    });
-                });
-            },
-            beforeSend: function (jqXHR, settings) {
-                jqXHR.url = settings.url;
-                //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-            }
-        });
-        */
     };
-
     //每頁幾筆
     $("#PerPage").change(function (e) {
         goSearch();
@@ -481,11 +498,21 @@
     });
     //排序
     $(".setOdr").click(function (e) {
-        $("#dataList>thead tr .setOdr span").remove();
-        $(this).append("<span>▲</span>");
+        //$("#dataList>thead tr .setOdr span").remove();
+        //$(this).append("<span class='odby'>▲</span>");
         $("#SetOrder").val($(this).attr("v1"));
         goSearch();
     });
+    //設定表頭排序圖示
+    function theadOdr() {
+        $(".setOdr").each(function (i) {
+            $(this).remove("span.odby");
+            if ($(this).attr("v1").toLowerCase() == $("#SetOrder").val().toLowerCase()) {
+                $(this).append("<span class='odby'>▲</span>");
+            }
+        });
+    }
+
     //關閉視窗
     $(".imgCls").click(function (e) {
         if (!(window.parent.tt === undefined)) {
