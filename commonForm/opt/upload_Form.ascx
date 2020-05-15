@@ -40,8 +40,8 @@
 	    </TR>
 	    <TR id="tr_upload_btn">
 		    <TD class=whitetablebg align=right colspan=5>
-			    <input type=button value="增加一筆附件" class="c1button BLock" id=<%=uploadfield%>_Add_button name=<%=uploadfield%>_Add_button onclick="upload_form.appendFile()">
-			    <input type=button value="減少一筆附件" class="c1button BLock" id=<%=uploadfield%>_Del_button name=<%=uploadfield%>_Del_button onclick="upload_form.deleteFile()">
+			    <input type=button value="增加一筆附件" class="c1button BLock" id="<%=uploadfield%>_Add_button" name="<%=uploadfield%>_Add_button" onclick="upload_form.appendFile()">
+			    <input type=button value="減少一筆附件" class="c1button BLock" id="<%=uploadfield%>_Del_button" name="<%=uploadfield%>_Del_button" onclick="upload_form.deleteFile()">
 		    </TD>
 	    </TR>
     </thead>
