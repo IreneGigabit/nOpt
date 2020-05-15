@@ -1,8 +1,8 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
-    protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "爭救案案件查詢";//HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt62";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -45,8 +45,6 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;
-		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
     </tr>
     <tr>
@@ -58,7 +56,7 @@
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <div id="id-div-slide">
-        <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="70%" align="center">	
+        <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="75%" align="center">	
             <tr >
 	            <td class=lightbluetable align=right nowrap>交辦來源：</td>
 	            <td class=whitetablebg colspan=3> 
@@ -127,7 +125,7 @@
                     &nbsp;<label><input type="checkbox" name="qSTAT_CODE" value='NY'>承辦完成</label>
                     &nbsp;<label><input type="checkbox" name="qSTAT_CODE" value='YY'>判行完成</label>
                     &nbsp;<label><input type="checkbox" name="qSTAT_CODE" value='YS'>已發文</label>
-                    <input type="text" id="qrySTAT_CODE" name="qrySTAT_CODE" value="">
+                    <input type="hidden" id="qrySTAT_CODE" name="qrySTAT_CODE" value="">
                 </td>
             </tr>         
         </table>
@@ -158,7 +156,9 @@
         $("#qryPR_SCODE").getOption({//承辦人
             url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=U",
             valueFormat: "{scode}",
-            textFormat: "{scode}_{sc_name}"
+            textFormat: "{scode}_{sc_name}",
+            showEmpty:false,
+            firstOpt: "<option value=''>全部</option>"
         });
 
         $("#qryARCASE").getOption({//案性
@@ -218,7 +218,7 @@
         }
 
         reg.action = "<%=HTProgPrefix%>_list.aspx";
-        reg.target = "Eblank";
+        //reg.target = "Eblank";
         reg.submit();
     });
 
