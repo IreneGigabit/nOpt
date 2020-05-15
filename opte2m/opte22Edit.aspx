@@ -216,7 +216,10 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "0%,100%";
+            if($("#submittask").val()=="Q")
+                window.parent.tt.rows = "20%,80%";
+            else
+                window.parent.tt.rows = "0%,100%";
         }
         $("#chkTest").click(function (e) {
             $("#ActFrame").showFor($(this).prop("checked"));
