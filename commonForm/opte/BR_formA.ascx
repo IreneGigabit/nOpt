@@ -132,19 +132,19 @@
     var br_formA = {};
     br_formA.init = function () {
         $("#Branch").getOption({//區所別
-            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data: { sql: "select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort" },
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"
         });
         $("#agt_no").getOption({//出名代理人
-            url: getRootPath() + "/json/LookupDataBranch.aspx",
+            url: getRootPath() + "/ajax/LookupDataBranch.aspx",
             data: { type: "getagtdata", branch: "<%#branch%>" },
             valueFormat: "{agt_no}",
             textFormat: "{strcomp_name}{agt_name}"
         });
         $("#Arcase").getOption({//交辦案性
-            url: getRootPath() + "/json/LookupDataBranch.aspx",
+            url: getRootPath() + "/ajax/LookupDataBranch.aspx",
             data: { type: "getarcasedata", branch: "<%#branch%>" },
             valueFormat: "{rs_code}",
             textFormat: "{rs_codenm}---{rs_detail}",
@@ -213,7 +213,7 @@
         //取得區所案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/ExtData.aspx?branch=" + $("#Branch").val() + "&seq=" + $("#Bseq").val() + "&seq1=" + $("#Bseq1").val(),
+            url: getRootPath() + "/ajax/_ExtData.aspx?branch=" + $("#Branch").val() + "&seq=" + $("#Bseq").val() + "&seq1=" + $("#Bseq1").val(),
             async: false,
             cache: false,
             success: function (json) {

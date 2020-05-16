@@ -321,7 +321,7 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         $("select[name='law_type1_##'],select[name='law_type2_##'],select[name='law_type3_##']").getOption({//法條搜尋內容
-            url: getRootPath() + "/json/Law.aspx",
+            url: getRootPath() + "/ajax/json_Law.aspx",
             data:{},
             valueFormat: "{law_sqlno}",
             textFormat: "{law_text}"

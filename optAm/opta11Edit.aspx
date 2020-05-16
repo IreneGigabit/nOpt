@@ -279,7 +279,7 @@
         searchSql+= " AND law_no3 = '" + $("#edit_law_no3").val() + "'";
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/_GetSqlData.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
             data: { sql:searchSql},
             async: false,
             cache: false,

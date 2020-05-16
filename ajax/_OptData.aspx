@@ -20,10 +20,9 @@
     protected string att_sql = "";
     protected string arcase_type = "";
     protected string case_no = "";
-    protected string ar_form = "";
-    protected string country = "";
 
-    //http://web08/nOpt/json/OptData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
+
+    //http://web08/nOpt/ajax/_OptData.aspx?branch=N&opt_sqlno=2453&_=1584086771124
 
     protected void Page_Load(object sender, EventArgs e) {
         strConnB = Conn.OptB(Request["branch"]);
@@ -31,27 +30,26 @@
         branch = Request["branch"];
         opt_sqlno = Request["opt_sqlno"];
 
-        DataTable dt_opte = GetBROpte(branch, opt_sqlno);//案件資料
+        DataTable dt_opt = GetBROpt(branch, opt_sqlno);//案件資料
         DataTable dt_cust = GetBRCust(cust_area, cust_seq);//客戶
         DataTable dt_attList = GetBRAtt(cust_area, cust_seq);//聯絡人清單
         DataTable dt_ap = GetBRAP(case_no);//申請人
-        DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch, country);//交辦費用
-        DataTable dt_arcase = GetArcase(arcase_type,ar_form);//委辦案性
-        DataTable dt_arcaseItem = GetArcaseItem(ar_form);//其他費用案性
-        DataTable dt_optePrior = GetOptePrior(opt_sqlno, case_no, branch);//優先權
-        //DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
-        DataTable dt_opteGood = GetOpteGood(opt_sqlno, case_no);//類別
-        //DataTable dt_tran = GetTran(opt_sqlno);//異動
-        //DataTable dt_tran_mod_client = GetTranModClient(case_no, opt_sqlno);//關係人
-        //DataTable dt_tran_mod_dmt = GetTranModDmt(case_no, opt_sqlno);
-        //DataTable dt_tran_mod_pul = GetTranModPul(case_no, opt_sqlno);
-        //DataTable dt_tran_mod_ap = GetTranModAp(case_no, opt_sqlno);
-        //DataTable dt_tran_mod_aprep = GetTranModAprep(case_no, opt_sqlno);
-        //DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
-        //DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
-        DataTable dt_brdmt_attach = GetBRDmtAttach(opt_sqlno);
-        DataTable dt_opte_attach = GetOpteAttach(opt_sqlno);
-            
+        DataTable dt_casefee = GetCaseFees(arcase_type, opt_sqlno, case_no, branch);//交辦費用
+        DataTable dt_arcase = GetArcase(arcase_type);//委辦案性
+        DataTable dt_arcaseItem = GetArcaseItem();//其他費用案性
+        DataTable dt_arcaseOther = GetArcaseOther(arcase_type);//轉帳費用案性
+        DataTable dt_casegood = GetCaseGood(opt_sqlno, case_no, branch);//類別
+        DataTable dt_tran = GetTran(opt_sqlno);//異動
+        DataTable dt_tran_mod_client = GetTranModClient(case_no, opt_sqlno);//關係人
+        DataTable dt_tran_mod_dmt = GetTranModDmt(case_no, opt_sqlno);
+        DataTable dt_tran_mod_pul = GetTranModPul(case_no, opt_sqlno);
+        DataTable dt_tran_mod_ap = GetTranModAp(case_no, opt_sqlno);
+        DataTable dt_tran_mod_aprep = GetTranModAprep(case_no, opt_sqlno);
+        DataTable dt_tran_mod_claim1 = GetTranModClaim1(case_no, opt_sqlno);
+        DataTable dt_tran_mod_class = GetTranModClass(case_no, opt_sqlno);
+        DataTable dt_brdmt_attach = GetBRDmtAttach(case_no);
+        DataTable dt_opt_attach = GetOptAttach(opt_sqlno);
+
         var settings = new JsonSerializerSettings() {
             Formatting = Formatting.Indented,
             ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
@@ -59,26 +57,25 @@
         };
 
         Response.Write("{");
-        Response.Write("\"opte\":" + JsonConvert.SerializeObject(dt_opte, settings).ToUnicode() + "\n");
+        Response.Write("\"opt\":" + JsonConvert.SerializeObject(dt_opt, settings).ToUnicode() + "\n");
         Response.Write(",\"cust\":" + JsonConvert.SerializeObject(dt_cust, settings).ToUnicode() + "\n");
         Response.Write(",\"att_list\":" + JsonConvert.SerializeObject(dt_attList, settings).ToUnicode() + "\n");
         Response.Write(",\"caseap\":" + JsonConvert.SerializeObject(dt_ap, settings).ToUnicode() + "\n");
         Response.Write(",\"casefee\":" + JsonConvert.SerializeObject(dt_casefee, settings).ToUnicode() + "\n");
         Response.Write(",\"arcase\":" + JsonConvert.SerializeObject(dt_arcase, settings).ToUnicode() + "\n");
         Response.Write(",\"arcase_item\":" + JsonConvert.SerializeObject(dt_arcaseItem, settings).ToUnicode() + "\n");
-        Response.Write(",\"opte_prior\":" + JsonConvert.SerializeObject(dt_optePrior, settings).ToUnicode() + "\n");
-        //Response.Write(",\"arcase_other\":" + JsonConvert.SerializeObject(dt_arcaseOther, settings).ToUnicode() + "\n");
-        Response.Write(",\"opte_good\":" + JsonConvert.SerializeObject(dt_opteGood, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran\":" + JsonConvert.SerializeObject(dt_tran, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_client\":" + JsonConvert.SerializeObject(dt_tran_mod_client, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_dmt\":" + JsonConvert.SerializeObject(dt_tran_mod_dmt, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_pul\":" + JsonConvert.SerializeObject(dt_tran_mod_pul, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_ap\":" + JsonConvert.SerializeObject(dt_tran_mod_ap, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_aprep\":" + JsonConvert.SerializeObject(dt_tran_mod_aprep, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
-        //Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
+        Response.Write(",\"arcase_other\":" + JsonConvert.SerializeObject(dt_arcaseOther, settings).ToUnicode() + "\n");
+        Response.Write(",\"casegood\":" + JsonConvert.SerializeObject(dt_casegood, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran\":" + JsonConvert.SerializeObject(dt_tran, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_client\":" + JsonConvert.SerializeObject(dt_tran_mod_client, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_dmt\":" + JsonConvert.SerializeObject(dt_tran_mod_dmt, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_pul\":" + JsonConvert.SerializeObject(dt_tran_mod_pul, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_ap\":" + JsonConvert.SerializeObject(dt_tran_mod_ap, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_aprep\":" + JsonConvert.SerializeObject(dt_tran_mod_aprep, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_claim1\":" + JsonConvert.SerializeObject(dt_tran_mod_claim1, settings).ToUnicode() + "\n");
+        Response.Write(",\"tran_mod_class\":" + JsonConvert.SerializeObject(dt_tran_mod_class, settings).ToUnicode() + "\n");
         Response.Write(",\"brdmt_attach\":" + JsonConvert.SerializeObject(dt_brdmt_attach, settings).ToUnicode() + "\n");
-        Response.Write(",\"opte_attach\":" + JsonConvert.SerializeObject(dt_opte_attach, settings).ToUnicode() + "\n");
+        Response.Write(",\"opt_attach\":" + JsonConvert.SerializeObject(dt_opt_attach, settings).ToUnicode() + "\n");
         Response.Write("}");
 
         //Response.Write(JsonConvert.SerializeObject(rtnStr, Formatting.Indented, new DBNullCreationConverter()).ToUnicode());
@@ -105,8 +102,8 @@
             string rtnStr = "";
             if (pFile.IndexOf("\\") > -1) {//絕對路徑
                 string a = pFile.Replace("\\", "/").ToLower();//斜線改方向
-                //擷取『/XTE/』後(含)的字串
-                rtnStr = "http://" + uploadserver_name + "/btbrt" + a.Substring(a.IndexOf("/" + branch + "te/", StringComparison.OrdinalIgnoreCase));
+                //擷取『/XT/』後(含)的字串
+                rtnStr = "http://" + uploadserver_name + "/btbrt" + a.Substring(a.IndexOf("/" + branch + "t/", StringComparison.OrdinalIgnoreCase));
             } else {
                 rtnStr = "http://" + uploadserver_name + pFile;
             }
@@ -116,7 +113,6 @@
     }
 
     private string showBRDmtFile(string pBranch, string pFile, string tname) {
-        //抓區所商標圖server主機名稱(iis)
         string servername = Sys.webservername(pBranch);
 
         if (pFile.IndexOf(".") > -1) {//路徑包含檔案
@@ -127,9 +123,9 @@
     }
 
     #region GetBROpt 案件資料
-    private DataTable GetBROpte(string pBranch,string pOptSqlno) {
+    private DataTable GetBROpt(string pBranch,string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "Select *,''fseq,''drfile from vbr_opte where opt_sqlno='" + pOptSqlno + "' ";
+            SQL = "Select *,''fseq,''drfile from vbr_opt where opt_sqlno='" + pOptSqlno + "' ";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
             if (dt.Rows.Count>0) {
@@ -140,21 +136,22 @@
                 att_sql = dt.Rows[0].SafeRead("att_sql", "");
                 arcase_type = dt.Rows[0].SafeRead("arcase_type", "");
                 case_no = dt.Rows[0].SafeRead("case_no", "");
-                ar_form = dt.Rows[0].SafeRead("ar_form", "");
 
-                dt.Rows[0]["fseq"] = Funcs.formatSeq(dt.Rows[0].SafeRead("Bseq", "")
-                                    , dt.Rows[0].SafeRead("Bseq1", "")
-                                    , dt.Rows[0].SafeRead("country", "")
-                                    , dt.Rows[0].SafeRead("Branch", "")
-                                    , Sys.GetSession("dept")+"E");
+                dt.Rows[0]["fseq"] = Funcs.formatSeq(dt.Rows[0].SafeRead("Bseq", ""), dt.Rows[0].SafeRead("Bseq1", ""), "", dt.Rows[0].SafeRead("Branch", ""), Sys.GetSession("dept"));
                 dt.Rows[0]["drfile"] = showDRFile(pBranch,dt.Rows[0].SafeRead("draw_file", ""));
                 dt.Rows[0]["send_dept"] = dt.Rows[0].SafeRead("send_dept", "B");
-
-                //承辦案性版本
-                if (dt.Rows[0].SafeRead("pr_rs_type", "").Trim() == "") {
-                    SQL = "select cust_code from cust_code where code_type='bjtrs_type'";
-                    object objResult = conn.ExecuteScalar(SQL);
-                    dt.Rows[0]["pr_rs_type"] = (objResult == DBNull.Value || objResult == null) ? "bjt96" : objResult.ToString();
+                
+                if (dt.Rows[0].SafeRead("rs_type", "") == "") { dt.Rows[0]["rs_type"] = dt.Rows[0].SafeRead("arcase_type", ""); }
+                if (dt.Rows[0].SafeRead("rs_code", "") == "") { dt.Rows[0]["rs_code"] = dt.Rows[0].SafeRead("arcase", ""); }
+                if (dt.Rows[0].SafeRead("rs_class", "") == "") {
+                    using (DBHelper connB = new DBHelper(strConnB, false)) {
+                        SQL = "Select rs_class from code_br where rs_type='" + dt.Rows[0].SafeRead("rs_type", "") + "' and rs_code='" + dt.Rows[0].SafeRead("rs_code", "") + "' and cr='Y' ";
+                        using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
+                            if (dr.Read()) {
+                                dt.Rows[0]["rs_class"] = dr.SafeRead("rs_class", "").Trim();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -235,15 +232,36 @@
     #region GetBRAP 案件申請人
     private DataTable GetBRAP(string pCaseNo) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
-            SQL = "select a.* ";
-            SQL += ",b.apcust_no,b.Apclass,b.Ap_country,b.Ap_crep,b.Ap_erep,b.apatt_zip,b.apatt_addr1,b.apatt_addr2,b.apatt_tel0,b.apatt_tel1,b.apatt_tel,b.apatt_fax ";
-            SQL += ",(select code_name from cust_code where code_type='apclass' and cust_code=b.apclass) as apclassnm ";
-            SQL += " from caseext_apcust a ";
-            SQL += " inner join apcust b on a.apsqlno=b.apsqlno ";
-            SQL += " inner join case_ext c on a.in_no=c.in_no ";
-            SQL += " where  c.case_no='" + pCaseNo + "'";
+            SQL = "SELECT d.apsqlno,d.Server_flag,d.ap_cname1,d.ap_cname2,d.ap_ename1,d.ap_ename2 ";
+            SQL += ",d.ap_fcname,d.ap_lcname,d.ap_fename,d.ap_lename ";
+            SQL += ",d.ap_sql,d.ap_zip as dmt_ap_zip,d.ap_addr1 as dmt_ap_addr1,d.ap_addr2 as dmt_ap_addr2 ";
+            SQL += ",d.ap_eaddr1 as dmt_ap_eaddr1,d.ap_eaddr2 as dmt_ap_eaddr2,d.ap_eaddr3 as dmt_ap_eaddr3,d.ap_eaddr4 as dmt_ap_eaddr4 ";
+            SQL += ",a.apcust_no,a.Apclass,a.Ap_country,a.Ap_crep,a.Ap_erep,a.Ap_addr1,a.Ap_addr2 ";
+            SQL += ",a.Ap_eaddr1,a.Ap_eaddr2,a.Ap_eaddr3,a.Ap_eaddr4 ";
+            SQL += ",a.Apatt_zip,a.Apatt_addr1,a.Apatt_addr2,a.Apatt_tel0 ";
+            SQL += ",a.Apatt_tel,a.Apatt_tel1,a.Apatt_fax,a.Ap_zip ";
+            SQL += "From dmt_temp_ap as d ";
+            SQL += "inner join apcust as a on d.apsqlno=a.apsqlno ";
+            SQL += "inner join case_dmt as b on d.in_no=b.in_no ";
+            SQL += "Where b.case_no = '" + pCaseNo + "' and d.case_sqlno=0 ";
             DataTable dt = new DataTable();
             connB.DataTable(SQL, dt);
+
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                //因交辦案件申請人先前無中英文地址，當無申請人序號，則依申請人檔資料顯示
+                //若申請人序號>=0，則以交辦案件申請人為準
+                if (dt.Rows[i].SafeRead("ap_sql", "") == "") {
+                    dt.Rows[i]["ap_sql"] = "0";
+                } else {
+                    dt.Rows[i]["ap_zip"] = dt.Rows[i].SafeRead("dmt_ap_zip", "");
+                    dt.Rows[i]["ap_addr1"] = dt.Rows[i].SafeRead("dmt_ap_addr1", "");
+                    dt.Rows[i]["ap_addr2"] = dt.Rows[i].SafeRead("dmt_ap_addr2", "");
+                    dt.Rows[i]["ap_eaddr1"] = dt.Rows[i].SafeRead("dmt_ap_eaddr1", "");
+                    dt.Rows[i]["ap_eaddr2"] = dt.Rows[i].SafeRead("dmt_ap_eaddr2", "");
+                    dt.Rows[i]["ap_eaddr3"] = dt.Rows[i].SafeRead("dmt_ap_eaddr3", "");
+                    dt.Rows[i]["ap_eaddr4"] = dt.Rows[i].SafeRead("dmt_ap_eaddr4", "");
+                }
+            }
 
             return dt;
         }
@@ -251,13 +269,14 @@
     #endregion
 
     #region GetCaseFees 交辦費用
-    private DataTable GetCaseFees(string pType, string pOptSqlno,string pCaseNo,string pBranch,string pCountry) {
+    private DataTable GetCaseFees(string pType, string pOptSqlno,string pCaseNo,string pBranch) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select a.*,b.service as P_service,b.fees as P_fees from caseitem_opte a ";
-            SQL += "left outer join " + Sys.kdbname + ".dbo.case_fee b on b.dept='T' and b.country='" + pCountry + "' and b.rs_code=a.item_arcase and getdate() between b.beg_date and b.end_date ";
-            SQL += "where opt_sqlno = '" + pOptSqlno + "' and case_no='" + pCaseNo + "' and branch='" + pBranch + "' ";
-            SQL += "order by item_sql";
-
+            SQL = "select a.item_sql,a.item_arcase,a.item_count,a.item_service,a.item_fees,b.prt_code,c.service,c.fees,c.others,c.oth_code,c.oth_code1 ";
+            SQL += "from caseitem_opt a ";
+            SQL += "inner join "+Sys.kdbname+".dbo.code_br b on  a.item_arcase=b.rs_code AND b.no_code='N' and b.rs_type='"+pType+"' ";
+            SQL += "left outer join "+Sys.kdbname+".dbo.case_fee c on c.dept='T' and c.country='T' and c.rs_code=a.item_arcase and getdate() between c.beg_date and c.end_date ";
+            SQL += "where a.opt_sqlno='" + pOptSqlno + "' and a.Case_no= '" + pCaseNo + "' and a.Branch='" + pBranch + "' ";
+            SQL += "order by a.item_sql";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -267,15 +286,14 @@
     #endregion
 
     #region GetArcase 委辦案性
-    private DataTable GetArcase(string pType,string pAr_form) {
-        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "SELECT  rs_code, rs_detail ";
-            SQL += "FROM " + Sys.kdbname + ".dbo.code_ext ";
-            SQL += "WHERE rs_class like '" +pAr_form+ "%' And  cr_flag= 'Y' ";
-            SQL += "And getdate() >= beg_date and (end_date is null or end_date='' or end_date > getdate()) ";
-            SQL+="And (Mark is null or left(mark,1)<>'A') and rs_type='" +pType+ "' ORDER BY rs_code";
+    private DataTable GetArcase(string pType) {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
+            SQL = "SELECT rs_code,prt_code,rs_detail,remark ";
+            SQL += "FROM code_br ";
+            SQL += "WHERE  (mark = 'B' ) And cr= 'Y' and dept='T' And rs_type='" + pType + "' AND no_code='N' and getdate() >= beg_date ";
+            SQL += "ORDER BY rs_code";
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+            connB.DataTable(SQL, dt);
 
             return dt;
         }
@@ -283,33 +301,20 @@
     #endregion
 
     #region GetArcaseItem 其他費用案性
-    private DataTable GetArcaseItem(string pAr_form) {
-        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+    private DataTable GetArcaseItem() {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "SELECT  rs_code, rs_detail ";
-            SQL += "FROM  " + Sys.kdbname + ".dbo.code_ext ";
-            SQL += "WHERE rs_class like  '" + pAr_form + "%'  And  cr_flag= 'Y' and left(mark,1)='A' ";
-            SQL += " and getdate() >= beg_date and (end_date is null or end_date='' or end_date > getdate()) ORDER BY rs_code";
+            SQL += "FROM code_br ";
+            SQL += "WHERE rs_class = 'Z1' And cr= 'Y' and dept='T' AND no_code='N' and getdate() >= beg_date ";
+            SQL += "ORDER BY rs_code";
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+            connB.DataTable(SQL, dt);
 
             return dt;
         }
     }
     #endregion
-    
-    #region GetArcaseItem 優先權
-    private DataTable GetOptePrior(string pOptSqlno, string pCaseNo, string pBranch) {
-        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select * from caseopte_prior ";
-            SQL += "where opt_sqlno='" + pOptSqlno + "' and case_no='" + pCaseNo + "' and branch='" + pBranch + "'";
-            DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
 
-            return dt;
-        }
-    }
-    #endregion
-    
     #region GetArcaseOther 轉帳費用案性
     private DataTable GetArcaseOther(string pType) {
         using (DBHelper connB = new DBHelper(strConnB, false)) {
@@ -326,10 +331,10 @@
     }
     #endregion
 
-    #region GetOpteGood 類別
-    private DataTable GetOpteGood(string pOptSqlno, string pCaseNo) {
+    #region GetCaseGood 類別
+    private DataTable GetCaseGood(string pOptSqlno,string pCaseNo,string pBranch) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select * from caseopte_good where case_no='" + pCaseNo + "' and opt_sqlno='" + pOptSqlno + "' order by class ";
+            SQL = "select * from  caseopt_good  where opt_sqlno='" + pOptSqlno + "' and case_no= '" + pCaseNo + "' and branch='" + pBranch + "'";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -472,17 +477,14 @@
 
     #region GetBRDmtAttach
     private DataTable GetBRDmtAttach(string pCaseNo) {
-        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+        using (DBHelper connB = new DBHelper(strConnB, false)) {
             SQL = "select *,''preview_path ";
-            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm";
-            SQL += ",(select form_name from cust_code where code_type='osername' and cust_code=attach_opte.branch) as uploadservername ";
-            SQL += " from attach_opte ";
-            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
-            SQL += " and source='br' ";
-            SQL += " order by opt_sqlno,attach_no ";
+            SQL += "from dmt_attach ";
+            SQL += "where case_no='" +pCaseNo+ "' and source='case' and attach_flag<>'D' and attach_branch='B' ";
+            SQL += " order by attach_sqlno ";
 
             DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
+            connB.DataTable(SQL,dt);
             for (int i = 0; i < dt.Rows.Count; i++) {
                 dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
             }
@@ -492,22 +494,17 @@
     }
     #endregion
 
-    #region GetOpteAttach
-    private DataTable GetOpteAttach(string pOptSqlno) {
+    #region GetOptAttach
+    private DataTable GetOptAttach(string pOptSqlno) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            SQL = "select *,''preview_path ";
-            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm";
-            SQL += ",(select form_name from cust_code where code_type='osername' and cust_code=attach_opte.branch) as uploadservername ";
-            SQL += " from attach_opte ";
-            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
-            SQL += " and source='pr' ";
+            SQL = "select * ";
+            SQL += ",(Select sc_name from sysctrl.dbo.scode where scode=add_scode) as add_scodenm ";
+            SQL += " from attach_opt ";
+            SQL += " where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D' ";
             SQL += " order by opt_sqlno,attach_no ";
-    
+
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
-            for (int i = 0; i < dt.Rows.Count; i++) {
-                dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
-            }
 
             return dt;
         }

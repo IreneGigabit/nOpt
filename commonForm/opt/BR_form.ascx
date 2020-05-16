@@ -58,7 +58,7 @@
     var br_form = {};
     br_form.init = function () {
         $("#pr_scode").getOption({//爭議組承辦人員
-            url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
+            url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}"
         });

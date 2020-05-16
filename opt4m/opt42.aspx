@@ -150,7 +150,7 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         $("#qryBranch,#cust_area").getOption({//區所別
-            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"
@@ -194,7 +194,7 @@
     function getRsNo(){
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/rs_no.aspx",
+            url: getRootPath() + "/ajax/json_rs_no.aspx",
             data: { cgrs: $("#cgrs").val(), sdate: $("#sdate").val(), edate: $("#edate").val(), send_dept: $("#qrySend_dept").val() },
             async: false,
             cache: false,

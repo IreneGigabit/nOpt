@@ -119,7 +119,7 @@
     //重新抓取區所交辦資料
     $("#GetBranch_remark_button").click(function () { 
         if (confirm("是否確定重新取得區所交辦說明資料？")) {
-            var url = getRootPath() + "/json/get_branchdata.aspx?prgid=<%=prgid%>&datasource=remark&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + 
+            var url = getRootPath() + "/ajax/get_branchdata.aspx?prgid=<%=prgid%>&datasource=remark&branch=" + $("#Branch").val() + "&case_no=" + $("#case_no").val() + 
                 "&opt_sqlno=" + $("#opt_sqlno").val() + "&step_grade=" + $("#bstep_grade").val() + "&seq=" + $("#tfzb_seq").val() + "&seq1=" + $("#tfzb_seq1").val() + "&chkTest=" + $("#chkTest:checked").val();
             //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
             ActFrame.location.href = url;

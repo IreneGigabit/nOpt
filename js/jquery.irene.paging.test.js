@@ -108,8 +108,11 @@
             //$(this).bind(_settings.bind, _settings.callback);
         });
     }
+    //#endregion
+
     /*
-    $.fn.extend({
+	//#region chkRequire
+	$.fn.extend({
 		chkRequire: function (option) {
 			var defaults = {
 				msg: "",
@@ -127,7 +130,15 @@
 					$(this).parents("td:first").append("<span class='errlog'></span>");
 				}
 
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+				//$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
+
 				if (settings.depend != null && settings.depend != undefined && settings.depend != "") {
+					//if (this.type == "radio" || this.type == "checkbox") {
+					//	if ($(this).prop("checked") == false) {
+					//		return false;
+					//	}
+					//} else
 					if ($(settings.depend).val() == "") {
 						return false;
 					}
@@ -162,10 +173,59 @@
 				//console.log($(this).index());
 				//console.log($(this).parents("td:first").find(".errlog").index());
 				//console.log($(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").length+",errmsg="+errmsg);
+				//$(this).tooltipster({ trigger: 'custom', position: 'right', content: errmsg, multiple: true, theme: 'tooltipster-light' });
+				if (errmsg != "") {
+					$(this).addClass("chkError");
+				    $(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
+					//$(this).tooltipster('show');
+				} else {
+				    $(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html("");
+				    $(this).removeClass("chkError");
+				    //$(this).tooltipster('hide');
+				}
+			});
+			return errflag;
+		}
+	});
+	//#endregion
+
+	//#region chkNumber 
+	$.fn.extend({
+		chkNumber: function (option) {
+			var defaults = {
+				msg: "",
+				br: false,
+				min: null,
+				max: null,
+				require: false
+			};
+
+			var settings = $.extend(defaults, option || {});
+			var errflag = false;
+
+			this.each(function () {
+				var errmsg = "";
+				if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
+					$(this).parents("td:first").append("<span class='errlog'></span>");
+				}
+
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
+
+				if (this.type == "text") {
+					if (settings.require && $(this).val() == "") {
+						errmsg = settings.msg || "須輸入數值";
+						errflag = true;
+					} else if (isNaN($(this).val())) {
+						errmsg = settings.msg || "須為數值";
+						errflag = true;
+					} else if (settings.min != null && parseFloat($(this).val()) < settings.min) {
+						errmsg = settings.msg || "須>=" + settings.min;
+						errflag = true;
+					}
+				}
 
 				if (errmsg != "") {
-					//$(this).parents("td:first").find(".errlog").html(errmsg);
-					//$(this).nextAll(".errlog:eq(0)").html(errmsg);
 					$(this).addClass("chkError");
 					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
 				} else {
@@ -177,7 +237,198 @@
 			return errflag;
 		}
 	});
-    */
 	//#endregion
+
+	//#region chkDate
+	$.fn.extend({
+		chkDate: function (option) {
+			var defaults = {
+				msg: "",
+				br: false,
+				require: false
+			};
+
+			var settings = $.extend(defaults, option || {});
+			var errflag = false;
+
+			this.each(function () {
+				var errmsg = "";
+				if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
+					$(this).parents("td:first").append("<span class='errlog'></span>");
+				}
+
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
+
+				if (this.type == "text") {
+				    if ($(this).val() != "") {
+				        if (!$.isDate($(this).val())) {
+							errmsg = settings.msg || "日期格式錯誤，請重新輸入!!! 日期格式:YYYY/MM/DD";
+							errflag = true;
+						}
+				    } else {
+				        if (settings.require) {
+							errmsg = settings.msg || "日期格式錯誤，請重新輸入!!! 日期格式:YYYY/MM/DD";
+							errflag = true;
+						}
+					}
+				}
+
+				if (errmsg != "") {
+					$(this).addClass("chkError");
+					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
+				} else {
+					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+						$(this).removeClass("chkError");
+					}
+				}
+			});
+			return errflag;
+		}
+	});
+	//#endregion
+
+	//#region chkRequireGrp
+	$.fn.extend({
+		chkRequireGrp: function (option) {
+			var defaults = {
+				msg: "",
+				br: false,
+				alert: true,
+				extcheck: function (hasFlag) { }
+			};
+
+			var settings = $.extend(defaults, option || {});
+			var errflag = false;
+			var errmsg = "";
+			var hasFlag = false;
+
+			hasFlag = settings.extcheck(hasFlag);
+			this.each(function () {
+				//if (this.type == "radio" || this.type == "checkbox") {
+				//	if ($(this).prop("checked") != true) {
+				//		hasFlag = hasFlag || true;
+				//	}
+				//} else
+				//alert($(this).val());
+				if ($(this).val() != "") {
+					hasFlag = hasFlag || true;
+				}
+				//if (window.console) {
+				//	console.log(this.type + "..hasFlag.." + hasFlag);
+				//}
+			});
+
+			if (!hasFlag) {
+				errflag = true;
+				if (settings.alert) {
+					alert(settings.msg || "至少輸入一項!!");
+				} else {
+					this.each(function () {
+						if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
+							$(this).parents("td:first").append("<span class='errlog'></span>");
+						}
+
+						errmsg = settings.msg || "至少輸入一項!!";
+						//console.log(errmsg);
+						$(this).addClass("chkError");
+						$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
+					});
+				}
+			} else {
+				this.each(function () {
+					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+						$(this).removeClass("chkError");
+					}
+				});
+			}
+			return errflag;
+		}
+	});
+	//#endregion
+
+	//#region chkLength
+	$.fn.extend({
+		chkLength: function (option) {
+			var defaults = {
+				msg: "",
+				br: false,
+				max:0
+			};
+
+			var settings = $.extend(defaults, option || {});
+			var errflag = false;
+
+			this.each(function () {
+				var errmsg = "";
+
+				if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
+					$(this).parents("td:first").append("<span class='errlog'></span>");
+				}
+
+			    //$(this).nextAll(".errlog:eq(0)").html("");
+			    //$(this).parents("td:first").children(":gt("+$(this).index()+").errlog:first").html("");
+
+				if ($(this).val().CodeLength() > settings.max) {
+					errmsg = settings.msg || "長度過長，請檢查！";
+				}
+				
+				if (errmsg != "") {
+					//$(this).parents("td:first").find(".errlog").html(errmsg);
+					//$(this).nextAll(".errlog:eq(0)").html(errmsg);
+					$(this).addClass("chkError");
+					$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + errmsg);
+				} else {
+					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+						$(this).removeClass("chkError");
+					}
+				}
+
+			});
+			return errflag;
+		}
+	});
+	//#endregion
+
+	//#region chkErrorExt
+	$.fn.extend({
+		chkErrorExt: function (option) {
+			var defaults = {
+				msg: "資料有誤，請檢查!!",
+				br: false,
+				alert: false,
+				checkErr: function (extFlag) { }
+			};
+
+			var settings = $.extend(defaults, option || {});
+			var errflag = false;
+
+			errflag = settings.checkErr(settings);
+
+			if (errflag) {
+				if (settings.alert) {
+					alert(settings.msg);
+				} else {
+					this.each(function () {
+						if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").length == 0) {
+							$(this).parents("td:first").append("<span class='errlog'></span>");
+						}
+						$(this).addClass("chkError");
+						$(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html((settings.br ? "<BR>" : "") + settings.msg);
+					});
+				}
+			} else {
+				this.each(function () {
+					if ($(this).parents("td:first").children(":gt(" + $(this).index() + ").errlog:first").html() == "") {
+						$(this).removeClass("chkError");
+					}
+				});
+			}
+
+			return errflag;
+		}
+	});
+	//#endregion
+    */
 })(jQuery);
 

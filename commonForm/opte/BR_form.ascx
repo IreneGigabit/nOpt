@@ -100,7 +100,7 @@
 
     br_form.getPrScode = function () {
         $("#pr_scode").getOption({//爭議組承辦人員
-            url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=A&pr_branch=" + $("#pr_branch").val(),
+            url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A&pr_branch=" + $("#pr_branch").val(),
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}"
         });
@@ -109,7 +109,7 @@
     //取得結構分類
     br_form.getRsClass = function () {
         $("#pr_rs_class").getOption({
-            url: getRootPath() + "/json/bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val(),
+            url: getRootPath() + "/ajax/json_bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val(),
             valueFormat: "{rs_class}",
             textFormat: "{rs_class}_{rs_class_name}",
         });
@@ -118,7 +118,7 @@
     //依結構分類帶案性
     $("#pr_rs_class").change(function () {
         $("#pr_rs_code").getOption({//案性
-            url: getRootPath() + "/json/bjtrs_code.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_class="+$("#pr_rs_class").val(),
+            url: getRootPath() + "/ajax/json_bjtrs_code.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_class=" + $("#pr_rs_class").val(),
             valueFormat: "{cust_code}",
             textFormat: "{cust_code}_{code_name}",
             attrFormat: "val1='{form_name}'"
@@ -129,7 +129,7 @@
     $("#pr_rs_code").change(function () {
         //if ($("#pr_rs_class").val() == "") {
         //    $("#pr_rs_class").getOption({//結構分類
-        //        url: getRootPath() + "/json/bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_code=" + $("#pr_rs_code").val(),
+        //        url: getRootPath() + "/ajax/json_bjtrs_class.aspx?rs_type=" + $("#pr_rs_type").val() + "&rs_code=" + $("#pr_rs_code").val(),
         //        valueFormat: "{rs_class}",
         //        textFormat: "{rs_class}_{rs_class_name}",
         //    });

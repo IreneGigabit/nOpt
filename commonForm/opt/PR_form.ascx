@@ -54,7 +54,7 @@
     pr_form.init = function () {
         /*
         $("#pr_per").getOption({//承辦完成百分比
-            url: getRootPath() + "/json/_GetSqlData.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
             data: { sql: "Select cust_code,code_name from cust_code where code_type='Opr_per' order by sortfld" },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}",

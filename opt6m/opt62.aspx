@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -147,14 +147,14 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         $("#qryBranch,#qrycust_area").getOption({//區所別
-            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"
         });
 
         $("#qryPR_SCODE").getOption({//承辦人
-            url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=U",
+            url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=U",
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}",
             showEmpty:false,
@@ -162,7 +162,7 @@
         });
 
         $("#qryARCASE").getOption({//案性
-            url: getRootPath() + "/json/_GetSqlData.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
             data: { sql: "select cust_code,code_name from cust_code where code_type='T92' order by form_name" },
             valueFormat: "{cust_code}",
             textFormat: "{cust_code}-{code_name}",

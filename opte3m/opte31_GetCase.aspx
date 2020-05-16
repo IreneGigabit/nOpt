@@ -254,7 +254,7 @@
 		            //alert("submit");
 		            reg.submit();
 		        }else{
-		            var url=getRootPath() + "/json/get_branchdata.aspx?prgid=<%=prgid%>&datasource=" +datasource+ 
+		            var url=getRootPath() + "/ajax/get_branchdata.aspx?prgid=<%=prgid%>&datasource=" +datasource+ 
                         "&branch="+$("#Branch").val()+"&case_no="+$("#Case_no").val()+"&opt_sqlno="+$("#opt_sqlno").val()+
                         "&step_grade="+$("#step_grade").val()+"&seq="+$("#Seq").val()+"&seq1="+$("#Seq1").val();
 		            //alert(url);

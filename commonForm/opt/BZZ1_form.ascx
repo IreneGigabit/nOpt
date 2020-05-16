@@ -34,7 +34,7 @@
     var tran_form = {};
     tran_form.init = function () {
         $("#Pagt_no").getOption({//代理人
-            url: getRootPath() + "/json/LookupDataBranch.aspx",
+            url: getRootPath() + "/ajax/LookupDataBranch.aspx",
             data: { type: "getagtdata", branch: "<%#branch%>" },
             valueFormat: "{agt_no}",
             textFormat: "{strcomp_name}{agt_name}"

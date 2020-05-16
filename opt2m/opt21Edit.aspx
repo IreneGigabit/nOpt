@@ -210,7 +210,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/ajax/_OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {
@@ -259,15 +259,17 @@
 
     //分　　案
     $("#btnsearchSubmit").click(function () {
-        var errFlag = false;
+        if ($("#ctrl_date").val()==""){
+            alert("請輸入預計完成日期！！");
+            $("#ctrl_date").focus();
+            return false;
+        }
 
-        errFlag = $("#ctrl_date").chkDate({ br:true,require: true, msg: "預計完成日期格式錯誤(yyyy/mm/dd)或未輸入！" }) || errFlag;
-        errFlag = $("#pr_scode").chkRequire({ msg: "請輸入承辦人員！！" }) || errFlag;
-
-        if (errFlag) {
-		    alert("輸入的資料有誤,請檢查!!");
-		    return false;
-		}
+        if ($("#pr_scode").val()==""){
+            alert("請輸入承辦人員！！");
+            $("#pr_scode").focus();
+            return false;
+        }
 
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit").lock(!$("#chkTest").prop("checked"));

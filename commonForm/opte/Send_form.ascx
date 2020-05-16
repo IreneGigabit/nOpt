@@ -41,7 +41,7 @@
     var send_form = {};
     send_form.init = function () {
         $("#send_code").getOption({//回稿代碼
-            url: getRootPath() + "/json/_GetSqlData.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
             data: { branch: "<%#branch%>", sql: "Select tf_code,tf_name from tfcode_opt where tf_class='send_br' order by tf_code" },
             valueFormat: "{tf_code}",
             textFormat: "{tf_name}"
@@ -62,7 +62,7 @@
         //規費收費標準
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/_GetSqlData.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
             data: { sql:searchSql},
             async: false,
             cache: false,

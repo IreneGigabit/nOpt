@@ -188,13 +188,13 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         $("#qryPr_scode").getOption({//爭議組承辦人員
-            url: getRootPath() + "/json/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
+            url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
             valueFormat: "{scode}",
             textFormat: "{scode}_{sc_name}"
         })
 
         $("#qryBranch").getOption({//區所別
-            url: getRootPath() + "/json/_GetSqlDataCnn.aspx",
+            url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"

@@ -160,7 +160,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/ajax/_OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {
@@ -211,15 +211,23 @@
 
     //分　　案/新增分案
     function formSearchSubmit(dowhat) {
-        var errFlag = false;
+        if ($("#Branch").val()==""){
+            alert("區所別未輸入！");
+            $("#Branch").focus();
+            return false;
+        }
 
-        errFlag = $("#Branch").chkRequire() || errFlag;
-        errFlag = $("#Bseq").chkRequire() || errFlag;
-        errFlag = $("#Bseq1").chkRequire() || errFlag;
-        errFlag = $("#dfy_last_date").chkRequire() || errFlag;
-        errFlag = $("#ctrl_date").chkRequire() || errFlag;
-        errFlag = $("#pr_scode").chkRequire() || errFlag;
-        errFlag = $("#Arcase").chkRequire() || errFlag;
+        if ($("#Bseq").val()==""){
+            alert("區所編號未輸入！");
+            $("#Bseq").focus();
+            return false;
+        }
+
+        if ($("#Bseq１").val()==""){
+            alert("區所編號副碼未輸入！");
+            $("#Bseq１").focus();
+            return false;
+        }
 
         if (($("#Bseq").val()!=$("#oldBseq").val()
             ||$("#Bseq1").val()!=$("#oldBseq1").val()
@@ -227,13 +235,29 @@
             &&$("#oldBseq").val()!=""&&$("#oldBseq1").val()&&$("#oldBranch").val()
             ){
             alert("區所案件編號變動過，請按[確定]按鈕，重新抓取資料!!!");
-            errFlag=true;
+            $("#btnBseq").focus();
+            return false;
         }
-
-        if (errFlag) {
-		    alert("輸入的資料有誤,請檢查!!");
-		    return false;
-		}
+        if ($("#dfy_last_date").val()==""){
+            alert("請輸入法定期限！！");
+            $("#dfy_last_date").focus();
+            return false;
+        }
+        if ($("#ctrl_date").val()==""){
+            alert("請輸入預計完成日期！！");
+            $("#ctrl_date").focus();
+            return false;
+        }
+        if ($("#pr_scode").val()==""){
+            alert("請輸入承辦人員！！");
+            $("#pr_scode").focus();
+            return false;
+        }
+        if ($("#arcase").val()==""){
+            alert("請輸入交辦案性！！");
+            $("#arcase").focus();
+            return false;
+        }
 
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit1,#btnsearchSubmit2").lock(!$("#chkTest").prop("checked"));

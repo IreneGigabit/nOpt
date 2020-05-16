@@ -196,7 +196,7 @@
         //取得案件資料
         $.ajax({
             type: "get",
-            url: getRootPath() + "/json/OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            url: getRootPath() + "/ajax/_OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
             async: false,
             cache: false,
             success: function (json) {
