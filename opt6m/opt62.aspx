@@ -190,9 +190,6 @@
 
     //[查詢]
     $("#btnSrch").click(function (e) {
-        $("#dataList>thead tr .setOdr span").remove();
-        $("#SetOrder").val("");
-
         if ($("#qryBseq").val()!="" && $("#qryBranch").val()==""){
             alert("請輸入區所別!!!");
             $("#qryBranch").focus();

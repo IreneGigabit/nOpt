@@ -207,7 +207,7 @@
 </head>
 
 <body>
-<table cellspacing="1" cellpadding="0" width="98%" border="0">
+<table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
@@ -221,13 +221,13 @@
         <td colspan="2"><%#titleLabel%></td>
     </tr>
 </table>
-<br>
+
 <form style="margin:0;" id="reg" name="reg" method="post">
     <%#hiddenText%>
     <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
-		    <td colspan=2 align=center class=whitetablebg>
+		    <td colspan=2 align=center>
 			    <font size="2" color="#3f8eba">
 				    第<font color="red"><span id="NowPage"><%#page.nowPage%></span>/<span id="TotPage"><%#page.totPage%></span></font>頁
 				    | 資料共<font color="red"><span id="TotRec"><%#page.totRow%></span></font>筆

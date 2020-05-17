@@ -112,7 +112,7 @@
     <div id="divPaging" style="display:none">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
-		    <td colspan=2 align=center class=whitetablebg>
+		    <td colspan=2 align=center>
 			    <font size="2" color="#3f8eba">
 				    第<font color="red"><span id="NowPage"></span>/<span id="TotPage"></span></font>頁
 				    | 資料共<font color="red"><span id="TotRec"></span></font>筆

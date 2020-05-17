@@ -119,8 +119,8 @@
                     ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["month"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
                 } else {
                     if ((Request["SubmitTask"] ?? "") == "Q") {//從統計表來
-                        ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["month"].Trim() + "/1"; //上個月一號
-                        ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["month"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
+                        ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["qrysMonth"].Trim() + "/1"; //上個月一號
+                        ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["qryeMonth"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
                     }
                     if (ReqVal.TryGet("qrySdate", "") != "") {
                         SQL += " and a." + ReqVal.TryGet("qryKINDDATE", "") + ">='" + ReqVal.TryGet("qrySdate", "") + "' ";
@@ -229,7 +229,7 @@
                         "&opt_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
                         "&branch=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
                         "&case_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&prgid=" + prgid + "&Submittask=Q";
+                        "&prgid=" + prgid + "&Submittask=Q&back_flag=" + Request["back_flag"];
                 if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
                     urlasp = "../opt2m/opt22Edit.aspx?" + urlasp;
                 } else {
@@ -365,7 +365,7 @@
 </head>
 
 <body>
-<table cellspacing="1" cellpadding="0" width="98%" border="0">
+<table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
@@ -379,13 +379,13 @@
         <td colspan="2"><%#titleLabel%></td>
     </tr>
 </table>
-<br>
+
 <form style="margin:0;" id="reg" name="reg" method="post">
     <%#hiddenText%>
     <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
-		    <td colspan=2 align=center class=whitetablebg>
+		    <td colspan=2 align=center>
 			    <font size="2" color="#3f8eba">
 				    第<font color="red"><span id="NowPage"><%#page.nowPage%></span>/<span id="TotPage"><%#page.totPage%></span></font>頁
 				    | 資料共<font color="red"><span id="TotRec"><%#page.totRow%></span></font>筆

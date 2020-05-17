@@ -138,9 +138,6 @@
 
     //[查詢]
     $("#btnSrch").click(function (e) {
-        $("#dataList>thead tr .setOdr span").remove();
-        $("#SetOrder").val("");
-
         if ($("#qryDay").val()==""){
             alert("請輸入抓取天數!!!");
             $("#qryDay").focus();
