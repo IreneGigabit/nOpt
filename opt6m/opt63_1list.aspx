@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -24,6 +24,7 @@
     protected DataTable dtx = new DataTable();
     protected DataTable dty = new DataTable();
     protected DataTable dt = new DataTable();
+    protected string hrefq = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -57,6 +58,14 @@
 
     private void ListPageLayout() {
         StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
+
+        //根據查詢條件組查詢條件字串(hrefq)
+        hrefq += "&qryinclude=" + Request["qryinclude"];
+        hrefq += "&qryYear=" + Request["qryYear"];
+        hrefq += "&qrysMonth=" + Request["qrysMonth"];
+        hrefq += "&qryeMonth=" + Request["qryeMonth"];
+        hrefq += "&qrybr_source=" + Request["qrybr_source"];
+        hrefq += "&prgid=" + Request["prgid"];
 
         //顯示查詢條件
         string qrybr_source_name = "";
@@ -146,6 +155,21 @@
                 sumRow[1] = "合計";
                 dtx.Rows.Add(sumRow);
             }
+            //string line1 = "",line2="";
+            //for (int i = 0; i < dtx.Rows.Count; i++) {
+            //    if (i == 0) {
+            //        line1 += "<tr><td align=\"center\" class=\"lightbluetable\" rowspan=2>月份</td>";
+            //        line2 += "<tr>";
+            //    }
+            //    line1 += "<td align=\"center\" class=\"lightbluetable\" colspan=2>" + dtx.Rows[i]["x_branchnm"] + "</td>";
+            //    line2 += "<td align=\"center\" class=\"lightbluetable\" nowrap>案件數</td>";
+            //    line2 += "<td align=\"center\" class=\"lightbluetable\" nowrap>得　分</td>";
+            //    if (i == dtx.Rows.Count-1) {
+            //        line1 += "</tr>";
+            //        line2 += "</tr>";
+            //    }
+            //}
+            //tablehead = line1 + line2;
 
             //y軸
             SQL = "select m.cust_code y_month,m.code_name y_monthnm ";
@@ -154,10 +178,7 @@
             SQL += " order by m.sortfld ";
             conn.DataTable(SQL, dty);
             DataRow totRow = dty.NewRow();
-            totRow[0] = "";
-            totRow[1] = "總計";
-            dty.Rows.Add(totRow);
-
+            
             //符合條件的明細
             SQL = "select month(a.ap_date)m_ap_date,* from br_opt as a ";
             SQL += "where a.mark<>'B'and score_flag='Y' ";
@@ -180,50 +201,58 @@
             
             monthRepeater.DataSource = dty;
             monthRepeater.DataBind();
-            
-            //標題
-            //for (int x = 0; x < dtx.Rows.Count; x++) {
-            //    if (x == 0) Response.Write("月份");
-            //    Response.Write("," + dtx.Rows[x]["x_branchnm"]);
-            //}
-            //
-            //for (int y = 0; y < dty.Rows.Count; y++) {
-            //    Response.Write("<BR>" + dty.Rows[y]["y_monthnm"]);
-            //    for (int x = 0; x < dtx.Rows.Count; x++) {
-            //        Response.Write("，" + dt.Compute("count(branch)", "m_ap_date='" + dty.Rows[y]["y_month"] + "' and branch='" + dtx.Rows[x]["x_branch"] + "'").ToString());
-            //        Response.Write("_" + dt.Compute("Sum(score)", "m_ap_date='" + dty.Rows[y]["y_month"] + "' and branch='" + dtx.Rows[x]["x_branch"] + "'").ToString());
-            //    }
-            //}
         }
     }
 
     protected void monthRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e) {
-        Repeater branchRepeater3 = (Repeater)e.Item.FindControl("branchRepeater3");
-        branchRepeater3.DataSource = dtx;
-        branchRepeater3.DataBind();
+		if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem)) {// For items
+            Repeater branchRepeater3 = (Repeater)e.Item.FindControl("branchRepeater3");
+            branchRepeater3.DataSource = dtx;
+            branchRepeater3.DataBind();
+        } else if (e.Item.ItemType == ListItemType.Footer) {// For Footer
+            Repeater branchRepeater4 = (Repeater)e.Item.FindControl("branchRepeater4");
+            branchRepeater4.DataSource = dtx;
+            branchRepeater4.DataBind();
+            Repeater branchRepeater5 = (Repeater)e.Item.FindControl("branchRepeater5");
+            branchRepeater5.DataSource = dtx;
+            branchRepeater5.DataBind();
+        }
     }
-
+    
     //案件數
-    protected string GetCount(object month, object branch) {
+    protected string GetCount(RepeaterItem Container, bool showlink) {
         string rtn = "";
+
+        string month = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_month") ?? "").ToString();
+        string branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
         string where = " 1=1";
         if (month != "") where += " and m_ap_date='" + month + "'";
         if (branch != "") where += " and branch='" + branch + "'";
 
         rtn = dt.Compute("count(branch)", where).ToString();
-        return rtn == "" ? "0" : rtn;
+        rtn = rtn == "" ? "0" : Convert.ToInt32(rtn).ToString("N0");
+
+        if (showlink && rtn != "0")
+            rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + "&month=" + month + "' target='Eblank'>" + rtn + "</a>";
+        return rtn;
     }
     
     //得分
-    protected string GetScore(object month, object branch) {
+    protected string GetScore(RepeaterItem Container, bool showlink) {
         string rtn = "";
+        string month = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_month") ?? "").ToString();
+        string branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
+
         string where = " 1=1";
         if (month != "") where += " and m_ap_date='" + month + "'";
         if (branch != "") where += " and branch='" + branch + "'";
-        //where += " and m_ap_date='" + DataBinder.Eval(pItem, "y_month").ToString() + "'";
-        
+
         rtn = dt.Compute("Sum(score)", where).ToString();
-        return rtn == "" ? "0" : rtn;
+        rtn = rtn == "" ? "0" : Convert.ToInt32(rtn).ToString("N0");
+
+        if (showlink && rtn != "0")
+            rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + "&month=" + month + "' target='Eblank'>" + rtn + "</a>";
+        return rtn;
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -257,7 +286,7 @@
     </tr>
 </table>
 <br />
-<table width="100%" cellspacing="1" cellpadding="2" class="bluetable" align="center">                   
+<table width="100%" cellspacing="1" cellpadding="2" class="bluetable" align="center">
     <tr align="left">
         <td align="center" class="lightbluetable" rowspan=2>月份</td>
         <asp:Repeater id="branchRepeater1" runat="server">
@@ -281,14 +310,39 @@
             <td align="center" class="lightbluetable3"><%#Eval("y_monthnm")%></td>
             <asp:Repeater id="branchRepeater3" runat="server">
             <ItemTemplate>
-                <!--GetScore(((RepeaterItem)Container.Parent.Parent).DataItem,Eval("x_branch"))-->
-                <!--GetCount(((RepeaterItem)Container.Parent.Parent).DataItem,Eval("x_branch"))-->
-                <td align="center" class="sfont9"><%#GetCount(DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem,"y_month"),Eval("x_branch"))%></td>
-                <td align="center" class="sfont9"><%#GetScore(DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem,"y_month"),Eval("x_branch"))%></td>
+                <td align="center" class="<%#Eval("x_branch")!= "" ?"sfont9":"lightbluetable3"%>">
+                    <%#GetCount(Container,true)%>
+                    <!--GetCount(((RepeaterItem)Container.Parent.Parent).DataItem,Eval("x_branch"))-->
+                </td>
+                <td align="center" class="<%#Eval("x_branch")!= "" ?"sfont9":"lightbluetable3"%>">
+                    <%#GetScore(Container,false)%>
+                    <!--GetScore(((RepeaterItem)Container.Parent.Parent).DataItem,Eval("x_branch"))-->
+                </td>
             </ItemTemplate>
             </asp:Repeater>
         </tr>
     </ItemTemplate>
+    <FooterTemplate>
+        <tr>
+            <td align="center" class="lightbluetable">總計</td>
+            <asp:Repeater id="branchRepeater4" runat="server">
+            <ItemTemplate>
+                <td align="center" class="lightbluetable"><%#GetCount(Container,true)%></td>
+                <td align="center" class="lightbluetable"><%#GetScore(Container,false)%></td>
+            </ItemTemplate>
+            </asp:Repeater>
+        </tr>
+        <tr>
+            <td align="center" class="lightbluetable">平均得分</td>
+            <asp:Repeater id="branchRepeater5" runat="server">
+            <ItemTemplate>
+                <td align="center" class="lightbluetable" colspan="2">
+                    <%#(Convert.ToDecimal(GetScore(Container,false))/Convert.ToDecimal(GetCount(Container,false))).ToString("N")%>
+                </td>
+            </ItemTemplate>
+            </asp:Repeater>
+        </tr>
+    </FooterTemplate>
     </asp:Repeater>
 </table>
 </body>
