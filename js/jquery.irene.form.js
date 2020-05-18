@@ -197,6 +197,7 @@
 	            url: "",
 	            data: null,
 	            dataList: null,
+	            mod: null,//幾個換行(<br>)
 	            objName: "",//radio的name(群組名)
 	            valueFormat: "",//radio的value格式,用{}包住欄位,ex:{scode}
 	            textFormat: "",//radio的文字格式,用{}包住欄位,ex:{scode}_{sc_name}
@@ -267,6 +268,104 @@
 	                    obj.append("<label><input type='radio' id='" + settings.objName + val + "' name='" + settings.objName + "' value='" + val + "' " + attr + " checked>" + txt + "</label>");
 	                else
 	                    obj.append("<label><input type='radio' id='" + settings.objName + val + "' name='" + settings.objName + "' value='" + val + "' " + attr + ">" + txt + "</label>");
+
+	                if (settings.mod != null) {
+	                    if ((i + 1) % settings.mod == 0) {
+	                        obj.append("<BR>");
+	                    }
+	                }
+	            });
+	        });
+	    }
+	});
+    //#endregion
+
+    //#region getCheckbox
+	$.fn.extend({
+	    getCheckbox: function (option) {
+	        var obj = $(this);
+	        var defaults = {
+	            debug: false,
+	            url: "",
+	            data: null,
+	            dataList: null,
+                mod:null,//幾個換行(<br>)
+	            objName: "",//checkbox的name(群組名)
+	            valueFormat: "",//checkbox的value格式,用{}包住欄位,ex:{scode}
+	            textFormat: "",//checkbox的文字格式,用{}包住欄位,ex:{scode}_{sc_name}
+	            attrFormat: "",//checkbox的attribute格式,用{}包住欄位,ex:value1='{scode1}' value2='{sscode}'
+	            setValue: ""//預設值
+	        };
+	        var settings = $.extend(defaults, option || {});  //初始化
+
+	        var debugurl = settings.url + "?";// + unescape(unescape($.param(settings.data)));
+	        if (settings.data != null) debugurl += unescape(unescape($.param(settings.data)));
+	        if (settings.debug) {
+	            if ($("body").find("#divDebug").length == 0) {
+	                $("body").append("<div id=\"divDebug\" style=\"display:none;color:#1B3563\"></div>");
+	            }
+	            $("#divDebug").html("<a href=\"" + debugurl + "\" target=\"_blank\">Open getcheckbox Debug Win<a>");
+	            $("#divDebug").show();
+	            $("#divDebug").fadeOut(5000);
+	        }
+
+	        return this.each(function () {
+	            var obj = $(this);
+	            obj.empty();
+
+	            if (settings.dataList == null) {
+	                $.ajax({
+	                    async: false,
+	                    cache: false,
+	                    type: "get",
+	                    data: settings.data,
+	                    url: settings.url,
+	                    success: function (json) {
+	                        settings.dataList = $.parseJSON(json);
+	                    },
+	                    beforeSend: function (jqXHR, settings) {
+	                        jqXHR.url = settings.url;
+	                        //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
+	                    },
+	                    error: function (jqXHR, textStatus, errorThrown) {
+	                        //window.open(debugurl);
+	                        //alert("載入查詢清單發生錯誤!!");
+	                        toastr.error("<a href='" + jqXHR.url + "' target='_new'>載入查詢清單發生錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+	                    }
+	                });
+	            }
+
+	            $.each(settings.dataList, function (i, item) {
+	                //處理value
+	                var val = settings.valueFormat;
+	                Object.keys(item).forEach(function (key) {
+	                    var re = new RegExp("{" + key + "}", "ig");
+	                    val = val.replace(re, item[key]);
+	                });
+
+	                //處理text
+	                var txt = settings.textFormat;
+	                Object.keys(item).forEach(function (key) {
+	                    var re = new RegExp("{" + key + "}", "ig");
+	                    txt = txt.replace(re, item[key]);
+	                });
+
+	                //處理attribute
+	                var attr = settings.attrFormat;
+	                Object.keys(item).forEach(function (key) {
+	                    var re = new RegExp("{" + key + "}", "ig");
+	                    attr = attr.replace(re, item[key]);
+	                });
+	                if (val.toLowerCase() == settings.setValue.toLowerCase())
+	                    obj.append("<label><input type='checkbox' id='" + settings.objName + val + "' name='" + settings.objName + "' value='" + val + "' " + attr + " checked>" + txt + "</label>");
+	                else
+	                    obj.append("<label><input type='checkbox' id='" + settings.objName + val + "' name='" + settings.objName + "' value='" + val + "' " + attr + ">" + txt + "</label>");
+
+	                if (settings.mod != null) {
+	                    if ((i + 1) % settings.mod == 0) {
+	                        obj.append("<BR>");
+	                    }
+	                }
 	            });
 	        });
 	    }
