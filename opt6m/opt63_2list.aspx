@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -59,14 +59,10 @@
     }
 
     private void ListPageLayout() {
-        if ((Request["homelist"] ?? "") == "homelist") {
-            StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\"  target=\"Etop\">[查詢]</a>";
+        if ((Request["submitTask"] ?? "") == "Q") {
+            StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
         } else {
-            if ((Request["homelist"] ?? "") == "homelist") {
-                StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
-            } else {
-                StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
-            }
+            StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
         }
     }
 
@@ -343,7 +339,7 @@
 		            <td align="center"><%#Eval("link")%><%#Eval("scode_name")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("pr_scode_name")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("score")%></a></td>
-		            <td align="center"><%#Eval("link")%><%#Eval("opt_remark")%></a></td>
+		            <td><%#Eval("link")%><%#Eval("opt_remark")%></a></td>
 				</tr>
 			</ItemTemplate>
 <FooterTemplate>
@@ -358,7 +354,7 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         if (!(window.parent.tt === undefined)) {
-            if ($("#submittask").val() == "Q") {
+            if ($("#submittask").val() == "Q" || $("#submitTask").val() == "Q") {
                 window.parent.tt.rows = "30%,70%";
             } else {
                 window.parent.tt.rows = "100%,0%";
