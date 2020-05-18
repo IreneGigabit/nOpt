@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -73,10 +73,10 @@
                 }
 
                 //算總計
-                totcnt += 1;
-                if (dtRpt.Rows[i].SafeRead("sendmark","") == "正本") {
-                    totfees += Convert.ToInt32(dtRpt.Rows[i].SafeRead("Bfees",""));
-                }
+                //totcnt += 1;
+                //if (dtRpt.Rows[i].SafeRead("sendmark","") == "正本") {
+                //    totfees += Convert.ToInt32(dtRpt.Rows[i].SafeRead("Bfees",""));
+                //}
             }
 
             DataTable dtBranch = dtRpt.DefaultView.ToTable(true, new string[] { "branch","branchname" });
@@ -102,10 +102,6 @@
         countnum = 0;
         fees = 0;
         if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem)) {
-            //totcount += 1;
-            //var data = ((RepeaterItem)e.Item.Parent.Parent).DataItem;
-            //Response.Write(((DataRowView)data).Row["branch"] + "<BR>");
-            
             Repeater dtlRpt = (Repeater)e.Item.FindControl("dtlRepeater");
 
             if ((dtlRpt != null)) {
@@ -120,10 +116,12 @@
 
     protected void dtlRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e) {
         if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem)) {
-            countnum += 1;
-
+            countnum += 1;//小計件數
+            totcnt += 1;//總計件數
+            
             if (((DataRowView)e.Item.DataItem).Row["sendmark"].ToString() == "正本") {
-                fees += Convert.ToInt32(((DataRowView)e.Item.DataItem).Row["Bfees"].ToString());
+                fees += Convert.ToInt32(((DataRowView)e.Item.DataItem).Row["Bfees"].ToString());//小計規費
+                totfees += Convert.ToInt32(((DataRowView)e.Item.DataItem).Row["Bfees"].ToString());//總計規費
             }
         }
     }
