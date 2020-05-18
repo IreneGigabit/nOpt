@@ -70,7 +70,7 @@ function chkInt(pFieldName,pObj){
 
 
 //檢查日期格式
-function ChkDate(pObj){
+function ChkDate(pObj) {//=chkdateformat
     if (pObj.value=="")return false;
     if ($.isDate(pObj.value)==false){
         alert("日期格式錯誤，請重新輸入!!! 日期格式:YYYY/MM/DD");
