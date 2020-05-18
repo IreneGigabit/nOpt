@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -86,7 +86,7 @@
 		        <td class="whitetablebg" align="left">
                     <span id="spanclass"></span>
 			        <br><label><input type="checkbox" id=qryPClass>全部</label>
-			        <input type="hidden" id="qryClass" name="qryClass">
+			        <input type="text" id="qryClass" name="qryClass">
 		        </td> 
 	        </tr>
 	        <tr>
@@ -227,9 +227,11 @@
             &&($("input[name='qrykind']:checked").val()=="rs_class"
             ||$("input[name='qrykind']:checked").val()=="rs_code")
             ){
-            alert("日期範圍不可為空白!");
-            $("#qrysDATE").focus();
-            return false;
+            if($("#qrysDATE").val()==""||$("#qryeDATE").val()==""){
+                alert("日期範圍不可為空白!");
+                $("#qrysDATE").focus();
+                return false;
+            }
         }
         if($("input[name='qrykind']:checked").val()=="month"){
             if($("qryYear").val()==""){
@@ -248,6 +250,23 @@
                 return false;
             }
         }
+        if($("input[name='qryprint']:checked").val()=="D"){//明細表
+            if($("#qryBseq").val()!=""){
+                if($("input[name='qryBranch']:checked").val()==""){
+                    alert("請輸入區所別!");
+                    $("input[name='qryBranch']").eq(0).focus();
+                    return false;
+                }
+            }
+            $("input[name='qrykind']").prop("checked",false);
+        }else{
+            if($("input[name='qryPClass']:checked").length==0){
+                alert("請勾選欲統計之類別!!");
+                return false;
+            }
+        }
+        //串接統計類別
+        $("#qryClass").val(getValueStr("input[name='qryPClass']:checked", ";")+";");
 
         if ($("input[name='qryprint']:checked").val()=="T"){
             reg.action = "<%=HTProgPrefix%>_1list.aspx";

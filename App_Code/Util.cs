@@ -110,9 +110,17 @@ public static class Util
     #endregion
 
     #region Left
+    /// <summary>
+    /// 從左邊取N個字元，若ln為負數0則是剩餘N個字元數
+    /// </summary>
     public static string Left(this string str, int ln) {
-        string sret = str.Substring(0, Math.Min(ln, str.Length));
-        return sret;
+        if (ln >= 0) {
+            string sret = str.Substring(0, Math.Min(ln, str.Length));
+            return sret;
+        } else {
+            string sret = str.Substring(0, str.Length + ln);
+            return sret;
+        }
     }
     #endregion
 
