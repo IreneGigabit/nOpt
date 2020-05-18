@@ -218,6 +218,37 @@
 
     //[查詢]
     $("#btnSrch").click(function (e) {
+        if($("input[name='qrykind']:checked").length==0){
+            alert("請選擇統計依據!");
+            $("input[name='qrykind']").eq(0).focus();
+            return false;
+        }
+        if($("input[name='qryKinddate']:checked").val()=="Confirm_date"
+            &&($("input[name='qrykind']:checked").val()=="rs_class"
+            ||$("input[name='qrykind']:checked").val()=="rs_code")
+            ){
+            alert("日期範圍不可為空白!");
+            $("#qrysDATE").focus();
+            return false;
+        }
+        if($("input[name='qrykind']:checked").val()=="month"){
+            if($("qryYear").val()==""){
+                alert("年度不可空白!");
+                $("#qryYear").focus();
+                return false;
+            }
+            if($("qrysMonth").val()==""){
+                alert("月份(起)不可空白!");
+                $("#qrysMonth").focus();
+                return false;
+            }
+            if($("qryeMonth").val()==""){
+                alert("月份(迄)不可空白!");
+                $("#qryeMonth").focus();
+                return false;
+            }
+        }
+
         if ($("input[name='qryprint']:checked").val()=="T"){
             reg.action = "<%=HTProgPrefix%>_1list.aspx";
         }else if($("input[name='qryprint']:checked").val()=="D"){
