@@ -503,6 +503,12 @@ input.bluebutton {
     COLOR: black;
     BACKGROUND-COLOR: lightcyan
 }
+.Yellowtable,.Yellowtable>td
+{
+    FONT-SIZE: 10pt;
+    COLOR: black;
+    BACKGROUND-COLOR: #ffffcc
+}
 .sedit1
 {
     BORDER-RIGHT: medium none;
@@ -919,7 +925,6 @@ input.btn5 {}
 .vGrp7 {}
 .vGrp8 {}
 .vGrp9 {}
-
 
 /*
 input[type=button]:disabled,input[type=button][disabled] {
