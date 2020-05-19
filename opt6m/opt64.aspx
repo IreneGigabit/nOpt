@@ -1,8 +1,8 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
-    protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "爭救案性統計表";//HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt64";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -85,8 +85,8 @@
 		        <td class="lightbluetable" align="right">統計類別 :</td>
 		        <td class="whitetablebg" align="left">
                     <span id="spanclass"></span>
-			        <br><label><input type="checkbox" id=qryPClass>全部</label>
-			        <input type="text" id="qryClass" name="qryClass">
+			        <br><label><input type="checkbox" id=qryPClassA name=qryPClassA value="1">全部</label>
+			        <input type="hidden" id="qryClass" name="qryClass">
 		        </td> 
 	        </tr>
 	        <tr>
@@ -270,6 +270,9 @@
 
         if ($("input[name='qryprint']:checked").val()=="T"){
             reg.action = "<%=HTProgPrefix%>_1list.aspx";
+            if ($("input[name='qrykind']:checked").val()=="rs_code"){
+                reg.action = "<%=HTProgPrefix%>_1list_sub.aspx";
+            }
         }else if($("input[name='qryprint']:checked").val()=="D"){
             reg.action = "<%=HTProgPrefix%>_3list.aspx";
         }else if($("input[name='qryprint']:checked").val()=="B"){
@@ -335,7 +338,7 @@
     });
 
     //統計類別全選
-    $("#qryPClass").click(function () {
+    $("#qryPClassA").click(function () {
         $("input[name='qryPClass']").prop("checked",$(this).prop("checked"));
     });
 
