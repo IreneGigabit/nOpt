@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Data.SqlClient;
 using System.Text;
@@ -81,6 +81,13 @@ public class Token
             //檢查網頁參照
             Uri webRef = HttpContext.Current.Request.UrlReferrer;//http://localhost/system/sys_main.html
             string stmp = "";
+            //HttpContext.Current.Response.Write(this.SysCode + "<BR>");
+            //HttpContext.Current.Response.Write(this.APcode + "<BR>");
+            //HttpContext.Current.Response.Write(this.UGrpID + "<BR>");
+            //HttpContext.Current.Response.Write(this.ConnectionString + "<BR>");
+            //HttpContext.Current.Response.Write(this.Rights + "<BR>");
+            //HttpContext.Current.Response.Write(this._Passworded + "<BR>");
+            //HttpContext.Current.Response.Write(HttpContext.Current.Session["Password"] + "<BR>");
 
             if (chkRef) {
                 if (webRef != null) {
@@ -104,6 +111,13 @@ public class Token
                     throw new Exception("無頁面參照！");
                 }
             }
+            //HttpContext.Current.Response.Write(this.SysCode + "<BR>");
+            //HttpContext.Current.Response.Write(this.APcode + "<BR>");
+            //HttpContext.Current.Response.Write(this.UGrpID + "<BR>");
+            //HttpContext.Current.Response.Write(this.ConnectionString + "<BR>");
+            //HttpContext.Current.Response.Write(this.Rights + "<BR>");
+            //HttpContext.Current.Response.Write(this._Passworded + "<BR>");
+            //HttpContext.Current.Response.Write(HttpContext.Current.Session["Password"] + "<BR>");
 
             if (_Passworded) {
                 bool myRights = false;
@@ -140,7 +154,15 @@ public class Token
                     if (cn != null) cn.Close();
                 }
             } else {
-                //HttpContext.Current.Response.Write(PageDirect("系統停滯時間逾時，請重新登入 !"));
+                //HttpContext.Current.Response.Write(this.SysCode + "<BR>");
+                //HttpContext.Current.Response.Write(this.APcode + "<BR>");
+                //HttpContext.Current.Response.Write(this.UGrpID + "<BR>");
+                //HttpContext.Current.Response.Write(this.ConnectionString + "<BR>");
+                //HttpContext.Current.Response.Write(this.Rights + "<BR>");
+                //HttpContext.Current.Response.Write(this._Passworded + "<BR>");
+                //HttpContext.Current.Response.Write(HttpContext.Current.Session["Password"] + "<BR>");
+                //HttpContext.Current.Response.End();
+                //HttpContext.Current.Response.Write(PageDirect(Sys.GetSession("Password") + "系統停滯時間逾時，請重新登入 !", false));
                 //HttpContext.Current.Response.End();
                 throw new Exception("系統停滯時間逾時，請重新登入 !");
             }
