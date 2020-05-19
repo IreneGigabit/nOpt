@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -254,6 +254,23 @@
             rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + "&month=" + month + "' target='Eblank'>" + rtn + "</a>";
         return rtn;
     }
+    //平均得分
+    protected string GetAvg(RepeaterItem Container, bool showlink) {
+        string rtn = "";
+        string score = GetScore(Container, false);
+        string count = GetCount(Container, false);
+
+        if (score == "0" || count == "0") {
+            rtn = "0";
+        } else {
+            rtn = (Convert.ToDecimal(score) / Convert.ToDecimal(count)).ToString("N");
+        }
+
+        string branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
+        if (showlink && rtn != "0")
+            rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + " target='Eblank'>" + rtn + "</a>";
+        return rtn;
+    }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -337,7 +354,7 @@
             <asp:Repeater id="branchRepeater5" runat="server">
             <ItemTemplate>
                 <td align="center" class="lightbluetable" colspan="2">
-                    <%#(Convert.ToDecimal(GetScore(Container,false))/Convert.ToDecimal(GetCount(Container,false))).ToString("N")%>
+                    <%#GetAvg(Container,false)%>
                 </td>
             </ItemTemplate>
             </asp:Repeater>
