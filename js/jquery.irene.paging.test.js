@@ -1,4 +1,4 @@
-﻿(function ($) {
+(function ($) {
     //#region Paging
     $.fn.paging = function (settings) {
         var defaultSettings = {
@@ -110,7 +110,6 @@
     }
     //#endregion
 
-    /*
 	//#region chkRequire
 	$.fn.extend({
 		chkRequire: function (option) {
@@ -189,6 +188,7 @@
 	});
 	//#endregion
 
+    /*
 	//#region chkNumber 
 	$.fn.extend({
 		chkNumber: function (option) {
