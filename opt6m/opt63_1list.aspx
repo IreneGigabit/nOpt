@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -20,7 +20,7 @@
     protected string titleLabel = "";
 
     protected string submitTask = "";
-    
+
     protected DataTable dtx = new DataTable();
     protected DataTable dty = new DataTable();
     protected DataTable dt = new DataTable();
@@ -178,7 +178,7 @@
             SQL += " order by m.sortfld ";
             conn.DataTable(SQL, dty);
             DataRow totRow = dty.NewRow();
-            
+
             //符合條件的明細
             SQL = "select month(a.ap_date)m_ap_date,* from br_opt as a ";
             SQL += "where a.mark<>'B'and score_flag='Y' ";
@@ -192,20 +192,20 @@
                 SQL += " and a.branch='" + Request["qryBranch"] + "' ";
             }
             conn.DataTable(SQL, dt);
-           
-            
+
+
             branchRepeater1.DataSource=dtx;
             branchRepeater1.DataBind();
             branchRepeater2.DataSource = dtx;
             branchRepeater2.DataBind();
-            
+
             monthRepeater.DataSource = dty;
             monthRepeater.DataBind();
         }
     }
 
     protected void monthRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e) {
-		if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem)) {// For items
+        if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem)) {// For items
             Repeater branchRepeater3 = (Repeater)e.Item.FindControl("branchRepeater3");
             branchRepeater3.DataSource = dtx;
             branchRepeater3.DataBind();
@@ -218,7 +218,7 @@
             branchRepeater5.DataBind();
         }
     }
-    
+
     //案件數
     protected string GetCount(RepeaterItem Container, bool showlink) {
         string rtn = "";
@@ -236,7 +236,7 @@
             rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + "&month=" + month + "' target='Eblank'>" + rtn + "</a>";
         return rtn;
     }
-    
+
     //得分
     protected string GetScore(RepeaterItem Container, bool showlink) {
         string rtn = "";
@@ -257,14 +257,14 @@
     //平均得分
     protected string GetAvg(RepeaterItem Container, bool showlink) {
         string rtn = "";
-        string score = GetScore(Container, false);
-        string count = GetCount(Container, false);
+        decimal score = Convert.ToDecimal(GetScore(Container, false));
+        decimal count = Convert.ToDecimal(GetCount(Container, false));
 
-        if (score == "0" || count == "0") {
-            rtn = "0";
-        } else {
-            rtn = (Convert.ToDecimal(score) / Convert.ToDecimal(count)).ToString("N");
-        }
+        decimal avg = 0;
+        if (score != 0 && count != 0)
+            avg = (score / count);
+
+        rtn = avg.ToString("N");
 
         string branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
         if (showlink && rtn != "0")
@@ -375,11 +375,6 @@
             }
         }
     });
-
-    //執行查詢
-    function goSearch() {
-        reg.submit();
-    };
 
     //關閉視窗
     $(".imgCls").click(function (e) {

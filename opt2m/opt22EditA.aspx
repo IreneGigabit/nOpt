@@ -16,6 +16,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string StrFormBtnTop = "";
 
     protected string submitTask = "";
     protected string branch = "";
@@ -47,7 +48,7 @@
         opt_sqlno = Request["opt_sqlno"] ?? "";
         opt_no = Request["opt_no"] ?? "";
         case_no = Request["case_no"] ?? "";
-        
+
         if (prgid == "opt22") {
             HTProgCap = "爭救案判行作業";
             SLock = "false";
@@ -71,6 +72,11 @@
     }
 
     private void PageLayout() {
+        if ((Request["back_flag"] ?? "") == "Y") {
+            StrFormBtnTop += "<a href=\"javascript:history.go(-1);void(0);\">[回上一頁]</a>";
+        }
+        StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
+
         //品質評分欄位要不要show的flag
         using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
             string SQL = "select ref_code from cust_code where code_type='T92' and cust_code='" + Request["arcase"] + "'";
@@ -80,7 +86,6 @@
                 show_qu_form = "Y";
         }
     }
-
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -106,7 +111,7 @@
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>

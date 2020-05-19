@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -129,9 +129,6 @@
                         SQL += " and a." + ReqVal.TryGet("qryKINDDATE", "") + "<='" + ReqVal.TryGet("qryeDATE", "") + "' ";
                     }
                 }
-                if ((Request["Pclass"] ?? "") != "") {
-                    SQL += " and  a.form_name in (" + Request["Pclass"].Left(-1) + ")";
-                }
             } else {
                 if ((Request["qrykinddate"] ?? "") != "") {
                     SQL += " and a." + Request["qrykinddate"] + ">='" + Request["qrySdate"] + "'";
@@ -250,9 +247,9 @@
 
             string qryinclude_name = "";
             if ((Request["qryinclude"] ?? "") == "Y") {
-                qryinclude_name = "&nbsp;<font color=blue>◎包含項目：</font>只印附屬案性";
+                qryinclude_name = "<BR>&nbsp;<font color=blue>◎包含項目：</font>只印附屬案性";
             } else if ((Request["qryinclude"] ?? "") == "N") {
-                qryinclude_name = "&nbsp;<font color=blue>◎包含項目：</font>不含附屬案性";
+                qryinclude_name = "<BR>&nbsp;<font color=blue>◎包含項目：</font>不含附屬案性";
             }
 
             string qrybranch_name = "";
@@ -279,7 +276,7 @@
                 SQL = "select sc_name from sysctrl.dbo.scode where scode='" + Request["qrypr_scode"] + "'";
                 object objResult = conn.ExecuteScalar(SQL);
                 qrypr_scode_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
-                qrypr_scode_name = "&nbsp;<font color=blue>◎承辦人：</font>" + qrypr_scode_name;
+                qrypr_scode_name = "<BR>&nbsp;<font color=blue>◎承辦人：</font>" + qrypr_scode_name;
             }
 
             string qrystatus_name = "";
@@ -292,9 +289,9 @@
             string qryAP_DATE_name = "";
             if ((ReqVal["qrykinddate"] ?? "") != "") {
                 if ((Request["qrykinddate"] ?? "") == "Confirm_date") {
-                    qryAP_DATE_name = "&nbsp;<font color=blue>◎收文期間：</font>";
+                    qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎收文期間：</font>";
                 } else if ((Request["qrykinddate"] ?? "") == "ap_date") {
-                    qryAP_DATE_name = "&nbsp;<font color=blue>◎判行期間：</font>";
+                    qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎判行期間：</font>";
                 }
                 qryAP_DATE_name += ReqVal["qrySdate"] + "~" + ReqVal["qryEdate"];
             }
@@ -322,16 +319,14 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
-        <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+        <td width="25%" class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
+        <td ><%#titleLabel%></td>
+        <td width="15%" class="FormLink" align="right" nowrap="nowrap">
             <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
-        <td colspan="2"><hr class="style-one"/></td>
-    </tr>
-    <tr>
-        <td colspan="2"><%#titleLabel%></td>
+        <td colspan="3"><hr class="style-one"/></td>
     </tr>
 </table>
 

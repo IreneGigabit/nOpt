@@ -179,14 +179,6 @@ hr
     color: black;
     background-color: #bbffff;
 }
-.whitetablebg3
-{
-    font-size: 10pt; 
-    font-weight: bold;
-    color: blue;
-    background-color: #ffffff;
-}
-
 .yellowtablebg1
 {
     font-size: 10pt;
@@ -508,6 +500,12 @@ input.bluebutton {
     FONT-SIZE: 10pt;
     COLOR: black;
     BACKGROUND-COLOR: #ffffcc
+}
+.whitetablebg3,.whitetablebg3>td
+{
+    FONT-SIZE: 10pt;
+    COLOR: black;
+    BACKGROUND-COLOR: lavender;
 }
 .sedit1
 {

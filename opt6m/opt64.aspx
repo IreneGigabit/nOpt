@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -271,7 +271,7 @@
         if ($("input[name='qryprint']:checked").val()=="T"){
             reg.action = "<%=HTProgPrefix%>_1list.aspx";
             if ($("input[name='qrykind']:checked").val()=="rs_code"){
-                reg.action = "<%=HTProgPrefix%>_1list_sub.aspx";
+                //reg.action = "<%=HTProgPrefix%>_1list_sub.aspx";
             }
         }else if($("input[name='qryprint']:checked").val()=="D"){
             reg.action = "<%=HTProgPrefix%>_3list.aspx";

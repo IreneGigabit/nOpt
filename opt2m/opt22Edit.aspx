@@ -20,6 +20,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string StrFormBtnTop = "";
 
     protected string submitTask = "";
     protected string branch = "";
@@ -76,6 +77,11 @@
     }
 
     private void PageLayout() {
+        if ((Request["back_flag"] ?? "") == "Y") {
+            StrFormBtnTop += "<a href=\"javascript:history.go(-1);void(0);\">[回上一頁]</a>";
+        }
+        StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
+
         //決定要不要顯示案件主檔畫面
         if (",DO1,DI1,DR1,".IndexOf(","+Request["arcase"]+",")>-1) {
             dmt_show_flag = "N";
@@ -131,7 +137,7 @@
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
