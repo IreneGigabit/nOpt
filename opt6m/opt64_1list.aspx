@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -24,6 +24,8 @@
     protected DataTable dtx = new DataTable();
     protected DataTable dty = new DataTable();
     protected DataTable dt = new DataTable();
+    protected string y_title = "";
+    protected string y_align = "center";
     protected string hrefq = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
@@ -58,20 +60,22 @@
 
     private void ListPageLayout() {
         StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
-
+        StrFormBtnTop += "<br><a href=\"window.print()\" target=\"myWindowOne\">列印</a>日期："+DateTime.Today.ToShortDateString();
+        
         //根據查詢條件組查詢條件字串(hrefq)
         hrefq += "&qryKind=" + Request["qryKind"];
         hrefq += "&qryinclude=" + Request["qryinclude"];
         hrefq += "&qrystatus=" + Request["qrystatus"];
         hrefq += "&qrykindDate=" + Request["qrykindDate"];
         hrefq += "&qrypr_scode=" + Request["qrypr_scode"];
-        hrefq += "&qrysdate=" + Request["qrysdate"];
-        hrefq += "&qryedate=" + Request["qryedate"];
+        hrefq += "&qrysdate=" + ReqVal["qrysdate"];
+        hrefq += "&qryedate=" + ReqVal["qryedate"];
         hrefq += "&qryYear=" + Request["qryYear"];
         hrefq += "&qrysMonth=" + Request["qrysMonth"];
         hrefq += "&qryeMonth=" + Request["qryeMonth"];
-        hrefq += "&qryClass=" + Request[" qryClass"];
+        hrefq += "&qryClass=" + Request["qryClass"];
         hrefq += "&qryPClass=" + Request["qryPClass"];
+        hrefq += "&qryPClassA=" + Request["qryPClassA"];
         hrefq += "&qrybr_source=" + Request["qrybr_source"];
         hrefq += "&prgid=" + Request["prgid"];
     }
@@ -98,17 +102,18 @@
 
             //y軸
             if ((Request["qrykind"] ?? "") == "rs_class") {//類別
-                SQL = "select cust_code,code_name from cust_code ";
+                SQL = "select cust_code y_value,code_name y_text ";
+                SQL += "from cust_code ";
                 SQL += "where code_type='OClass' ";
                 if ((Request["qryClass"] ?? "") != "") {
                     SQL += "and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
                 }
                 SQL += "order by cust_code ";
             } else if ((Request["qrykind"] ?? "") == "rs_code") {//案性
-                 SQL = "select t.form_name,o.code_name,t.cust_code,t.code_name ";
-                 SQL += "from cust_code t  ";
-                 SQL += "inner join cust_code o on o.code_type='OClass' and t.form_name=o.cust_code ";
-                 SQL += "where t.code_type='T92'  ";
+                SQL = "select t.form_name,o.code_name,t.cust_code y_value,o.code_name+'－'+t.code_name y_text ";
+                SQL += "from cust_code t  ";
+                SQL += "inner join cust_code o on o.code_type='OClass' and t.form_name=o.cust_code ";
+                SQL += "where t.code_type='T92'  ";
                 if ((Request["qryClass"] ?? "") != "") {
                     SQL += "and t.form_name in('" + Request["qryClass"].Replace(";", "','") + "')";
                 }
@@ -119,30 +124,23 @@
                 }
                 SQL += "order by t.form_name ";
             } else if ((Request["qrykind"] ?? "") == "month") {//月份
-                SQL = "select m.cust_code y_month,m.code_name y_monthnm ";
+                SQL = "select m.cust_code y_value,m.code_name y_text ";
                 SQL += "from cust_code m ";
                 SQL += "where m.code_type='Omonth' and m.cust_code>=" + Request["qrysMonth"] + " and m.cust_code<=" + Request["qryeMonth"] + " ";
                 SQL += " order by m.sortfld ";
             }
             conn.DataTable(SQL, dty);
-            DataRow totRow = dty.NewRow();
 
             //符合條件的明細
-            SQL = "select month(a.ap_date)m_ap_date,* from vopt_641 as a ";
-            SQL += "where a.mark<>'B'and score_flag='Y' ";
-            SQL += " and year(a.ap_date)='" + Request["qryYear"] + "' ";
-            SQL += " and month(a.ap_date)>=" + Request["qrysMonth"] + " ";
-            SQL += " and month(a.ap_date)<=" + Request["qryeMonth"] + " ";
+            SQL = "select month(a." + Request["qrykinddate"] + ")m_ap_date,* from vopt_641 as a ";
+            SQL += "where a.Bmark<>'B' and a.form_name is not null ";
             if ((Request["qrykind"] ?? "") == "rs_class") {//類別
-                SQL += " and  and a.form_name=c.cust_code and a.Bmark<>'B'  and a.form_name is not null ";
-                SQL += " and a." + Request["qrykinddate"] + ">='" + Request["qrySdate"] + "'";
-                SQL += " and a." + Request["qrykinddate"] + "<='" + Request["qryEdate"] + "'";
+                SQL += " and a." + Request["qrykinddate"] + ">='" + ReqVal["qrySdate"] + "'";
+                SQL += " and a." + Request["qrykinddate"] + "<='" + ReqVal["qryEdate"] + "'";
             } else if ((Request["qrykind"] ?? "") == "rs_code") {//案性
-                SQL += " and a.arcase=c.cust_code and a.Bmark<>'B'   and a.form_name is not null ";
-                SQL += " and a." + Request["qrykinddate"] + ">='" + Request["qrySdate"] + "'";
-                SQL += " and a." + Request["qrykinddate"] + "<='" + Request["qryEdate"] + "'";
+                SQL += " and a." + Request["qrykinddate"] + ">='" + ReqVal["qrySdate"] + "'";
+                SQL += " and a." + Request["qrykinddate"] + "<='" + ReqVal["qryEdate"] + "'";
             } else if ((Request["qrykind"] ?? "") == "month") {//月份
-                SQL += " and a.Bmark<>'B'   and a.form_name is not null ";
                 SQL += " and year(a." + Request["qrykinddate"] + ")='" + Request["qryYear"] + "' ";
                 SQL += " and month(a." + Request["qrykinddate"] + ")>=" + Request["qrysMonth"] + " ";
                 SQL += " and month(a." + Request["qrykinddate"] + ")<=" + Request["qryeMonth"] + " ";
@@ -165,6 +163,9 @@
             }
             if ((Request["qryBranch"] ?? "") != "") {//區所
                 SQL += " and a.branch='" + Request["qryBranch"] + "' ";
+            }
+            if ((Request["qryClass"] ?? "") != "") {
+                SQL += "and a.form_name in('" + Request["qryClass"].Replace(";", "','") + "')";
             }
             conn.DataTable(SQL, dt);
 
@@ -189,24 +190,30 @@
             string qrykind_name = "";
             if ((Request["qrykind"] ?? "") == "rs_class") {
                 qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>類別";
+                y_title = "類別";
+                y_align = "center";
             } else if ((Request["qrykind"] ?? "") == "rs_code") {
                 qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>案性";
+                y_title = "案性";
+                y_align = "left";
             } else if ((Request["qrykind"] ?? "") == "month") {
                 qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>月份";
+                ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["qrysMonth"].Trim() + "/1"; //上個月一號
+                ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["qryeMonth"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
+                y_title = "月份";
+                y_align = "center";
             }
 
             string qrycode_name = "";
-            if ((Request["SubmitTask"] ?? "") == "Q") {
-                if ((Request["qryPClass"] ?? "") != "") {
-                    SQL = "select code_name from cust_code where code_type='OClass' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
-                    string PClassnm = "";
-                    using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                        while (dr.Read()) {
-                            PClassnm += (PClassnm != "" ? "、" : "") + dr.SafeRead("code_name", "");
-                        }
+            if ((Request["qryPClassA"] ?? "") == "") {
+                SQL = "select code_name from cust_code where code_type='OClass' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
+                string PClassnm = "";
+                using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                    while (dr.Read()) {
+                        PClassnm += (PClassnm != "" ? "、" : "") + dr.SafeRead("code_name", "");
                     }
-                    qrycode_name = "&nbsp;<font color=blue>◎統計類別：</font>" + PClassnm;
                 }
+                qrycode_name = "&nbsp;<font color=blue>◎統計類別：</font>" + PClassnm;
             }
 
             string qryinclude_name = "";
@@ -266,45 +273,106 @@
             Repeater branchRepeater4 = (Repeater)e.Item.FindControl("branchRepeater4");
             branchRepeater4.DataSource = dtx;
             branchRepeater4.DataBind();
-            Repeater branchRepeater5 = (Repeater)e.Item.FindControl("branchRepeater5");
-            branchRepeater5.DataSource = dtx;
-            branchRepeater5.DataBind();
         }
     }
     
     //案件數
     protected string GetCount(RepeaterItem Container, bool showlink) {
         string rtn = "";
+        string x_branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
+        string y_value = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_value") ?? "").ToString();
+        string arug = "";
 
-        string month = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_month") ?? "").ToString();
-        string branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
-        string where = " 1=1";
-        if (month != "") where += " and m_ap_date='" + month + "'";
-        if (branch != "") where += " and branch='" + branch + "'";
+        string where = " 1=1 ";
+        if ((Request["qrykind"] ?? "") == "rs_class") {//依類別
+            if (y_value != "") where += " and form_name='" + y_value + "'";
+            if (x_branch != "") where += " and branch='" + x_branch + "'";
+
+            arug = "&form_name=" + y_value;
+        } else if ((Request["qrykind"] ?? "") == "rs_code") {//依案性
+            if (y_value != "") where += " and arcase='" + y_value + "'";
+            if (x_branch != "") where += " and branch='" + x_branch + "'";
+
+            arug = "&arcase=" + y_value;
+        } else if ((Request["qrykind"] ?? "") == "month") {//依月份
+            if (y_value != "") where += " and m_ap_date='" + y_value + "'";
+            if (x_branch != "") where += " and branch='" + x_branch + "'";
+            arug = "&month=" + y_value;
+        }
 
         rtn = dt.Compute("count(branch)", where).ToString();
         rtn = rtn == "" ? "0" : Convert.ToInt32(rtn).ToString("N0");
 
         if (showlink && rtn != "0")
-            rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + "&month=" + month + "' target='Eblank'>" + rtn + "</a>";
+            rtn = String.Format("<a href='opt64_3List.aspx?1=1{0}&submitTask=Q&qryBranch={1}{2}' target='Eblank'>{3}</a>"
+                , hrefq, x_branch, arug, rtn);
+
         return rtn;
     }
     
-    //得分
-    protected string GetScore(RepeaterItem Container, bool showlink) {
+    //服務費
+    protected string GetFees(RepeaterItem Container, bool showlink) {
         string rtn = "";
-        string month = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_month") ?? "").ToString();
-        string branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
+        string x_branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
+        string y_value = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_value") ?? "").ToString();
+        string arug = "";
 
-        string where = " 1=1";
-        if (month != "") where += " and m_ap_date='" + month + "'";
-        if (branch != "") where += " and branch='" + branch + "'";
+        string where = " 1=1 ";
+        if ((Request["qrykind"] ?? "") == "rs_class") {//依類別
+            if (y_value != "") where += " and form_name='" + y_value + "'";
+            if (x_branch != "") where += " and branch='" + x_branch + "'";
 
-        rtn = dt.Compute("Sum(score)", where).ToString();
+            arug = "&form_name=" + y_value;
+        } else if ((Request["qrykind"] ?? "") == "rs_code") {//依案性
+            if (y_value != "") where += " and arcase='" + y_value + "'";
+            if (x_branch != "") where += " and branch='" + x_branch + "'";
+
+            arug = "&arcase=" + y_value;
+
+        } else if ((Request["qrykind"] ?? "") == "month") {//依月份
+            if (y_value != "") where += " and m_ap_date='" + y_value + "'";
+            if (x_branch != "") where += " and branch='" + x_branch + "'";
+            arug = "&month=" + y_value;
+        }
+
+        rtn = dt.Compute("sum(service)", where).ToString();
         rtn = rtn == "" ? "0" : Convert.ToInt32(rtn).ToString("N0");
 
         if (showlink && rtn != "0")
-            rtn = "<a href='opt63_2List.aspx?1=1" + hrefq + "&submitTask=Q&qryBranch=" + branch + "&month=" + month + "' target='Eblank'>" + rtn + "</a>";
+            rtn = String.Format("<a href='opt64_3List.aspx?1=1{0}&submitTask=Q&qryBranch={1}{2}' target='Eblank'>{3}</a>"
+                , hrefq, x_branch, arug, rtn);
+
+        return rtn;
+    }
+
+    //平均金額
+    protected string GetAvg(RepeaterItem Container, bool showlink) {
+        string rtn = "";
+        string x_branch = DataBinder.Eval(Container.DataItem, "x_branch").ToString();
+        string y_value = (DataBinder.Eval(((RepeaterItem)Container.Parent.Parent).DataItem, "y_value") ?? "").ToString();
+        string arug = "";
+
+        if ((Request["qrykind"] ?? "") == "rs_class") {//依類別
+            arug = "&form_name=" + y_value;
+        } else if ((Request["qrykind"] ?? "") == "rs_code") {//依案性
+            arug = "&arcase=" + y_value;
+        } else if ((Request["qrykind"] ?? "") == "month") {//依月份
+            arug = "&month=" + y_value;
+        }
+
+        string fees = GetFees(Container, false);
+        string count = GetCount(Container, false);
+
+        if (fees == "0" || count == "0") {
+            rtn = "0";
+        } else {
+            rtn = (Convert.ToDecimal(fees) / Convert.ToDecimal(count)).ToString("N0");
+        }
+
+        if (showlink && rtn != "0")
+            rtn = String.Format("<a href='opt64_3List.aspx?1=1{0}&submitTask=Q&qryBranch={1}{2}' target='Eblank'>{3}</a>"
+                , hrefq, x_branch, arug, rtn);
+
         return rtn;
     }
 </script>
@@ -341,10 +409,10 @@
 <br />
 <table width="100%" cellspacing="1" cellpadding="2" class="bluetable" align="center">
     <tr align="left">
-        <td align="center" class="lightbluetable" rowspan=2>月份</td>
+        <td align="center" class="lightbluetable" rowspan=2><%#y_title%></td>
         <asp:Repeater id="branchRepeater1" runat="server">
         <ItemTemplate>
-            <td align="center" class="lightbluetable" colspan=2><%#Eval("x_branchnm")%></td>
+            <td align="center" class="lightbluetable" colspan=3><%#Eval("x_branchnm")%></td>
         </ItemTemplate>
         </asp:Repeater>
     </tr>
@@ -352,7 +420,8 @@
         <asp:Repeater id="branchRepeater2" runat="server">
         <ItemTemplate>
             <td align="center" class="lightbluetable" nowrap>案件數</td>
-            <td align="center" class="lightbluetable" nowrap>得　分</td>
+            <td align="center" class="lightbluetable" nowrap>服務費</td>
+            <td align="center" class="lightbluetable" nowrap>平均金額</td>
         </ItemTemplate>
         </asp:Repeater>
     </tr>
@@ -360,16 +429,17 @@
     <asp:Repeater id="monthRepeater" runat="server" OnItemDataBound="monthRepeater_ItemDataBound">
     <ItemTemplate>
         <tr>
-            <td align="center" class="lightbluetable3"><%#Eval("y_monthnm")%></td>
+            <td align="<%#y_align%>" class="lightbluetable3"><%#Eval("y_text")%></td>
             <asp:Repeater id="branchRepeater3" runat="server">
             <ItemTemplate>
                 <td align="center" class="<%#Eval("x_branch")!= "" ?"sfont9":"lightbluetable3"%>">
                     <%#GetCount(Container,true)%>
-                    <!--GetCount(((RepeaterItem)Container.Parent.Parent).DataItem,Eval("x_branch"))-->
                 </td>
                 <td align="center" class="<%#Eval("x_branch")!= "" ?"sfont9":"lightbluetable3"%>">
-                    <%#GetScore(Container,false)%>
-                    <!--GetScore(((RepeaterItem)Container.Parent.Parent).DataItem,Eval("x_branch"))-->
+                    <%#GetFees(Container,false)%>
+                </td>
+                <td align="center" class="<%#Eval("x_branch")!= "" ?"sfont9":"lightbluetable3"%>">
+                    <%#GetAvg(Container,false)%>
                 </td>
             </ItemTemplate>
             </asp:Repeater>
@@ -381,17 +451,8 @@
             <asp:Repeater id="branchRepeater4" runat="server">
             <ItemTemplate>
                 <td align="center" class="lightbluetable"><%#GetCount(Container,true)%></td>
-                <td align="center" class="lightbluetable"><%#GetScore(Container,false)%></td>
-            </ItemTemplate>
-            </asp:Repeater>
-        </tr>
-        <tr>
-            <td align="center" class="lightbluetable">平均得分</td>
-            <asp:Repeater id="branchRepeater5" runat="server">
-            <ItemTemplate>
-                <td align="center" class="lightbluetable" colspan="2">
-                    
-                </td>
+                <td align="center" class="lightbluetable"><%#GetFees(Container,false)%></td>
+                <td align="center" class="lightbluetable"><%#GetAvg(Container,false)%></td>
             </ItemTemplate>
             </asp:Repeater>
         </tr>
