@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -160,7 +160,7 @@
             if (ReqVal.TryGet("qryOrder", "") != "") {
                 SQL += " order by " + ReqVal.TryGet("qryOrder", "");
             }
-
+            //Response.Write(SQL);
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -234,15 +234,17 @@
             }
             string qrycode_name = "";
             if ((Request["SubmitTask"] ?? "") == "Q") {
-                if ((Request["qryClass"] ?? "") != "") {
-                    SQL = "select code_name from cust_code where code_type='OClass' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
-                    string PClassnm = "";
-                    using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                        while (dr.Read()) {
-                            PClassnm += (PClassnm != "" ? "、" : "") + dr.SafeRead("code_name", "");
+                if ((Request["qryPClass"] ?? "") == "") {
+                    if ((Request["qryClass"] ?? "") != "") {
+                        SQL = "select code_name from cust_code where code_type='OClass' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
+                        string PClassnm = "";
+                        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                            while (dr.Read()) {
+                                PClassnm += (PClassnm != "" ? "、" : "") + dr.SafeRead("code_name", "");
+                            }
                         }
+                        qrycode_name = "&nbsp;<font color=blue>◎統計類別：</font>" + PClassnm;
                     }
-                    qrycode_name = "&nbsp;<font color=blue>◎統計類別：</font>" + PClassnm;
                 }
             }
 
