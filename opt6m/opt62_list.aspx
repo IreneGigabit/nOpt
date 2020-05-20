@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -74,7 +74,7 @@
         if ((Request["homelist"] ?? "") == "homelist") {
             StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\"  target=\"Etop\">[查詢]</a>";
         } else {
-            if ((Request["homelist"] ?? "") == "homelist") {
+            if ((Request["SubmitTask"] ?? "") == "Q") {
                 StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
             } else {
                 StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
@@ -118,7 +118,7 @@
                     ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["month"].Trim() + "/1"; //上個月一號
                     ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["month"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
                 } else {
-                    if ((Request["SubmitTask"] ?? "") == "Q") {//從統計表來
+                    if ((Request["submitTask"] ?? "") == "Q") {//從統計表來
                         ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["qrysMonth"].Trim() + "/1"; //上個月一號
                         ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["qryeMonth"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
                     }
@@ -182,7 +182,6 @@
             } else {
                 SQL += " order by a.pr_scode,a.BSEQ";
             }
-
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
@@ -230,7 +229,7 @@
                         "&branch=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
                         "&case_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
                         "&arcase=" + page.pagedTable.Rows[i].SafeRead("arcase", "") +
-                        "&prgid=" + prgid + "&Submittask=Q&back_flag=" + Request["back_flag"];
+                        "&prgid=" + prgid + "&submitTask=Q&back_flag=" + Request["back_flag"];
                 if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
                     urlasp = "../opt2m/opt22Edit.aspx?" + urlasp;
                 } else {
@@ -277,7 +276,7 @@
                     SQL += " where c.cust_area='" + Request["qrycust_area"] + "' and c.cust_seq='" + Request["qrycust_seq"] + "'";
                     object objResult = connB.ExecuteScalar(SQL);
                     string cust_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
-                    qrycust_area_name = "&nbsp;<font color=blue>◎客戶編號：</font>" + Request["qrycust_area"] + "-" + Request["qrycust_seq"] + "　" + cust_name;
+                    qrycust_area_name = "<BR>&nbsp;<font color=blue>◎客戶編號：</font>" + Request["qrycust_area"] + "-" + Request["qrycust_seq"] + "　" + cust_name;
                 }
             }
             
@@ -308,25 +307,25 @@
             string qryKINDDATE_name = "";
             if ((Request["qrydtDATE"] ?? "") != "N") {
                 if (ReqVal.TryGet("qryKINDDATE", "") == "CONFIRM_DATE") {
-                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>收文期間";
+                    qryKINDDATE_name = "<BR>&nbsp;<font color=blue>◎日期種類：</font>收文期間";
                 } else if (ReqVal.TryGet("qryKINDDATE", "") == "BPR_DATE") {
-                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>承辦完成期間";
+                    qryKINDDATE_name = "<BR>&nbsp;<font color=blue>◎日期種類：</font>承辦完成期間";
                 } else if (ReqVal.TryGet("qryKINDDATE", "") == "GS_DATE") {
-                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>發文期間";
+                    qryKINDDATE_name = "<BR>&nbsp;<font color=blue>◎日期種類：</font>發文期間";
                 } else if (ReqVal.TryGet("qryKINDDATE", "") == "AP_DATE") {
-                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：判行期間";
+                    qryKINDDATE_name = "<BR>&nbsp;<font color=blue>◎日期種類：判行期間";
                 } else if (ReqVal.TryGet("qryKINDDATE", "") == "BCase_date") {
-                    qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>交辦期間";
+                    qryKINDDATE_name = "<BR>&nbsp;<font color=blue>◎日期種類：</font>交辦期間";
                 }
             }
             string qryDATE_name = "";
-            if ((Request["qrySdate"] ?? "") != "" && (Request["qryEdate"] ?? "") != "") {
-                qryDATE_name = "&nbsp;<font color=blue>◎日期範圍：</font>" + Request["qrySdate"] + "~" + Request["qryEdate"];
+            if (ReqVal.TryGet("qrySdate", "") != "" && ReqVal.TryGet("qryEdate", "") != "") {
+                qryDATE_name = "&nbsp;<font color=blue>◎日期範圍：</font>" + ReqVal["qrySdate"] + "~" + ReqVal["qryEdate"];
             }
             
             string qrySTAT_CODE_name = "";
             if ((Request["qrySTAT_CODE"] ?? "") != "") {
-                qrySTAT_CODE_name = "&nbsp;<font color=blue>◎承辦狀態：</font>";
+                qrySTAT_CODE_name = "<BR>&nbsp;<font color=blue>◎承辦狀態：</font>";
                 string[] arrSTAT_CODE = ReqVal.TryGet("qrySTAT_CODE", "").Split(';');
                 for (int i = 0; i < arrSTAT_CODE.Length - 1; i++) {
                     if (i > 0) qrySTAT_CODE_name += "、";
@@ -368,16 +367,14 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
-        <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+        <td width="25%" class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
+        <td ><%#titleLabel%></td>
+        <td width="15%" class="FormLink" align="right" nowrap="nowrap">
             <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
-        <td colspan="2"><hr class="style-one"/></td>
-    </tr>
-    <tr>
-        <td colspan="2"><%#titleLabel%></td>
+        <td colspan="3"><hr class="style-one"/></td>
     </tr>
 </table>
 
@@ -470,7 +467,7 @@
             if ($("#homelist") == "homelist") {
                 window.parent.tt.rows = "0%,100%";
             } else {
-                if ($("#submittask").val() == "Q") {
+                if ($("#submitTask").val() == "Q") {
                     window.parent.tt.rows = "30%,70%";
                 } else {
                     window.parent.tt.rows = "100%,0%";
