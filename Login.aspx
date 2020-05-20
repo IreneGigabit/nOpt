@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 
 <!DOCTYPE html>
@@ -24,6 +24,7 @@
     <title><%#StrProjectName%></title>
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.paging.test.js")%>"></script>
+    <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
     <link href="inc/setstyle.css" rel="stylesheet" />
 </head>
 <body style="margin:0px;">
@@ -68,19 +69,19 @@ function init_form() {
 }
 
 function formSubmit() {
-    var errflag=$("#tfx_scode,#tfx_sys_password").chkRequire();
-	//if (chkNull("帳號", reg.tfx_scode)) {
-    //    return false;
-    //}
-    //
-    //if (chkNull("密碼", reg.tfx_sys_password)) {
-    //    return false;
-    //}
-    if (!errflag) {
+	if (chkNull("帳號", reg.tfx_scode)) {
+        return false;
+    }
+    
+    if (chkNull("密碼", reg.tfx_sys_password)) {
+        return false;
+    }
+    //var errflag=$("#tfx_scode,#tfx_sys_password").chkRequire();
+    //if (!errflag) {
         reg.target = "_top";
         reg.action = "checklogin.aspx";
         reg.submit();
-    }
+    //}
 }
 
 document.body.onkeydown = function(e){
