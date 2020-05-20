@@ -270,7 +270,7 @@
 	                    obj.append("<label><input type='radio' id='" + settings.objName + val + "' name='" + settings.objName + "' value='" + val + "' " + attr + ">" + txt + "</label>");
 
 	                if (settings.mod != null) {
-	                    if ((i + 1) % settings.mod == 0) {
+	                    if ((i + 1) % settings.mod == 0 && (i + 1) < settings.dataList.length) {
 	                        obj.append("<BR>");
 	                    }
 	                }
@@ -362,7 +362,7 @@
 	                    obj.append("<label><input type='checkbox' id='" + settings.objName + val + "' name='" + settings.objName + "' value='" + val + "' " + attr + ">" + txt + "</label>");
 
 	                if (settings.mod != null) {
-	                    if ((i + 1) % settings.mod == 0) {
+	                    if ((i + 1) % settings.mod == 0 && (i + 1) < settings.dataList.length) {
 	                        obj.append("<BR>");
 	                    }
 	                }

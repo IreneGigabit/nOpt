@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -61,7 +61,7 @@
 	            <td class=lightbluetable align=right nowrap>交辦來源：</td>
 	            <td class=whitetablebg colspan=3> 
 	                <label><input type="radio" name='qrybr_source' value='br' >區所交辦</label>
-	                &nbsp;<label><input type="radio" name='qrybr_source' value='opt' >新增分案</label>
+	                &nbsp;<label><input type="radio" name='qrybr_source' value='opte' >新增分案</label>
 	                &nbsp;<label><input type="radio" name='qrybr_source' checked value='' >不指定</label>
                </td>
             </tr>  

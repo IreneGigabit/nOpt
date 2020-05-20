@@ -929,7 +929,7 @@ input[type=button]:disabled,input[type=button][disabled] {
     background: #e7e7e7 !important;
     border:1px solid #bababa;*/
     color: #a0a0a0;
-    text-shadow: 0.1em 0.1em #ffffff;
+    text-shadow: 1px 1px #ffffff;
 }
 
 .errlog {
