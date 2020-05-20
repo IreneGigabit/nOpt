@@ -55,6 +55,7 @@
 
 <form id="reg" name="reg" method="post">
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="qrySTAT_CODE" name="qrySTAT_CODE" value="Y;">
     <div id="id-div-slide">
         <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="75%" align="center">	
  	        <tr>
