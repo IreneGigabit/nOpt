@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -180,11 +180,11 @@
 
             string qryOrder_name = "";
             if (ReqVal.TryGet("qryOrder", "") == "confirm_date") {
-                qryOrder_name = "&nbsp;<font color=blue>◎排序方式：</font>收文日期";
+                qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>收文日期";
             } else if (ReqVal.TryGet("qryOrder", "") == "ctrl_date") {
-                qryOrder_name = "&nbsp;<font color=blue>◎排序方式：</font>承辦期限";
+                qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>承辦期限";
             } else if (ReqVal.TryGet("qryOrder", "") == "last_date") {
-                qryOrder_name = "&nbsp;<font color=blue>◎排序方式：</font>法定期限";
+                qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>法定期限";
             }
 
             titleLabel = "<font color=red>" + qrybranch_name + qrybranch_name + qryKINDDATE_name + qryDay_name + qryOrder_name + "</font>";
@@ -209,16 +209,14 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
-        <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+        <td width="25%" class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
+        <td ><%#titleLabel%></td>
+        <td width="15%" class="FormLink" align="right" nowrap="nowrap">
             <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
-        <td colspan="2"><hr class="style-one"/></td>
-    </tr>
-    <tr>
-        <td colspan="2"><%#titleLabel%></td>
+        <td colspan="3"><hr class="style-one"/></td>
     </tr>
 </table>
 
@@ -243,7 +241,7 @@
 					    <option value="30" <%#page.perPage==30?"selected":""%>>30</option>
 					    <option value="50" <%#page.perPage==50?"selected":""%>>50</option>
 				    </select>
-                    <input type="text" name="SetOrder" id="SetOrder" value="<%#ReqVal.TryGet("qryOrder", "")%>" />
+                    <input type="hidden" name="SetOrder" id="SetOrder" value="<%#ReqVal.TryGet("qryOrder", "")%>" />
 			    </font>
 		    </td>
 	    </tr>
