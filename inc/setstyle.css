@@ -924,12 +924,13 @@ input.btn5 {}
 .vGrp8 {}
 .vGrp9 {}
 
-/*
 input[type=button]:disabled,input[type=button][disabled] {
-    color: #707070 !important;
+    /*color: #707070 !important;
     background: #e7e7e7 !important;
-    border:1px solid #bababa;
-}*/
+    border:1px solid #bababa;*/
+    color: #a0a0a0;
+    text-shadow: 0.1em 0.1em #ffffff;
+}
 
 .errlog {
 	/*color:#ff0000;*/
