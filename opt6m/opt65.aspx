@@ -279,7 +279,6 @@
 
     $("#qrysMonth,#qryeMonth").blur(function (e) {
         if (chkNum1($(this)[0], "月份")) return false;
-        parseInt(_settings.data.nowPage||0, 10);
         if(parseInt($("#qrysMonth").val())<1||parseInt($("#qrysMonth").val())>12){
             alert("月份請輸入介於1~12的數字!");
             $(this).focus();
