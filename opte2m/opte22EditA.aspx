@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -13,6 +13,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string StrFormBtnTop = "";
 
     protected string submitTask = "";
     protected string branch = "";
@@ -70,6 +71,17 @@
     }
 
     private void PageLayout() {
+        if ((Request["homelist"] ?? "") == "homelist") {
+        } else {
+            if ((Request["SubmitTask"] ?? "") == "Q") {
+                if ((Request["back_flag"] ?? "") == "Y") {
+                    StrFormBtnTop += "<a href=\"javascript:history.go(-1);void(0);\">[回上一頁]</a>";
+                }
+                StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
+            } else {
+                StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[返回清單]</a>";
+            }
+        }
     }
 
 </script>
@@ -97,7 +109,7 @@
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[返回清單]</a>
+            <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
