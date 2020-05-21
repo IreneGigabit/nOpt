@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -224,14 +224,14 @@
             string qrykind_name = "";
             if ((Request["qrykind"] ?? "") == "rs_class") {
                 qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>類別";
-            } else if ((Request["qrybr_source"] ?? "") == "rs_code") {
+            } else if ((Request["qrykind"] ?? "") == "rs_code") {
                 qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>案性";
-            } else if ((Request["qrybr_source"] ?? "") == "month") {
+            } else if ((Request["qrykind"] ?? "") == "month") {
                 qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>月份";
             }
             string qrycode_name = "";
             if ((Request["SubmitTask"] ?? "") == "Q") {
-                if ((Request["qryPClass"] ?? "") == "") {
+                if ((Request["qryPClassA"] ?? "") == "") {
                     if ((Request["qryClass"] ?? "") != "") {
                         SQL = "select code_name from cust_code where code_type='OClass' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
                         string PClassnm = "";
