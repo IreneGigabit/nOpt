@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="PageBase" %>
+<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Data"  %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -43,7 +43,7 @@
     private void CreateMenu() {
         if (Convert.ToBoolean(Session["Password"])) {
             //StrUser = ProjectName + " / " + Session["sc_name");
-            using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
+            using (DBHelper cnn = new DBHelper(Conn.ODBCDSN).Debug(false))
             {
                 string SQL = "SELECT a.APcode, a.APnameC, a.APorder, a.APserver, a.APpath, a.ReMark" +
                      ", b.LoginGrp, b.Rights" +
@@ -112,7 +112,7 @@
             }
 			
 			StrSYSs = "";
-            using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
+            using (DBHelper cnn = new DBHelper(Conn.ODBCDSN).Debug(false))
             {
                 //求取該登入人員所有的系統權限(不含本系統)
                 string SQL = "SELECT a.sysserver+ISNULL(a.syspath, '')path, a.sysnameC, a.syscode";
@@ -147,7 +147,7 @@
 <body style="margin:0px 0px 0px 0px;overflow:hidden;background:url('images/top/back5.gif');background-repeat: no-repeat;">
     <table id="toptable" cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr>
-            <td width="5%">&nbsp;</td>
+            <td width="2%">&nbsp;</td>
             <td align="left" style="background-image: url(images/top/w02.png); background-repeat: no-repeat;background-size: 199px 26px; padding-left: 65px;">
                 <%#ProjectName%>
             </td>
@@ -182,7 +182,7 @@
     <iframe id="workfram" src="mainFrame.aspx" style="z-index: 1; position:absolute; width: 99.8%; height: 800px; left: 0px;"></iframe>
     <div id="oPopBody" style="position:absolute; display:none;z-index: 10; width:250px"></div>
     <form method="post" id="reg" name="reg" target="_top">
-        <input type="hidden" name="syscode" value="">
+        <input type="hidden" name="syscode" value="<%=Request["syscode"]%>">
         <input type="hidden" name="tfx_scode" value="<%=Session["Scode"]%>">
         <input type="hidden" name="tfx_sys_password" value="" />
         <input type="hidden" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
