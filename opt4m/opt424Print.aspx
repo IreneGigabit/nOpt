@@ -24,11 +24,12 @@
         try {
             WordOut();
         }
-        catch {
+        catch(Exception ex) {
             strOut.AppendLine("<script language=\"javascript\">");
             strOut.AppendLine("    alert(\"爭救案件發文回條 Word 產生失敗!!!\");");
             strOut.AppendLine("<" + "/script>");
             Response.Write(strOut.ToString());
+            Response.Write(ex.Message);
         }
         finally {
             if (Rpt != null) Rpt.Dispose();
@@ -46,7 +47,7 @@
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(true)) {
             SQL = "select in_scode,appl_name,apply_no,issue_no,rej_no,class,class_count,term1,term2,last_date";
             SQL += ",rs_no,tot_num,class_count,branch,Bseq,Bseq1,Bstep_grade,gs_date,mp_date,send_selnm,send_clnm,send_cl1nm,rs_class,rs_detail,Bfees,pr_scode";
-            SQL += ",a.send_sel,(select mark1 from sikdbs.dbo.cust_code where code_type='SEND_SEL' and cust_code=a.send_sel) as send_selfel";//發文性質的欄位名稱
+            SQL += ",a.send_sel,(select mark1 from "+Sys.tdbname("K")+".cust_code where code_type='SEND_SEL' and cust_code=a.send_sel) as send_selfel";//發文性質的欄位名稱
             SQL += ",(select branchname from sysctrl.dbo.branch_code where branch=a.branch) as branchnm";
             SQL += ",send_way,receipt_type,receipt_title,rectitle_name";
             SQL += " from vbr_opt a where a.Bstat_code='YS' and a.Bmark='N' ";

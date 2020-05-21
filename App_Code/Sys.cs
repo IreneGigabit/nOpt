@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -138,13 +138,13 @@ public class Sys
         string rtnStr = "";
         switch (Host) {
             case "sik10": //正式環境
-                if (pBranch.ToUpper() == "N") rtnStr = "sinn05.sindbs.dbo.";
-                if (pBranch.ToUpper() == "C") rtnStr = "sic10.sicdbs.dbo.";
-                if (pBranch.ToUpper() == "S") rtnStr = "sis10.sisdbs.dbo.";
-                if (pBranch.ToUpper() == "K") rtnStr = "sik10.sikdbs.dbo.";
+                if (pBranch.ToUpper() == "N") rtnStr = "sinn05.sindbs.dbo";
+                if (pBranch.ToUpper() == "C") rtnStr = "sic10.sicdbs.dbo";
+                if (pBranch.ToUpper() == "S") rtnStr = "sis10.sisdbs.dbo";
+                if (pBranch.ToUpper() == "K") rtnStr = "sik10.sikdbs.dbo";
                 break;
             default:
-                rtnStr = "sindbs.dbo.";//開發環境
+                rtnStr = "sindbs.dbo";//開發環境
                 break;
         }
         return rtnStr;

@@ -64,14 +64,14 @@
                 switch (i) {
                     case "vcustlist"://案件客戶、聯絡人
                         SQL = "update case_opt Set cust_area=b.cust_area,cust_seq=b.cust_seq,att_sql=b.att_sql";
-                        SQL += " from case_opt as a ," + Sys.tdbname(qBranch) + "case_dmt as b ";
+                        SQL += " from case_opt as a ," + Sys.tdbname(qBranch) + ".case_dmt as b ";
                         SQL += " where a.case_no=b.case_no and a.case_no='" + qCase_no + "' and a.branch='" + qBranch + "'";
                         conn.ExecuteNonQuery(SQL);
                         break;
                     case "apcust"://案件申請人
                         SQL = "update opt_detail Set apsqlno=b.apsqlno,ap_cname=b.ap_cname,ap_cname1=b.ap_cname1";
                         SQL += ",ap_cname2=b.ap_cname2,ap_ename=b.ap_ename,ap_ename1=b.ap_ename1,ap_ename2=b.ap_ename2";
-                        SQL += " from opt_detail as a ," + Sys.tdbname(qBranch) + "dmt_temp as b ";
+                        SQL += " from opt_detail as a ," + Sys.tdbname(qBranch) + ".dmt_temp as b ";
                         SQL += " where a.case_no='" + qCase_no + "' and a.branch='" + qBranch + "' and b.in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
 
@@ -86,7 +86,7 @@
                         SQL += "select '" + qopt_sqlno + "','" + qCase_no + "','" + qBranch + "',apsqlno,server_flag,apcust_no,";
                         SQL += "ap_cname,ap_cname1,ap_cname2,ap_ename,ap_ename1,ap_ename2,getdate(),'" + Session["scode"] + "' ";
                         SQL += ",ap_fcname,ap_lcname,ap_fename,ap_lename,ap_sql,ap_zip,ap_addr1,ap_addr2,ap_eaddr1,ap_eaddr2,ap_eaddr3,ap_eaddr4 ";
-                        SQL += "from " + Sys.tdbname(qBranch) + "dmt_temp_ap where in_no='" + in_no + "'";
+                        SQL += "from " + Sys.tdbname(qBranch) + ".dmt_temp_ap where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
                         break;
                     case "caseitem_dmt"://收費與接洽事項
@@ -109,7 +109,7 @@
                         SQL += ",ar_chk1,source,cust_date,pr_date,case_date";
                         SQL += ",case_num,contract_no,stat_code,remark,new,case_stat,tot_num,tran_date,mark";
                         SQL += ",rectitle_name,send_way,receipt_type,receipt_title";
-                        SQL += " from " + Sys.tdbname(qBranch) + "case_dmt where in_no='" + in_no + "'";
+                        SQL += " from " + Sys.tdbname(qBranch) + ".case_dmt where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
 
                         //刪除
@@ -121,7 +121,7 @@
                         SQL += ",item_service,item_fees,item_count,mark) ";
                         SQL += " select '" + qopt_sqlno + "','" + qBranch + "','" + qCase_no + "',item_sql,seq,seq1,item_arcase";
                         SQL += ",item_service,item_fees,item_count,mark ";
-                        SQL += " from " + Sys.tdbname(qBranch) + "caseitem_dmt where in_no='" + in_no + "'";
+                        SQL += " from " + Sys.tdbname(qBranch) + ".caseitem_dmt where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
                         break;
                     case "dmt_temp"://交辦內容
@@ -140,7 +140,7 @@
                         SQL += ",appl_name,cappl_name,eappl_name,eappl_name1,eappl_name2,jappl_name,jappl_name1,jappl_name2,zappl_name1,zappl_name2";
                         SQL += ",zname_type,oappl_name,draw,draw_file,symbol,color,agt_no,prior_date,prior_no,prior_country,open_date,rej_no,end_date,end_code";
                         SQL += ",dmt_term1,dmt_term2,renewal,grp_code,good_name,good_count,remark1,remark2,remark3,remark4,tr_date,tr_scode,ref_no,ref_no1,Mseq,Mseq1,mark ";
-                        SQL += " from " + Sys.tdbname(qBranch) + "dmt_temp where in_no='" + in_no + "'";
+                        SQL += " from " + Sys.tdbname(qBranch) + ".dmt_temp where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
 
                         //刪除caseopt_good
@@ -152,7 +152,7 @@
                         SQL += ",dmt_grp_code,dmt_goodname,dmt_goodcount,tr_date,tr_scode,mark) ";
                         SQL += " select '" + qopt_sqlno + "','" + qBranch + "','" + qCase_no + "',class";
                         SQL += ",dmt_grp_code,dmt_goodname,dmt_goodcount,tr_date,tr_scode,mark ";
-                        SQL += " from " + Sys.tdbname(qBranch) + "casedmt_good where in_no='" + in_no + "'";
+                        SQL += " from " + Sys.tdbname(qBranch) + ".casedmt_good where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
 
                         //刪除opt_tran
@@ -170,7 +170,7 @@
                         SQL += ",mod_dmt,mod_class,mod_pul,mod_tcnref,mod_claim1,mod_claim2,mod_oth,mod_oth1";
                         SQL += ",mod_oth2,term1,term2,tran_remark1,tran_remark2,debit_money";
                         SQL += ",other_item,other_item1,other_item2,tr_date,tr_scode,tran_mark ";
-                        SQL += " from " + Sys.tdbname(qBranch) + "dmt_tran where in_no='" + in_no + "'";
+                        SQL += " from " + Sys.tdbname(qBranch) + ".dmt_tran where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
 
                         //刪除opt_tranlist
@@ -190,13 +190,13 @@
                         SQL += ",old_no,ocname1,ocname2,oename1,oename2,ocrep,oerep,ozip,oaddr1,oaddr2,oeaddr1,oeaddr2";
                         SQL += ",oeaddr3,oeaddr4,otel0,otel,otel1,ofax";
                         SQL += ",list_remark,tran_code,mark ";
-                        SQL += " from " + Sys.tdbname(qBranch) + "dmt_tranlist where in_no='" + in_no + "'";
+                        SQL += " from " + Sys.tdbname(qBranch) + ".dmt_tranlist where in_no='" + in_no + "'";
                         conn.ExecuteNonQuery(SQL);
                         break;
                     case "dmt"://區所案件之營洽、出名代理人、案件名稱、申請人等資料
                         //update case_opt
                         SQL = "update case_opt Set in_scode=b.scode,cust_area=b.cust_area,cust_seq=b.cust_seq,att_sql=b.att_sql";
-                        SQL += " from case_opt as a ," + Sys.tdbname(qBranch) + "dmt as b ";
+                        SQL += " from case_opt as a ," + Sys.tdbname(qBranch) + ".dmt as b ";
                         SQL += " where a.seq=b.seq and a.seq1=b.seq1 and a.Branch='" + qBranch + "' and a.opt_sqlno='" + qopt_sqlno + "'";
                         SQL += "  and b.seq='" + qSeq + "' and b.seq1='" + qSeq1 + "'";
                         conn.ExecuteNonQuery(SQL);
@@ -205,7 +205,7 @@
                         SQL = "update opt_detail Set apsqlno=b.apsqlno,ap_cname=b.ap_cname";
                         SQL += ",ap_ename=b.ap_ename,agt_no=b.agt_no";
                         SQL += ",appl_name=b.appl_name";
-                        SQL += " from opt_detail as a ," + Sys.tdbname(qBranch) + "dmt as b ";
+                        SQL += " from opt_detail as a ," + Sys.tdbname(qBranch) + ".dmt as b ";
                         SQL += " where a.seq=b.seq and a.seq1=b.seq1";
                         SQL += "  and b.seq='" + qSeq + "' and b.seq1='" + qSeq1 + "'";
                         SQL += "  and a.Branch='" + qBranch + "' and a.opt_sqlno='" + qopt_sqlno + "'";

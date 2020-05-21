@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -148,13 +148,13 @@
             }
 
             string qryAP_DATE_name = "";
-            if ((ReqVal["qrykinddate"] ?? "") != "") {
+            if ((Request["qrykinddate"] ?? "") != "") {
                 if ((Request["qrykinddate"] ?? "") == "Confirm_date") {
                     qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎收文期間：</font>";
                 } else if ((Request["qrykinddate"] ?? "") == "ap_date") {
                     qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎判行期間：</font>";
                 }
-                qryAP_DATE_name += ReqVal["qrySdate"] + "~" + ReqVal["qryEdate"];
+                qryAP_DATE_name += ReqVal.TryGet("qrySdate","") + "~" + ReqVal.TryGet("qryEdate","");
             }
 
             titleLabel = "<font color=red>" + qrybr_source_name + qrykind_name + qrycode_name + qrybranch_name + qryBseq_name +
