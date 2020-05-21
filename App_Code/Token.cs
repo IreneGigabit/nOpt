@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Data.SqlClient;
 using System.Text;
@@ -25,7 +25,7 @@ public class Token
 		 Sys.getAppSetting("Sysmenu")//因menu的syscode不同.所以不能用syscode
 		, ""
         , Sys.GetSession("LoginGrp")
-        , Conn.Sysctrl
+        , Conn.ODBCDSN
         ) { }
 
     public Token(string APcode)
@@ -33,14 +33,14 @@ public class Token
          Sys.getAppSetting("Sysmenu")
         , APcode
         , Sys.GetSession("LoginGrp")
-        , Conn.Sysctrl
+        , Conn.ODBCDSN
         ) { }
 
      public Token(string Syscode, string APcode)
         : this(
         Syscode, APcode
         , Sys.GetSession("LoginGrp")
-        , Conn.Sysctrl
+        , Conn.ODBCDSN
         ) { }
 
    public Token(string Syscode, string APcode, string UGrpID, string ConnectionString)
