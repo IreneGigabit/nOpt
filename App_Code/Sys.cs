@@ -9,7 +9,10 @@ using System.IO;
 
 public class Sys
 {
-	public static string Host = HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString().ToLower();
+    /// <summary>
+    /// IIS主機名(小寫)
+    /// </summary>
+    public static string Host = HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString().ToLower();
 	/// <summary>  
 	/// 取得某個Session值  
 	/// </summary>  
@@ -93,7 +96,7 @@ public class Sys
 			eSQL = eSQL + "'" + prgID + "',";
 			eSQL = eSQL + "'" + ex.Message.Replace("'", "''") + "',";
 			eSQL = eSQL + "'" + string.Join("\r\n=====\r\n", sqlList.ToArray()).Replace("'", "''") + "',";
-			eSQL = eSQL + "'" + ex.StackTrace.Replace("'", "''") + "')";
+			eSQL = eSQL + "'" + (ex.StackTrace??"").Replace("'", "''") + "')";
 
 			SqlCommand cmd = new SqlCommand(eSQL, cn);
 			cmd.ExecuteNonQuery();
