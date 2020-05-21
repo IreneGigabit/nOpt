@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Text"%>
 <%@Import Namespace = "System.Data.SqlClient"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -38,7 +38,7 @@
         DBHelper conn = null;
         try
         {
-            conn = new DBHelper(Conn.Sysctrl, false);
+            conn = new DBHelper(Conn.ODBCDSN, false).Debug(false);
             if (Uid != "")
             {
                 SQL = "SELECT a.*,b.*,c.logingrp,c.GrpName ";
@@ -91,7 +91,7 @@
         }
         catch (Exception ex)
         {
-            exMsg = Conn.Sysctrl + "\n" + SQL;
+            exMsg = conn.ConnString + "\n" + SQL;
             if (conn != null) Sys.errorLog(ex, conn.exeSQL, "0000");
             strRet = "執行錯誤 !" + ex.Message + "\\n\\n" + SQL;
             Session["Password"] = false;
