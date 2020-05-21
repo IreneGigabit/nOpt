@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -6,7 +6,7 @@
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
-    protected string HTProgCap = "爭救案性統計表-明細表";// HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "出口爭救案性統計表-明細表";// HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -22,10 +22,17 @@
 
     protected string submitTask = "";
 
+    DBHelper conn = null;//開完要在Page_Unload釋放,否則sql server連線會一直佔用
+    private void Page_Unload(System.Object sender, System.EventArgs e) {
+        if (conn != null) conn.Dispose();
+    }
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
 
         if (Request.RequestType == "GET") {
             ReqVal = Request.QueryString.ToDictionary();
@@ -64,35 +71,125 @@
         } else {
             StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
         }
+
+        //顯示查詢條件
+        //using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
+            string qrybr_source_name = "";
+            if ((Request["qrybr_source"] ?? "") == "br") {
+                qrybr_source_name = "&nbsp;<font color=blue>◎交辦來源：</font>區所交辦";
+            } else if ((Request["qrybr_source"] ?? "") == "opte") {
+                qrybr_source_name = "&nbsp;<font color=blue>◎交辦來源：</font>新增分案";
+            }
+
+            string qrykind_name = "";
+            if ((Request["qrykind"] ?? "") == "rs_class") {
+                qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>類別";
+            } else if ((Request["qrykind"] ?? "") == "rs_code") {
+                qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>案性";
+            } else if ((Request["qrykind"] ?? "") == "month") {
+                qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>月份";
+            }
+            string qrycode_name = "";
+            if ((Request["SubmitTask"] ?? "") == "Q") {
+                if ((Request["qryPClassA"] ?? "") == "") {
+                    if ((Request["qryClass"] ?? "") != "") {
+                        SQL = "select code_name from cust_code where code_type='bjt96' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
+                        string PClassnm = "";
+                        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                            while (dr.Read()) {
+                                PClassnm += (PClassnm != "" ? "、" : "") + dr.SafeRead("code_name", "");
+                            }
+                        }
+                        qrycode_name = "&nbsp;<font color=blue>◎統計類別：</font>" + PClassnm;
+                    }
+                }
+            }
+
+            string qrybranch_name = "";
+            if ((Request["qrybranch"] ?? "") == "N") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台北所";
+            } else if ((Request["qrybranch"] ?? "") == "C") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台中所";
+            } else if ((Request["qrybranch"] ?? "") == "S") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台南所";
+            } else if ((Request["qrybranch"] ?? "") == "K") {
+                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>高雄所";
+            }
+
+            string qryBseq_name = "";
+            if ((Request["qryBseq"] ?? "") != "") {
+                qryBseq_name = "&nbsp;<font color=blue>◎區所案件編號：</font>" + Request["qryBseq"];
+            }
+            if ((Request["qryBseq1"] ?? "") != "" && (Request["qryBseq1"] ?? "") != "_") {
+                qryBseq_name += "-" + Request["qryBseq1"];
+            }
+
+            string qrypr_branch_name = "";
+            if ((Request["qrypr_branch"] ?? "") != "") {
+                SQL = "Select code_name from cust_code where code_type='OEBranch' and cust_code='" + Request["qrypr_branch"] + "'";
+                object objResult = conn.ExecuteScalar(SQL);
+                qrypr_branch_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                qrypr_branch_name = "<BR>&nbsp;<font color=blue>◎承辦單位：</font>" + qrypr_branch_name;
+            }
+
+            string qrypr_scode_name = "";
+            if ((Request["qrypr_scode"] ?? "") != "") {
+                SQL = "select sc_name from sysctrl.dbo.scode where scode='" + Request["qrypr_scode"] + "'";
+                object objResult = conn.ExecuteScalar(SQL);
+                qrypr_scode_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
+                qrypr_scode_name = "<BR>&nbsp;<font color=blue>◎承辦人：</font>" + qrypr_scode_name;
+            }
+
+            string qrystatus_name = "";
+            if ((Request["qrystatus"] ?? "") == "NN") {
+                qrystatus_name = "&nbsp;<font color=blue>◎承辦狀態：</font>承辦中";
+            } else if ((Request["qrystatus"] ?? "") == "Y") {
+                qrystatus_name = "&nbsp;<font color=blue>◎承辦狀態：</font>判行完成";
+            }
+
+            string qryAP_DATE_name = "";
+            if ((ReqVal["qrykinddate"] ?? "") != "") {
+                if ((Request["qrykinddate"] ?? "") == "Confirm_date") {
+                    qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎收文期間：</font>";
+                } else if ((Request["qrykinddate"] ?? "") == "ap_date") {
+                    qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎判行期間：</font>";
+                }
+                qryAP_DATE_name += ReqVal["qrySdate"] + "~" + ReqVal["qryEdate"];
+            }
+
+            titleLabel = "<font color=red>" + qrybr_source_name + qrykind_name + qrycode_name + qrybranch_name + qryBseq_name +
+                qrypr_branch_name + qrypr_scode_name + qrystatus_name + qryAP_DATE_name + "</font>";
+        //}
     }
 
     private void QueryData() {
         string back_flag = "";//用於判斷是從統計入,還是明細表入
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
-            SQL = "SELECT a.opt_sqlno,a.opt_no,a.Case_no,a.branch,a.Bseq,a.Bseq1";
-            SQL += ",a.ap_cname,a.issue_no,a.appl_name";
-            SQL += ",a.arcase,a.arcase_name,a.pr_date,a.pr_scode_name,b.code_name";
-            SQL += ",a.Service,a.scode_name ";
-            SQL += ",''fseq,''optap_cname,''oappl_name,''link";
-            SQL += " from vbr_opt as a ";
-            SQL += " inner join cust_code as b on B.code_type='Ostat_code' and b.cust_code=a.bstat_code ";
-            SQL += " Where a.form_name is not null ";
+        //using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
+ 	        SQL = "SELECT a.opt_sqlno,a.opt_no,a.Case_no,a.branch,a.Bseq,a.Bseq1,a.country,ext_seq,ext_seq1";
+ 	        SQL += ",a.issue_no,a.appl_name,a.your_no" ;
+ 	        SQL += ",a.arcase_name,a.pr_date,a.pr_scode_name,b.code_name" ;
+ 	        SQL += ",a.Service,a.scode_name,a.pr_rs_code_name " ;
+            SQL += ",''fseq,''fext_seq,''ap_cname,''optap_cname,''oappl_name,''link";
+            SQL += " from vbr_opte as a ";
+ 	        SQL += " inner join cust_code as b on B.code_type='Oestatcode' " ;
+            SQL += " and b.cust_code=a.bstat_code ";
+            SQL += " Where 1=1 ";
 
-            if ((Request["qryinclude"] ?? "") == "Y") {
-                SQL += " and a.ref_code is not null";
-            } else if ((Request["qryinclude"] ?? "") == "N") {
-                SQL += " and a.ref_code is  null";
-            }
             if ((Request["qryBranch"] ?? "") != "") {
                 SQL += " and a.branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryPr_scode"] ?? "") != "") {
-                SQL += " and a.Pr_scode='" + Request["qryPr_scode"] + "'";
+            if ((Request["qrypr_branch"] ?? "") != "") {
+                SQL += " and a.pr_branch='" + Request["qrypr_branch"] + "'";
             }
-            if ((Request["qryStatus"] ?? "") == "NA") {//承辦中(包含未分案)
-                SQL += " and ( a.bstat_code like 'N%' or a.Bstat_code like 'R%')";
+            if ((Request["qryPR_SCODE"] ?? "") != "") {
+                SQL += " and a.bPR_SCODE='" + Request["qryPR_SCODE"] + "'";
+            }
+            if ((Request["qryStatus"] ?? "") == "NN") {//承辦中
+                SQL += " and ( a.bstat_code like 'N%')";
             } else if ((Request["qryStatus"] ?? "") == "Y") {//判行完成
                 SQL += " and ( a.bstat_code like 'Y%')";
+            } else {
+                SQL += " and ( a.bstat_code like 'N%' or a.bstat_code like 'Y%')";
             }
 
             //代表從統計過來
@@ -103,7 +200,7 @@
                         SQL += " and a." + Request["qrykinddate"] + "<='" + Request["qryEdate"] + "'";
                     }
                     if ((Request["form_name"] ?? "") != "") {
-                        SQL += " and  a.form_name= '" + Request["form_name"] + "'";
+                        SQL += " and a.pr_rs_class= '" + Request["form_name"] + "'";
                     }
                 } else if ((Request["qrykind"] ?? "") == "rs_code") {
                     if ((Request["qrykinddate"] ?? "") != "") {
@@ -111,10 +208,10 @@
                         SQL += " and a." + Request["qrykinddate"] + "<='" + Request["qryEdate"] + "'";
                     }
                     if ((Request["arcase"] ?? "") != "") {
-                        SQL += " and  a.arcase= '" + Request["arcase"] + "'";
+                        SQL += " and  a.pr_rs_code= '" + Request["arcase"] + "'";
                     }
                     if ((Request["Pclass"] ?? "") != "") {
-                        SQL += " and a.form_name= '" + Request["Pclass"] + "'";
+                        SQL += " and a.pr_rs_class= '" + Request["Pclass"] + "'";
                     }
                 } else if ((Request["qrykind"] ?? "") == "month") {
                     if ((Request["month"] ?? "") != "") {
@@ -173,11 +270,18 @@
                 page.pagedTable.Rows[i]["fseq"] = Funcs.formatSeq(
                     page.pagedTable.Rows[i].SafeRead("Bseq", "")
                     , page.pagedTable.Rows[i].SafeRead("Bseq1", "")
-                    , ""
+                    , page.pagedTable.Rows[i].SafeRead("country", "")
                     , page.pagedTable.Rows[i].SafeRead("Branch", "")
-                    , Sys.GetSession("dept"));
+                    , Sys.GetSession("dept") + "E");
+                //國外所編號
+                page.pagedTable.Rows[i]["fext_seq"] = Funcs.formatSeq(
+                    page.pagedTable.Rows[i].SafeRead("ext_seq", "")
+                    , page.pagedTable.Rows[i].SafeRead("ext_seq1", "")
+                    , ""
+                    , ""
+                    , Sys.GetSession("dept") + "E");
 
-                SQL = "select ap_cname from caseopt_ap where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
+                SQL = "select ap_cname from caseopte_ap where opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "");
                 string ap_cname = "";
                 using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                     while (dr.Read()) {
@@ -202,103 +306,16 @@
                         "&arcase=" + page.pagedTable.Rows[i].SafeRead("arcase", "") +
                         "&prgid=" + prgid + "&Submittask=Q&back_flag=" + back_flag;
                 if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
-                    urlasp = "../opt2m/opt22Edit.aspx?" + urlasp;
+                    urlasp = "../opte2m/opte22Edit.aspx?" + urlasp;
                 } else {
-                    urlasp = "../opt2m/opt22EditA.aspx?" + urlasp;
+                    urlasp = "../opte2m/opte22EditA.aspx?" + urlasp;
                 }
                 page.pagedTable.Rows[i]["link"] = "<a href='" + urlasp + "' target='Eblank'>";
             }
 
             dataRepeater.DataSource = page.pagedTable;
             dataRepeater.DataBind();
-
-
-            //顯示查詢條件
-            string qrybr_source_name = "";
-            if ((Request["qrybr_source"] ?? "") == "br") {
-                qrybr_source_name = "&nbsp;<font color=blue>◎交辦來源：</font>區所交辦";
-            } else if ((Request["qrybr_source"] ?? "") == "opt") {
-                qrybr_source_name = "&nbsp;<font color=blue>◎交辦來源：</font>新增分案";
-            }
-
-            string qrykind_name = "";
-            if ((Request["qrykind"] ?? "") == "rs_class") {
-                qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>類別";
-            } else if ((Request["qrybr_source"] ?? "") == "rs_code") {
-                qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>案性";
-            } else if ((Request["qrybr_source"] ?? "") == "month") {
-                qrykind_name = "&nbsp;<font color=blue>◎統計依據：</font>月份";
-            }
-            string qrycode_name = "";
-            if ((Request["SubmitTask"] ?? "") == "Q") {
-                if ((Request["qryPClass"] ?? "") == "") {
-                    if ((Request["qryClass"] ?? "") != "") {
-                        SQL = "select code_name from cust_code where code_type='OClass' and cust_code in('" + Request["qryClass"].Replace(";", "','") + "')";
-                        string PClassnm = "";
-                        using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                            while (dr.Read()) {
-                                PClassnm += (PClassnm != "" ? "、" : "") + dr.SafeRead("code_name", "");
-                            }
-                        }
-                        qrycode_name = "&nbsp;<font color=blue>◎統計類別：</font>" + PClassnm;
-                    }
-                }
-            }
-
-            string qryinclude_name = "";
-            if ((Request["qryinclude"] ?? "") == "Y") {
-                qryinclude_name = "<BR>&nbsp;<font color=blue>◎包含項目：</font>只印附屬案性";
-            } else if ((Request["qryinclude"] ?? "") == "N") {
-                qryinclude_name = "<BR>&nbsp;<font color=blue>◎包含項目：</font>不含附屬案性";
-            }
-
-            string qrybranch_name = "";
-            if ((Request["qrybranch"] ?? "") == "N") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台北所";
-            } else if ((Request["qrybranch"] ?? "") == "C") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台中所";
-            } else if ((Request["qrybranch"] ?? "") == "S") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台南所";
-            } else if ((Request["qrybranch"] ?? "") == "K") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>高雄所";
-            }
-
-            string qryBseq_name = "";
-            if ((Request["qryBseq"] ?? "") != "") {
-                qryBseq_name = "&nbsp;<font color=blue>◎區所案件編號：</font>" + Request["qryBseq"];
-            }
-            if ((Request["qryBseq1"] ?? "") != "" && (Request["qryBseq1"] ?? "") != "_") {
-                qryBseq_name += "-" + Request["qryBseq1"];
-            }
-
-            string qrypr_scode_name = "";
-            if ((Request["qrypr_scode"] ?? "") != "") {
-                SQL = "select sc_name from sysctrl.dbo.scode where scode='" + Request["qrypr_scode"] + "'";
-                object objResult = conn.ExecuteScalar(SQL);
-                qrypr_scode_name = (objResult == DBNull.Value || objResult == null) ? "" : objResult.ToString();
-                qrypr_scode_name = "<BR>&nbsp;<font color=blue>◎承辦人：</font>" + qrypr_scode_name;
-            }
-
-            string qrystatus_name = "";
-            if ((Request["qrystatus"] ?? "") == "NA") {
-                qrystatus_name = "&nbsp;<font color=blue>◎承辦狀態：</font>承辦中(包含未分案)";
-            } else if ((Request["qrystatus"] ?? "") == "Y") {
-                qrystatus_name = "&nbsp;<font color=blue>◎承辦狀態：</font>判行完成";
-            }
-
-            string qryAP_DATE_name = "";
-            if ((ReqVal["qrykinddate"] ?? "") != "") {
-                if ((Request["qrykinddate"] ?? "") == "Confirm_date") {
-                    qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎收文期間：</font>";
-                } else if ((Request["qrykinddate"] ?? "") == "ap_date") {
-                    qryAP_DATE_name = "<BR>&nbsp;<font color=blue>◎判行期間：</font>";
-                }
-                qryAP_DATE_name += ReqVal["qrySdate"] + "~" + ReqVal["qryEdate"];
-            }
-            titleLabel = "<font color=red>" + qrybr_source_name + qrykind_name + qrycode_name + qryinclude_name + qrybranch_name + qryBseq_name +
-                qrypr_scode_name + qrystatus_name + qryAP_DATE_name + "</font>";
-
-        }
+        //}
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -369,12 +386,15 @@
 	    <thead>
             <Tr>
 	            <td class="lightbluetable" nowrap align="center">區所編號</td>
+	            <td class="lightbluetable" nowrap align="center">國外所案號</td> 
+	            <td class="lightbluetable" nowrap align="center">對方號</td> 
 	            <td class="lightbluetable" nowrap align="center">申請人</td> 
 	            <td class="lightbluetable" nowrap align="center">註冊號</td> 
 	            <td class="lightbluetable" nowrap align="center">案件名稱</td> 
+	            <td class="lightbluetable" nowrap align="center">交辦案性</td> 
 	            <td class="lightbluetable" nowrap align="center">服務費</td> 
-	            <td class="lightbluetable" nowrap align="center">案性</td> 
 	            <td class="lightbluetable" nowrap align="center">營洽</td>
+	            <td class="lightbluetable" nowrap align="center">承辦案性</td>
 	            <td class="lightbluetable" nowrap align="center">承辦人</td> 
 	            <td class="lightbluetable" nowrap align="center">承辦狀態</td> 
             </tr>
@@ -384,12 +404,15 @@
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
 		            <td align="center"><%#Eval("link")%><%#Eval("fseq")%></a></td>
+		            <td align="center"><%#Eval("link")%><%#Eval("fext_seq")%></a></td>
+		            <td align="center"><%#Eval("link")%><%#Eval("your_no")%></a></td>
 		            <td title="<%#Eval("ap_cname")%>"><%#Eval("link")%><%#Eval("optap_cname")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("issue_no")%></a></td>
 		            <td title="<%#Eval("appl_name")%>"><%#Eval("link")%><%#Eval("oappl_name")%></a></td>
-		            <td align="center"><%#Eval("link")%><%#Eval("Service")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("arcase_name")%></a></td>
+		            <td align="center"><%#Eval("link")%><%#Eval("Service")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("scode_name")%></a></td>
+		            <td align="center"><%#Eval("link")%><%#Eval("pr_rs_code_name")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("pr_scode_name")%></a></td>
 		            <td align="center"><%#Eval("link")%><%#Eval("code_name")%></a></td>
 				</tr>
