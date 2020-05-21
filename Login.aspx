@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        syscode = Request["syscode"] ?? Sys.getAppSetting("syscode");//系統
+        syscode = Request["syscode"] ?? Sys.getAppSetting("Sysmenu");//系統
 
         this.DataBind();
     }
