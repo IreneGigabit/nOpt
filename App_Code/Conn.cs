@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +8,9 @@ using System.Web;
 /// </summary>
 public static class Conn
 {
+    /// <summary>
+    /// IIS主機名(大寫)
+    /// </summary>
     private static string Host = HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString().ToUpper();
 
     /// <summary>
@@ -86,7 +89,10 @@ public static class Conn
     public static string Sysctrl {
         get {
             switch (Host) {
-                case "SIK10": return Sys.getConnString("prod_sysctrl");//正式環境
+                case "SINN05": return Sys.getConnString("prod_Nsysctrl");//正式環境北
+                case "SIC10": return Sys.getConnString("prod_Csysctrl");//正式環境中
+                case "SIS10": return Sys.getConnString("prod_Ssysctrl");//正式環境南
+                case "SIK10": return Sys.getConnString("prod_Ksysctrl");//正式環境雄
 				case "WEB10": return Sys.getConnString("test_sysctrl");//使用者測試環境
                 default: return Sys.getConnString("dev_sysctrl");//開發環境
             }
@@ -94,14 +100,17 @@ public static class Conn
     }
 
     /// <summary>
-    /// ODBCDSN
+    /// ODBCDSN(for系統管理用，EX:權限，台北所指向總所sysctrl)
     /// </summary>
     public static string ODBCDSN {
         get {
             switch (Host) {
-                case "SIK10": return Sys.getConnString("prod_sysctrl");//正式環境
-				case "WEB10": return Sys.getConnString("test_sysctrl");//使用者測試環境
-                default: return Sys.getConnString("dev_sysctrl");//開發環境
+                case "SINN05": return Sys.getConnString("prod_mg_sysctrl");//正式環境北
+                case "SIC10": return Sys.getConnString("prod_Csysctrl");//正式環境中
+                case "SIS10": return Sys.getConnString("prod_Ssysctrl");//正式環境南
+                case "SIK10": return Sys.getConnString("prod_Ksysctrl");//正式環境雄
+                case "WEB10": return Sys.getConnString("test_mg_sysctrl");//使用者測試環境
+                default: return Sys.getConnString("dev_mg_sysctrl");//開發環境
             }
         }
     }
