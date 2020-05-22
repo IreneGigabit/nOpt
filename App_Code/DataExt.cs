@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -250,142 +250,142 @@ public static class DataExt
         }
     }
 
-    ///// <summary>
-    ///// 獲取字串
-    ///// </summary> 
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>  
-    //public static string GetString(this IDataReader dr, string colName) {
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null)
-    //		return dr[colName].ToString().Trim();
-    //	return String.Empty;
-    //}
-    ///// <summary>
-    ///// 獲取DateTime(null時回傳現在時間)
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static DateTime GetDateTime(this IDataReader dr, string colName) {
-    //	DateTime result = DateTime.Now;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!DateTime.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("日期格式數據轉換失敗(" + colName + ")");
-    //	}
-    //	return result;
-    //}
-    ///// <summary>
-    ///// 獲取DateTime(可回傳null)
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static DateTime? GetNullDateTime(this IDataReader dr, string colName) {
+    /// <summary>
+    /// 獲取字串
+    /// </summary> 
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>  
+    public static string GetString(this IDataReader dr, string colName) {
+        if (dr[colName] != DBNull.Value && dr[colName] != null)
+            return dr[colName].ToString().Trim();
+        return String.Empty;
+    }
+    /// <summary>
+    /// 獲取DateTime(null時回傳現在時間)
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static DateTime GetDateTime(this IDataReader dr, string colName) {
+        DateTime result = DateTime.Now;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!DateTime.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("日期格式數據轉換失敗(" + colName + ")");
+        }
+        return result;
+    }
+    /// <summary>
+    /// 獲取DateTime(可回傳null)
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static DateTime? GetNullDateTime(this IDataReader dr, string colName) {
 
-    //	DateTime? result = null;
-    //	DateTime time = DateTime.Now;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!DateTime.TryParse(dr[colName].ToString(), out time))
-    //			throw new Exception("日期格式數據轉換失敗(" + colName + ")");
-    //		result = time;
-    //	}
-    //	return result;
-    //}
+        DateTime? result = null;
+        DateTime time = DateTime.Now;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!DateTime.TryParse(dr[colName].ToString(), out time))
+                throw new Exception("日期格式數據轉換失敗(" + colName + ")");
+            result = time;
+        }
+        return result;
+    }
 
-    ///// <summary>
-    ///// 獲取Int16
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static Int16 GetInt16(this IDataReader dr, string colName) {
-    //	short result = 0;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!short.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("短整形轉換失敗(" + colName + ")");
-    //	}
-    //	return result;
-    //}
+    /// <summary>
+    /// 獲取Int16
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static Int16 GetInt16(this IDataReader dr, string colName) {
+        short result = 0;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!short.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("短整形轉換失敗(" + colName + ")");
+        }
+        return result;
+    }
 
-    ///// <summary>
-    ///// 獲取Int32
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static int GetInt32(this IDataReader dr, string colName) {
-    //	int result = 0;
+    /// <summary>
+    /// 獲取Int32
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static int GetInt32(this IDataReader dr, string colName) {
+        int result = 0;
 
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!int.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("整形轉換失敗(" + colName + ")");
-    //	}
-    //	return result;
-    //}
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!int.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("整形轉換失敗(" + colName + ")");
+        }
+        return result;
+    }
 
-    ///// <summary>
-    ///// 獲取Double
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static double GetDouble(this IDataReader dr, string colName) {
-    //	double result = 0.00;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!double.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("雙精度類型轉換失敗(" + colName + ")");
-    //	}
-    //	return result;
-    //}
-    ///// <summary>
-    ///// 獲取Single
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static float GetSingle(this IDataReader dr, string colName) {
-    //	float result = 0.00f;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!float.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("單精度類型轉換失敗(" + colName + ")");
-    //	}
+    /// <summary>
+    /// 獲取Double
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static double GetDouble(this IDataReader dr, string colName) {
+        double result = 0.00;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!double.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("雙精度類型轉換失敗(" + colName + ")");
+        }
+        return result;
+    }
+    /// <summary>
+    /// 獲取Single
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static float GetSingle(this IDataReader dr, string colName) {
+        float result = 0.00f;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!float.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("單精度類型轉換失敗(" + colName + ")");
+        }
 
-    //	return result;
-    //}
+        return result;
+    }
 
-    ///// <summary>
-    ///// 獲取Decimal
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static decimal GetDecimal(this IDataReader dr, string colName) {
-    //	decimal result = 0.00m;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!decimal.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("Decimal類型轉換失敗(" + colName + ")");
-    //	}
-    //	return result;
-    //}
+    /// <summary>
+    /// 獲取Decimal
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static decimal GetDecimal(this IDataReader dr, string colName) {
+        decimal result = 0.00m;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!decimal.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("Decimal類型轉換失敗(" + colName + ")");
+        }
+        return result;
+    }
 
-    ///// <summary>
-    ///// 獲取Byte
-    ///// </summary> 
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static byte GetByte(this IDataReader dr, string colName) {
-    //	byte result = 0;
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		if (!byte.TryParse(dr[colName].ToString(), out result))
-    //			throw new Exception("Byte類型轉換失敗(" + colName + ")");
-    //	}
-    //	return result;
-    //}
+    /// <summary>
+    /// 獲取Byte
+    /// </summary> 
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static byte GetByte(this IDataReader dr, string colName) {
+        byte result = 0;
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            if (!byte.TryParse(dr[colName].ToString(), out result))
+                throw new Exception("Byte類型轉換失敗(" + colName + ")");
+        }
+        return result;
+    }
 
-    ///// <summary>
-    ///// 獲取bool(如果是1或Y時回傳true);
-    ///// </summary>
-    ///// <param name="colName">欄位名稱</param>  
-    ///// <returns></returns>
-    //public static bool GetBool(this IDataReader dr, string colName) {
-    //	if (dr[colName] != DBNull.Value && dr[colName] != null) {
-    //		return dr[colName].ToString() == "1" || dr[colName].ToString() == "Y" || dr[colName].ToString().ToLower() == "true";
-    //	}
-    //	return false;
-    //}
+    /// <summary>
+    /// 獲取bool(如果是1或Y時回傳true);
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>  
+    /// <returns></returns>
+    public static bool GetBool(this IDataReader dr, string colName) {
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            return dr[colName].ToString() == "1" || dr[colName].ToString() == "Y" || dr[colName].ToString().ToLower() == "true";
+        }
+        return false;
+    }
     #endregion
 
     #region DataRow 擴展
@@ -418,7 +418,6 @@ public static class DataExt
         }
     }
 
-    /*
 	/// <summary>
 	/// 獲取字串
 	/// </summary> 
@@ -555,7 +554,6 @@ public static class DataExt
 		}
 		return false;
 	}
-    */
     #endregion
 
     #region RequestForm 擴展
