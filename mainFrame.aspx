@@ -1,6 +1,7 @@
-﻿<%@ Page Language="C#" CodePage="65001" %>
+<%@ Page Language="C#" CodePage="65001" %>
 <script runat="server">
     protected string mainSrc = "";
+    protected string leftSrc = "";
     
 	private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -9,8 +10,10 @@
 
         if (Convert.ToBoolean(Session["Password"])) {
             mainSrc = "homelist.aspx";
+            leftSrc = "leftmenu.aspx";
         } else {
             mainSrc = "login.aspx";
+            leftSrc = "about:blank";
         }
         this.Page.DataBind();
     }
@@ -26,8 +29,8 @@
     <frame name="Etop" id="Etop" scrolling="auto" src="homelist.aspx"/>
     <frame name="Eblank" id="Eblank" scrolling="auto" src="login.aspx"/>
 </frameset-->
-<frameset name="f" id="f" cols="0,*">
-    <frame src="about:blank" frameborder="0" name="leftFrame" id="leftFrame" />
+<frameset name="f" id="f" cols="200,*">
+    <frame src="<%#leftSrc%>" frameborder="0" name="leftFrame" id="leftFrame" />
     <frameset rows="100%,*" name="tt" id="tt">
         <frame name="Etop" id="Etop" scrolling="auto" src="<%#mainSrc%>">"/>
         <frame name="Eblank" id="Eblank" scrolling="auto" src="about:blank"/>
