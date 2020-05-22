@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -24,8 +24,6 @@
     protected DataTable dtx = new DataTable();
     protected DataTable dty = new DataTable();
     protected DataTable dt = new DataTable();
-    protected string y_title = "";
-    protected string y_align = "center";
     protected string hrefq = "";
 
     DBHelper conn = null;//開完要在Page_Unload釋放,否則sql server連線會一直佔用
@@ -112,11 +110,13 @@
         } else if ((Request["qryKINDDATE"] ?? "") == "BPR_DATE") {
             qryKINDDATE_name = "承辦完成期間";
         }
-        
         string qryAP_DATE_name = "";
         ReqVal["qrySdate"] = Request["qryYear"] + "/" + Request["qrysMonth"].Trim() + "/1"; //上個月一號
         ReqVal["qryEdate"] = new DateTime(Convert.ToInt32(Request["qryYear"].ToString()), Convert.ToInt32(Request["qryeMonth"].Trim()), 1).AddMonths(1).AddDays(-1).ToShortDateString();
         qryAP_DATE_name = "&nbsp;<font color=blue>◎" + qryKINDDATE_name + "：</font>" + ReqVal["qrySdate"] + "~" + ReqVal["qryEdate"];
+        if ((Request["qryend_flag"] ?? "") != "Y") {
+            qryAP_DATE_name += "&nbsp;<font color=blue>(含離職人員)";
+        }
 
         titleLabel = "<font color=red>" + qrybr_source_name + qryinclude_name + qrybranch_name + qryAP_DATE_name + "</font>";
     }
@@ -124,27 +124,26 @@
     private void QueryData() {
         //using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
             string SQL = "";
-            string wscode_end = "";
+            string wSQL = "";
             //x軸
             if ((Request["qryend_flag"] ?? "") == "Y") {//不含離職人員
-                wscode_end += " and (c.end_date is null or c.end_date>='" +ReqVal["qrySdate"] + "') ";
+                wSQL += " and (c.end_date is null or c.end_date>='" + ReqVal["qrySdate"] + "') ";
             }
             if ((Request["qrypr_branch"] ?? "") != "") {//承辦區所
-                wscode_end += " and c.scode='" + Request["qrypr_branch"] + "' ";
-                wscode_end += " and a.grpclass='" + Request["qrypr_branch"] + "' ";
+                wSQL += " and a.grpclass='" + Request["qrypr_branch"] + "' ";
             }
             if ((Request["qryPR_SCODE"] ?? "") != "") {//承辦人
-                wscode_end += " and c.scode='" + Request["qryPR_SCODE"] + "' ";
+                wSQL += " and c.scode='" + Request["qryPR_SCODE"] + "' ";
             }
             SQL = "select c.scode x_scode,c.sc_name x_scodenm,c.sscode ";
             SQL += " from sysctrl.dbo.grpid as a ";
             SQL += " inner join sysctrl.dbo.scode_group as b on a.grpclass=b.grpclass and a.grpid=b.grpid";
-            SQL += " inner join sysctrl.dbo.scode as c on b.scode=c.scode " + wscode_end;
+            SQL += " inner join sysctrl.dbo.scode as c on b.scode=c.scode " + wSQL;
             SQL+= " where a.grpclass='B' and a.grpid='T100'";
             SQL+= " union ";
             SQL += " select c.scode,c.sc_name,c.sscode ";
             SQL += " from sysctrl.dbo.scode_group as a ";
-            SQL += " inner join sysctrl.dbo.scode as c on a.scode=c.scode " + wscode_end;
+            SQL += " inner join sysctrl.dbo.scode as c on a.scode=c.scode " + wSQL;
             SQL+= " where a.grpclass='BJ' and a.grpid='T100'";
             SQL += " order by c.sscode ";
             conn.DataTable(SQL, dtx);
@@ -152,7 +151,7 @@
             if ((Request["qryPR_SCODE"] ?? "") == "") {
                 DataRow sumRow = dtx.NewRow();
                 sumRow[0] = "";
-                sumRow[1] = "合計";
+                sumRow[1] = "總計";
                 dtx.Rows.Add(sumRow);
             }
 
@@ -295,9 +294,9 @@
     </tr>
 </table>
 <br />
-<table width="100%" cellspacing="1" cellpadding="2" class="bluetable" align="center">
+<table width="<%#30+dtx.Rows.Count*10%>%" cellspacing="1" cellpadding="2" class="bluetable" align="center">
     <tr align="left">
-        <td align="center" class="lightbluetable" rowspan=2><%#y_title%></td>
+        <td align="center" class="lightbluetable" rowspan=2>月份</td>
         <asp:Repeater id="xRepeater1" runat="server">
         <ItemTemplate>
             <td align="center" class="lightbluetable" colspan=2><%#Eval("x_scodenm")%></td>
@@ -315,8 +314,8 @@
 
     <asp:Repeater id="yRepeater" runat="server" OnItemDataBound="yRepeater_ItemDataBound">
     <ItemTemplate>
-        <tr>
-            <td align="<%#y_align%>" class="lightbluetable3"><%#Eval("y_text")%></td>
+ 		<tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
+            <td align="center"><%#Eval("y_text")%></td>
             <asp:Repeater id="xRepeater3" runat="server">
             <ItemTemplate>
                 <td align="center" class="<%#Eval("x_scode")!= "" ?"sfont9":"lightbluetable3"%>" title="<%#GetXY(Container)%>">
@@ -331,7 +330,7 @@
     </ItemTemplate>
     <FooterTemplate>
         <tr>
-            <td align="right" class="lightbluetable">總計</td>
+            <td align="right" class="lightbluetable">合計</td>
             <asp:Repeater id="xRepeater4" runat="server">
             <ItemTemplate>
                 <td align="center" class="lightbluetable" title="<%#GetXY(Container)%>"><%#GetHour(Container,false,true)%></td>
