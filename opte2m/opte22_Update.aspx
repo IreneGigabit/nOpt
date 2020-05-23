@@ -425,7 +425,7 @@
                 in_scode_name = dr.SafeRead("scode_name", "");
                 appl_name = dr.SafeRead("appl_name", "");
                 arcase_name = dr.SafeRead("arcase_name", "");
-                last_date = Util.parsedate(dr.SafeRead("last_date", ""), "yyyy/M/d");
+                last_date = Util.parseDBDate(dr.SafeRead("last_date", ""), "yyyy/M/d");
             }
         }
 

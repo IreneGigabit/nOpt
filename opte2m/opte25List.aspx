@@ -101,7 +101,7 @@
                 page.pagedTable.Rows[i]["pdfsize"] = (Convert.ToInt32("0" + page.pagedTable.Rows[i].SafeRead("attach_size", "")) / 1024) + 1;
 
                 if((Request["qrytodo"] ?? "") == "recopy") {
-                    if(Util.parsedate(page.pagedTable.Rows[i].SafeRead("attach_datebj", ""), "yyyy/M/d") == DateTime.Today.ToString("yyyy/M/d")) {
+                    if(Util.parseDBDate(page.pagedTable.Rows[i].SafeRead("attach_datebj", ""), "yyyy/M/d") == DateTime.Today.ToString("yyyy/M/d")) {
                         recopy_flag = "Y";
                     }
                 }

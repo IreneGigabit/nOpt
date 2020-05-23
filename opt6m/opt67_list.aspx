@@ -130,7 +130,7 @@
                     page.pagedTable.Rows[i]["code_name"] = "未收件";
                 }
                 //完成日期
-                page.pagedTable.Rows[i]["oBpr_date"] = Util.parsedate(page.pagedTable.Rows[i].SafeRead("Bpr_date", ""), "yyyy/M/d");
+                page.pagedTable.Rows[i]["oBpr_date"] = Util.parseDBDate(page.pagedTable.Rows[i].SafeRead("Bpr_date", ""), "yyyy/M/d");
                 if (page.pagedTable.Rows[i].SafeRead("oBpr_date", "") == "1900/1/1") {
                     page.pagedTable.Rows[i]["oBpr_date"] = "&nbsp;";
                 }

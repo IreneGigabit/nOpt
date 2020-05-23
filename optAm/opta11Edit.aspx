@@ -187,7 +187,7 @@
             $("#edit_law_no3").val("<%#RS.TryGet("law_no3","")%>");
             $("#O_edit_law_mark").val("<%#RS.TryGet("law_mark","").ToString().Trim()%>");
             $("#edit_law_mark").val("<%#RS.TryGet("law_mark","")%>");
-            $("#edit_end_date").val("<%#Util.parsedate(RS.TryGet("end_mark","").ToString(),"yyyy/M/d")%>");
+            $("#edit_end_date").val("<%#Util.parseDBDate(RS.TryGet("end_mark","").ToString(),"yyyy/M/d")%>");
         }else if($("#submittask").val()=="D"){
             if (!(window.parent.tt === undefined)) {
                 window.parent.tt.rows = "50%,50%";

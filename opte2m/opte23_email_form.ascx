@@ -132,9 +132,9 @@
                 }
             }
             tf_content = tf_content.Replace("/*ap_cname*/", ap_cname);
-            tf_content = tf_content.Replace("/*last_date*/", Util.parsedate(RS.TryGet("last_date", "").ToString(), "yyyy年M月d日"));
-            tf_content = tf_content.Replace("/*ctrl_date*/", Util.parsedate(RS.TryGet("ctrl_date", "").ToString(), "yyyy年M月d日"));
-            tf_content = tf_content.Replace("/*ctrl_date1*/", Util.parsedate(RS.TryGet("ctrl_date", "").ToString(), "yyyy年M月d日"));
+            tf_content = tf_content.Replace("/*last_date*/", Util.parseDBDate(RS.TryGet("last_date", "").ToString(), "yyyy年M月d日"));
+            tf_content = tf_content.Replace("/*ctrl_date*/", Util.parseDBDate(RS.TryGet("ctrl_date", "").ToString(), "yyyy年M月d日"));
+            tf_content = tf_content.Replace("/*ctrl_date1*/", Util.parseDBDate(RS.TryGet("ctrl_date", "").ToString(), "yyyy年M月d日"));
             tf_content = tf_content.Replace("/*arcase_name*/", RS.TryGet("pr_rs_code_name", "").ToString());
             tf_content = tf_content.Replace("/*remarkb*/", RS.TryGet("remarkb", "").ToString());
         }

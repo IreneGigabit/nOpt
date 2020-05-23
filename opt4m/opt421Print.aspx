@@ -196,7 +196,7 @@
 			            <td nowrap align="center"><%#GetSeq(Container.DataItem)%></td>
 			            <td>&nbsp;<%#Eval("rs_detail")%></td>
 			            <td nowrap align="center"><%#Eval("sendmark")%></td>
-			            <td nowrap align="center"><%#Util.parsedate(Eval("GS_date").ToString(),"yyyy/M/d")%></td>
+			            <td nowrap align="center"><%#Util.parseDBDate(Eval("GS_date").ToString(),"yyyy/M/d")%></td>
 			            <td nowrap align="center"><%#Eval("rs_no")%></td>
 			            <td nowrap align="center">&nbsp;<%#Eval("apply_no")%></td>
 			            <td nowrap align="center"><%#GetFees(Container.DataItem)%></td>

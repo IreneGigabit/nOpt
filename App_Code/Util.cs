@@ -381,11 +381,17 @@ public static class Util
     }
     #endregion
 
-    #region parsedate - 將db讀出之日期(ex:2014/12/29 上午 12:00:00)轉成指定格式
-    public static string parsedate(string iStr, string format) {
+    #region parseDBDate - 將db讀出之日期(ex:2014/12/29 上午 12:00:00)轉成指定格式
+    public static string parseDBDate(string iStr, string format) {
         if (iStr == null || iStr == "") return "";
 
         return DateTime.ParseExact(iStr.Trim(), "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
+    }
+    #endregion
+
+    #region str2Dateime - 將字串日期(ex:2014/12/29)轉成DateTime
+    public static DateTime str2Dateime(string iStr) {
+        return DateTime.ParseExact(iStr.Trim(), "yyyy/M/d", new System.Globalization.CultureInfo("zh-TW"));
     }
     #endregion
 

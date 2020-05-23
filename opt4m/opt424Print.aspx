@@ -134,7 +134,7 @@
 
                     string str4 = "";
                     if (dt.Rows[i].SafeRead("rs_class", "").Trim() == "A4") {
-                        str4 = "專用期限:" + Util.parsedate(dt.Rows[i].SafeRead("term1", ""), "yyyy/M/d") + " ~ " + Util.parsedate(dt.Rows[i].SafeRead("term2", ""), "yyyy/M/d");
+                        str4 = "專用期限:" + Util.parseDBDate(dt.Rows[i].SafeRead("term1", ""), "yyyy/M/d") + " ~ " + Util.parseDBDate(dt.Rows[i].SafeRead("term2", ""), "yyyy/M/d");
                     }
                     if (send_detail != "" && str4 != "") send_detail += "\n";
                     send_detail += str4;
@@ -180,7 +180,7 @@
                     Rpt.ReplaceBookmark("seq", seq);
 
                     //最後期限，法定期限(本次官發銷管的管制日期)
-                    Rpt.ReplaceBookmark("ctrl_date", Util.parsedate(dt.Rows[i].SafeRead("last_date", ""), "yyyy/M/d"));
+                    Rpt.ReplaceBookmark("ctrl_date", Util.parseDBDate(dt.Rows[i].SafeRead("last_date", ""), "yyyy/M/d"));
 
                     //規費
                     if (r == 2)
