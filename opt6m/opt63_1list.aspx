@@ -26,10 +26,17 @@
     protected DataTable dt = new DataTable();
     protected string hrefq = "";
 
+    DBHelper conn = null;//開完要在Page_Unload釋放,否則sql server連線會一直佔用
+    private void Page_Unload(System.Object sender, System.EventArgs e) {
+        if (conn != null) conn.Dispose();
+    }
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
 
         if (Request.RequestType == "GET") {
             ReqVal = Request.QueryString.ToDictionary();
@@ -274,7 +281,7 @@
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><%=HTProgCap%></title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.css")%>" />

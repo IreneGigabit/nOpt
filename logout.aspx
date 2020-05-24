@@ -12,7 +12,7 @@
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>登出</title>
 <link href="./inc/setstyle.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript">

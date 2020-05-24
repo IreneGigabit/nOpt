@@ -1,7 +1,6 @@
-﻿<%@ Page Language="C#" Inherits="PageBase" %>
+﻿<%@ Page Language="C#" CodePage="65001" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Data"  %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
+<!DOCTYPE html>
 <script runat="server">
     protected string SiServer = Sys.SIServer;//聖島人主機
     protected string ProjectName = "";
@@ -93,7 +92,7 @@
                         //scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Link = \"" + dt.Rows[i]["APpath"].ToString() + "?prgid=" + dt.Rows[i]["APcode"].ToString() + "\";\n";
                         scriptString += "\t\tzmenu[" + xmIdx.ToString() + "].Link = \"http://" + dt.Rows[i]["APserver"].ToString() + "/" + dt.Rows[i]["APpath"].ToString() +
                                                                                     "?prgid=" + dt.Rows[i]["APcode"].ToString() +
-                                                                                    "&prgname=" + dt.Rows[i]["APNameC"].ToString() +
+                                                                                    "&prgname=" + Server.UrlEncode(dt.Rows[i]["APNameC"].ToString()) +
                                                                                     dt.Rows[i]["ReMark"].ToString() + "\";\n";
 
                         xapo = dt.Rows[i]["APorder"].ToString().Substring(0, 1);
@@ -135,13 +134,13 @@
 </script>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="IE=10">
     <title></title>
     <link href="inc/setstyle.css" rel="stylesheet" />
     <script type="text/javascript" src="js/lib/jquery-1.12.4.min.js"></script>
     <%--<script type="text/javascript"  src="js/lib/json2.js"></script>--%>
-    <script type="text/javascript" src="js/lib/toastr.min.js"></script>
+    <%--<script type="text/javascript" src="js/lib/toastr.min.js"></script>--%>
     <script type="text/javascript" src="js/util.js"></script>
 </head>
 <body style="margin:0px 0px 0px 0px;overflow:hidden;background:url('images/top/back5.gif');background-repeat: no-repeat;">
@@ -171,7 +170,7 @@
     </table>
     <table cellspacing="0" cellpadding="0" width="100%" border="0">
         <tr style="background-color:#5a63bd">
-            <td width="30" id="imgSide" style="cursor:pointer;background-image:url(images/x-1.gif);background-size:60% 95%;background-repeat:no-repeat;">
+            <td width="30" id="imgSide" style="cursor:pointer;background-size:60% 95%;background-repeat:no-repeat;">
                 <%--<img id="imgSide" style="cursor:pointer;" src="images/x-1.gif" />&nbsp;&nbsp;--%>
             </td>
             <td height="20">
@@ -195,7 +194,6 @@
 </body>
 </html>
 
-
 <script type="text/javascript" language="javascript">
     var zmenu = Array();
     var oPopup;
@@ -207,7 +205,7 @@
         $("#imgSide").click(function (e) {
             var ifrm = $("#workfram").contents();
             if ($(ifrm).find("#f").attr("cols") == "0,*") {
-                $(ifrm).find("#f").attr("cols", "200,*");
+                $(ifrm).find("#f").attr("cols", "220,*");
                 //$(this).attr("src", "images/x-2.gif");
                 $(this).css("background-image","url(images/x-2.gif)"); 
             } else {
@@ -222,6 +220,7 @@
         $(".apcat").click(menuClick);
         $("#oPopBody").mouseleave(function (e) { $(this).hide(); });
         $("#goweb").change(gosite);
+        $("#imgSide").css("background-image", "url(images/x-2.gif)");
 
         $(window).load(setIframe);
         $(window).resize(setIframe);

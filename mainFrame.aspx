@@ -22,14 +22,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 <title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="cache-control" content="no-cache"/>
 </head>
 <!--frameset col="30%,70%" id="tt">
     <frame name="Etop" id="Etop" scrolling="auto" src="homelist.aspx"/>
     <frame name="Eblank" id="Eblank" scrolling="auto" src="login.aspx"/>
 </frameset-->
-<frameset name="f" id="f" cols="200,*">
+<frameset name="f" id="f" cols="220,*">
     <frame src="<%#leftSrc%>" frameborder="0" name="leftFrame" id="leftFrame" />
     <frameset rows="100%,*" name="tt" id="tt">
         <frame name="Etop" id="Etop" scrolling="auto" src="<%#mainSrc%>">"/>

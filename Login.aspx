@@ -19,7 +19,7 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="x-ua-compatible" content="IE=10">
     <title><%#StrProjectName%></title>
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>

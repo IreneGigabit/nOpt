@@ -154,6 +154,16 @@ Date.prototype.addDays = function (days) {
 }
 //#end region
 
+//#region Date.prototype.addMonths
+//js日期加上 X 月
+//var today = new Date();
+//today.addMonths(7);
+Date.prototype.addMonths = function (months) {
+    this.setDate(this.getMonth() + months);
+    return this;
+}
+//#end region
+
 /*將數值轉換貨幣表示法
 n:取到小數第幾位
 x:幾位一撇

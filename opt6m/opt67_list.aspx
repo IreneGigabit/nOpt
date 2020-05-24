@@ -22,11 +22,18 @@
 
     protected string submitTask = "";
 
+    DBHelper conn = null;//開完要在Page_Unload釋放,否則sql server連線會一直佔用
+    private void Page_Unload(System.Object sender, System.EventArgs e) {
+        if (conn != null) conn.Dispose();
+    }
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
+        conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+            
         if (Request.RequestType == "GET") {
             ReqVal = Request.QueryString.ToDictionary();
         } else {
@@ -68,10 +75,47 @@
                 StrFormBtnTop += "<a href=\"" + HTProgPrefix + ".aspx?prgid=" + prgid + "\" >[查詢]</a>";
             }
         }
+
+        //顯示查詢條件
+        string qrybranch_name = "";
+        if ((Request["qrybranch"] ?? "") == "N") {
+            qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台北所";
+        } else if ((Request["qrybranch"] ?? "") == "C") {
+            qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台中所";
+        } else if ((Request["qrybranch"] ?? "") == "S") {
+            qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台南所";
+        } else if ((Request["qrybranch"] ?? "") == "K") {
+            qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>高雄所";
+        }
+
+        string qryKINDDATE_name = "";
+        if (ReqVal.TryGet("qryKINDDATE", "") == "confirm_date") {
+            qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>收文日期";
+        } else if (ReqVal.TryGet("qryKINDDATE", "") == "ctrl_date") {
+            qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>承辦期限";
+        } else if (ReqVal.TryGet("qryKINDDATE", "") == "last_date") {
+            qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>法定期限";
+        }
+
+        string qryDay_name = "";
+        if (ReqVal.TryGet("qryDay", "") != "") {
+            qryDay_name = "&nbsp;<font color=blue>◎抓取天數：</font>前" + Request["qryDay"] + "天";
+        }
+
+        string qryOrder_name = "";
+        if (ReqVal.TryGet("qryOrder", "") == "confirm_date") {
+            qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>收文日期";
+        } else if (ReqVal.TryGet("qryOrder", "") == "ctrl_date") {
+            qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>承辦期限";
+        } else if (ReqVal.TryGet("qryOrder", "") == "last_date") {
+            qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>法定期限";
+        }
+
+        titleLabel = "<font color=red>" + qrybranch_name + qrybranch_name + qryKINDDATE_name + qryDay_name + qryOrder_name + "</font>";
     }
 
     private void QueryData() {
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
+        //using (DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST")) {
             SQL = "SELECT Bseq,Bseq1,ap_cname,issue_no,appl_name,Confirm_date,ctrl_date";
             SQL += ",last_date,arcase_name,isnull(Bpr_date,'') as Bpr_date";
             SQL += ",ap_date,a.gs_date,a.pr_scode_name,b.code_name";
@@ -150,50 +194,12 @@
 
             dataRepeater.DataSource = page.pagedTable;
             dataRepeater.DataBind();
-
-
-            //顯示查詢條件
-            string qrybranch_name = "";
-            if ((Request["qrybranch"] ?? "") == "N") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台北所";
-            } else if ((Request["qrybranch"] ?? "") == "C") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台中所";
-            } else if ((Request["qrybranch"] ?? "") == "S") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>台南所";
-            } else if ((Request["qrybranch"] ?? "") == "K") {
-                qrybranch_name = "&nbsp;<font color=blue>◎區所：</font>高雄所";
-            }
-
-            string qryKINDDATE_name = "";
-            if (ReqVal.TryGet("qryKINDDATE", "") == "confirm_date") {
-                qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>收文日期";
-            } else if (ReqVal.TryGet("qryKINDDATE", "") == "ctrl_date") {
-                qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>承辦期限";
-            } else if (ReqVal.TryGet("qryKINDDATE", "") == "last_date") {
-                qryKINDDATE_name = "&nbsp;<font color=blue>◎日期種類：</font>法定期限";
-            }
-
-            string qryDay_name = "";
-            if (ReqVal.TryGet("qryDay", "") != "") {
-                qryDay_name = "&nbsp;<font color=blue>◎抓取天數：</font>前" + Request["qryDay"] + "天";
-            }
-
-            string qryOrder_name = "";
-            if (ReqVal.TryGet("qryOrder", "") == "confirm_date") {
-                qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>收文日期";
-            } else if (ReqVal.TryGet("qryOrder", "") == "ctrl_date") {
-                qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>承辦期限";
-            } else if (ReqVal.TryGet("qryOrder", "") == "last_date") {
-                qryOrder_name = "<BR>&nbsp;<font color=blue>◎排序方式：</font>法定期限";
-            }
-
-            titleLabel = "<font color=red>" + qrybranch_name + qrybranch_name + qryKINDDATE_name + qryDay_name + qryOrder_name + "</font>";
-        }
+        //}
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><%=HTProgCap%></title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.css")%>" />

@@ -379,7 +379,7 @@
                     }
                 }
                 //完成日期
-                page.pagedTable.Rows[i]["oBpr_date"] = Util.parsedate(page.pagedTable.Rows[i].SafeRead("Bpr_date", ""), "yyyy/M/d");
+                page.pagedTable.Rows[i]["oBpr_date"] = Util.parseDBDate(page.pagedTable.Rows[i].SafeRead("Bpr_date", ""), "yyyy/M/d");
                 if (page.pagedTable.Rows[i].SafeRead("oBpr_date", "") == "1900/1/1") {
                     page.pagedTable.Rows[i]["oBpr_date"] = "&nbsp;";
                 }
@@ -404,7 +404,7 @@
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><%=HTProgCap%></title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.css")%>" />

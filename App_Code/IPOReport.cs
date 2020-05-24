@@ -9,16 +9,14 @@ using System.Web;
 /// 產生智慧局電子申請書用
 /// </summary>
 public class IPOReport : OpenXmlHelper {
-	private string _connStr = null;
-	private string _in_no = "";
-	private string _in_scode = "";
-	private string _case_sqlno = "";
-	private DBHelper _conn = null;
+    private string _opt_sqlno = "";
+    private DBHelper _conn = null;
+    private DBHelper _connB = null;
 
 	private string _seq = "";
 	private string _sound = "";
 	private string _movie = "";
-	private DataTable _dtDmt = null;
+	private DataTable _dtOpt = null;
 	private DataTable _dtApcust = null;
 	private DataTable _dtAgt = null;
 	private DataTable _dtAnt = null;
@@ -70,9 +68,9 @@ public class IPOReport : OpenXmlHelper {
 	/// <summary>
 	/// 案件資料
 	/// </summary>
-	public DataTable Dmt {
-		get { return _dtDmt; }
-		protected set { _dtDmt = value; }
+	public DataTable Opt {
+		get { return _dtOpt; }
+		protected set { _dtOpt = value; }
 	}
 
 	/// <summary>
@@ -174,66 +172,51 @@ public class IPOReport : OpenXmlHelper {
 
 	}
 
-	public IPOReport(string connStr, string in_scode, string in_no, string case_sqlno) {
-		this._connStr = connStr;
-		this._in_no = in_no;
-		this._in_scode = in_scode;
-		this._case_sqlno = case_sqlno;
-		this._conn = new DBHelper(connStr, false).Debug(false);
+	public IPOReport(string branch, string opt_sqlno) {
+		this._opt_sqlno = opt_sqlno;
+        this._conn = new DBHelper(Conn.OptK, false).Debug(false);
+        this._connB = new DBHelper(Conn.OptB(branch), false).Debug(false);
 
-		this._dtDmt = new DataTable();
+		this._dtOpt = new DataTable();
 		string SQL = "SELECT a.* ";
-		SQL += ",c.fees,c.arcase,c.div_arcase,c.cust_area,t.tran_remark1,c.tot_num,c.send_way,c.receipt_type,c.receipt_title ";
-		SQL += ",(SELECT b.coun_c FROM sysctrl.dbo.country b WHERE b.coun_code = a.zname_type and b.markb<>'X') AS nzname ";
-		SQL += ",(SELECT c.coun_code+c.coun_cname FROM sysctrl.dbo.ipo_country c WHERE c.ref_coun_code = a.prior_country ) AS ncountry ";
-		SQL += ",''colornm,''s_marknm ";
-		SQL += " FROM dmt_temp A";
-		SQL += " inner join case_dmt c on a.in_no = c.in_no and a.in_scode = c.in_scode";
-		SQL += " left join dmt_tran t on a.in_no = t.in_no and a.in_scode = t.in_scode";
-		SQL += " WHERE A.in_no ='" + _in_no + "' and a.in_scode='" + _in_scode + "'";
-		SQL += " and case_sqlno=" + (_case_sqlno == "" ? "0" : _case_sqlno) + " ";
-		_conn.DataTable(SQL, _dtDmt);//抓案件資料
+		SQL += " From vbr_opt as a ";
+		SQL += " WHERE opt_sqlno='" + _opt_sqlno + "' ";
+		_conn.DataTable(SQL, _dtOpt);//抓案件資料
 
-		string drawPath = _dtDmt.Rows[0]["draw_file"].ToString();
-		if (_dtDmt.Rows[0]["draw_file"].ToString().IndexOf(@"/btbrt/") == 0) {//『/btbrt/』開頭要換掉
-			_dtDmt.Rows[0]["draw_file"] = "~/"+drawPath.Substring(7);
-		} else if (_dtDmt.Rows[0]["draw_file"].ToString().IndexOf(@"D:\Data\document\") == 0) {//『D:\Data\document\』開頭要換掉
-			_dtDmt.Rows[0]["draw_file"] = "~/" + drawPath.Substring(17).Replace("\\","/");
+		string drawPath = _dtOpt.Rows[0]["draw_file"].ToString();
+		if (_dtOpt.Rows[0]["draw_file"].ToString().IndexOf(@"/btbrt/") == 0) {//『/btbrt/』開頭要換掉
+			_dtOpt.Rows[0]["draw_file"] = "~/"+drawPath.Substring(7);
+		} else if (_dtOpt.Rows[0]["draw_file"].ToString().IndexOf(@"D:\Data\document\") == 0) {//『D:\Data\document\』開頭要換掉
+			_dtOpt.Rows[0]["draw_file"] = "~/" + drawPath.Substring(17).Replace("\\","/");
 		}
 
 		//商標顏色
-		if (_dtDmt.Rows[0]["color"].ToString()=="C" ||_dtDmt.Rows[0]["color"].ToString()=="M"){
-			_dtDmt.Rows[0]["colornm"]="彩色";
-		} else if (_dtDmt.Rows[0]["color"].ToString() == "B") {
-			_dtDmt.Rows[0]["colornm"] = "墨色";
+		if (_dtOpt.Rows[0]["color"].ToString()=="C" ||_dtOpt.Rows[0]["color"].ToString()=="M"){
+			_dtOpt.Rows[0]["colornm"]="彩色";
+		} else if (_dtOpt.Rows[0]["color"].ToString() == "B") {
+			_dtOpt.Rows[0]["colornm"] = "墨色";
 		}
 
 		//商標或標章種類
-		if (_dtDmt.Rows[0]["s_mark"].ToString().Trim() == "S") {
-			_dtDmt.Rows[0]["s_marknm"] = "商標(92年修正前服務標章)";
-		} else if (_dtDmt.Rows[0]["s_mark"].ToString().Trim() == "N") {
-			_dtDmt.Rows[0]["s_marknm"] = "團體商標";
-		} else if (_dtDmt.Rows[0]["s_mark"].ToString().Trim() == "M") {
-			_dtDmt.Rows[0]["s_marknm"] = "團體標章";
-		} else if (_dtDmt.Rows[0]["s_mark"].ToString().Trim() == "L") {
-			_dtDmt.Rows[0]["s_marknm"] = "證明標章";
+		if (_dtOpt.Rows[0]["s_mark"].ToString().Trim() == "S") {
+			_dtOpt.Rows[0]["s_marknm"] = "商標(92年修正前服務標章)";
+		} else if (_dtOpt.Rows[0]["s_mark"].ToString().Trim() == "N") {
+			_dtOpt.Rows[0]["s_marknm"] = "團體商標";
+		} else if (_dtOpt.Rows[0]["s_mark"].ToString().Trim() == "M") {
+			_dtOpt.Rows[0]["s_marknm"] = "團體標章";
+		} else if (_dtOpt.Rows[0]["s_mark"].ToString().Trim() == "L") {
+			_dtOpt.Rows[0]["s_marknm"] = "證明標章";
 		} else {
-			_dtDmt.Rows[0]["s_marknm"] = "商標";
+			_dtOpt.Rows[0]["s_marknm"] = "商標";
 		}
 
 		SetSeq();//組案件編號
-		SetSound();//抓聲音檔
-		SetMovie();//抓影像檔
 		SetApcust();//抓申請人
 		SetAgent();//抓代理人
-		SetShow();//抓主張展覽會優先權
 		SetGoods();//抓商品服務類別
 		SetAttach();//抓附送書件
 		SetTran();//抓異動資料
 		SetModAP();//抓關係人
-
-		_dtDmt.ShowTable();
-		_dtTran.ShowTable();
 	}
 
 	#region 關閉 +void Close()
@@ -241,7 +224,8 @@ public class IPOReport : OpenXmlHelper {
 	/// 關閉
 	/// </summary>
 	public void Close() {
-		if (_conn != null) _conn.Dispose();
+        if (_conn != null) _conn.Dispose();
+        if (_connB != null) _connB.Dispose();
 		this.Dispose();
 	}
 	#endregion
@@ -251,49 +235,11 @@ public class IPOReport : OpenXmlHelper {
 	/// 組本所編號
 	/// </summary>
 	private void SetSeq() {
-		string lseq = _dtDmt.Rows[0]["cust_area"].ToString() + "T" + _dtDmt.Rows[0]["seq"];
-		if (_dtDmt.Rows[0]["seq1"].ToString() != "_") {
-			lseq += "-" + _dtDmt.Rows[0]["seq1"];
+		string lseq = _dtOpt.Rows[0]["cust_area"].ToString() + "T" + _dtOpt.Rows[0]["seq"];
+		if (_dtOpt.Rows[0]["seq1"].ToString() != "_") {
+			lseq += "-" + _dtOpt.Rows[0]["seq1"];
 		}
 		this.Seq = lseq;
-	}
-	#endregion
-
-	#region 抓聲音檔 -void SetSound()
-	/// <summary>
-	/// 抓聲音檔
-	/// </summary>
-	private void SetSound() {
-		string SQL = "select b.source_name ";
-		SQL += " from attcase_dmt a ";
-		SQL += " inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' and b.doc_type='E19' ";	//抓取電子送件且為doc_type=E19聲音檔
-		SQL += " where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
-		DataTable dt = new DataTable();
-		_conn.DataTable(SQL, dt);
-
-		this.Sound = "";
-		if (dt.Rows.Count != 0) {
-			this.Sound = dt.Rows[0]["source_name"].ToString().Trim();
-		}
-	}
-	#endregion
-
-	#region 抓影像檔 -void SetMovie()
-	/// <summary>
-	/// 抓影像檔
-	/// </summary>
-	private void SetMovie() {
-		string SQL = "select b.source_name ";
-		SQL += " from attcase_dmt a ";
-		SQL += " inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' and b.doc_type='E20' ";	//抓取電子送件且為doc_type=E20影像檔
-		SQL += " where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
-		DataTable dt = new DataTable();
-		_conn.DataTable(SQL, dt);
-
-		this.Movie = "";
-		if (dt.Rows.Count != 0) {
-			this.Movie = dt.Rows[0]["source_name"].ToString().Trim();
-		}
 	}
 	#endregion
 
@@ -312,8 +258,8 @@ public class IPOReport : OpenXmlHelper {
 		SQL += ",''c_id,''c_zip,''c_addr,''e_addr ";
 		SQL += " FROM dmt_temp_ap a";
 		SQL += " INNER JOIN apcust b ON a.apsqlno=b.apsqlno";
-		SQL += " WHERE a.in_no = '" + _in_no + "' ";
-		SQL += " and a.case_sqlno=" + (_case_sqlno == "" ? "0" : _case_sqlno) + " ";
+        SQL += " inner join case_dmt c on a.in_no=c.in_no ";
+		SQL += " WHERE c.case_sqlno=0 and c.case_no='"+Opt.Rows[0]["case_no"]+"' ";
 		SQL += " order by a.server_flag desc,a.temp_ap_sqlno ";
 		DataTable dt = new DataTable();
 		_conn.DataTable(SQL, dt);
@@ -407,12 +353,10 @@ public class IPOReport : OpenXmlHelper {
 	/// 抓代理人
 	/// </summary>
 	private void SetAgent() {
-		string SQL = "SELECT a.agt_no,b.*,''s_agatt_tel,''s_agatt_fax ";
-		SQL += " FROM dmt_temp a";
-		SQL += " inner join agt b on a.agt_no=b.agt_no ";
-		SQL += " WHERE a.in_no = '" +_in_no + "'";
-		SQL += " and a.case_sqlno=" + (_case_sqlno == "" ? "0" : _case_sqlno) + " ";
-		SQL += " and a.agt_no not in('YYYY','XXXX') ";
+		string SQL = "select b.*,''s_agatt_tel,''s_agatt_fax ";
+        SQL += " from agt b where agt_no = '" + Opt.Rows[0]["agt_no"] + "'";
+        SQL += " and '" + Opt.Rows[0]["agt_no"] + "' not in('YYYY','XXXX') ";
+
 		DataTable dt = new DataTable();
 		_conn.DataTable(SQL, dt);
 
@@ -436,29 +380,13 @@ public class IPOReport : OpenXmlHelper {
 	}
 	#endregion
 
-	#region 抓主張展覽會優先權資料 -void SetShow()
-	/// <summary>
-	/// 抓主張展覽會優先權資料
-	/// </summary>
-	private void SetShow() {
-		string SQL = "select a.* from casedmt_show a ";
-		SQL+=" where a.in_no='" + _in_no + "'";
-		SQL += " and a.case_sqlno=" + (_case_sqlno == "" ? "0" : _case_sqlno) + " ";
-
-		DataTable dt = new DataTable();
-		_conn.DataTable(SQL, dt);
-		this.Show = dt;
-	}
-	#endregion
-
 	#region 抓商品服務類別資料 -void SetGoods()
 	/// <summary>
 	/// 抓商品服務類別資料
 	/// </summary>
 	private void SetGoods() {
-		string SQL = "select *,''pclass from casedmt_good ";
-		SQL += " where in_no = '" + _in_no + "' and in_scode='"+ _in_scode +"' ";
-		SQL += " and case_sqlno=" + (_case_sqlno == "" ? "0" : _case_sqlno) + " ";
+        string SQL = "select *,''pclass from caseopt_good ";
+        SQL += " where opt_sqlno ='" + _opt_sqlno + "' ";
 		SQL += " order by cast(class as int)";
 		DataTable dt = new DataTable();
 		_conn.DataTable(SQL, dt);
@@ -481,7 +409,7 @@ public class IPOReport : OpenXmlHelper {
 		SQL += " from attcase_dmt a ";
 		SQL += " inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
 		SQL += " inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-		SQL += " where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
+		SQL += " where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' ";
 		SQL += " order by sort,charindex(','+c.code_name+',',',委任書,基本資料表,') desc,doc_type";
 
 		DataTable dt = new DataTable();
@@ -495,50 +423,28 @@ public class IPOReport : OpenXmlHelper {
 	/// 抓異動資料
 	/// </summary>
 	private void SetTran() {
-		string SQL = "select * from dmt_tran " +
-		"where in_no = '" + _in_no + "' and in_scode='" + _in_scode + "'";
+        string SQL = "select * from opt_tran " +
+        "where opt_sqlno ='" + _opt_sqlno + "'";
 		DataTable dt = new DataTable();
 		_conn.DataTable(SQL, dt);
 		this.Tran = dt;
 
-		SQL = "select ncname1,(ncname1+isnull(ncname2,'')) as cname from dmt_tranlist " +
-		"where in_no = '" + _in_no + "' and in_scode='" + _in_scode + "' and mod_field='mod_dmt'";
+		SQL = "select ncname1,(ncname1+isnull(ncname2,'')) as cname from opt_tranlist " +
+        "where opt_sqlno ='" + _opt_sqlno + "' and mod_field='mod_dmt'";
 		DataTable dt1 = new DataTable();
 		_conn.DataTable(SQL, dt1);
 		this.TranList = dt1;
 
-		SQL = "select * from dmt_tranlist " +
-		"where in_no = '" + _in_no + "' and in_scode='" + _in_scode + "' and mod_field='mod_class'";
+		SQL = "select * from opt_tranlist " +
+        "where opt_sqlno ='" + _opt_sqlno + "' and mod_field='mod_class'";
 		DataTable dt2 = new DataTable();
 		_conn.DataTable(SQL, dt2);
 		this.TranListClass = dt2;
 
-		SQL = "select * from dmt_tranlist " +
-		"where in_no = '" + _in_no + "' and in_scode='" + _in_scode + "'";
+		SQL = "select * from opt_tranlist where opt_sqlno ='" + _opt_sqlno + "'";
 		DataTable dt3 = new DataTable();
 		_conn.DataTable(SQL, dt3);
 		this.TranListE = dt3.AsEnumerable();
-
-		/*
-			//移轉關係人
-			SQL = "select old_no,(isnull(ocname1,'')+isnull(ocname2,'')) as ocname " +
-			",(isnull(oename1,'')+' '+isnull(oename2,'')) as oename,oapclass " +
-			",''Title_cname,''Title_ename " +
-			" from dmt_tranlist where in_scode='" + _in_scode + "' and in_no='" + _in_no + "' " +
-			" and mod_field='mod_ap'";
-			DataTable dt2 = new DataTable();
-			_conn.DataTable(SQL, dt2);
-			for (int i = 0; i < dt2.Rows.Count; i++) {
-				if (dt2.Rows[i].SafeRead("Title_cname", "") == "B") {
-					dt2.Rows[i]["Title_cname"] = "中文姓名";
-					dt2.Rows[i]["Title_ename"] = "英文姓名";
-				} else {
-					dt2.Rows[i]["Title_cname"] = "中文名稱";
-					dt2.Rows[i]["Title_ename"] = "英文名稱";
-				}
-			}
-			this.TranListAP = dt2;
-			 * */
 	}
 	#endregion
 
@@ -551,9 +457,9 @@ public class IPOReport : OpenXmlHelper {
 		SQL += ",(SELECT c.coun_code+c.coun_cname FROM sysctrl.dbo.ipo_country c WHERE c.ref_coun_code = a.oap_country ) AS oapcountry "; 
 		SQL += ",''oapclass_name,''Country_name,''Title_cname,''Cname_string,''Title_ename,''Ename_string ";
 		SQL += ",''o_id,''o_zip,''c_addr,''e_addr ";
-		SQL += "from dmt_tranlist a ";
+        SQL += "from opt_tranlist a ";
 		SQL += "where mod_field='mod_ap' ";
-		SQL += "and in_no ='" + _in_no + "' and in_scode='" + _in_scode + "' ";
+        SQL += "and opt_sqlno ='" + _opt_sqlno + "' ";
 		DataTable dt = new DataTable();
 		_conn.DataTable(SQL, dt);
 
@@ -640,7 +546,7 @@ public class IPOReport : OpenXmlHelper {
 
 		//20191230因申請書列印無相關request參數,直接抓case_dmt的值
 		if (this.RectitleFlag == "") {
-			this.RectitleTitle = Dmt.Rows[0].SafeRead("receipt_title", "B");//若db無值則為空白
+			this.RectitleTitle = Opt.Rows[0].SafeRead("receipt_title", "B");//若db無值則為空白
 			if (this.RectitleTitle != "B" && this.RectitleTitle != "") {
 				this.RectitleFlag = "Y";
 			} else {
@@ -664,7 +570,7 @@ public class IPOReport : OpenXmlHelper {
 		} else {//空白
 			this.RectitleName = "";
 		}
-		ReplaceBookmark("fees", Dmt.Rows[0]["fees"].ToString().Trim(), "0");
+		ReplaceBookmark("fees", Opt.Rows[0]["fees"].ToString().Trim(), "0");
 		ReplaceBookmark("receipt_name", this.RectitleName, true);
 	}
 	#endregion
@@ -957,8 +863,8 @@ public class IPOReport : OpenXmlHelper {
 			ReplaceBookmark("base_ap_num", (i + 1).ToString());
 			//身份類別
 			if (AP_marknm != null) {
-				if (AP_marknm.ContainsKey(Dmt.Rows[0]["mark"].ToString().Trim())) {
-					ReplaceBookmark("base_ap_mark", AP_marknm[Dmt.Rows[0]["mark"].ToString().Trim()]);
+				if (AP_marknm.ContainsKey(Opt.Rows[0]["mark"].ToString().Trim())) {
+					ReplaceBookmark("base_ap_mark", AP_marknm[Opt.Rows[0]["mark"].ToString().Trim()]);
 				} else {
 					ReplaceBookmark("base_ap_mark", "");
 				}
@@ -1082,20 +988,6 @@ public class IPOReport : OpenXmlHelper {
 			}
 		}
 		CopyPageFoot(baseDocName, false);//頁尾
-	}
-	#endregion
-
-	#region 更新列印狀態 +SetPrint()
-	/// <summary>
-	/// 更新列印狀態
-	/// </summary>
-	public void SetPrint() {
-		string SQL = "update case_dmt set new='P' " +
-					",rectitle_flag='" + this.RectitleFlag + "' " +
-					",receipt_title='" + this.RectitleTitle + "' " +
-					",rectitle_name='" + this.RectitleName.ToBig5() + "' " +
-					"where in_scode='" + _in_scode + "' and in_no='" + _in_no + "'";
-		_conn.ExecuteNonQuery(SQL);
 	}
 	#endregion
 }
