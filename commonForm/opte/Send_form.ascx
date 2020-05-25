@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_send_form" %>
+<%@ Control Language="C#" ClassName="ext_send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -32,7 +32,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>回稿說明 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<textarea ROWS="6" style="width:90%" id=send_remark name="send_remark" class="SLock"></textarea>
+			<textarea ROWS="6" style="width:90%" id=send_remark name="send_remark" class="SLock YYLock"></textarea>
 		</td>
 	</TR>
 </table>
