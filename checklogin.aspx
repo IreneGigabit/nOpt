@@ -1,4 +1,4 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
+<%@Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Text"%>
 <%@Import Namespace = "System.Data.SqlClient"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -30,7 +30,7 @@
         string Uid = Request["tfx_scode"] ?? "";//帳號
         string sys_pwd = Request["sys_pwd"] ?? "";//密碼
         string tfx_sys_password = Request["tfx_sys_password"] ?? "";//明碼
-
+        Sys.errorLog(new Exception("tfx_scode(ref:" + HttpContext.Current.Request.UrlReferrer + ")"), Uid, "checklogin");
         if (tfx_sys_password != "") {
             sys_pwd = Util.GetHashValueMD5(tfx_sys_password.ToLower());//明碼轉md5
         }
@@ -50,6 +50,7 @@
                 SQL += " AND a.scode='" + Uid + "' ";
                 SQL += " AND a.sys_pwd ='" + sys_pwd + "' ";
                 SQL += " AND GETDATE() BETWEEN a.beg_date AND isnull(a.end_date,'2079/06/06') ";
+                Sys.errorLog(new Exception(Conn.ODBCDSN), SQL, "checklogin");
                 SqlDataReader dr = conn.ExecuteReader(SQL);
                 if (dr.Read())
                 {
@@ -92,7 +93,7 @@
         catch (Exception ex)
         {
             exMsg = conn.ConnString + "\n" + SQL;
-            if (conn != null) Sys.errorLog(ex, conn.exeSQL, "0000");
+            if (conn != null) Sys.errorLog(ex, conn.exeSQL, "checklogin");
             strRet = "執行錯誤 !" + ex.Message + "\\n\\n" + SQL;
             Session["Password"] = false;
             Session.Abandon();
