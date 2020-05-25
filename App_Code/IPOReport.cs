@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -555,13 +555,10 @@ public class IPOReport : OpenXmlHelper {
 		}
 		//串申請人
 		string RectitleNameStr = "";
-		string SQL = "Select a.ap_cname from dmt_temp_ap a where a.in_no='" + _in_no + "' and a.case_sqlno=0 order by a.server_flag desc,a.temp_ap_sqlno";
-		using (SqlDataReader dr = _conn.ExecuteReader(SQL)) {
-			while (dr.Read()) {
+        for (int i = 1; i < Apcust.Rows.Count; i++) {
 				if (RectitleNameStr != "") RectitleNameStr += "、";
-				RectitleNameStr += dr.GetString("ap_cname");
-			}
-		}
+                RectitleNameStr += Apcust.Rows[i].SafeRead("ap_cname", "");
+        }
 
 		if (this.RectitleTitle == "A") {//專利權人
 			this.RectitleName = RectitleNameStr;
@@ -729,7 +726,7 @@ public class IPOReport : OpenXmlHelper {
                     SQL += "	from attcase_dmt a ";
                     SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
                     SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-                    SQL += "	where a.sign_stat='NN' and a.in_no='" + _in_no + "' and b.doc_type='" + brMap[y].docType + "' ";
+                    SQL += "	where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' and b.doc_type='" + brMap[y].docType + "' ";
                     SQL += ")x on z.cust_code=x.doc_type ";
                     _conn.DataTable(SQL, dtAttach);
                 } else {
@@ -749,7 +746,7 @@ public class IPOReport : OpenXmlHelper {
                     SQL += "	from attcase_dmt a ";
                     SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
                     SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-                    SQL += "	where a.sign_stat='NN' and a.in_no='" + _in_no + "' and b.doc_type='" + brMap[y].docType + "' ";
+                    SQL += "	where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' and b.doc_type='" + brMap[y].docType + "' ";
                     SQL += ")x on z.Cust_code=x.doc_type ";
                     _conn.DataTable(SQL, dtAttach);
                 }
@@ -761,7 +758,7 @@ public class IPOReport : OpenXmlHelper {
             SQL += "from attcase_dmt a ";
             SQL += "inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
             SQL += "inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-            SQL += "where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
+            SQL += "where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' ";
             if (exclude != "") {
                 SQL += "and b.doc_type not in('" + exclude.Substring(1).Replace(",","','") + "') ";
             }
