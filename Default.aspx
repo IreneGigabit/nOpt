@@ -1,6 +1,7 @@
-﻿<%@ Page Language="C#" CodePage="65001" Inherits="PageBase" %>
+<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Data"  %>
 <!DOCTYPE html>
+
 <script runat="server">
     protected string SiServer = Sys.SIServer;//聖島人主機
     protected string ProjectName = "";
@@ -10,6 +11,7 @@
 	//protected string StrBkClr = "bgcolor=\"#5a63bd\"";
 	//protected string StrDisp = " style=\"display:none\"";
 	//protected string theTop = "44px";
+    protected string sideWidth = "";//側邊欄寬
 	protected string StrMenus = "";
 	protected string scriptString = "";
 	//protected string gcTestDisp = " style=\"display:none\"";
@@ -25,6 +27,7 @@
 		Response.AddHeader("Pragma", "no-cache");
 		Response.Expires = -1;
 
+        sideWidth = "220";
         if (Convert.ToBoolean(Session["Password"])) {
             ProjectName = Sys.getAppSetting("Project");
             LoginGrp = Sys.GetSession("LoginGrp");
@@ -178,21 +181,22 @@
             </td>
         </tr>
     </table>
-    <iframe id="workfram" src="mainFrame.aspx" style="z-index: 1; position:absolute; width: 99.8%; height: 800px; left: 0px;"></iframe>
+    <iframe id="workfram" src="mainFrame.aspx?sidewidth=<%#sideWidth%>" style="z-index: 1; position:absolute; width: 99.8%; height: 800px; left: 0px;"></iframe>
     <div id="oPopBody" style="position:absolute; display:none;z-index: 10; width:250px"></div>
     <form method="post" id="reg" name="reg" target="_top">
-        <input type="hidden" name="syscode" value="<%=Request["syscode"]%>">
-        <input type="hidden" name="tfx_scode" value="<%=Session["Scode"]%>">
-        <input type="hidden" name="tfx_sys_password" value="" />
-        <input type="hidden" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
-        <input type="hidden" name="toppage" value="<%=Session["SeTopPage"]%>">
-        <input type="hidden" name="ctrlleft" value="<%=Request["ctrlleft"]%>">
-        <input type="hidden" name="ctrltab" value="<%=Request["ctrltab"]%>">
-        <input type="hidden" name="ctrlhomelist" value="<%=Request["ctrlhomelist"]%>">
-        <input type="hidden" name="ctrlhomelistshow" value="<%=Request["ctrlhomelistshow"]%>">
+        <input type="text" name="syscode" value="<%=Request["syscode"]%>">
+        <input type="text" name="tfx_scode" value="<%=Session["Scode"]%>">
+        <input type="text" name="tfx_sys_password" value="" />
+        <input type="text" name="sys_pwd" value="<%=Session["SeSysPwd"]%>">
+        <input type="text" name="toppage" value="<%=Session["SeTopPage"]%>">
+        <input type="text" name="ctrlleft" value="<%=Request["ctrlleft"]%>">
+        <input type="text" name="ctrltab" value="<%=Request["ctrltab"]%>">
+        <input type="text" name="ctrlhomelist" value="<%=Request["ctrlhomelist"]%>">
+        <input type="text" name="ctrlhomelistshow" value="<%=Request["ctrlhomelistshow"]%>">
     </form>
 </body>
 </html>
+
 
 <script type="text/javascript" language="javascript">
     var zmenu = Array();
@@ -205,7 +209,7 @@
         $("#imgSide").click(function (e) {
             var ifrm = $("#workfram").contents();
             if ($(ifrm).find("#f").attr("cols") == "0,*") {
-                $(ifrm).find("#f").attr("cols", "220,*");
+                $(ifrm).find("#f").attr("cols", "<%#sideWidth%>,*");
                 //$(this).attr("src", "images/x-2.gif");
                 $(this).css("background-image","url(images/x-2.gif)"); 
             } else {
@@ -221,7 +225,7 @@
         $("#oPopBody").mouseleave(function (e) { $(this).hide(); });
         $("#goweb").change(gosite);
         $("#imgSide").css("background-image", "url(images/x-2.gif)");
-
+        
         $(window).load(setIframe);
         $(window).resize(setIframe);
         init();
@@ -346,6 +350,7 @@
                 break;
         }
     }
+
     //Eblank frame
     $("#btnEblank").click(function () {
         var ifrm = $("#workfram").contents();
