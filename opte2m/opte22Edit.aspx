@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -43,6 +43,8 @@
     protected string SELock = "true";
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
+    protected string YYLock = "true";//已判行維護控制
+    protected string YZLock = "true";//已判行未回稿確認維護控制
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -63,9 +65,17 @@
             ALock = "false";
         } else if (prgid == "opte24") {
             HTProgCap = "出口爭救案已判行維護作業";
-            if (stat_code == "YY") {//承辦內容_已判行未回稿確認的控制
-                SLock = "false";
-                ALock = "false";
+            if (stat_code == "YY") {//承辦內容_已判行的控制
+                //SLock = "false";
+                //ALock = "false";
+                PHide = "false";
+                YYLock = "false";
+                YZLock = "false";
+            }
+            if (stat_code == "YZ") {//承辦內容_已判行已回稿確認的控制
+                //SLock = "false";
+                //ALock = "false";
+                YZLock = "false";
             }
         } else {
             HTProgCap = "出口爭救案內容查詢";
@@ -132,14 +142,14 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
-	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="text" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
-	<input type="text" id="bstep_grade" name="bstep_grade">
+    <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
+	<input type="hidden" id="bstep_grade" name="bstep_grade">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
-	<input type="text" id="progid" name="progid">
-	<input type="text" id="stat_code" name="stat_code" value="<%=stat_code%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="progid" name="progid">
+	<input type="hidden" id="stat_code" name="stat_code" value="<%=stat_code%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -260,6 +270,8 @@
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
+        $(".YYLock").lock(<%#YYLock%>);
+        $(".YZLock").lock(<%#YZLock%>);
 
         $("#tr_button1,#tr_button2").showFor($("#submittask").val()!="Q");//按鈕
         $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
@@ -303,9 +315,11 @@
             $("#send_dept").val("<%=branch%>");
         }
 
-        if($("#prgid").val()=="opte24" && $("#stat_code").val()=="YY"){
+        if($("#prgid").val()=="opte24" && ($("#stat_code").val()=="YY" || $("#stat_code").val()=="YZ")){
             $("#btnSaveSubmitU,#btnBack1Submit").hide();//判行/退回承辦
             $("#btnSaveSubmitS").show();//編修存檔
+        }else{
+            $("#btnSaveSubmitS").hide();//編修存檔
         }
     }
 
