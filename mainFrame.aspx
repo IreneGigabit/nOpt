@@ -1,7 +1,8 @@
-﻿<%@ Page Language="C#" CodePage="65001" %>
+<%@ Page Language="C#" CodePage="65001" %>
 <script runat="server">
     protected string mainSrc = "";
     protected string leftSrc = "";
+    protected string sideWidth = "";
     
 	private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -15,6 +16,9 @@
             mainSrc = "login.aspx";
             leftSrc = "about:blank";
         }
+
+        sideWidth = Request["sidewidth"] ?? "200";
+        
         this.Page.DataBind();
     }
 </script>
@@ -29,7 +33,7 @@
     <frame name="Etop" id="Etop" scrolling="auto" src="homelist.aspx"/>
     <frame name="Eblank" id="Eblank" scrolling="auto" src="login.aspx"/>
 </frameset-->
-<frameset name="f" id="f" cols="220,*">
+<frameset name="f" id="f" cols="<%#sideWidth%>,*">
     <frame src="<%#leftSrc%>" frameborder="0" name="leftFrame" id="leftFrame" />
     <frameset rows="100%,*" name="tt" id="tt">
         <frame name="Etop" id="Etop" scrolling="auto" src="<%#mainSrc%>">"/>
