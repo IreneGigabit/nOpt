@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_form" %>
+<%@ Control Language="C#" ClassName="ext_br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -24,7 +24,7 @@
 </script>
 
 <%=Sys.GetAscxPath(this)%>
-<input type="text" name="br_source" id="br_source"><!--記錄分案來源-->		
+<input type="hidden" name="br_source" id="br_source"><!--記錄分案來源-->		
 <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
 		<TD align=center colspan=4 class=lightbluetable1>
@@ -43,21 +43,21 @@
 	<TR>
 		<td class="lightbluetable"  align="right">承辦單位別 :</td>
 		  <td class="whitetablebg"  align="left">
-			<Select id="pr_branch" name="pr_branch" class="RLock"><%#pr_branch%></Select>
+			<Select id="pr_branch" name="pr_branch" class="RLock YZLock"><%#pr_branch%></Select>
 		</td>
 		<td class="lightbluetable"  align="right">承辦人員 :</td>
 		  <td class="whitetablebg"  align="left">
-			<Select id="pr_scode" name="pr_scode" class="RLock"></Select>
+			<Select id="pr_scode" name="pr_scode" class="RLock YZLock"></Select>
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">承辦案性 :</td>
 		  <td class="whitetablebg"  align="left" colspan=3>
             結構分類：
-            <select name="pr_rs_class" id="pr_rs_class" class="RLock" ></select>
+            <select name="pr_rs_class" id="pr_rs_class" class="RLock YZLock" ></select>
             案性：
-            <select id=pr_rs_code NAME=pr_rs_code class="RLock"></select>
-            <input type="text" id="pr_rs_type" name="pr_rs_type" value="<%#pr_rs_type %>">
+            <select id=pr_rs_code NAME=pr_rs_code class="RLock YZLock"></select>
+            <input type="hidden" id="pr_rs_type" name="pr_rs_type" value="<%#pr_rs_type %>">
 		</td>
 	</TR>
 	<Tr>
@@ -114,6 +114,11 @@
             textFormat: "{rs_class}_{rs_class_name}",
         });
     }
+
+    //依承辦單位帶承辦人員
+    $("#pr_branch").change(function () {
+        br_form.getPrScode();
+    });
 
     //依結構分類帶案性
     $("#pr_rs_class").change(function () {
