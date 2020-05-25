@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_formA" %>
+<%@ Control Language="C#" ClassName="ext_br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -19,20 +19,20 @@
 </script>
 
 <%=Sys.GetAscxPath(this)%>
-<input type="text" id="in_date" name="in_date">
-<input type="text" id="apply_no" name="apply_no">
-<input type="text" id="apply_date" name="apply_date">
-<input type="text" id="issue_no" name="issue_no">
-<input type="text" id="issue_date" name="issue_date">
-<input type="text" id="renewal_no" name="renewal_no">
-<input type="text" id="renewal_date" name="renewal_date">
-<input type="text" id="ext_term1" name="ext_term1">
-<input type="text" id="ext_term2" name="ext_term2">
-<input type="text" id="cust_name" name="cust_name">
-<input type="text" id="ap_ename" name="ap_ename">
-<input type="text" id="class" name="class">
-<input type="text" id="class_count" name="class_count">
-<input type="text" id=br_apnum name=br_apnum value=0><!--進度筆數-->
+<input type="hidden" id="in_date" name="in_date">
+<input type="hidden" id="apply_no" name="apply_no">
+<input type="hidden" id="apply_date" name="apply_date">
+<input type="hidden" id="issue_no" name="issue_no">
+<input type="hidden" id="issue_date" name="issue_date">
+<input type="hidden" id="renewal_no" name="renewal_no">
+<input type="hidden" id="renewal_date" name="renewal_date">
+<input type="hidden" id="ext_term1" name="ext_term1">
+<input type="hidden" id="ext_term2" name="ext_term2">
+<input type="hidden" id="cust_name" name="cust_name">
+<input type="hidden" id="ap_ename" name="ap_ename">
+<input type="hidden" id="class" name="class">
+<input type="hidden" id="class_count" name="class_count">
+<input type="hidden" id=br_apnum name=br_apnum value=0><!--進度筆數-->
 <table id=br_tab border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
 	<Tr>
 		<TD align=center colspan=4 class=lightbluetable1>
@@ -53,10 +53,10 @@
 			<input type="text" id="Bseq1" name="Bseq1" SIZE=1 class="QLock" maxLength="1">
 			<input type="text" id="country" name="country" SIZE=2 class="QLock Lock">
 			<input type="button" value="確定" class="cbutton QHide" id="btnBseq" name="btnBseq">
-			<input type="text" id="keyBseq" name="keyBseq" value="N" class="QHide">
-			<input type="text" id="oldBranch" name="oldBranch">
-			<input type="text" id="oldBseq" name="oldBseq">
-			<input type="text" id="oldBseq1" name="oldBseq1">
+			<input type="hidden" id="keyBseq" name="keyBseq" value="N" class="QHide">
+			<input type="hidden" id="oldBranch" name="oldBranch">
+			<input type="hidden" id="oldBseq" name="oldBseq">
+			<input type="hidden" id="oldBseq1" name="oldBseq1">
 		</td>
 		<td class="lightbluetable"  align="right">營洽 :</td>
 		  <td class="whitetablebg"  align="left">
@@ -68,7 +68,7 @@
 			<td class=lightbluetable align=right>國外所案號：</td>
 			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq name=ext_seq SIZE=5 MAXLENGTH=5 class="sedit" readonly>-<INPUT TYPE=text id=ext_seq1 name=ext_seq1 SIZE=3 MAXLENGTH=3  class="sedit" readonly value="_">	
 			<td class=lightbluetable align=right>對方號：</td>
-			<td class=whitetablebg ><INPUT TYPE=text id=your_no name=your_no SIZE=20 MAXLENGTH=20 >	
+			<td class=whitetablebg ><INPUT TYPE=text id=your_no name=your_no SIZE=20 MAXLENGTH=20 class="Lock YZLock" >	
 			<input type="button" value="查詢" class="cbutton QHide" id="btnyour_no" name="btnyour_no">
 	</tr>
 	<tr>
@@ -92,9 +92,9 @@
 		<td class="lightbluetable"  align="right">申請人 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
 			<input type="text" id="ap_cname" name="ap_cname" class="CLock" SIZE=60 maxlength=60 >
-		    <input type="text" id="cust_seq" name="cust_seq">
-		    <input type="text" id="cust_area" name="cust_area">
-		    <input type="text" id="att_sql" name="att_sql">
+		    <input type="hidden" id="cust_seq" name="cust_seq">
+		    <input type="hidden" id="cust_area" name="cust_area">
+		    <input type="hidden" id="att_sql" name="att_sql">
 		</td>
 	</TR>
 	<TR style="display:none">
@@ -106,7 +106,7 @@
 			 	<select id=Arcase NAME=Arcase SIZE=1 class="QLock"></select>
 				</span>
 				<input type="text" id="arcase_type" name="arcase_type" value="<%#arcase_type %>">
-				<input type="text" id="arcase_class" name="arcase_class" >
+				<input type="hidden" id="arcase_class" name="arcase_class" >
 		</td>
 	</TR>
 	<TR>
@@ -226,12 +226,12 @@
                 var jExt = JSONdata.ext[0];
                 if (jExt != null) {
                     if (jExt.end_date != "") {
-                        if ($("#submittask").val() != "Q") {
+                        if ($("#submittask").val() != "Q" && $("#submittask").val() != "S") {
                             if(!confirm("本案件區所已結案，是否確定新增分案？"))
                                 return false;
                         }
                     }
-                    if ($("#submittask").val() != "Q") {
+                    if ($("#submittask").val() != "Q" && $("#submittask").val() != "S") {
                         //提醒案件國別是否為大陸
                         if (jExt.country != "CM") {
                             if (!confirm("本案件國別為" + jExt.country + "非大陸案，是否確定新增分案？"))
@@ -280,14 +280,14 @@
                 $.each(jAp, function (i, item) {
                     var nRow = i + 1;
                     var trHTML = "";
-                    trHTML += "<input type=text id='apsqlno_" + nRow + "' name='apsqlno_" + nRow + "' value='"+item.apsqlno+"'>";
-                    trHTML += "<input type=text id='apcust_no_" + nRow + "' name='apcust_no_" + nRow + "' value='"+item.apcust_no+"'>";
-                    trHTML += "<input type=text id='ap_cname_" + nRow + "' name='ap_cname_" + nRow + "' value='"+item.ap_cname+"'>";
-                    trHTML += "<input type=text id='ap_cname1_" + nRow + "' name='ap_cname1_" + nRow + "' value='"+item.ap_cname1+"'>";
-                    trHTML += "<input type=text id='ap_cname2_" + nRow + "' name='ap_cname2_" + nRow + "' value='"+item.ap_cname2+"'>";
-                    trHTML += "<input type=text id='ap_ename_" + nRow + "' name='ap_ename_" + nRow + "' value='"+item.ap_ename+"'>";
-                    trHTML += "<input type=text id='ap_ename1_" + nRow + "' name='ap_ename1_" + nRow + "' value='"+item.ap_ename1+"'>";
-                    trHTML += "<input type=text id='ap_ename2_" + nRow + "' name='ap_ename2_" + nRow + "' value='"+item.ap_ename2+"'>";
+                    trHTML += "<input type=hidden id='apsqlno_" + nRow + "' name='apsqlno_" + nRow + "' value='" + item.apsqlno + "'>";
+                    trHTML += "<input type=hidden id='apcust_no_" + nRow + "' name='apcust_no_" + nRow + "' value='" + item.apcust_no + "'>";
+                    trHTML += "<input type=hidden id='ap_cname_" + nRow + "' name='ap_cname_" + nRow + "' value='" + item.ap_cname + "'>";
+                    trHTML += "<input type=hidden id='ap_cname1_" + nRow + "' name='ap_cname1_" + nRow + "' value='" + item.ap_cname1 + "'>";
+                    trHTML += "<input type=hidden id='ap_cname2_" + nRow + "' name='ap_cname2_" + nRow + "' value='" + item.ap_cname2 + "'>";
+                    trHTML += "<input type=hidden id='ap_ename_" + nRow + "' name='ap_ename_" + nRow + "' value='" + item.ap_ename + "'>";
+                    trHTML += "<input type=hidden id='ap_ename1_" + nRow + "' name='ap_ename1_" + nRow + "' value='" + item.ap_ename1 + "'>";
+                    trHTML += "<input type=hidden id='ap_ename2_" + nRow + "' name='ap_ename2_" + nRow + "' value='" + item.ap_ename2 + "'>";
                     $("#br_aptab").append("<tr><td colspan=4>" + trHTML + "</td></tr>");
                 });
 
