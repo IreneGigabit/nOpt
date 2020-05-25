@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -118,10 +118,10 @@ public class Funcs {
         using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false)) {
             string SQL = "select c.scode,c.sc_name from scode_group as a ";
             SQL += " inner join scode as c on a.scode=c.scode ";
-            SQL += " where a.grpclass='BJ' and a.grpid='T100' ";
             if (submitTask == "A") {
                 SQL += "and (c.end_date is null or c.end_date>=getdate()) ";
             }
+            SQL += " where a.grpclass='BJ' and a.grpid='T100' ";
             DataTable dt = new DataTable();
             cnn.DataTable(SQL, dt);
 
