@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_ap_form" %>
+<%@ Control Language="C#" ClassName="ext_ap_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -28,11 +28,11 @@
 		</td>
 		<td class="lightbluetable"  align="right" nowrap width="10%">核准時數:</td>
 		<td class="whitetablebg"  align="left">
-			<input type="text" id="PRY_hour" name="PRY_hour" class="ALock" size="3">
+			<input type="text" id="PRY_hour" name="PRY_hour" class="ALock YZLock" size="3">
 		</td>
 		<td class="lightbluetable"  align="right" nowrap width="10%">判行核稿時數:</td>
 		<td class="whitetablebg"  align="left">
-			<input type="text" id="AP_hour" name="AP_hour" class="ALock" size="3">
+			<input type="text" id="AP_hour" name="AP_hour" class="ALock YZLock" size="3">
 		</td> 
 	</TR>
 	<Tr>
