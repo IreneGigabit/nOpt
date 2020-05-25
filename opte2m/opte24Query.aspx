@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -57,7 +57,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>‧<b style="color:Red">未判行清單</b>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%><b style="color:Red"></b>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <!--<a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;-->
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
@@ -136,6 +136,10 @@
     </div>
 </form>
 
+<div align="center" id="toEnter">
+	<font color="red">=== 請先輸入查詢條件並按查詢，以取得資料 ===</font>
+</div>
+
 <div align="center" id="noData" style="display:none">
 	<font color="red">=== 目前無資料 ===</font>
 </div>
@@ -168,10 +172,10 @@
 		<td align="center">{{stat_name}}</td>
 		<td align="center" nowrap>
             <span id="tr_edit_{{nRow}}">
-			    <a href="opte22Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&stat_code={{bstat_code}}&arcase={{arcase}}&prgid=<%#prgid%>" target="Eblank">[{{todo_name}}]</a>
+			    <a href="opte22Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&stat_code={{bstat_code}}&arcase={{arcase}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
             </span>
             <span id="tr_editA_{{nRow}}">
-                <a href="opte22EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask=U" target="Eblank">[維護]</a>
+                <a href="opte22EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&stat_code={{bstat_code}}&arcase={{arcase}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
             </span>
 		</td>
 	</tr>
@@ -198,7 +202,7 @@
 
         $(".QLock").lock(<%#QLock%>);
         $("#qrypr_branch").trigger("change");
-        $("#btnSrch").click();
+        //$("#btnSrch").click();
     });
 
     //[查詢]
@@ -212,7 +216,7 @@
     //執行查詢
     function goSearch() {
         window.parent.tt.rows = '100%,0%';
-        $("#divPaging,#noData,#dataList").hide();
+        $("#divPaging,#noData,#dataList,#toEnter").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
 
@@ -284,12 +288,14 @@
                         strLine1 = strLine1.replace(/{{stat_name}}/g, item.stat_name);
                         strLine1 = strLine1.replace(/{{bstat_code}}/g, item.bstat_code);
 
-                        var todo_name="維護";
-                        if(item.br_source=="br"){
-                            if(item.bstat_code=="YZ")todo_name="查詢";
+                        var todo_name="查詢",submittask="Q";
+                        if(item.bstat_code=="YZ"||item.bstat_code=="YY"){
+                            todo_name="維護";
+                            submittask="S";
                         }
 
                         strLine1 = strLine1.replace(/{{todo_name}}/g, todo_name);
+                        strLine1 = strLine1.replace(/{{submittask}}/g, submittask);
 
                         $("#dataList>tbody").append(strLine1);
                         $("#tr_edit_"+nRow).showFor(item.br_source=="br");
