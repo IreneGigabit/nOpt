@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
 using System.IO;
+using System.Collections;
+using System.Collections.Specialized;
 
 public class Sys
 {
@@ -54,12 +56,31 @@ public class Sys
             //return string.Format("\\{0}\\{1}.ascx<hr class='style-one'/>", dir, control.GetType().ToString().Replace("ASP.", ""))
             //	.Replace(HttpContext.Current.Server.MapPath("/"), "");
             if ((control.TemplateControl.ID??"") != "")
-                return string.Format("{0}/{1}.ascx<hr class='style-one'/>", control.TemplateSourceDirectory, control.TemplateControl.ID);
+                return string.Format("<hr class='style-one'/>{0}/{1}.ascx<BR>", control.TemplateSourceDirectory, control.TemplateControl.ID);
             else
-                return string.Format("{0}/{1}.ascx<hr class='style-one'/>", control.TemplateSourceDirectory, control.GetType().ToString().Replace("ASP.", ""));
+                return string.Format("<hr class='style-one'/>{0}/{1}.ascx<BR>", control.TemplateSourceDirectory, control.GetType().ToString().Replace("ASP.", ""));
         } else {
             return "";
         }
+    }
+
+    /// <summary>  
+    /// 將Request參數轉至Dictionary
+    /// </summary>  
+    public static Dictionary<string, string> GetParam() {
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        NameValueCollection col = null;
+        if (HttpContext.Current.Request.RequestType == "GET") {
+            col = HttpContext.Current.Request.QueryString;
+        } else {
+            col = HttpContext.Current.Request.Form;
+        }
+
+        foreach (var key in col.Keys) {
+            dict.Add(key.ToString(), col[key.ToString()].ToBig5().Trim());
+        }
+
+        return dict;
     }
 
 	public static bool IsAdmin() {
