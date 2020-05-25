@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -21,6 +21,7 @@
     protected string opt_no = "";
     protected string case_no = "";
     protected string todo_sqlno = "";
+    protected string stat_code = "";
 
     protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
     protected string QLock = "true";//收費與接洽事項的控制
@@ -34,6 +35,8 @@
     protected string SELock = "true";
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
+    protected string YYLock = "true";//已判行維護控制
+    protected string YZLock = "true";//已判行未回稿確認維護控制
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -46,11 +49,26 @@
         opt_no = Request["opt_no"] ?? "";
         case_no = Request["case_no"] ?? "";
         todo_sqlno = Request["todo_sqlno"] ?? "";
+        stat_code = Request["stat_code"] ?? "";
 
         if (prgid == "opte22") {
             HTProgCap = "出口爭救案判行作業";
             SLock = "false";
             ALock = "false";
+        } else if (prgid == "opte24") {
+            HTProgCap = "出口爭救案已判行維護作業";
+            if (stat_code == "YY") {//承辦內容_已判行的控制
+                //SLock = "false";
+                //ALock = "false";
+                PHide = "false";
+                YYLock = "false";
+                YZLock = "false";
+            }
+            if (stat_code == "YZ") {//承辦內容_已判行已回稿確認的控制
+                //SLock = "false";
+                //ALock = "false";
+                YZLock = "false";
+            }
         } else {
             HTProgCap = "出口爭救案內容查詢";
             submitTask = "Q";
@@ -124,6 +142,7 @@
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 	<input type="hidden" id="progid" name="progid">
+	<input type="hidden" id="stat_code" name="stat_code" value="<%=stat_code%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
@@ -150,7 +169,8 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td width="100%" align="center">
-		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U')" id="btnSaveSubmit">
+		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U')" id="btnSaveSubmitU">
+		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('S')" id="btnSaveSubmitS">
 		<input type=button value="退回承辦" class="redbutton" id="btnBack1Submit">
     </td>
 </tr>
@@ -197,7 +217,7 @@
         $(".QLock").lock(<%#QLock%>);
         $(".QHide").hideFor(<%#QHide%>);
         $(".PLock").lock(<%#PLock%>);
-        $(".PHide").lock(<%#PHide%>);
+        $(".PHide").hideFor(<%#PHide%>);
         $(".RLock").lock(<%#RLock%>);
         $(".CLock").lock(<%#CLock%>);
         $(".BLock").lock(<%#BLock%>);
@@ -205,6 +225,8 @@
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
+        $(".YYLock").lock(<%#YYLock%>);
+        $(".YZLock").lock(<%#YZLock%>);
 
         //取得案件資料
         $.ajax({
@@ -232,6 +254,13 @@
         ap_form.init();
 
         $("#sopt_no").html(br_opte.opte[0].opt_no);
+
+        if($("#prgid").val()=="opte24" && ($("#stat_code").val()=="YY" || $("#stat_code").val()=="YZ")){
+            $("#btnSaveSubmitU,#btnBack1Submit").hide();//判行/退回承辦
+            $("#btnSaveSubmitS").show();//編修存檔
+        }else{
+            $("#btnSaveSubmitS").hide();//編修存檔
+        }
     }
 
     // 切換頁籤
