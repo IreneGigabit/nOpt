@@ -164,7 +164,7 @@ public class Token
                 //HttpContext.Current.Response.End();
                 //HttpContext.Current.Response.Write(PageDirect(Sys.GetSession("Password") + "系統停滯時間逾時，請重新登入 !", false));
                 //HttpContext.Current.Response.End();
-                throw new Exception("系統停滯時間逾時，請重新登入 !");
+                throw new Exception("系統停滯時間逾時，請重新登入(token)!");
             }
         }
         catch (Exception ex) {
