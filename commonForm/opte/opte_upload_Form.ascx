@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="opte_upload_form" %>
+<%@ Control Language="C#" ClassName="opte_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -31,17 +31,17 @@
 		    <TD align=center colspan=5 class=lightbluetable1>
                 <font color=white>承&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font>
 	            <input type="text" id="<%=uploadfield%>_maxAttach_no" name="<%=uploadfield%>_maxAttach_no" value="<%=doc_maxAttach_no%>"><!--目前table裡最大值-->
-	            <input type="text" id="<%=uploadfield%>_attach_cnt" name="<%=uploadfield%>_attach_cnt" value="<%=doc_attach_cnt%>">
+	            <input type="hidden" id="<%=uploadfield%>_attach_cnt" name="<%=uploadfield%>_attach_cnt" value="<%=doc_attach_cnt%>">
 	            <input type="text" id="<%=uploadfield%>_filenum" name="<%=uploadfield%>_filenum" value="0"><!--attach_no-->
 	            <input type="text" id="<%=uploadfield%>_sqlnum" name="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
-	            <input type="text" id="opt_uploadfield" name="opt_uploadfield" value="<%#uploadfield%>">
-	            <input type="text" id="opt_uploadsource" name="opt_uploadsource" value="<%=opt_source_type%>"><!--為了入區所opt.source的欄位-->
+	            <input type="hidden" id="opt_uploadfield" name="opt_uploadfield" value="<%#uploadfield%>">
+	            <input type="hidden" id="opt_uploadsource" name="opt_uploadsource" value="<%=opt_source_type%>"><!--為了入區所opt.source的欄位-->
             </TD>
 	    </TR>
 	    <TR id="tr_upload_btn">
 		    <TD class=whitetablebg align=right colspan=5>
-			    <input type=button value="增加一筆附件" class="c1button SLock" id=<%=uploadfield%>_Add_button name=<%=uploadfield%>_Add_button onclick="upload_form.appendFile()">
-			    <input type=button value="減少一筆附件" class="c1button BLock" id=<%=uploadfield%>_Del_button name=<%=uploadfield%>_Del_button onclick="upload_form.deleteFile()">
+			    <input type=button value="增加一筆附件" class="c1button SLock YYLock" id=<%=uploadfield%>_Add_button name=<%=uploadfield%>_Add_button onclick="upload_form.appendFile()">
+			    <input type=button value="減少一筆附件" class="c1button SLock YYLock BLock " id=<%=uploadfield%>_Del_button name=<%=uploadfield%>_Del_button onclick="upload_form.deleteFile()">
 		    </TD>
 	    </TR>
     </thead>
@@ -52,23 +52,23 @@
 			</TD>
 			<TD class=sfont9 colspan="2" align="left">
 	            附件名稱：<input type=text id='<%=uploadfield%>_name_##' name='<%=uploadfield%>_name_##' class="Lock" size=45 maxlength=50>
-	            <input type=button id='btn<%=uploadfield%>_##' name='btn<%=uploadfield%>_##' class='cbutton SLock' value='上傳' onclick="upload_form.UploadOptAttach('##')">
-	            <input type=button id='btn<%=uploadfield%>_D_##' name='btn<%=uploadfield%>_D_##' class='delbutton SLock' value='刪除' onclick="upload_form.DelOptAttach('##')">
+	            <input type=button id='btn<%=uploadfield%>_##' name='btn<%=uploadfield%>_##' class='cbutton SLock YYLock' value='上傳' onclick="upload_form.UploadOptAttach('##')">
+	            <input type=button id='btn<%=uploadfield%>_D_##' name='btn<%=uploadfield%>_D_##' class='delbutton SLock YYLock' value='刪除' onclick="upload_form.DelOptAttach('##')">
 	            <input type=button id='btn<%=uploadfield%>_S_##' name='btn<%=uploadfield%>_S_##' class='cbutton' value='檢視' onclick="upload_form.PreviewOptAttach('##')">
-	            <input type='text' id='<%=uploadfield%>_dbflag_##' name='<%=uploadfield%>_dbflag_##' value="A">
-	            <input type='text' id='<%=uploadfield%>_attach_flag_##' name='<%=uploadfield%>_attach_flag_##'>
-	            <input type='text' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
-	            <input type='text' id='<%=uploadfield%>_size_##' name='<%=uploadfield%>_size_##'>
-	            <input type='text' id='<%=uploadfield%>_##' name='<%=uploadfield%>_##'>
+	            <input type='hidden' id='<%=uploadfield%>_dbflag_##' name='<%=uploadfield%>_dbflag_##' value="A">
+	            <input type='hidden' id='<%=uploadfield%>_attach_flag_##' name='<%=uploadfield%>_attach_flag_##'>
+	            <input type='hidden' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
+	            <input type='hidden' id='<%=uploadfield%>_size_##' name='<%=uploadfield%>_size_##'>
+	            <input type='hidden' id='<%=uploadfield%>_##' name='<%=uploadfield%>_##'>
 	            <input type='text' id='<%=uploadfield%>_attach_no_##' name='<%=uploadfield%>_attach_no_##' value='##'>
-	            <input type='text' id='<%=uploadfield%>_path_##' name='<%=uploadfield%>_path_##' value=''>
-	            <input type='text' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
-	            <input type='text' id='<%=uploadfield%>_source_name_##' name='<%=uploadfield%>_source_name_##' value=''><br>
-	            文件種類：<Select id='<%=uploadfield%>_doc_type_##' name='<%=uploadfield%>_doc_type_##' Onchange="upload_form.getdesc('##')" class="BLock"><%=html_attach_doc%></Select>
+	            <input type='hidden' id='<%=uploadfield%>_path_##' name='<%=uploadfield%>_path_##' value=''>
+	            <input type='hidden' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
+	            <input type='hidden' id='<%=uploadfield%>_source_name_##' name='<%=uploadfield%>_source_name_##' value=''><br>
+	            文件種類：<Select id='<%=uploadfield%>_doc_type_##' name='<%=uploadfield%>_doc_type_##' Onchange="upload_form.getdesc('##')" class="BLock YYLock"><%=html_attach_doc%></Select>
 	            附件說明：<input type=text id='<%=uploadfield%>_desc_##' name='<%=uploadfield%>_desc_##' class="BLock" size=50 maxlength=50 onblur="fChkDataLen(this,'附件說明')">
 	            上傳日期：<input type=text id='<%=uploadfield%>_add_date_##' name='<%=uploadfield%>_add_date_##' class="Lock" size=20 maxlength=20 onblur="fChkDataLen(this,'上傳日期')">
 	            <span id='span_<%=uploadfield%>_attach_branch_##' class="PHide">
-                    <input type='checkbox' id='<%=uploadfield%>_attach_branch_##' name='<%=uploadfield%>_attach_branch_##' value='BR' class="SLock"><font color=blue>上傳區所</font>
+                    <label><input type='checkbox' id='<%=uploadfield%>_attach_branch_##' name='<%=uploadfield%>_attach_branch_##' value='BR' class="SLock YYLock"><font color=blue>上傳區所</font></label>
 	            </span>
 	            <span id='span_<%=uploadfield%>_add_scodenm_##' style='display:none'>
                     <br>上傳人員：<input type=text id='<%=uploadfield%>_add_scodenm_##' name='<%=uploadfield%>_add_scodenm_##' class="Lock" size=10 maxlength=10 onblur="fChkDataLen(this,'上傳人員')">
@@ -149,7 +149,9 @@
         var fld = $("#opt_uploadfield").val();
         var tfilenum = parseInt($("#" + fld + "_filenum").val(), 10) + 1;//attach_no
         var tsqlnum = parseInt($("#" + fld + "_sqlnum").val(), 10) + 1;//畫面顯示NO
-        $("#maxattach_no").val(parseInt($("#maxattach_no").val(), 10) + 1);//table+畫面顯示 NO
+        //$("#maxattach_no").val(parseInt($("#maxattach_no").val(), 10) + 1);//table+畫面顯示 NO
+        $("#" + fld + "_maxAttach_no").val(parseInt($("#" + fld + "_maxAttach_no").val(), 10) + 1);
+
         //複製樣板
         $("#tabfileopt_file>tfoot").each(function (i) {
             var strLine1 = $(this).html().replace(/##/g, tfilenum);
@@ -157,7 +159,8 @@
         });
         $("#" + fld + "_filenum").val(tfilenum);
         $("#" + fld + "_sqlnum").val(tsqlnum);
-        $("#" + fld + "_attach_no_" + tfilenum).val($("#maxattach_no").val());//opte_attach.attach_no
+        //$("#" + fld + "_attach_no_" + tfilenum).val($("#maxattach_no").val());//opte_attach.attach_no
+        $("#" + fld + "_attach_no_" + tfilenum).val($("#" + fld + "_maxAttach_no").val());//opte_attach.attach_no
     }
 
     upload_form.deleteFile = function () {
