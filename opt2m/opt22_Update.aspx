@@ -49,7 +49,7 @@
         //交辦資料
         Arcase = (Request["tfy_Arcase"] ?? "").Trim();
 
-        ReqVal = Request.Form.ToDictionary();
+        ReqVal = Util.GetRequestParam(Context);
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();

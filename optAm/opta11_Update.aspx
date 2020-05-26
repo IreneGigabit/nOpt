@@ -25,7 +25,7 @@
 
         submitTask = (Request["submittask"] ?? "").Trim();
 
-        ReqVal = Request.Form.ToDictionary();
+        ReqVal = Util.GetRequestParam(Context);
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();

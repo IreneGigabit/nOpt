@@ -49,7 +49,7 @@
         //交辦資料
         Arcase = (Request["tfy_Arcase"] ?? "").Trim();
 
-        ReqVal = Request.Form.ToDictionary();
+        ReqVal = Util.GetRequestParam(Context);
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
@@ -107,7 +107,6 @@
                     Pmod_dmt = "Y";
                     insert_opttranlist(conn, "mod_dmt", "");
                 }
-                Request.Form.ToDictionary();
 
                 if (Arcase == "DR1") {//廢止
                     //2012/10/5因應2012/7/1新申請書增加商標違法說明

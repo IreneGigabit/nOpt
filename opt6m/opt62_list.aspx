@@ -34,7 +34,7 @@
 
         conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
 
-        ReqVal = Sys.GetParam();
+        ReqVal = Util.GetRequestParam(Context);
         foreach (KeyValuePair<string, string> p in ReqVal) {
             if (String.Compare(p.Key, "GoPage", true) != 0
                 && String.Compare(p.Key, "PerPage", true) != 0

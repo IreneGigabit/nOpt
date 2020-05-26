@@ -40,12 +40,7 @@
 
         conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
 
-        if (Request.RequestType == "GET") {
-            ReqVal = Request.QueryString.ToDictionary();
-        } else {
-            ReqVal = Request.Form.ToDictionary();
-        }
-
+        ReqVal = Util.GetRequestParam(Context);
         submitTask = Request["submitTask"] ?? "";
 
         Token myToken = new Token(HTProgCode);

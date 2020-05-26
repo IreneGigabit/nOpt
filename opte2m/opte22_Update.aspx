@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -41,8 +41,7 @@
         submitTask = (Request["submittask"] ?? "").Trim();
         todo_sqlno = (Request["todo_sqlno"] ?? "").Trim();
 
-        //ReqVal = Request.Form.ToDictionary();
-        ReqVal = Sys.GetParam();
+        ReqVal = Util.GetRequestParam(Context);
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();

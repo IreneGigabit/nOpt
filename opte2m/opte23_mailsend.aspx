@@ -28,7 +28,7 @@
         Response.Expires = -1;
 
         submitTask = (Request["submittask"] ?? "").Trim();
-        ReqVal = Request.Form.ToDictionary();
+        ReqVal = Util.GetRequestParam(Context);
         email_sqlno = (Request["email_sqlno"] ?? "").Trim();
 
         Token myToken = new Token(HTProgCode);

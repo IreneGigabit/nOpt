@@ -3,18 +3,13 @@
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "opte24";//程式檔名前綴
+    protected string HTProgPrefix = "opt24";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
-    protected string PrScode_html = "";
-    protected string BJPrScode_html = "";
-    protected string BJPrScode_html2="";
-    protected string qrypr_branch = "";
+    protected string qryPr_scode = "";
     
-    protected string QLock = "true";
- 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
@@ -27,15 +22,13 @@
             this.DataBind();
         }
     }
-
+    
     private void QueryPageLayout() {
-        if ((HTProgRight & 64) != 0) {
-            QLock = "false";
+        if((HTProgRight & 128)!=0){
+            qryPr_scode="";
+        } else{
+            qryPr_scode = Sys.GetSession("scode");
         }
-        qrypr_branch = Funcs.getcust_code("OEBranch", "", "").Option("{cust_code}", "{code_name}");
-        PrScode_html = Funcs.GetPrTermALL("A").Option("{scode}", "{scode}_{sc_name}").Replace("\n", "");
-        BJPrScode_html = Funcs.GetBJPrTermALL("A").Option("{scode}", "{scode}_{sc_name}").Replace("\n", "");//顯示"請選擇"
-        BJPrScode_html2 = Funcs.GetBJPrTermALL("A").Option("{scode}", "{scode}_{sc_name}", false).Replace("\n", "");//不要顯示"請選擇"
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -57,7 +50,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%><b style="color:Red"></b>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <!--<a class="imgQry" href="javascript:void(0);" >[查詢條件]</a>&nbsp;-->
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
@@ -76,7 +69,7 @@
         <tr>
 	        <td class="text9">
 		        ◎案件編號:
-			        <input type="text" name="qryopt_no" id="qryopt_no" size="11" maxLength="10">
+			        <input type="text" name="qryopt_no" id="qryopt_no" size="10" maxLength="10">
 	        </td>
 	        <td class="text9">
 		        ◎區所案件編號:
@@ -84,27 +77,21 @@
 			    <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
 	        </td>
 	        <td class="text9">
+		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode"></Select>	
+	        </td>
+	        <td class="text9">
 		        ◎排序: <select id="qryOrder" name="qryOrder">
 			            <option value="">請選擇</option>
-			            <option value="opt_in_date desc">分案日期</option>
+			            <option value="in_date desc">分案日期</option>
 			            <option value="ctrl_date">承辦期限</option>
 			            <option value="last_date">法定期限</option>
-			            <option value="a.opt_no" selected>案件編號</option>
+			            <option value="opt_no" selected>案件編號</option>
 			        </select>
-	        </td>
-        </tr>	
-        <tr>
-	        <td class="text9">
-		        ◎承辦單位別 :
-		        <Select id="qrypr_branch" name="qrypr_branch" class="QLock"><%#qrypr_branch %></Select>
-           </td>
-	        <td class="text9">
-		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode" class="QLock"></Select>	
 	        </td>
 	        <td class="text9">
 		        <input type="button" id="btnSrch" value ="查詢" class="cbutton" />
 	        </td>
-        </tr>
+        </tr>	
         </table>
     </div>
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
@@ -151,9 +138,6 @@
 	    <td class="lightbluetable" nowrap align="center">區所案件編號</td>
 	    <td class="lightbluetable" nowrap align="center">案件名稱</td> 
 	    <td class="lightbluetable" nowrap align="center">案性</td> 
-	    <td class="lightbluetable" nowrap align="center">承辦人</td> 
-	    <td class="lightbluetable" nowrap align="center">分案日期</td> 
-	    <td class="lightbluetable" nowrap align="center">承辦期限</td>
 	    <td class="lightbluetable" nowrap align="center">法定期限</td>
 	    <td class="lightbluetable" nowrap align="center">承辦狀態</td>
 	    <td class="lightbluetable" nowrap align="center">作業</td>
@@ -165,17 +149,14 @@
 		<td align="center">{{fseq}}</td>
 		<td>{{appl_name}}</td>
 		<td nowrap>{{arcase_name}}</td>
-		<td align="center">{{pr_scode_name}}</td>
-		<td align="center">{{opt_in_date}}</td>
-		<td align="center">{{ctrl_date}}</td>
 		<td align="center">{{last_date}}</td>
 		<td align="center">{{stat_name}}</td>
 		<td align="center" nowrap>
             <span id="tr_edit_{{nRow}}">
-			    <a href="opte22Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&stat_code={{bstat_code}}&arcase={{arcase}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
+			    <a href="opt22Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
             </span>
             <span id="tr_editA_{{nRow}}">
-                <a href="opte22EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&stat_code={{bstat_code}}&arcase={{arcase}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
+                <a href="opt22EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
             </span>
 		</td>
 	</tr>
@@ -184,12 +165,19 @@
 	</tbody>
 </TABLE>
 <br>
+
 </body>
 </html>
 
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        $("#qryPr_scode").getOption({//爭議組承辦人員
+            url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
+            valueFormat: "{scode}",
+            textFormat: "{scode}_{sc_name}"
+        })
+
         $("#qryBranch").getOption({//區所別
             url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
@@ -200,8 +188,6 @@
         $("input.dateField").datepick();
         $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
 
-        $(".QLock").lock(<%#QLock%>);
-        $("#qrypr_branch").trigger("change");
         //$("#btnSrch").click();
     });
 
@@ -271,7 +257,6 @@
 
                         strLine1 = strLine1.replace(/{{opt_no}}/g, item.opt_no);
                         strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
                         strLine1 = strLine1.replace(/{{ap_cname}}/g, item.optap_cname);
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{arcase_name}}/g, item.arcase_name);
@@ -289,7 +274,7 @@
                         strLine1 = strLine1.replace(/{{bstat_code}}/g, item.bstat_code);
 
                         var todo_name="查詢",submittask="Q";
-                        if(item.bstat_code=="YZ"||item.bstat_code=="YY"){
+                        if(item.bstat_code=="YS"||item.bstat_code=="YY"){
                             todo_name="維護";
                             submittask="S";
                         }
@@ -298,8 +283,8 @@
                         strLine1 = strLine1.replace(/{{submittask}}/g, submittask);
 
                         $("#dataList>tbody").append(strLine1);
-                        $("#tr_edit_"+nRow).showFor(item.br_source=="br");
-                        $("#tr_editA_" + nRow).showFor(item.br_source != "br");
+                        $("#tr_edit_"+nRow).showFor(item.case_no!="");
+                        $("#tr_editA_" + nRow).showFor(item.case_no == "");
                     });
                 });
             },
@@ -348,17 +333,6 @@
         }
     });
     //////////////////////
-    $("#qrypr_branch").change(function (e) {
-        $("#qryPr_scode").empty();
-        if($(this).val()=="B"){
-            $("#qryPr_scode").append("<%#PrScode_html%>");
-        }else if($(this).val()=="BJ"){
-            $("#qryPr_scode").append("<%#BJPrScode_html%>");
-        }else{
-            $("#qryPr_scode").append("<%#PrScode_html%>");
-            $("#qryPr_scode").append("<%#BJPrScode_html2%>");
-        }
-    });
 
     $("#qryopt_no").blur(function (e) {
         chkNum1($(this)[0], "案件編號");

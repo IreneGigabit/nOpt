@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -15,6 +15,7 @@ public class Sys
     /// IIS主機名(小寫)
     /// </summary>
     public static string Host = HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString().ToLower();
+
 	/// <summary>  
 	/// 取得某個Session值  
 	/// </summary>  
@@ -62,25 +63,6 @@ public class Sys
         } else {
             return "";
         }
-    }
-
-    /// <summary>  
-    /// 將Request參數轉至Dictionary
-    /// </summary>  
-    public static Dictionary<string, string> GetParam() {
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        NameValueCollection col = null;
-        if (HttpContext.Current.Request.RequestType == "GET") {
-            col = HttpContext.Current.Request.QueryString;
-        } else {
-            col = HttpContext.Current.Request.Form;
-        }
-
-        foreach (var key in col.Keys) {
-            dict.Add(key.ToString(), col[key.ToString()].ToBig5().Trim());
-        }
-
-        return dict;
     }
 
 	public static bool IsAdmin() {

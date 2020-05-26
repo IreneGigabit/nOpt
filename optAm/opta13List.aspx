@@ -20,7 +20,6 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe(false, true);
 
-        //ReqVal = Request.Form.ToDictionary();
         ReqVal = Request.QueryString.ToDictionary();
 
         bool first_check = false;//判斷有無填寫條件

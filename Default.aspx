@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Inherits="PageBase" %>
+﻿<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Data"  %>
 <!DOCTYPE html>
 

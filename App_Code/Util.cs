@@ -4,6 +4,7 @@ using System.Web;
 using System.Globalization;
 using System.Text;
 using System.Security.Cryptography;
+using System.Collections.Specialized;
 
 public static class Util
 {
@@ -332,6 +333,27 @@ public static class Util
     #region Request - 同Request["xxxx"]
     public static string Request(string s) {
         return (HttpContext.Current.Request[s] ?? "").ToString();
+    }
+    #endregion
+
+    #region GetRequestParam - 將Request參數轉至Dictionary
+    /// <summary>  
+    /// 將Request參數轉至Dictionary
+    /// </summary>  
+    public static Dictionary<string, string> GetRequestParam(HttpContext context) {
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        NameValueCollection col = null;
+        if (context.Request.RequestType == "GET") {
+            col = context.Request.QueryString;
+        } else {
+            col = context.Request.Form;
+        }
+
+        foreach (var key in col.Keys) {
+            dict.Add(key.ToString(), col[key.ToString()].ToBig5().Trim());
+        }
+
+        return dict;
     }
     #endregion
 

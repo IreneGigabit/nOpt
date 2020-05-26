@@ -33,12 +33,8 @@
         Response.Expires = -1;
 
         conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
-            
-        if (Request.RequestType == "GET") {
-            ReqVal = Request.QueryString.ToDictionary();
-        } else {
-            ReqVal = Request.Form.ToDictionary();
-        }
+
+        ReqVal = Util.GetRequestParam(Context);
         foreach (KeyValuePair<string, string> p in ReqVal) {
             if (String.Compare(p.Key, "GoPage", true) != 0
                 && String.Compare(p.Key, "PerPage", true) != 0
