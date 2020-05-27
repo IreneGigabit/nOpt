@@ -16,6 +16,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string StrFormBtnTop = "";
 
     protected string opt_job_scode1 = "",opt_job_scode2 = "";
 
@@ -123,6 +124,22 @@
             }
         }
 
+        if ((Request["homelist"] ?? "") == "homelist") {
+        } else {
+            if ((Request["SubmitTask"] ?? "") == "Q") {
+                StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
+            } else {
+                if (prgid == "opt31_1") {
+                } else {
+                    if (Back_flag != "B") {
+                        //StrFormBtnTop += "<a id=\"btnEnd\" href=\"javascript:void(0);\" onclick=\"formSaveSubmit('U','opt31_1')\" >[結辦處理]</a>";
+                        StrFormBtnTop += "<a id=\"btnEnd\" href=\"opt31EditA.aspx?prgid=opt31_1&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "\">[結辦處理]</a>";
+                   }
+                }
+                StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[返回清單]</a>";
+            }
+        }
+
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
@@ -165,8 +182,7 @@
             <input type=button value ="區所案件資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a id="btnEnd" href="opt31EditA.aspx?prgid=opt31_1&opt_sqlno=<%=opt_sqlno%>&opt_no=<%#opt_sqlno%>&branch=<%#branch%>">[結辦處理]</a>
-            <a class="imgCls" href="javascript:void(0);" >[返回清單]</a>
+            <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
@@ -248,7 +264,10 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "0%,100%";
+            if($("#submittask").val()=="Q")
+                window.parent.tt.rows = "20%,80%";
+            else
+                window.parent.tt.rows = "0%,100%";
         }
         $("#chkTest").click(function (e) {
             $("#ActFrame").showFor($(this).prop("checked"));

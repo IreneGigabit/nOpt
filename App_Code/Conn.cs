@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -93,8 +93,8 @@ public static class Conn
                 case "SIC10": return Sys.getConnString("prod_Csysctrl");//正式環境中
                 case "SIS10": return Sys.getConnString("prod_Ssysctrl");//正式環境南
                 case "SIK10": return Sys.getConnString("prod_Ksysctrl");//正式環境雄
-                case "WEB10": return Sys.getConnString("dev_sysctrl");//使用者測試環境
-                default: return Sys.getConnString("test_sysctrl");//開發環境
+                case "WEB10": return Sys.getConnString("test_sysctrl");//使用者測試環境
+                default: return Sys.getConnString("dev_sysctrl");//開發環境
                 //case "WEB10": return Sys.getConnString("test_mg_sysctrl");//使用者測試環境
                 //default: return Sys.getConnString("dev_mg_sysctrl");//開發環境
             }
