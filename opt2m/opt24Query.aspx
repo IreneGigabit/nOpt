@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -153,10 +153,10 @@
 		<td align="center">{{stat_name}}</td>
 		<td align="center" nowrap>
             <span id="tr_edit_{{nRow}}">
-			    <a href="opt22Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
+			    <a href="opt22Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask={{submittask}}&mconf={{mconf}}" target="Eblank">[{{todo_name}}]</a>
             </span>
             <span id="tr_editA_{{nRow}}">
-                <a href="opt22EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask={{submittask}}" target="Eblank">[{{todo_name}}]</a>
+                <a href="opt22EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&arcase={{arcase}}&stat_code={{bstat_code}}&prgid=<%#prgid%>&SubmitTask={{submittask}}&mconf={{mconf}}" target="Eblank">[{{todo_name}}]</a>
             </span>
 		</td>
 	</tr>
@@ -272,6 +272,7 @@
                         strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
                         strLine1 = strLine1.replace(/{{stat_name}}/g, item.stat_name);
                         strLine1 = strLine1.replace(/{{bstat_code}}/g, item.bstat_code);
+                        strLine1 = strLine1.replace(/{{mconf}}/g, item.mconf);
 
                         var todo_name="查詢",submittask="Q";
                         if(item.bstat_code=="YS"||item.bstat_code=="YY"){
