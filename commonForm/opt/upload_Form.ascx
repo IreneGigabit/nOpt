@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="upload_form" %>
+<%@ Control Language="C#" ClassName="upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -40,8 +40,8 @@
 	    </TR>
 	    <TR id="tr_upload_btn">
 		    <TD class=whitetablebg align=right colspan=5>
-			    <input type=button value="增加一筆附件" class="c1button BLock" id="<%=uploadfield%>_Add_button" name="<%=uploadfield%>_Add_button" onclick="upload_form.appendFile()">
-			    <input type=button value="減少一筆附件" class="c1button BLock" id="<%=uploadfield%>_Del_button" name="<%=uploadfield%>_Del_button" onclick="upload_form.deleteFile()">
+			    <input type=button value="增加一筆附件" class="c1button BLock YZLock" id="<%=uploadfield%>_Add_button" name="<%=uploadfield%>_Add_button" onclick="upload_form.appendFile()">
+			    <input type=button value="減少一筆附件" class="c1button BLock YZLock" id="<%=uploadfield%>_Del_button" name="<%=uploadfield%>_Del_button" onclick="upload_form.deleteFile()">
 		    </TD>
 	    </TR>
     </thead>
@@ -52,8 +52,8 @@
 			</TD>
 			<TD class=sfont9 colspan="2" align="left">
 	            附件名稱：<input type=text id='<%=uploadfield%>_name_##' name='<%=uploadfield%>_name_##' class="Lock" size=45 maxlength=50>
-	            <input type=button id='btn<%=uploadfield%>_##' name='btn<%=uploadfield%>_##' class='cbutton BLock' value='上傳' onclick="upload_form.UploadOptAttach('##')">
-	            <input type=button id='btn<%=uploadfield%>_D_##' name='btn<%=uploadfield%>_D_##' class='delbutton BLock' value='刪除' onclick="upload_form.DelOptAttach('##')">
+	            <input type=button id='btn<%=uploadfield%>_##' name='btn<%=uploadfield%>_##' class='cbutton BLock YZLock' value='上傳' onclick="upload_form.UploadOptAttach('##')">
+	            <input type=button id='btn<%=uploadfield%>_D_##' name='btn<%=uploadfield%>_D_##' class='delbutton BLock YZLock' value='刪除' onclick="upload_form.DelOptAttach('##')">
 	            <input type=button id='btn<%=uploadfield%>_S_##' name='btn<%=uploadfield%>_S_##' class='cbutton' value='檢視' onclick="upload_form.PreviewOptAttach('##')">
 	            <input type='hidden' id='<%=uploadfield%>_dbflag_##' name='<%=uploadfield%>_dbflag_##' value="A">
 	            <input type='hidden' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
