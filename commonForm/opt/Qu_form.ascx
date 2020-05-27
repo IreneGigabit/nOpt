@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="qu_form" %>
+<%@ Control Language="C#" ClassName="qu_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -26,13 +26,13 @@
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>接洽得分:</td>
 		<td class="whitetablebg"  align="left">
-				<input type="text" id="Score" name="Score" class="ALock" size="3">
+				<input type="text" id="Score" name="Score" class="ALock YZLock" size="3">
 		</td> 
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right" nowrap>案件缺失及評語 :</td>
 		<TD class=lightbluetable colspan=3>
-			<textarea ROWS="6" style="width:90%" id=opt_Remark name="opt_Remark" class="ALock"></textarea>
+			<textarea ROWS="6" style="width:90%" id=opt_Remark name="opt_Remark" class="ALock YZLock"></textarea>
 		</TD>
 	</tr>
 </table>
