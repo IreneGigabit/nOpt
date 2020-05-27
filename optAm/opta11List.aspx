@@ -20,7 +20,7 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe(false, true);
 
-        ReqVal = Request.QueryString.ToDictionary();
+        ReqVal = Util.GetRequestParam(Context);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "SELECT *,''law_detail_no,''law_mark_str ";
