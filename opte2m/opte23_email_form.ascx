@@ -21,7 +21,7 @@
     protected int attcnt = 0;//附件數
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
-        ReqVal = Request.QueryString.ToDictionary();
+        ReqVal = Util.GetRequestParam(Context);
         if (Request["chkTest"] == "TEST") {
             foreach (KeyValuePair<string, string> p in ReqVal) {
                 Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
