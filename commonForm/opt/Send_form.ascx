@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -29,32 +29,32 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文單位 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="radio" name="send_dept" class="SLock" value="B">自行發文
-			<input type="radio" name="send_dept" class="SLock" value="L">轉法律處發文
+			<input type="radio" name="send_dept" class="SLock YYLock" value="B">自行發文
+			<input type="radio" name="send_dept" class="SLock YYLock" value="L">轉法律處發文
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>預計發文日期 :</td>
 		<td class="whitetablebg"  align="left">
-			 	<input type="text" id="GS_date" name="GS_date" SIZE=10  maxlength="10" class="SLock dateField">
+			 	<input type="text" id="GS_date" name="GS_date" SIZE=10  maxlength="10" class="SLock YYLock dateField">
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>總收發文日期 :</td>
 		<td class="whitetablebg"  align="left" colspan=3>
-			<input type="text" id="mp_date" name="mp_date" SIZE=10  maxlength="10" class="SLock dateField">
+			<input type="text" id="mp_date" name="mp_date" SIZE=10  maxlength="10" class="SLock YYLock dateField">
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文對象 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl name=send_cl class="SLock"><%#send_cl%></SELECT>
+			<SELECT id=send_cl name=send_cl class="SLock YYLock"><%#send_cl%></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>單位副本 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_cl1 name=send_cl1  class="SLock"><%#send_cl%></SELECT>
+			<SELECT id=send_cl1 name=send_cl1  class="SLock YYLock"><%#send_cl%></SELECT>
 		</td>
 		<td class="lightbluetable"  align="right" nowrap>官方號碼 :</td>
 		<td class="whitetablebg"  align="left">
-			<SELECT id=send_sel name=send_sel class="SLock"><%#send_sel%></SELECT>
+			<SELECT id=send_sel name=send_sel class="SLock YYLock"><%#send_sel%></SELECT>
 		</td>
 	</TR>
 	<TR>
@@ -72,7 +72,7 @@
 			處理事項：
 			<input type="hidden" id="act_sqlno" name="act_sqlno">
 			<span id=span_act_code>
-				<select id="act_code" name="act_code" class="SLock" ></select>
+				<select id="act_code" name="act_code" class="SLock YYLock" ></select>
 			</span>	
 		    <input type="hidden" id="code_br_agt_no" name="code_br_agt_no">
 		    <input type="hidden" id="code_br_agt_nonm" name="code_br_agt_nonm">
@@ -82,7 +82,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>發文內容 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
-			<input type="text" id="rs_detail" name="rs_detail" SIZE=60  maxlength="60" class="SLock">
+			<input type="text" id="rs_detail" name="rs_detail" SIZE=60  maxlength="60" class="SLock YYLock">
 		</td>
 	</TR>
 	<TR>
