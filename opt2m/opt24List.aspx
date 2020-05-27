@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -19,7 +19,7 @@
         HTProgRight= myToken.CheckMe(false,true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq ";
+            isql = "select a.*,'N'mconf,''fseq ";
             isql += ",(select code_name from cust_code as c where code_type='Ostat_code' and a.Bstat_code=c.cust_code) as stat_name ";
             isql += "from vbr_opt a ";
             isql += "where a.Bstat_code like 'Y%' and a.Bmark='N' ";
@@ -70,6 +70,27 @@
 
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
+
+                //已發文要判斷總管處是否確認
+                if (page.pagedTable.Rows[i].SafeRead("bstat_code", "") == "YS") {
+                    using (DBHelper connM = new DBHelper(Conn.OptBM).Debug(false)) {
+                        isql = "select send_status from mgt_send ";
+                        isql += "where seq_area0='B' ";
+                        isql += "and seq_area='" + page.pagedTable.Rows[i].SafeRead("Branch", "") + "' ";
+                        isql += "and seq='" + page.pagedTable.Rows[i].SafeRead("bseq", "") + "' ";
+                        isql += "and seq1='" + page.pagedTable.Rows[i].SafeRead("bseq1", "") + "' ";
+                        isql += "and rs_no='" + page.pagedTable.Rows[i].SafeRead("rs_no", "") + "' ";
+                        object objResult = connM.ExecuteScalar(isql);
+                        string send_status = (objResult == DBNull.Value || objResult == null ? "" : objResult.ToString());
+                        if (send_status != "" & send_status.Left(1) != "N") {
+                            page.pagedTable.Rows[i]["stat_name"] = "已發文，總管處已確認";
+                            page.pagedTable.Rows[i]["mconf"] = "Y";
+                        } else {
+                            page.pagedTable.Rows[i]["stat_name"] = "已發文，總管處未確認";
+                            page.pagedTable.Rows[i]["mconf"] = "N";
+                        }
+                    }
+                }
             }
 
             var settings = new JsonSerializerSettings()
