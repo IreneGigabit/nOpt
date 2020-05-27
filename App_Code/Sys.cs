@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -95,7 +95,7 @@ public class Sys
 			string eSQL = "INSERT INTO error_log(log_date, log_uid, syscode, prgid, MsgStr, SQLstr, StackStr) VALUES (";
 			eSQL = eSQL + "getdate(),";
 			eSQL = eSQL + "'" + (GetSession("scode") == "" ? GetSessionID() : GetSession("scode")) + "',";
-			eSQL = eSQL + "'" + (GetSession("Syscode") == "" ? GetRootDir().Replace("/", "") : GetSession("Syscode")) + "',";
+            eSQL = eSQL + "'" + (Sys.getAppSetting("Sysmenu") == "" ? GetRootDir().Replace("/", "") : Sys.getAppSetting("Sysmenu")) + "',";
 			eSQL = eSQL + "'" + prgID + "',";
 			eSQL = eSQL + "'" + ex.Message.Replace("'", "''") + "',";
 			eSQL = eSQL + "'" + string.Join("\r\n=====\r\n", sqlList.ToArray()).Replace("'", "''") + "',";
