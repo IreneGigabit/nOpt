@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -63,6 +64,8 @@
 
             if (submitTask == "U") {//判行
                 doConfirm();
+            } else if (submitTask == "S") {//已判行維護
+                doEdit();
             } else if (submitTask == "B") {//退回分案
                 doBack();
             }
@@ -102,7 +105,7 @@
                 SQL += ",score=0";
             }
             SQL += ",rs_agt_no='" + ReqVal.TryGet("rs_agt_no", "") + "'";
-            SQL += ",remark='" + ReqVal.TryGet("opt_remark", "") + "'";
+            SQL += ",remark='" + ReqVal.TryGet("opt_remark", "").ToBig5() + "'";
             SQL += ",stat_code='YY'";
             SQL += ",tran_scode='" + Session["scode"] + "'";
             SQL += ",tran_date=getdate()";
@@ -156,6 +159,195 @@
         }
     }
 
+    private void doEdit() {
+        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
+        DBHelper connB = new DBHelper(Conn.OptB(Request["branch"])).Debug(Request["chkTest"] == "TEST");
+        DBHelper connM = new DBHelper(Conn.OptBM).Debug(Request["chkTest"] == "TEST");
+        try {
+            //Funcs.insert_log_table(conn, "U", prgid, "br_opt", "opt_sqlno", opt_sqlno);
+
+            SQL = "update br_opt set remark='" + ReqVal.TryGet("opt_remark", "").ToBig5() + "'";
+            if (ReqVal.TryGet("score_flag", "") == "Y") {
+                SQL += ",score_flag=" + Util.dbnull(ReqVal.TryGet("score_flag", null)) + "";
+                SQL += ",score=" + Util.dbzero(ReqVal.TryGet("Score", "0")) + "";
+            } else {
+                SQL += ",score_flag='N'";
+                SQL += ",score=0";
+            }
+            //總管處未送件確認才可改
+            if (ReqVal.TryGet("mconf", "") == "N") {
+                SQL += ",send_dept=" + Util.dbnull(ReqVal.TryGet("send_dept", null)) + "";
+                SQL += ",GS_date=" + Util.dbnull(ReqVal.TryGet("GS_date", null)) + "";
+                SQL += ",mp_date=" + Util.dbnull(ReqVal.TryGet("mp_date", null)) + "";
+                SQL += ",Send_cl=" + Util.dbnull(ReqVal.TryGet("Send_cl", null)) + "";
+                SQL += ",Send_cl1=" + Util.dbnull(ReqVal.TryGet("Send_cl1", null)) + "";
+                SQL += ",Send_Sel=" + Util.dbnull(ReqVal.TryGet("Send_Sel", null)) + "";
+                SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
+                SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "") + "'";
+            }
+            SQL += ",tran_scode='" + Session["scode"] + "'";
+            SQL += ",tran_date=getdate()";
+            SQL += " where opt_sqlno='" + opt_sqlno + "'";
+            conn.ExecuteNonQuery(SQL);
+
+            //修改上傳文件
+            string opt_uploadfield = ReqVal.TryGet("opt_uploadfield", "");
+            //目前畫面上的最大值
+            int sqlnum = Convert.ToInt32("0" + ReqVal.TryGet(opt_uploadfield + "_sqlnum", ""));
+            for (int i = 1; i <= sqlnum; i++) {
+                string dbflag = ReqVal.TryGet(opt_uploadfield + "_dbflag_" + i, "");
+                if (dbflag == "A") {
+                    //當上傳路徑不為空的 and attach_sqlno為空的,才需要新增
+                    if (ReqVal.TryGet(opt_uploadfield + "_" + i, "") != "" && ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
+                        SQL = "insert into attach_opt (Opt_sqlno,Source";
+                        SQL += ",add_date,add_scode,Attach_no,attach_path,attach_desc";
+                        SQL += ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode";
+                        SQL += ",Source_name,doc_type";
+                        SQL += ") values (";
+                        SQL += opt_sqlno + ",'PR'";
+                        SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                        SQL += ")";
+                        conn.ExecuteNonQuery(SQL);
+                    }
+                } else if (dbflag == "U") {
+                    Funcs.insert_log_table(conn, "U", prgid, "attach_opt", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
+                    SQL = "Update attach_opt set Source='PR'";
+                    SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                    SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
+                    SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                    SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
+                    SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                    SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                    SQL += ",attach_flag='U'";
+                    SQL += ",tran_date=getdate()";
+                    SQL += ",tran_scode='" + Session["scode"] + "'";
+                    //SQL += " OUTPUT 'U', GETDATE(),'" + Session["scode"] + "'," + Util.dbnull(prgid) + "," + "DELETED.* INTO attach_opt_log";
+                    SQL += " Where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
+                    conn.ExecuteNonQuery(SQL);
+                } else if (dbflag == "D") {
+                    Funcs.insert_log_table(conn, "U", prgid, "attach_opt", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
+                    //當attach_sqlno <> empty時,表示db有值,必須刪除data(update attach_flag = 'D')
+                    if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
+                        SQL = "update attach_opt set attach_flag='D'";
+                        //SQL += " OUTPUT 'U', GETDATE(),'" + Session["scode"] + "'," + Util.dbnull(prgid) + "," + "DELETED.* INTO attach_opt_log";
+                        SQL += " where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
+                        conn.ExecuteNonQuery(SQL);
+                    }
+                }
+            }
+
+            //已發文
+            if (ReqVal.TryGet("stat_code", "") == "YS") {
+                SQL = "select rs_no,rs_type,rs_class,rs_code,act_code,rs_detail ";
+                SQL += ",rs_class_name,rs_code_name,act_code_name ";
+                SQL += " from vbr_opt where opt_sqlno='" + opt_sqlno + "'";
+                DataTable dt = new DataTable();
+                conn.DataTable(SQL, dt);
+                string rs_no = "", act_code_name = "";
+                if (dt.Rows.Count != 0) {
+                    rs_no = dt.Rows[0].SafeRead("rs_no", "").Trim();
+                    act_code_name = dt.Rows[0].SafeRead("act_code_name", "").Trim();
+                }
+
+                //[區所]:爭救案專案室所上傳的檔案
+                SQL = "Update bdmt_attach_temp set attach_flag='D' ";
+                SQL += "where seq='" + Request["bseq"] + "' ";
+                SQL += "and seq1='" + Request["bseq1"] + "' ";
+                SQL += "and rs_no='" + rs_no + "' ";
+                connB.ExecuteNonQuery(SQL);
+                SQL = "Select * from attach_opt where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
+                using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                    while (dr.Read()) {
+                        SQL = "insert into bdmt_attach_temp(rs_no,Seq,Seq1,Source,attach_no,attach_path";
+                        SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,in_date,in_scode";
+                        SQL += ") values (";
+                        SQL += " '" + rs_no + "'," + Request["bseq"] + ",'" + Request["bseq1"] + "','OPT','" + dr.SafeRead("attach_no", "").Trim() + "'";
+                        SQL += ",'" + dr.SafeRead("attach_path", "").Trim() + "','" + dr.SafeRead("attach_desc", "").Trim() + "'";
+                        SQL += ",'" + dr.SafeRead("attach_name", "").Trim() + "','" + dr.SafeRead("source_name", "").Trim() + "'";
+                        SQL += ",'" + dr.SafeRead("attach_size", "").Trim() + "','" + dr.SafeRead("attach_flag", "").Trim() + "'";
+                        SQL += ",'" + dr.SafeRead("doc_type", "").Trim() + "',getdate(),'" + Session["scode"] + "'";
+                        SQL += ")";
+                        connB.ExecuteNonQuery(SQL);
+                    }
+                }
+                
+                //總管處未送件確認才可改
+                if (ReqVal.TryGet("mconf", "") == "N") {
+                    //[區所]Bstep_temp
+                    SQL = "Update Bstep_temp set send_dept=" + Util.dbnull(ReqVal.TryGet("send_dept", null)) + "";
+                    SQL += ",step_date=" + Util.dbnull(ReqVal.TryGet("GS_date", null)) + "";
+                    SQL += ",mp_date=" + Util.dbnull(ReqVal.TryGet("mp_date", null)) + "";
+                    SQL += ",Send_cl=" + Util.dbnull(ReqVal.TryGet("Send_cl", null)) + "";
+                    SQL += ",Send_cl1=" + Util.dbnull(ReqVal.TryGet("Send_cl1", null)) + "";
+                    SQL += ",Send_Sel=" + Util.dbnull(ReqVal.TryGet("Send_Sel", null)) + "";
+                    SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
+                    SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "") + "'";
+                    SQL += "where Branch='" + Request["Branch"] + "' ";
+                    SQL += "and seq='" + Request["bseq"] + "' ";
+                    SQL += "and seq1='" + Request["bseq1"] + "' ";
+                    SQL += "and rs_no='" + rs_no + "' ";
+                    connB.ExecuteNonQuery(SQL);
+
+                    //[總收發]mgt_send
+                    Dictionary<string, string> cond = new Dictionary<string, string>() {
+                                    { "seq_area0","B" },
+                                    { "seq_area",Request["Branch"] },
+                                    { "seq",Request["bseq"] },
+                                    { "seq1",Request["bseq1"] },
+                                    {"rs_no",rs_no}};
+                    Funcs.insert_log_table(connM, "U", prgid, "mgt_send", cond);
+                    SQL = "Update mgt_send set step_date=" + Util.dbnull(ReqVal.TryGet("GS_date", null)) + "";
+                    SQL += ",mp_date=" + Util.dbnull(ReqVal.TryGet("mp_date", null)) + "";
+                    SQL += ",Send_cl=" + Util.dbnull(ReqVal.TryGet("Send_cl", null)) + "";
+                    SQL += ",Send_cl1=" + Util.dbnull(ReqVal.TryGet("Send_cl1", null)) + "";
+                    SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
+                    SQL += ",act_code_name=" + Util.dbnull(act_code_name) + "";
+                    SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "") + "'";
+                    SQL += ",tran_scode='" + Session["scode"] + "'";
+                    SQL += ",tran_date=getdate()";
+                    SQL += "where seq_area0='B' ";
+                    SQL += "and seq_area='" + Request["Branch"] + "' ";
+                    SQL += "and seq='" + Request["bseq"] + "' ";
+                    SQL += "and seq1='" + Request["bseq1"] + "' ";
+                    SQL += "and rs_no='" + rs_no + "' ";
+                    connM.ExecuteNonQuery(SQL);
+                }
+            }
+            
+            //conn.Commit();
+            //connB.Commit();
+            //connM.Commit();
+            conn.RollBack();
+            connB.RollBack();
+            connM.RollBack();
+
+            msg = "編修存檔成功，若有需要請通知區所重新抓取資料！";
+            strOut.AppendLine("alert('" + msg + "');");
+            if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
+        }
+        catch (Exception ex) {
+            conn.RollBack();
+            connB.RollBack();
+            connM.RollBack();
+            Sys.errorLog(ex, conn.exeSQL, prgid);
+
+            msg = "存檔失敗！";
+            strOut.AppendLine("alert('" + msg + "');");
+
+            throw new Exception(msg, ex);
+        }
+        finally {
+            conn.Dispose();
+            connB.Dispose();
+            connM.Dispose();
+        }
+    }
+    
     private void doBack() {
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
@@ -214,7 +406,7 @@
             conn.Dispose();
         }
     }
-
+    
     private void MailWin() {
         string fseq = "", in_scode = "", in_scode_name = "", cust_area = "", cust_seq = "", ap_cname = "", appl_name = "", arcase_name = "", last_date = "", cust_name = "";
         using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
