@@ -14,8 +14,8 @@
 
         StringBuilder sb = new StringBuilder();
         string strChk = CheckUser();
-        //sb.Append("window.alert(\"" + Session["Password"] + " !\");\n");
-        if (strChk.Length > 0) sb = sb.Append("window.alert(\"" + strChk + " !\");\n");
+         //sb.Append("alert(\"" + Session["Password"] + " !\");\n");
+        if (strChk.Length > 0) sb = sb.Append("alert(\"" + strChk + "\");\n");
         if (exMsg.Length == 0) sb = sb.Append("top.location.href = \"Default.aspx\";\n");
 
         ScriptString = sb.ToString();
