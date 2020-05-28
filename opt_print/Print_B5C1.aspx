@@ -1,4 +1,4 @@
-<%@ Page Language="C#"%>
+﻿<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -90,53 +90,54 @@
             //代理人
             ipoRpt.CopyBlock("b_agent");
             using (DataTable dtAgt = ipoRpt.Agent) {
-                for (int i = 0; i < dtAgt.Rows.Count; i++) {
-                    ipoRpt.ReplaceBookmark("apply_num", (i + 1).ToString());
-                    ipoRpt.ReplaceBookmark("apcust_no", dtAgt.Rows[i]["c_id"].ToString());
-                    ipoRpt.ReplaceBookmark("ap_cname", dtAgt.Rows[i]["Cname_string"].ToString().ToUnicode());
-                    ipoRpt.ReplaceBookmark("ap_ename", dtAgt.Rows[i]["Ename_string"].ToString().ToUnicode());
-                    ipoRpt.ReplaceBookmark("ap_addr", dtAgt.Rows[i]["c_zip"].ToString() + dtAgt.Rows[i]["c_addr"].ToString().ToUnicode());
-                    ipoRpt.ReplaceBookmark("ap_crep", dtAgt.Rows[i]["ap_crep"].ToString().ToUnicode());
-                    ipoRpt.ReplaceBookmark("ap_erep", dtAgt.Rows[i]["ap_erep"].ToString().ToUnicode());
-                    ipoRpt.ReplaceBookmark("server_flag", dtAgt.Rows[i]["server_flag"].ToString() == "Y" ? "V" : "");
+                if (dtAgt.Rows.Count > 0) {
+                    dtAgt.Rows[0]["agt_name1"] = dtAgt.Rows[0].SafeRead("agt_name1", "").Replace(",", "");
+                    dtAgt.Rows[0]["agt_name2"] = dtAgt.Rows[0].SafeRead("agt_name2", "").Replace(",", "");
+                    if (dtAgt.Rows[0].SafeRead("agt_id2", "") != "") {
+                        ipoRpt.ReplaceBookmark("agt_id1", dtAgt.Rows[0].SafeRead("agt_id1", "") + "、" + dtAgt.Rows[0].SafeRead("agt_id2", ""));
+                    } else {
+                        ipoRpt.ReplaceBookmark("agt_id1", dtAgt.Rows[0].SafeRead("agt_id1", ""));
+                    }
+
+                    if (dtAgt.Rows[0].SafeRead("agt_name2", "") != "") {
+                        ipoRpt.ReplaceBookmark("agt_name", dtAgt.Rows[0].SafeRead("agt_name1", "") + "、" + dtAgt.Rows[0].SafeRead("agt_name2", ""));
+                    } else {
+                        ipoRpt.ReplaceBookmark("agt_name", dtAgt.Rows[0].SafeRead("agt_name1", ""));
+                    }
+
+                    ipoRpt.ReplaceBookmark("agt_addr", dtAgt.Rows[0].SafeRead("agt_zip", "") + dtAgt.Rows[0].SafeRead("agt_addr", ""));
+                    ipoRpt.ReplaceBookmark("agt_tel", dtAgt.Rows[0].SafeRead("agt_tel", ""));
+                    ipoRpt.ReplaceBookmark("agt_fax", dtAgt.Rows[0].SafeRead("agt_fax", ""));
+
+                    string agatt_tel = dtAgt.Rows[0].SafeRead("agatt_tel0", "");
+                    agatt_tel += dtAgt.Rows[0].SafeRead("agatt_tel", "") == "" ? "" : "-" + dtAgt.Rows[0].SafeRead("agatt_tel", "");
+                    ipoRpt.ReplaceBookmark("agatt_tel", agatt_tel);
+
+                    ipoRpt.ReplaceBookmark("agatt_tel1", dtAgt.Rows[0].SafeRead("agatt_tel1", ""));
                 }
             }
-/*
-			//事務所或申請人案件編號
-			ipoRpt.ReplaceBookmark("seq", ipoRpt.Seq + "(" + DateTime.Today.ToString("yyyyMMdd") + ")");
-			//商標或標章種類
-            ipoRpt.ReplaceBookmark("s_mark", opt.Rows[0]["s_marknm"].ToString());
-			//申請人
-			using (DataTable dtAp = ipoRpt.Apcust) {
-				for (int i = 0; i < dtAp.Rows.Count; i++) {
-					ipoRpt.CopyBlock("b_apply");
-					ipoRpt.ReplaceBookmark("apply_num", (i + 1).ToString());
-					ipoRpt.ReplaceBookmark("ap_country", dtAp.Rows[i]["Country_name"].ToString());
-					ipoRpt.ReplaceBookmark("ap_cname_title", dtAp.Rows[i]["Title_cname"].ToString());
-					ipoRpt.ReplaceBookmark("ap_ename_title", dtAp.Rows[i]["Title_ename"].ToString());
-					ipoRpt.ReplaceBookmark("ap_cname", dtAp.Rows[i]["Cname_string"].ToString().ToXmlUnicode());
-					ipoRpt.ReplaceBookmark("ap_ename", dtAp.Rows[i]["Ename_string"].ToString().ToXmlUnicode(true), true);
-				}
-			}
-			//代理人
-			ipoRpt.CopyBlock("b_agent");
-			using (DataTable dtAgt = ipoRpt.Agent) {
-				ipoRpt.ReplaceBookmark("agt_name1", dtAgt.Rows[0]["agt_name1"].ToString());
-				ipoRpt.ReplaceBookmark("agt_name2", dtAgt.Rows[0]["agt_name2"].ToString());
-			}
-			//申請內容
-			ipoRpt.CopyBlock("b_content");
-			ipoRpt.ReplaceBookmark("tran_remark1", opt.Rows[0]["tran_remark1"].ToString().ToXmlUnicode());
-            if (opt.Rows[0]["tran_remark1"].ToString() != "") {
-				ipoRpt.AddParagraph();
-			}
-			//繳費資訊
-			ipoRpt.CreateFees();
-            
-            //具結
-			ipoRpt.CopyBlock("b_sign");
-*/
-			ipoRpt.CopyPageFoot("apply");//申請書頁尾
+
+            //對照當事人
+            ipoRpt.CopyBlock("b_mod");
+            switch (opt.Rows[0]["tran_mark"].ToString()) {
+                case "A": ipoRpt.ReplaceBookmark("tran_markA", "Ｖ"); break;
+                case "I": ipoRpt.ReplaceBookmark("tran_markI", "Ｖ"); break;
+            }
+            using (DataTable dtMod = ipoRpt.TranListE.Where(row => row.SafeRead("mod_field", "") == "mod_client").CopyToDataTable()) {
+                for (int i = 0; i < dtMod.Rows.Count; i++) {
+                    ipoRpt.CopyBlock("tbl_mod");
+                    ipoRpt.ReplaceBookmark("ncname", dtMod.Rows[i].SafeRead("ncname1", "").ToXmlUnicode());
+                    ipoRpt.ReplaceBookmark("naddr", dtMod.Rows[i].SafeRead("naddr1", "").ToXmlUnicode());
+                    ipoRpt.ReplaceBookmark("nagent", opt.Rows[0].SafeRead("other_item2", "").ToXmlUnicode());
+                }
+            }
+            ipoRpt.AddParagraph();
+
+            //應舉行聽證之理由
+            ipoRpt.CopyBlock("b_content");
+            ipoRpt.ReplaceBookmark("tran_remark1", opt.Rows[0].SafeRead("tran_remark1", "").ToXmlUnicode());
+
+            ipoRpt.CopyPageFoot("apply");//申請書頁尾
 		}
 		ipoRpt.Flush(docFileName);
 		ipoRpt.SetPrint();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -406,17 +406,17 @@ public class IPOReport : OpenXmlHelper {
 	/// 抓附送書件資料
 	/// </summary>
 	private void SetAttach() {
-		string SQL = "select a.att_sqlno,b.doc_type,c.code_name as doc_typenm,b.attach_desc,b.source_name ";
-		SQL += ",case when b.doc_type='99' then 99 else 0 end sort ";
-		SQL += " from attcase_dmt a ";
-		SQL += " inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-		SQL += " inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-		SQL += " where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' ";
-		SQL += " order by sort,charindex(','+c.code_name+',',',委任書,基本資料表,') desc,doc_type";
-
-		DataTable dt = new DataTable();
-		_connB.DataTable(SQL, dt);
-		this.Attach = dt;
+		//string SQL = "select a.att_sqlno,b.doc_type,c.code_name as doc_typenm,b.attach_desc,b.source_name ";
+		//SQL += ",case when b.doc_type='99' then 99 else 0 end sort ";
+		//SQL += " from attcase_dmt a ";
+		//SQL += " inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
+		//SQL += " inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
+		//SQL += " where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' ";
+		//SQL += " order by sort,charindex(','+c.code_name+',',',委任書,基本資料表,') desc,doc_type";
+        //
+		//DataTable dt = new DataTable();
+		//_connB.DataTable(SQL, dt);
+		//this.Attach = dt;
 	}
 	#endregion
 

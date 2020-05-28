@@ -21,6 +21,7 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
     protected string StrFormBtnTop = "";
+    protected string StrFormBtn = "";
 
     protected string opt_job_scode1 = "",opt_job_scode2 = "";
 
@@ -111,6 +112,18 @@
             }
         }
 
+        if (prgid == "opt31" || prgid == "opt31_1") {
+            if (prgid == "opt31") {
+                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
+            } else if (prgid == "opt31_1") {
+                StrFormBtn += "<input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
+            }
+            if (word_show_flag == "Y") {
+                StrFormBtn += "<input type=button value=\"申請書列印\" class=\"cbutton\" id=\"btnPrintSubmit\">";
+            }
+            StrFormBtn += "<input type=button value=\"退回分案\" class=\"redbutton\" id=\"btnBack1Submit\">";
+        }
+        
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
@@ -312,10 +325,11 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0">
 <tr id="tr_button1">
     <td width="100%" align="center">
-		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
+        <%#StrFormBtn%>
+		<!--<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opt31')" id="btnSaveSubmit">
 		<input type=button value="結辦" class="cbutton" onClick="formEndSubmit('U')" id="btnEndSubmit">
         <input type=button value="申請書列印" class="cbutton" id="btnPrintSubmit">
-		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">
+		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">-->
     </td>
 </tr>
 <tr id="tr_button2" style="display:none">
@@ -369,9 +383,9 @@
         $(".SELock").lock(<%#SELock%>);
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
-        $("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//[編修存檔]
-        $("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//[結辦]
-        $("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//[申請書列印]
+        //$("#btnSaveSubmit").showFor($("#prgid").val()=="opt31");//[編修存檔]
+        //$("#btnEndSubmit").showFor($("#prgid").val()=="opt31_1");//[結辦]
+        //$("#btnPrintSubmit").showFor($("#word_show_flag").val()=="Y");//[申請書列印]
         $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()!="opt31_1");//[結辦處理]
         $("#branchCopy").hideFor($("#Back_flag").val() == "B"||$("#submittask").val() == "Q");//[區所交辦資料複製]
 
