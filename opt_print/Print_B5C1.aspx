@@ -89,7 +89,18 @@
             
             //代理人
             ipoRpt.CopyBlock("b_agent");
-
+            using (DataTable dtAgt = ipoRpt.Agent) {
+                for (int i = 0; i < dtAgt.Rows.Count; i++) {
+                    ipoRpt.ReplaceBookmark("apply_num", (i + 1).ToString());
+                    ipoRpt.ReplaceBookmark("apcust_no", dtAgt.Rows[i]["c_id"].ToString());
+                    ipoRpt.ReplaceBookmark("ap_cname", dtAgt.Rows[i]["Cname_string"].ToString().ToUnicode());
+                    ipoRpt.ReplaceBookmark("ap_ename", dtAgt.Rows[i]["Ename_string"].ToString().ToUnicode());
+                    ipoRpt.ReplaceBookmark("ap_addr", dtAgt.Rows[i]["c_zip"].ToString() + dtAgt.Rows[i]["c_addr"].ToString().ToUnicode());
+                    ipoRpt.ReplaceBookmark("ap_crep", dtAgt.Rows[i]["ap_crep"].ToString().ToUnicode());
+                    ipoRpt.ReplaceBookmark("ap_erep", dtAgt.Rows[i]["ap_erep"].ToString().ToUnicode());
+                    ipoRpt.ReplaceBookmark("server_flag", dtAgt.Rows[i]["server_flag"].ToString() == "Y" ? "V" : "");
+                }
+            }
 /*
 			//事務所或申請人案件編號
 			ipoRpt.ReplaceBookmark("seq", ipoRpt.Seq + "(" + DateTime.Today.ToString("yyyyMMdd") + ")");
