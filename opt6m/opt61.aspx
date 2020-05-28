@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -165,7 +165,7 @@
 	<tr class='{{tclass}}' id='tr_data_{{nRow}}'>
 		<td align="center" nowrap>
             <span id="tr_rpt_{{nRow}}">
-			    <a href="../opt3m/opt_print/Print_{{reportp}}.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid={{prgid}}" target="Eblank">[列印]</a>
+			    <a href="../opt_print/Print_{{reportp}}.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&arcase={{arcase}}&prgid={{prgid}}" target="Eblank">[列印]</a>
             </span>
 		</td>
 		<td align="center"><a href='{{urlasp}}' target='Eblank'>{{opt_no}}</a></td>
@@ -264,6 +264,7 @@
             }
         }
 
+        $("#GoPage").val("1");
         goSearch();
     });
 
