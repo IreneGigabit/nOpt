@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -178,17 +178,19 @@ public class IPOReport : OpenXmlHelper {
         this._connB = new DBHelper(Conn.OptB(branch), false).Debug(false);
 
 		this._dtOpt = new DataTable();
-		string SQL = "SELECT a.* ";
+        string SQL = "SELECT a.*,''colornm,''s_marknm ";
 		SQL += " From vbr_opt as a ";
 		SQL += " WHERE opt_sqlno='" + _opt_sqlno + "' ";
 		_conn.DataTable(SQL, _dtOpt);//抓案件資料
 
 		string drawPath = _dtOpt.Rows[0]["draw_file"].ToString();
 		if (_dtOpt.Rows[0]["draw_file"].ToString().IndexOf(@"/btbrt/") == 0) {//『/btbrt/』開頭要換掉
-			_dtOpt.Rows[0]["draw_file"] = "~/"+drawPath.Substring(7);
-		} else if (_dtOpt.Rows[0]["draw_file"].ToString().IndexOf(@"D:\Data\document\") == 0) {//『D:\Data\document\』開頭要換掉
-			_dtOpt.Rows[0]["draw_file"] = "~/" + drawPath.Substring(17).Replace("\\","/");
-		}
+            drawPath = drawPath.Substring(7);
+		} else if (_dtOpt.Rows[0]["draw_file"].ToString().ToLower().IndexOf(@"d:\data\document\") == 0) {//『D:\Data\document\』開頭要換掉
+            drawPath = drawPath.Substring(17);
+        }
+        //實體目錄
+        _dtOpt.Rows[0]["draw_file"] = @"\\" + Sys.uploadservername(branch) + @"\" + drawPath.Replace("/", @"\");
 
 		//商標顏色
 		if (_dtOpt.Rows[0]["color"].ToString()=="C" ||_dtOpt.Rows[0]["color"].ToString()=="M"){
@@ -259,10 +261,10 @@ public class IPOReport : OpenXmlHelper {
 		SQL += " FROM dmt_temp_ap a";
 		SQL += " INNER JOIN apcust b ON a.apsqlno=b.apsqlno";
         SQL += " inner join case_dmt c on a.in_no=c.in_no ";
-		SQL += " WHERE c.case_sqlno=0 and c.case_no='"+Opt.Rows[0]["case_no"]+"' ";
+		SQL += " WHERE a.case_sqlno=0 and c.case_no='"+Opt.Rows[0]["case_no"]+"' ";
 		SQL += " order by a.server_flag desc,a.temp_ap_sqlno ";
 		DataTable dt = new DataTable();
-		_conn.DataTable(SQL, dt);
+        _connB.DataTable(SQL, dt);
 
 		for (int i = 0; i < dt.Rows.Count; i++) {
 			string PersonCname = (dt.Rows[i]["ap_fcname"].ToString().Trim() + "," + dt.Rows[i]["ap_lcname"].ToString().Trim()).Replace("’", "'");
@@ -358,7 +360,7 @@ public class IPOReport : OpenXmlHelper {
         SQL += " and '" + Opt.Rows[0]["agt_no"] + "' not in('YYYY','XXXX') ";
 
 		DataTable dt = new DataTable();
-		_conn.DataTable(SQL, dt);
+		_connB.DataTable(SQL, dt);
 
 		if (dt.Rows.Count != 0) {
 			string s_agatt_tel = "";
@@ -372,8 +374,8 @@ public class IPOReport : OpenXmlHelper {
 			if (dt.Rows[0]["agatt_fax"].ToString().Trim() != "") s_agatt_fax += "-" + dt.Rows[0]["agatt_fax"].ToString().Trim();
 			dt.Rows[0]["s_agatt_fax"] = s_agatt_fax;
 
-			dt.Rows[0]["agt_name1"] = dt.Rows[0]["agt_name1"].ToString().Trim().Left(1) + "," + dt.Rows[0]["agt_name1"].ToString().Trim().Substring(1);
-			dt.Rows[0]["agt_name2"] = dt.Rows[0]["agt_name2"].ToString().Trim().Left(1) + "," + dt.Rows[0]["agt_name2"].ToString().Trim().Substring(1);
+            dt.Rows[0]["agt_name1"] = dt.Rows[0]["agt_name1"].ToString().Trim().Left(1) + "," + dt.Rows[0]["agt_name1"].ToString().Trim().Substring(Math.Min(1, dt.Rows[0]["agt_name1"].ToString().Length));
+            dt.Rows[0]["agt_name2"] = dt.Rows[0]["agt_name2"].ToString().Trim().Left(1) + "," + dt.Rows[0]["agt_name2"].ToString().Trim().Substring(Math.Min(1, dt.Rows[0]["agt_name2"].ToString().Length));
 		}
 
 		this.Agent = dt;
@@ -413,7 +415,7 @@ public class IPOReport : OpenXmlHelper {
 		SQL += " order by sort,charindex(','+c.code_name+',',',委任書,基本資料表,') desc,doc_type";
 
 		DataTable dt = new DataTable();
-		_conn.DataTable(SQL, dt);
+		_connB.DataTable(SQL, dt);
 		this.Attach = dt;
 	}
 	#endregion
@@ -454,7 +456,8 @@ public class IPOReport : OpenXmlHelper {
 	/// </summary>
 	private void SetModAP() {
 		string SQL = "Select a.* ";
-		SQL += ",(SELECT c.coun_code+c.coun_cname FROM sysctrl.dbo.ipo_country c WHERE c.ref_coun_code = a.oap_country ) AS oapcountry "; 
+        //SQL += ",(SELECT c.coun_code+c.coun_cname FROM sysctrl.dbo.ipo_country c WHERE c.ref_coun_code = a.oap_country ) AS oapcountry ";
+        SQL += ",'' AS oapcountry "; 
 		SQL += ",''oapclass_name,''Country_name,''Title_cname,''Cname_string,''Title_ename,''Ename_string ";
 		SQL += ",''o_id,''o_zip,''c_addr,''e_addr ";
         SQL += "from opt_tranlist a ";
@@ -462,7 +465,7 @@ public class IPOReport : OpenXmlHelper {
         SQL += "and opt_sqlno ='" + _opt_sqlno + "' ";
 		DataTable dt = new DataTable();
 		_conn.DataTable(SQL, dt);
-
+        /*
 		for (int i = 0; i < dt.Rows.Count; i++) {
 			string PersonCname = (dt.Rows[i]["ocname1"].ToString().Trim() + "," + dt.Rows[i]["ocname2"].ToString().Trim()).Replace("’", "'");
 			string PersonEname = (dt.Rows[i]["oename1"].ToString().Trim() + "," + dt.Rows[i]["oename2"].ToString().Trim()).Replace("’", "'");
@@ -532,7 +535,7 @@ public class IPOReport : OpenXmlHelper {
 			//國籍是台灣才要郵遞區號
 			if (dt.Rows[i]["oap_country"].ToString().Trim() != "T")
 				dt.Rows[i]["o_zip"] = "";
-		}
+		}*/
 		this.TranListAP = dt;
 	}
 	#endregion
@@ -708,6 +711,7 @@ public class IPOReport : OpenXmlHelper {
     /// 產生附送書件區塊
     /// </summary>
     public void CreateAttach(List<AttachMapping> brMap) {
+        /*
         CopyBlock("b_attach1");
         using (DataTable dtAttach = new DataTable()) {
             string exclude = "";
@@ -796,7 +800,7 @@ public class IPOReport : OpenXmlHelper {
                     }
                 }
             }
-        }
+        }*/
         AddParagraph();
     }
     #endregion
@@ -985,6 +989,17 @@ public class IPOReport : OpenXmlHelper {
 			}
 		}
 		CopyPageFoot(baseDocName, false);//頁尾
+	}
+	#endregion
+
+	#region 更新列印狀態 +SetPrint()
+	/// <summary>
+	/// 更新列印狀態
+	/// </summary>
+	public void SetPrint() {
+		string SQL = "update case_opt set new='P' " +
+                    "where opt_sqlno='" + _opt_sqlno + "'";
+		_conn.ExecuteNonQuery(SQL);
 	}
 	#endregion
 }
