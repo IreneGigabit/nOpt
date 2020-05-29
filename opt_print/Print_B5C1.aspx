@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -49,7 +49,7 @@
             ipoRpt.ReplaceBookmark("issue_no", opt.Rows[0]["issue_no"].ToString().Trim());
             //商標或標章種類
             switch (opt.Rows[0]["s_mark"].ToString()) {
-                case "S": ipoRpt.ReplaceBookmark("smark2", "Ｖ"); break;//
+                case "S": ipoRpt.ReplaceBookmark("smark2", "Ｖ"); break;
                 case "L": ipoRpt.ReplaceBookmark("smark3", "Ｖ"); break;
                 case "M": ipoRpt.ReplaceBookmark("smark4", "Ｖ"); break;
                 case "N": ipoRpt.ReplaceBookmark("smark5", "Ｖ"); break;
@@ -111,7 +111,8 @@
 
                     string agatt_tel = dtAgt.Rows[0].SafeRead("agatt_tel0", "");
                     agatt_tel += dtAgt.Rows[0].SafeRead("agatt_tel", "") == "" ? "" : "-" + dtAgt.Rows[0].SafeRead("agatt_tel", "");
-                    ipoRpt.ReplaceBookmark("agatt_tel", agatt_tel);
+
+                    ipoRpt.ReplaceBookmark("agatt_tel", agatt_tel == "" ? "     " : agatt_tel);
 
                     ipoRpt.ReplaceBookmark("agatt_tel1", dtAgt.Rows[0].SafeRead("agatt_tel1", ""));
                 }
