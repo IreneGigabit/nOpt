@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_formA" %>
+<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -6,11 +6,18 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string submitTask = "";
-    
+
+    protected string tfy_send_way = "", tfy_receipt_title = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         submitTask = Request["submitTask"] ?? "";
+        
+        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
+            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
+            tfy_receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
+        }
         
         this.DataBind();
     }
@@ -41,7 +48,7 @@
 	</tr>
 	<TR>
 		<td class="lightbluetable"  align="right">區所本所編號 :</td>
-		<td class="whitetablebg"  align="left" colspan=3 >
+		<td class="whitetablebg"  align="left" colspan=5 >
 			<Select id="Branch" name="Branch" class="QLock"></Select>
 			<input type="text" id="Bseq" name="Bseq" SIZE=5 class="QLock" maxLength="5">-
 			<input type="text" id="Bseq1" name="Bseq1" SIZE=1 class="QLock" maxLength="1">
@@ -59,19 +66,19 @@
 			<input type="text" id="scode_name" name="scode_name" class="CLock" SIZE=10 >
 		</td>
 		<td class="lightbluetable"  align="right">出名代理人 :</td>
-		<td class="whitetablebg"  align="left">
+		<td class="whitetablebg"  align="left" colspan=3>
 			<select id=agt_no name=agt_no class="CLock" SIZE=1 ></select>
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">案件名稱 :</td>
-		<td class="whitetablebg"  align="left" colspan=3>
+		<td class="whitetablebg"  align="left" colspan=5>
 			<input type="text" id="appl_name" name="appl_name" class="CLock" SIZE=90 maxlength=100 >
 		</td>
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">申請人 :</td>
-		<td class="whitetablebg"  align="left" colspan=3>
+		<td class="whitetablebg"  align="left" colspan=5>
 			<input type="text" id="ap_cname" name="ap_cname" class="CLock" SIZE=60 maxlength=60 >
 		    <input type="hidden" id="cust_seq" name="cust_seq">
 		    <input type="hidden" id="cust_area" name="cust_area">
@@ -80,21 +87,39 @@
 	</TR>
 	<TR>
 		<td class="lightbluetable"  align="right">交辦案性 :</td>
-		  <td class="whitetablebg"  align="left" colspan=3>
+		  <td class="whitetablebg"  align="left" colspan=5>
 			 	案性：<select id=Arcase NAME=Arcase SIZE=1 class="QLock"></SELECT>
 				<input type="hidden" id="arcase_type" name="arcase_type">
 				<input type="hidden" id="arcase_class" name="arcase_class">
 		</td>
 	</TR>
+    <TR id=tr_send_way>
+	    <TD class=lightbluetable align=right>發文方式：</TD>
+	    <TD class=whitetablebg><SELECT id="tfy_send_way" name="tfy_send_way" class="QLock"><%#tfy_send_way%></select>
+	    </TD>
+	    <TD class=lightbluetable align=right>官發收據種類：</TD>
+	    <TD class=whitetablebg>
+		    <select id="tfy_receipt_type" name="tfy_receipt_type" class="QLock">
+			    <option value='' style='color:blue'>請選擇</option>
+			    <option value="P">紙本收據</option>
+			    <option value="E">電子收據</option>
+		    </select>
+	    </TD>
+	    <TD class=lightbluetable align=right>收據抬頭：</TD>
+	    <TD class=whitetablebg>
+		    <select id="tfy_receipt_title" name="tfy_receipt_title" class="QLock"><%#tfy_receipt_title%></select>
+		    <input type="hidden" id="tfy_rectitle_name" name="tfy_rectitle_name">
+	    </TD>
+    </tr>
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>法定期限 :</td>
-		  <td class="whitetablebg"  align="left" colspan=3 >
+		  <td class="whitetablebg"  align="left" colspan=5 >
 			<input type="text" id="dfy_last_date" name="dfy_last_date" SIZE=10 class="RLock dateField" maxlength=10>
 		</td>
 	</TR>
 	<Tr>
 		<td class="lightbluetable" align="right">工作說明 :</td>
-		<TD class=lightbluetable colspan=3>
+		<TD class=lightbluetable colspan=5>
 			<textarea ROWS="6" style="width:90%" id=remark name="remark" class="RLock"></textarea>
 		</TD>
 	</tr>
@@ -250,6 +275,7 @@
     //載入區所案件資料
     $("#Arcase").change(function () {
         br_formA.getArcaseData(this);
+        br_formA.setSendWay();//依案性預設發文方式
     });
     br_formA.getArcaseData = function (obj) {
         $("#arcase_type").val($(":selected",obj).attr("val1"));
@@ -270,4 +296,44 @@
             }
         }
     });
+
+    //20200701 增加顯示發文方式
+    br_formA.setSendWay = function () {
+        $("#tfy_send_way").getOption({//出名代理人
+            url: getRootPath() + "/ajax/json_sendway.aspx",
+            data: { branch: "<%#branch%>", arcase: $("#Arcase").val() },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}"
+        });
+        $("#tfy_send_way option[value!='']").eq(0).prop("selected", true);
+
+        br_formA.setReceiptType();
+    };
+
+    //發文方式修改時調整收據種類選項
+    br_formA.setReceiptType = function () {
+        //alert("setReceiptType");
+        var send_way = $("#tfy_send_way").val();
+        var receipt_type = $("#tfy_receipt_type");
+        receipt_type.empty();
+        receipt_type.append("<option value='' style='COLOR:blue'>請選擇</option>");
+
+        if (send_way == "E" || send_way == "EA") {
+            receipt_type.append(new Option("紙本收據", "P"));
+            receipt_type.append(new Option("電子收據", "E", true, true));
+        } else {
+            receipt_type.append(new Option("紙本收據", "P", true, true));
+        }
+        br_formA.setReceiptTitle();
+    };
+
+    //收據種類時調整收據抬頭預設
+    br_formA.setReceiptTitle = function () {
+        //若是紙本收據抬頭預設空白
+        if ($("#tfy_receipt_type").val() == "P") {
+            $("#tfy_receipt_title").val("B");
+        } else {
+            $("#tfy_receipt_title").val("A");
+        }
+    };
 </script>
