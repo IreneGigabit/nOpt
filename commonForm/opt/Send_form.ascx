@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -8,6 +8,7 @@
     protected string case_no = "";
 
     protected string send_cl = "", send_sel = "";
+    protected string send_way = "", receipt_title = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         branch = Request["branch"] ?? "";
@@ -16,6 +17,10 @@
 
         send_cl = Funcs.getcust_code_mul("SEND_CL","","").Option("{cust_code}", "{code_name}");
         send_sel = Funcs.getcust_code_mul("SEND_SEL","","").Option("{cust_code}", "{code_name}");
+        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
+            send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
+            receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
+        }
 
         this.DataBind();
     }
@@ -92,6 +97,24 @@
 			<input type="hidden" id="old_Send_Fees" name="old_Send_Fees" SIZE=10  maxlength="10" class="SELock">
 		</td>
 	</TR>
+    <TR id=tr_send_way>
+	    <TD class=lightbluetable align=right>發文方式：</TD>
+	    <TD class=whitetablebg><SELECT id="send_way" name="send_way" class="QLock"><%#send_way%></select>
+	    </TD>
+	    <TD class=lightbluetable align=right>官發收據種類：</TD>
+	    <TD class=whitetablebg>
+		    <select id="receipt_type" name="receipt_type" class="QLock">
+			    <option value='' style='color:blue'>請選擇</option>
+			    <option value="P">紙本收據</option>
+			    <option value="E">電子收據</option>
+		    </select>
+	    </TD>
+	    <TD class=lightbluetable align=right>收據抬頭：</TD>
+	    <TD class=whitetablebg>
+		    <select id="receipt_title" name="receipt_title" class="QLock"><%#receipt_title%></select>
+		    <input type="hidden" id="rectitle_name" name="rectitle_name">
+	    </TD>
+    </tr>
 	<TR id="tr_score_flag">
 		<td class="lightbluetable"  align="right" nowrap>是否輸入評分 :</td>
 		<td class="whitetablebg"  align="left" colspan=5>
@@ -223,6 +246,12 @@
         if($("#submittask").val()!="Q") $("#rs_code").triggerHandler("change");
         $("#act_code").val(jOpt.act_code);
         if($("#submittask").val()!="Q") $("#act_code").triggerHandler("change");
+
+        //送件方式
+        $("#send_way").val(jOpt.send_way);
+        $("#receipt_type").val(jOpt.receipt_type);
+        $("#receipt_title").val(jOpt.receipt_title);
+        $("#rectitle_name").val(jOpt.rectitle_name);
     }
 
     //依結構分類帶案性代碼
