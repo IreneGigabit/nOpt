@@ -93,7 +93,7 @@
 				<input type="hidden" id="arcase_class" name="arcase_class">
 		</td>
 	</TR>
-    <TR id=tr_send_way>
+    <TR>
 	    <TD class=lightbluetable align=right>發文方式：</TD>
 	    <TD class=whitetablebg><SELECT id="tfy_send_way" name="tfy_send_way" class="QLock"><%#tfy_send_way%></select>
 	    </TD>
@@ -196,6 +196,16 @@
             if($("#ctrl_date").val()==""){
                 $("#dfy_last_date").blur();
             }
+
+            //送件方式(DB有值以DB為準)
+            //if (jOpt.send_way !== undefined && jOpt.send_way != "") $("#tfy_send_way").val(jOpt.send_way);
+            //if (jOpt.receipt_type !== undefined && jOpt.receipt_type != "") $("#tfy_receipt_type").val(jOpt.receipt_type);
+            //if (jOpt.receipt_title !== undefined && jOpt.receipt_title != "") $("#tfy_receipt_title").val(jOpt.receipt_title);
+            //if (jOpt.rectitle_name !== undefined && jOpt.rectitle_name != "") $("#tfy_rectitle_name").val(jOpt.rectitle_name);
+            $("#tfy_send_way").val(jOpt.send_way);
+            $("#tfy_receipt_type").val(jOpt.receipt_type);
+            $("#tfy_receipt_title").val(jOpt.receipt_title);
+            $("#tfy_rectitle_name").val(jOpt.rectitle_name);
         }
     };
 
@@ -301,7 +311,7 @@
     br_formA.setSendWay = function () {
         $("#tfy_send_way").getOption({//出名代理人
             url: getRootPath() + "/ajax/json_sendway.aspx",
-            data: { branch: "<%#branch%>", arcase: $("#Arcase").val() },
+            data: { branch: "<%#branch%>", rs_code: $("#Arcase").val() },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}"
         });
