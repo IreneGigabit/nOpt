@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -202,7 +202,7 @@
                         SQL = "insert into attach_opt (Opt_sqlno,Source";
                         SQL += ",add_date,add_scode,Attach_no,attach_path,attach_desc";
                         SQL += ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode";
-                        SQL += ",Source_name,doc_type";
+                        SQL += ",Source_name,doc_type,doc_flag";
                         SQL += ") values (";
                         SQL += opt_sqlno + ",'PR'";
                         SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
@@ -211,6 +211,7 @@
                         SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
                         SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
                         SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                         SQL += ")";
                         conn.ExecuteNonQuery(SQL);
                     }
@@ -223,6 +224,7 @@
                     SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
                     SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
                     SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                    SQL += ",doc_flag='" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                     SQL += ",attach_flag='U'";
                     SQL += ",tran_date=getdate()";
                     SQL += ",tran_scode='" + Session["scode"] + "'";
@@ -264,13 +266,14 @@
                 using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                     while (dr.Read()) {
                         SQL = "insert into bdmt_attach_temp(rs_no,Seq,Seq1,Source,attach_no,attach_path";
-                        SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,in_date,in_scode";
+                        SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,in_date,in_scode,doc_flag";
                         SQL += ") values (";
                         SQL += " '" + rs_no + "'," + Request["bseq"] + ",'" + Request["bseq1"] + "','OPT','" + dr.SafeRead("attach_no", "").Trim() + "'";
                         SQL += ",'" + dr.SafeRead("attach_path", "").Trim() + "','" + dr.SafeRead("attach_desc", "").Trim() + "'";
                         SQL += ",'" + dr.SafeRead("attach_name", "").Trim() + "','" + dr.SafeRead("source_name", "").Trim() + "'";
                         SQL += ",'" + dr.SafeRead("attach_size", "").Trim() + "','" + dr.SafeRead("attach_flag", "").Trim() + "'";
                         SQL += ",'" + dr.SafeRead("doc_type", "").Trim() + "',getdate(),'" + Session["scode"] + "'";
+                        SQL += ",'" + dr.SafeRead("doc_flag", "").Trim() + "'";
                         SQL += ")";
                         connB.ExecuteNonQuery(SQL);
                     }
@@ -287,6 +290,10 @@
                     SQL += ",Send_Sel=" + Util.dbnull(ReqVal.TryGet("Send_Sel", null)) + "";
                     SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
                     SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "") + "'";
+                    SQL += ",send_way='" + ReqVal.TryGet("send_way", "") + "'";
+                    SQL += ",rectitle_name='" + ReqVal.TryGet("rectitle_name", "") + "'";
+                    SQL += ",receipt_type='" + ReqVal.TryGet("receipt_type", "") + "'";
+                    SQL += ",receipt_title='" + ReqVal.TryGet("receipt_title", "") + "'";
                     SQL += "where Branch='" + Request["Branch"] + "' ";
                     SQL += "and seq='" + Request["bseq"] + "' ";
                     SQL += "and seq1='" + Request["bseq1"] + "' ";
