@@ -247,7 +247,11 @@
         $("#act_code").val(jOpt.act_code);
         if($("#submittask").val()!="Q") $("#act_code").triggerHandler("change");
 
-        //送件方式
+        //送件方式(DB有值以DB為準)
+        //if (jOpt.send_way !== undefined && jOpt.send_way != "") $("#send_way").val(jOpt.send_way);
+        //if (jOpt.receipt_type !== undefined && jOpt.receipt_type != "") $("#receipt_type").val(jOpt.receipt_type);
+        //if (jOpt.receipt_title !== undefined && jOpt.receipt_title != "") $("#receipt_title").val(jOpt.receipt_title);
+        //if (jOpt.rectitle_name !== undefined && jOpt.rectitle_name != "") $("#rectitle_name").val(jOpt.rectitle_name);
         $("#send_way").val(jOpt.send_way);
         $("#receipt_type").val(jOpt.receipt_type);
         $("#receipt_title").val(jOpt.receipt_title);
@@ -300,6 +304,7 @@
         if ($("#rs_class").val()!="" && $("#rs_code").val()!=""){
             send_form.getcode_br_agt_no();
         }
+        send_form.setSendWay();//依案性預設發文方式
     });
 
     //依處理事項代發文內容
@@ -347,4 +352,43 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>規費收費標準載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
     }
+
+    //20200701 增加顯示發文方式
+    send_form.setSendWay = function () {
+        $("#send_way").getOption({//出名代理人
+            url: getRootPath() + "/ajax/json_sendway.aspx",
+            data: { branch: "<%#branch%>", rs_type: $("#rs_type").val(), rs_code: $("#rs_code").val() },
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}"
+        });
+
+        $("#send_way option[value!='']").eq(0).prop("selected", true);
+        send_form.setReceiptType();
+    };
+
+    //發文方式修改時調整收據種類選項
+    send_form.setReceiptType = function () {
+        var send_way = $("#send_way").val();
+        var receipt_type = $("#receipt_type");
+        receipt_type.empty();
+        receipt_type.append("<option value='' style='COLOR:blue'>請選擇</option>");
+
+        if (send_way == "E" || send_way == "EA") {
+            receipt_type.append(new Option("紙本收據", "P"));
+            receipt_type.append(new Option("電子收據", "E", true, true));
+        } else {
+            receipt_type.append(new Option("紙本收據", "P", true, true));
+        }
+        send_form.setReceiptTitle();
+    };
+
+    //收據種類時調整收據抬頭預設
+    send_form.setReceiptTitle = function () {
+        //若是紙本收據抬頭預設空白
+        if ($("#receipt_type").val() == "P") {
+            $("#receipt_title").val("B");
+        } else {
+            $("#receipt_title").val("A");
+        }
+    };
 </script>
