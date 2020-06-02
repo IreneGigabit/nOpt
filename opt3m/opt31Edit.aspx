@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -111,18 +111,6 @@
                 StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[返回清單]</a>";
             }
         }
-
-        if (prgid == "opt31" || prgid == "opt31_1") {
-            if (prgid == "opt31") {
-                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
-            } else if (prgid == "opt31_1") {
-                StrFormBtn += "<input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
-            }
-            if (word_show_flag == "Y") {
-                StrFormBtn += "<input type=button value=\"申請書列印\" class=\"cbutton\" id=\"btnPrintSubmit\">";
-            }
-            StrFormBtn += "<input type=button value=\"退回分案\" class=\"redbutton\" id=\"btnBack1Submit\">";
-        }
         
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
@@ -194,8 +182,19 @@
         } else {
             tranHolder.Controls.Add(LoadControl("~/CommonForm/opt/BZZ1_form.ascx"));//無申請書之交辦內容案
         }
-    }
 
+        if (prgid == "opt31" || prgid == "opt31_1") {
+            if (prgid == "opt31") {
+                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
+            } else if (prgid == "opt31_1") {
+                StrFormBtn += "<input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
+            }
+            if (word_show_flag == "Y") {
+                StrFormBtn += " <input type=button value=\"申請書列印\" class=\"cbutton\" id=\"btnPrintSubmit\">";
+            }
+            StrFormBtn += " <input type=button value=\"退回分案\" class=\"redbutton\" id=\"btnBack1Submit\">";
+        }
+    }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -498,6 +497,22 @@
             }
         }
 	    
+        if ($("#send_way").val()==""){
+            alert("無發文方式,請重抓區所資料！！");
+            $("#send_way").focus();
+            return false;
+        }
+        if ($("#receipt_type").val()==""){
+            alert("無官發收據種類,請重抓區所資料！！");
+            $("#receipt_type").focus();
+            return false;
+        }
+        if ($("#receipt_title").val()==""){
+            alert("無收據抬頭,請重抓區所資料！");
+            $("#receipt_title").focus();
+            return false;
+        }
+
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
@@ -591,6 +606,26 @@
         if ($("#rs_detail").val()==""){
             alert("請輸入發文內容！！");
             $("#rs_detail").focus();
+            return false;
+        }
+        if ($("#Send_Fees").val()==""){
+            alert("請輸入規費支出！！");
+            $("#Send_Fees").focus();
+            return false;
+        }
+        if ($("#send_way").val()==""){
+            alert("無發文方式,請重抓區所資料！！");
+            $("#send_way").focus();
+            return false;
+        }
+        if ($("#receipt_type").val()==""){
+            alert("無官發收據種類,請重抓區所資料！！");
+            $("#receipt_type").focus();
+            return false;
+        }
+        if ($("#receipt_title").val()==""){
+            alert("無收據抬頭,請重抓區所資料！");
+            $("#receipt_title").focus();
             return false;
         }
 
