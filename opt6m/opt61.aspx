@@ -185,10 +185,6 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "100%,0%";
-        }
-
         $("#qryArcase").getOption({//承辦案性
             url: getRootPath() + "/ajax/JsonGetSqlDataBranch.aspx",
             data:{branch:"K",sql:"select RS_code, RS_detail from code_br where (dept = 'T') AND (cr = 'Y') And no_code='N' and mark='B' and prt_code is not null order by rs_class"},

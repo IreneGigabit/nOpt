@@ -172,6 +172,9 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        }
         $("#qryPr_scode").getOption({//爭議組承辦人員
             url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
             valueFormat: "{scode}",

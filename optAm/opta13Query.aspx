@@ -320,6 +320,9 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        }
         $("select[name='law_type1_##'],select[name='law_type2_##'],select[name='law_type3_##']").getOption({//法條搜尋內容
             url: getRootPath() + "/ajax/json_Law.aspx",
             data:{},

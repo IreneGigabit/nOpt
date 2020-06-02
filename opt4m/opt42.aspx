@@ -168,6 +168,9 @@
     });
 
     function this_init(){
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        }
         $("#sdate").val((new Date()).format("yyyy/M/d"));
         $("#edate").val((new Date()).format("yyyy/M/d"));
         getRsNo();

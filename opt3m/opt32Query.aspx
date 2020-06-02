@@ -173,7 +173,10 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-         $("#qryBranch,#qrycust_area").getOption({//區所別
+        if (!(window.parent.tt === undefined)) {
+            window.parent.tt.rows = "100%,0%";
+        }
+        $("#qryBranch,#qrycust_area").getOption({//區所別
             url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
             valueFormat: "{branch}",
