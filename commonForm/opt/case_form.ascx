@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="case_form" %>
+<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -139,7 +139,7 @@
         <INPUT type=text id=dfy_last_date name=dfy_last_date SIZE=10 class="dateField QLock">
 	</TD>
 </TR>
-<TR id=tr_send_way>
+<TR>
 	<TD class=lightbluetable align=right>發文方式：</TD>
 	<TD class=whitetablebg><SELECT id="tfy_send_way" name="tfy_send_way" class="QLock"><%#tfy_send_way%></select>
 	</TD>
