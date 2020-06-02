@@ -21,7 +21,7 @@
     protected void Page_Load(object sender, EventArgs e) {
         branch = Request["branch"]??"K";
         rs_type = Request["rs_type"] ?? "T92";
-        rs_code = Request["arcase"] ?? "";
+        rs_code = Request["rs_code"] ?? "";
 
         strConnB = Conn.OptB(branch);
         DataTable dt = new DataTable();
