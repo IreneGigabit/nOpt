@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -101,6 +101,7 @@
                     SQL += ",rs_class_name,rs_code_name,act_code_name,class_count,appl_name,eappl_name";
                     SQL += ",s_mark,apply_no,apply_date,issue_no,issue_date,rej_no,open_date";
                     SQL += ",term1,term2,end_date,end_code,cust_area,cust_seq,in_scode";
+                    SQL += ",send_way,rectitle_name,receipt_type,receipt_title";
                     SQL += " from vbr_opt where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     DataTable dt = new DataTable();
                     conn.DataTable(SQL, dt);
@@ -109,7 +110,7 @@
                     string rs_type = "", rs_class = "", rs_class_name = "", rs_code = "", rs_code_name = "", act_code = "", act_code_name = "", rs_detail = "";
                     string fees = "", case_no = "", rs_agt_no = "", mseq = "", mseq1 = "", class_count = "", cappl_name = "", eappl_name = "", s_mark = "";
                     string apply_no = "", apply_date = "", issue_no = "", issue_date = "", rej_no = "", open_date = "", term1 = "", term2 = "";
-                    string end_date = "", end_code = "", cust_area = "", cust_seq = "", in_scode = "";
+                    string end_date = "", end_code = "", cust_area = "", cust_seq = "", in_scode = "", send_way = "", rectitle_name = "", receipt_type = "", receipt_title = "";
                     if (dt.Rows.Count != 0) {
                         Branch = dt.Rows[0].SafeRead("Branch", "").Trim();
                         seq = dt.Rows[0].SafeRead("Bseq", "").Trim();
@@ -151,14 +152,20 @@
                         cust_area = dt.Rows[0].SafeRead("cust_area", "").Trim();
                         cust_seq = dt.Rows[0].SafeRead("cust_seq", "").Trim();
                         in_scode = dt.Rows[0].SafeRead("in_scode", "").Trim();
+                        send_way = dt.Rows[0].SafeRead("send_way", "").Trim();
+                        rectitle_name = dt.Rows[0].SafeRead("rectitle_name", "").Trim();
+                        receipt_type = dt.Rows[0].SafeRead("receipt_type", "").Trim();
+                        receipt_title = dt.Rows[0].SafeRead("receipt_title", "").Trim();
                     }
                     //[區所]Bstep_temp
                     SQL = "insert into Bstep_temp(RS_no,Branch,seq,seq1,send_dept,step_date,mp_date,CG,RS,Send_cl,Send_Cl1";
-                    SQL += ",send_sel,rs_type,rs_class,rs_code,act_code,rs_detail,fees,case_no,opt_sqlno,rs_agt_no) values (";
+                    SQL += ",send_sel,rs_type,rs_class,rs_code,act_code,rs_detail,fees,case_no,opt_sqlno,rs_agt_no";
+                    SQL += ",send_way,rectitle_name,receipt_type,receipt_title) values (";
                     SQL += " '" + rs_no + "','" + Branch + "'," + seq + ",'" + seq1 + "','" + send_dept + "'," + Util.dbdate(gs_date,"yyyy/M/d") + "";
                     SQL += "," + Util.dbdate(mp_date, "yyyy/M/d") + ",'G','S','" + send_cl + "','" + send_cl1 + "','" + send_sel + "'";
                     SQL += ",'" + rs_type + "','" + rs_class + "','" + rs_code + "','" + act_code + "','" + rs_detail + "'";
-                    SQL += "," + fees + ",'" + case_no + "','" + ReqVal.TryGet("opt_sqlno" + i, "") + "','" + rs_agt_no + "')";
+                    SQL += "," + fees + ",'" + case_no + "','" + ReqVal.TryGet("opt_sqlno" + i, "") + "','" + rs_agt_no + "'";
+                    SQL += "," + send_way + ",'" + rectitle_name + "','" + receipt_type + "','" + receipt_title + "')";
                     connB.ExecuteNonQuery(SQL);
 
                     //[區所]:爭救案專案室所上傳的檔案
