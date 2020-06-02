@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -141,15 +141,6 @@
             }
         }
 
-        if (prgid == "opt31" || prgid == "opt31_1") {
-            if (prgid == "opt31") {
-                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
-            } else if (prgid == "opt31_1") {
-                StrFormBtn += "<input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
-            }
-            StrFormBtn += "<input type=button value=\"退回分案\" class=\"redbutton\" id=\"btnBack1Submit\">";
-        }
-
         //欄位開關
         if (prgid.IndexOf("opt31") > -1) {
             if (Back_flag != "B") {//不是退回
@@ -164,8 +155,16 @@
                 SELock = "false";
             }
         }
-    }
 
+        if (prgid == "opt31" || prgid == "opt31_1") {
+            if (prgid == "opt31") {
+                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
+            } else if (prgid == "opt31_1") {
+                StrFormBtn += " <input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
+            }
+            StrFormBtn += " <input type=button value=\"退回分案\" class=\"redbutton\" id=\"btnBack1Submit\">";
+        }
+    }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
@@ -396,6 +395,23 @@
     function formSaveSubmit(dowhat,opt_prgid){
         $("select,textarea,input").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
+
+        if ($("#send_way").val()==""){
+            alert("無發文方式,請退回重新分案！！");
+            $("#send_way").focus();
+            return false;
+        }
+        if ($("#receipt_type").val()==""){
+            alert("無官發收據種類,請退回重新分案！！");
+            $("#receipt_type").focus();
+            return false;
+        }
+        if ($("#receipt_title").val()==""){
+            alert("無收據抬頭,請退回重新分案！");
+            $("#receipt_title").focus();
+            return false;
+        }
+
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
         reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
@@ -471,7 +487,21 @@
             $("#Send_Fees").focus();
             return false;
         }
-
+        if ($("#send_way").val()==""){
+            alert("無發文方式,請退回重新分案！！");
+            $("#send_way").focus();
+            return false;
+        }
+        if ($("#receipt_type").val()==""){
+            alert("無官發收據種類,請退回重新分案！！");
+            $("#receipt_type").focus();
+            return false;
+        }
+        if ($("#receipt_title").val()==""){
+            alert("無收據抬頭,請退回重新分案！");
+            $("#receipt_title").focus();
+            return false;
+        }
         if ($("#sameap_flag").val()=="Y"){
             if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
                 if(!confirm("是否確定不輸入核准時數？？")) {
