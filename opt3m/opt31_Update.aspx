@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -580,7 +580,7 @@
                     SQL = "insert into attach_opt (Opt_sqlno,Source";
                     SQL += ",add_date,add_scode,Attach_no,attach_path,attach_desc";
                     SQL += ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode";
-                    SQL += ",Source_name,doc_type";
+                    SQL += ",Source_name,doc_type,doc_flag";
                     SQL += ") values (";
                     SQL += popt_sqlno + ",'" + psource + "'";
                     SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
@@ -589,6 +589,7 @@
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                     SQL += ")";
                     conn.ExecuteNonQuery(SQL);
                 }
@@ -601,6 +602,7 @@
                 SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
                 SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
                 SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
+                SQL += ",doc_flag='" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                 SQL += ",attach_flag='U'";
                 SQL += ",tran_date=getdate()";
                 SQL += ",tran_scode='" + Session["scode"] + "'";
