@@ -1,26 +1,3 @@
-USE [sikopt]
-GO
-BEGIN TRANSACTION
-GO
-ALTER TABLE dbo.case_opt ADD
-	rectitle_name varchar(320) NULL,
-	send_way varchar(2) NULL,
-	receipt_type varchar(1) NULL,
-	receipt_title varchar(1) NULL
-GO
-ALTER TABLE dbo.case_opt SET (LOCK_ESCALATION = TABLE)
-GO
-COMMIT
-
-SELECT DISTINCT 'EXEC sp_refreshview ' + name + '' 
-FROM sys.objects so INNER JOIN sys.sql_dependencies sd 
-ON so.object_id = sd.object_id 
-WHERE type = 'V' 
-AND sd.referenced_major_id = object_id('case_opt');
---case_opt
-EXEC sp_refreshview vbr_opt
-EXEC sp_refreshview vopt_641
-
 
 USE [sikopt]
 GO
@@ -82,4 +59,70 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'錯誤堆疊' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'error_log', @level2type=N'COLUMN',@level2name=N'StackStr'
 GO
 
+
+
+
+
+USE [sikopt]
+GO
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.case_opt ADD
+	rectitle_name varchar(320) NULL,
+	send_way varchar(2) NULL,
+	receipt_type varchar(1) NULL,
+	receipt_title varchar(1) NULL
+GO
+ALTER TABLE dbo.case_opt SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+
+SELECT DISTINCT 'EXEC sp_refreshview ' + name + '' 
+FROM sys.objects so INNER JOIN sys.sql_dependencies sd 
+ON so.object_id = sd.object_id 
+WHERE type = 'V' 
+AND sd.referenced_major_id = object_id('case_opt');
+--case_opt
+EXEC sp_refreshview vbr_opt
+EXEC sp_refreshview vopt_641
+
+
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.attach_opt ADD
+	doc_flag varchar(1) NULL
+GO
+ALTER TABLE dbo.attach_opt SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.attach_opt_log ADD
+	doc_flag varchar(1) NULL
+GO
+ALTER TABLE dbo.attach_opt_log SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+
+
+USE [sindbs]
+GO
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.bstep_temp ADD
+	send_way varchar(2) NULL
+GO
+ALTER TABLE dbo.bstep_temp SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.bdmt_attach_temp ADD
+	doc_flag varchar(1) NULL
+GO
+ALTER TABLE dbo.bdmt_attach_temp SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
 
