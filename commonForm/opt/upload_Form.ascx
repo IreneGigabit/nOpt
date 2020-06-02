@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="upload_form" %>
+<%@ Control Language="C#" ClassName="upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -55,6 +55,7 @@
 	            <input type=button id='btn<%=uploadfield%>_##' name='btn<%=uploadfield%>_##' class='cbutton BLock YZLock' value='上傳' onclick="upload_form.UploadOptAttach('##')">
 	            <input type=button id='btn<%=uploadfield%>_D_##' name='btn<%=uploadfield%>_D_##' class='delbutton BLock YZLock' value='刪除' onclick="upload_form.DelOptAttach('##')">
 	            <input type=button id='btn<%=uploadfield%>_S_##' name='btn<%=uploadfield%>_S_##' class='cbutton' value='檢視' onclick="upload_form.PreviewOptAttach('##')">
+                <label style="color:blue"><INPUT id='<%=uploadfield%>_doc_flag_##' type=checkbox value=E name='<%=uploadfield%>_doc_flag_##'>電子送件檔</label>
 	            <input type='hidden' id='<%=uploadfield%>_dbflag_##' name='<%=uploadfield%>_dbflag_##' value="A">
 	            <input type='hidden' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
 	            <input type='hidden' id='<%=uploadfield%>_size_##' name='<%=uploadfield%>_size_##'>
@@ -114,7 +115,8 @@
             $("#" + fld + "_doc_type_" + nRow).val(item.doc_type.trim());
             $("#btn" + fld + "_" + nRow).prop("disabled", true);
 
-            $("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
+            $("input[name='" + fld + "_doc_flag_" + nRow + "'][value='" + item.doc_flag + "']").prop("checked", true);
+            //$("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
             $("#open_path_" + nRow).val(item.preview_path);
 
             if (item.add_scode != "<%#Session["scode"]%>") {
