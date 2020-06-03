@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -326,12 +326,12 @@
                 }
             }
             
-            //conn.Commit();
-            //connB.Commit();
-            //connM.Commit();
-            conn.RollBack();
-            connB.RollBack();
-            connM.RollBack();
+            conn.Commit();
+            connB.Commit();
+            connM.Commit();
+            //conn.RollBack();
+            //connB.RollBack();
+            //connM.RollBack();
 
             msg = "編修存檔成功，若有需要請通知區所重新抓取資料！";
             strOut.AppendLine("alert('" + msg + "');");
