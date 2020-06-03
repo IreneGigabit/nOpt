@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -203,7 +203,7 @@
                                 try {
                                     if (drawPath.IndexOf(@"/btbrt/") == 0) {//『/btbrt/』開頭要換掉
                                         drawPath = "~/" + drawPath.Substring(7);
-                                    } else if (drawPath.ToString().IndexOf(@"D:\Data\document\") == 0) {//『D:\Data\document\』開頭要換掉
+                                    } else if (drawPath.ToString().ToLower().IndexOf(@"d:\data\document\") == 0) {//『D:\Data\document\』開頭要換掉
                                         drawPath = "~/" + drawPath.Substring(17).Replace("\\", "/");
                                     }
                                     ipoRpt.AppendImage(new ImageFile(drawPath));
