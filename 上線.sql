@@ -105,6 +105,15 @@ ALTER TABLE dbo.attach_opt_log SET (LOCK_ESCALATION = TABLE)
 GO
 COMMIT
 
+insert into cust_code
+select 'ODoc_type',cust_code,code_name,sql,sortfld,form_name,ref_code,dept,remark,mark,mark1,end_date,tran_date
+ from sindbs.dbo.cust_code where code_type='TDOC' and ref_code='Eattach'
+and (remark is null or remark like '%FO8%' or remark like '%DO1%' or remark like '%DI1%' or remark like '%DR1%' or remark like '%B5C1%')
+and cust_code in('17','02','021','E54','E55','E56','E57','E58','E59','E60','E61','E62','E63','E64','E99')
+order by sortfld
+
+update cust_code set mark=null  where code_type='Odoc_type'
+
 
 USE [sindbs]
 GO
