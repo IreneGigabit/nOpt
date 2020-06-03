@@ -188,7 +188,7 @@
         SQL = "update br_opt set pr_hour=" + Util.dbzero(ReqVal.TryGet("pr_hour", "0")) + "";
         SQL += ",pr_per=" + Util.dbzero(ReqVal.TryGet("pr_per","0")) + "";
         SQL += ",pr_date=" + Util.dbnull(ReqVal.TryGet("pr_date",null)) + "";
-        SQL += ",pr_remark='" + ReqVal.TryGet("pr_remark", "") + "'";
+        SQL += ",pr_remark='" + ReqVal.TryGet("pr_remark", "").ToBig5() + "'";
         SQL += ",send_dept=" + Util.dbnull(ReqVal.TryGet("send_dept",null)) + "";
         SQL += ",mp_date=" + Util.dbnull(ReqVal.TryGet("mp_date",null)) + "";
         SQL += ",GS_date=" + Util.dbnull(ReqVal.TryGet("GS_date",null)) + "";
@@ -199,7 +199,7 @@
         SQL += ",rs_class=" + Util.dbnull(ReqVal.TryGet("rs_class",null)) + "";
         SQL += ",rs_code=" + Util.dbnull(ReqVal.TryGet("rs_code",null)) + "";
         SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code",null)) + "";
-        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail","") + "'";
+        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail","").ToBig5() + "'";
         SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees","0")) + "";
         SQL += ",tran_scode='" + Session["scode"] + "'";
         SQL += ",tran_date=getdate()";
@@ -262,10 +262,10 @@
         SQL += ",rs_class=" + Util.dbnull(ReqVal.TryGet("rs_class", null)) + "";
         SQL += ",rs_code=" + Util.dbnull(ReqVal.TryGet("rs_code", null)) + "";
         SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
-        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "") + "'";
+        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "").ToBig5() + "'";
         SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees", "0")) + "";
         SQL += ",ap_date='" + DateTime.Today.ToShortDateString() + "'";
-        SQL += ",ap_remark='" + ReqVal.TryGet("ap_remark", "") + "'";
+        SQL += ",ap_remark='" + ReqVal.TryGet("ap_remark", "").ToBig5() + "'";
         if (ReqVal.TryGet("score_flag", "") == "Y") {
             SQL += ",score_flag=" + Util.dbnull(ReqVal.TryGet("score_flag", null)) + "";
             SQL += ",score=" + Util.dbzero(ReqVal.TryGet("Score", "0")) + "";
@@ -273,7 +273,7 @@
             SQL += ",score_flag='N'";
             SQL += ",score=0";
         }
-        SQL += ",remark='" + ReqVal.TryGet("opt_remark", "") + "'";
+        SQL += ",remark='" + ReqVal.TryGet("opt_remark", "").ToBig5() + "'";
         SQL += ",stat_code='YY'";
         SQL += ",tran_scode='" + Session["scode"] + "'";
         SQL += ",tran_date=getdate()";
@@ -327,9 +327,9 @@
                     SQL += popt_sqlno + ",'" + psource + "'";
                     SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                     SQL += ")";
@@ -339,10 +339,10 @@
                 Funcs.insert_log_table(conn, "U", prgid, "attach_opt", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
                 SQL = "Update attach_opt set Source='" + psource + "'";
                 SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
-                SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "'";
+                SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                 SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
-                SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
                 SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
                 SQL += ",doc_flag='" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                 SQL += ",attach_flag='U'";

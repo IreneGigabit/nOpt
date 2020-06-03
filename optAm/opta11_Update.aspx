@@ -79,7 +79,7 @@
         SQL += ",'" + Request["edit_law_no1"] + "'";
         SQL += ",'" + Request["edit_law_no2"] + "'";
         SQL += ",'" + Request["edit_law_no3"] + "'";
-        SQL += ",'" + Request["edit_law_mark"] + "'";
+        SQL += ",'" + Request["edit_law_mark"].ToBig5() + "'";
         SQL += ",'" + Session["scode"] + "'";
         SQL += ",GETDATE() ";
         SQL += ",null )";
@@ -91,7 +91,7 @@
             Funcs.insert_log_table(conn, "U", prgid, "law_detail", "law_sqlno", ReqVal.TryGet("law_sqlno", ""));
 
             SQL = " Update law_detail ";
-            SQL += "set law_mark = '" + Request["edit_law_mark"] + "'";
+            SQL += "set law_mark = '" + Request["edit_law_mark"].ToBig5() + "'";
             SQL += ",tran_scode = '" + Session["scode"] + "'";
             SQL += " where 1=1 and law_sqlno = '" + Request["law_sqlno"] + "'";
             conn.ExecuteNonQuery(SQL);

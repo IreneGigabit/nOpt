@@ -96,7 +96,7 @@
                 SQL = "insert into bstep_ext_temp(branch,seq,seq1,bstep_grade,bcase_date,last_date,case_no,opt_sqlno,your_no,in_date,in_scode,send_remark) values ";
                 SQL += "('" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "") + "'," + ReqVal.TryGet("bstep_grade", "");
                 SQL += ",'" + ReqVal.TryGet("bcase_date", "") + "','" + ReqVal.TryGet("tfy_last_date", "") + "','" + case_no + "'," + opt_sqlno;
-                SQL += ",'" + ReqVal.TryGet("tfzd_your_no", "") + "',getdate(),'" + Session["scode"] + "','" + ReqVal.TryGet("send_remark", "") + "')";
+                SQL += ",'" + ReqVal.TryGet("tfzd_your_no", "") + "',getdate(),'" + Session["scode"] + "','" + ReqVal.TryGet("send_remark", "").ToBig5() + "')";
                 connB.ExecuteNonQuery(SQL);
 
                 //抓insert後的流水號
@@ -114,8 +114,8 @@
                         SQL += ",attach_name,source_name,attach_size,attach_flag) values ";
                         SQL += "(" + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "").Trim() + "'," + opt_sqlno + "," + Getbstep_sqlno + ",'opt',getdate()";
                         SQL += ",'" + Session["scode"] + "'," + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "").Trim() + ",'" + ReqVal.TryGet(opt_uploadfield + "_" + i, "") + "'";
-                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").Trim() + "'";
-                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").Trim() + "','" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").Trim() + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").Trim().ToBig5() + "'";
+                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").Trim().ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").Trim().ToBig5() + "'";
                         SQL += "," + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_flag_" + i, "") + "')";
                         connB.ExecuteNonQuery(SQL);
                     }
@@ -188,7 +188,7 @@
             SQL += ",pr_rs_code='" + Request["pr_rs_code"] + "'";
             if (ReqVal.TryGet("stat_code","") == "YY") {
                 if (ReqVal.TryGet("br_source", "") == "br") {//區所交辦
-                    SQL += ",send_remark='" + ReqVal.TryGet("send_remark", "") + "'";//回稿說明
+                    SQL += ",send_remark='" + ReqVal.TryGet("send_remark", "").ToBig5() + "'";//回稿說明
                 }
             }
             SQL += ",tran_scode='" + Session["scode"] + "'";
@@ -224,9 +224,9 @@
                             SQL += opt_sqlno + ",'" + branch + "','PR'";
                             SQL += ",getdate(),'" + Session["scode"] + "','" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "'";
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
-                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_branch_" + i, "") + "'";
                             SQL += ")";
@@ -236,10 +236,10 @@
                         Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
                         SQL = "Update attach_opte set Source='PR'";
                         SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                        SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
-                        SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                        SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "'";
+                        SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                         SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
-                        SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                        SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
                         SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
                         SQL += ",attach_branch='" + ReqVal.TryGet(opt_uploadfield + "_attach_branch_" + i, "") + "'";
                         SQL += ",attach_flag='U'";

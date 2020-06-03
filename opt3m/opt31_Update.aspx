@@ -124,9 +124,9 @@
                         for (int k = 1; k <= DR1_apnum; k++) {
                             SQL = "INSERT INTO opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,ncname2,ncrep,nzip,naddr1,naddr2";
                             SQL += ") VALUES('" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_ap',";
-                            SQL += "'" + ReqVal.TryGet("ttg1_mod_ap_ncname1_" + k, "") + "','" + ReqVal.TryGet("ttg1_mod_ap_ncname2_" + k, "") + "',";
-                            SQL += "'" + ReqVal.TryGet("ttg1_mod_ap_ncrep_" + k, "") + "','" + ReqVal.TryGet("ttg1_mod_ap_nzip_" + k, "") + "',";
-                            SQL += "'" + ReqVal.TryGet("ttg1_mod_ap_naddr1_" + k, "") + "','" + ReqVal.TryGet("ttg1_mod_ap_naddr2_" + k, "") + "')";
+                            SQL += "'" + ReqVal.TryGet("ttg1_mod_ap_ncname1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg1_mod_ap_ncname2_" + k, "").ToBig5() + "',";
+                            SQL += "'" + ReqVal.TryGet("ttg1_mod_ap_ncrep_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg1_mod_ap_nzip_" + k, "") + "',";
+                            SQL += "'" + ReqVal.TryGet("ttg1_mod_ap_naddr1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg1_mod_ap_naddr2_" + k, "").ToBig5() + "')";
                             conn.ExecuteNonQuery(SQL);
                         }
                         Pmod_ap = "Y";
@@ -142,9 +142,9 @@
                         for (int k = 1; k <= DI1_apnum; k++) {
                             SQL = "INSERT INTO opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,ncname2,ncrep,nzip,naddr1,naddr2";
                             SQL += ") VALUES('" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_ap',";
-                            SQL += "'" + ReqVal.TryGet("ttg3_mod_ap_ncname1_" + k, "") + "','" + ReqVal.TryGet("ttg3_mod_ap_ncname2_" + k, "") + "',";
-                            SQL += "'" + ReqVal.TryGet("ttg3_mod_ap_ncrep_" + k, "") + "','" + ReqVal.TryGet("ttg3_mod_ap_nzip_" + k, "") + "',";
-                            SQL += "'" + ReqVal.TryGet("ttg3_mod_ap_naddr1_" + k, "") + "','" + ReqVal.TryGet("ttg3_mod_ap_naddr2_" + k, "") + "')";
+                            SQL += "'" + ReqVal.TryGet("ttg3_mod_ap_ncname1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg3_mod_ap_ncname2_" + k, "").ToBig5() + "',";
+                            SQL += "'" + ReqVal.TryGet("ttg3_mod_ap_ncrep_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg3_mod_ap_nzip_" + k, "") + "',";
+                            SQL += "'" + ReqVal.TryGet("ttg3_mod_ap_naddr1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg3_mod_ap_naddr2_" + k, "").ToBig5() + "')";
                             conn.ExecuteNonQuery(SQL);
                         }
                         Pmod_ap = "Y";
@@ -160,9 +160,9 @@
                         for (int k = 1; k <= DO1_apnum; k++) {
                             SQL = "INSERT INTO opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,ncname2,ncrep,nzip,naddr1,naddr2";
                             SQL += ") VALUES('" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_ap',";
-                            SQL += "'" + ReqVal.TryGet("ttg2_mod_ap_ncname1_" + k, "") + "','" + ReqVal.TryGet("ttg2_mod_ap_ncname2_" + k, "") + "',";
-                            SQL += "'" + ReqVal.TryGet("ttg2_mod_ap_ncrep_" + k, "") + "','" + ReqVal.TryGet("ttg2_mod_ap_nzip_" + k, "") + "',";
-                            SQL += "'" + ReqVal.TryGet("ttg2_mod_ap_naddr1_" + k, "") + "','" + ReqVal.TryGet("ttg2_mod_ap_naddr2_" + k, "") + "')";
+                            SQL += "'" + ReqVal.TryGet("ttg2_mod_ap_ncname1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg2_mod_ap_ncname2_" + k, "").ToBig5() + "',";
+                            SQL += "'" + ReqVal.TryGet("ttg2_mod_ap_ncrep_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg2_mod_ap_nzip_" + k, "") + "',";
+                            SQL += "'" + ReqVal.TryGet("ttg2_mod_ap_naddr1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("ttg2_mod_ap_naddr2_" + k, "").ToBig5() + "')";
                             conn.ExecuteNonQuery(SQL);
                         }
                         Pmod_ap = "Y";
@@ -179,7 +179,7 @@
                     int de1_apnum = Convert.ToInt32("0" + ReqVal.TryGet("de1_apnum", "0"));
                     for (int k = 1; k <= de1_apnum; k++) {
                         SQL = "insert into opt_tranlist(opt_sqlno,branch,case_no,mod_field,ncname1,naddr1) values (";
-                        SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_client','" + ReqVal.TryGet("tfr4_ncname1_" + k, "") + "','" + ReqVal.TryGet("tfr4_naddr1_" + k, "") + "')";
+                        SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + ",'mod_client','" + ReqVal.TryGet("tfr4_ncname1_" + k, "").ToBig5() + "','" + ReqVal.TryGet("tfr4_naddr1_" + k, "").ToBig5() + "')";
                         conn.ExecuteNonQuery(SQL);
                     }
                 }
@@ -336,13 +336,13 @@
     //交辦內容opt_detail
     private void update_optdetail(DBHelper conn) {
         SQL = "Update opt_detail set ";
-        SQL += " Cappl_name=" + Util.dbnull(ReqVal.TryGet("PCappl_name", null)) + "";
-        SQL += ",Eappl_name=" + Util.dbnull(ReqVal.TryGet("PEappl_name", null)) + "";
-        SQL += ",Jappl_name=" + Util.dbnull(ReqVal.TryGet("PJappl_name", null)) + "";
-        SQL += ",Zappl_name1=" + Util.dbnull(ReqVal.TryGet("PZappl_name1", null)) + "";
+        SQL += " Cappl_name=" + Util.dbnull(ReqVal.TryGet("PCappl_name", null)).ToBig5() + "";
+        SQL += ",Eappl_name=" + Util.dbnull(ReqVal.TryGet("PEappl_name", null)).ToBig5() + "";
+        SQL += ",Jappl_name=" + Util.dbnull(ReqVal.TryGet("PJappl_name", null)).ToBig5() + "";
+        SQL += ",Zappl_name1=" + Util.dbnull(ReqVal.TryGet("PZappl_name1", null)).ToBig5() + "";
         SQL += ",Draw=" + Util.dbnull(ReqVal.TryGet("PDraw", null)) + "";
-        SQL += ",Remark3='" + ReqVal.TryGet("Remark3", "") + "'";
-        SQL += ",Mark=" + Util.dbnull(ReqVal.TryGet("PMark", null)) + "";
+        SQL += ",Remark3='" + ReqVal.TryGet("Remark3", "").ToBig5() + "'";
+        SQL += ",Mark=" + Util.dbnull(ReqVal.TryGet("PMark", null)).ToBig5() + "";
         SQL += " where opt_sqlno='" + opt_sqlno + "'";
         conn.ExecuteNonQuery(SQL);
     }
@@ -357,14 +357,14 @@
         SQL += ",mod_pul=" + Util.dbnull(Pmod_pul) + "";
         SQL += ",mod_dmt=" + Util.dbnull(Pmod_dmt) + "";
         SQL += ",mod_class=" + Util.dbnull(Pmod_class) + "";
-        SQL += ",tran_remark1='" + ReqVal.TryGet("Ptran_remark1", "") + "'";
-        SQL += ",tran_remark2='" + ReqVal.TryGet("Ptran_remark2", "") + "'";
-        SQL += ",tran_remark3='" + ReqVal.TryGet("Ptran_remark3", "") + "'";
-        SQL += ",tran_remark4='" + ReqVal.TryGet("Ptran_remark4", "") + "'";
+        SQL += ",tran_remark1='" + ReqVal.TryGet("Ptran_remark1", "").ToBig5() + "'";
+        SQL += ",tran_remark2='" + ReqVal.TryGet("Ptran_remark2", "").ToBig5() + "'";
+        SQL += ",tran_remark3='" + ReqVal.TryGet("Ptran_remark3", "").ToBig5() + "'";
+        SQL += ",tran_remark4='" + ReqVal.TryGet("Ptran_remark4", "").ToBig5() + "'";
         SQL += ",other_item='" + ReqVal.TryGet("Pother_item", "") + "'";
         SQL += ",other_item1='" + ReqVal.TryGet("Pother_item1", "") + "'";
         SQL += ",other_item2='" + ReqVal.TryGet("Pother_item2", "") + "'";
-        SQL += ",tran_mark='" + ReqVal.TryGet("Ptran_mark", "") + "'";
+        SQL += ",tran_mark='" + ReqVal.TryGet("Ptran_mark", "").ToBig5() + "'";
         SQL += " where opt_sqlno='" + opt_sqlno + "'";
         conn.ExecuteNonQuery(SQL);
     }
@@ -378,7 +378,7 @@
                 SQL += ",mod_field,new_no,ncname1,mod_type";
                 SQL += ") values (";
                 SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
-                SQL += ",'" + Pfield + "','" + ReqVal.TryGet("P1mod_pul_new_no", "") + "','" + ReqVal.TryGet("P1mod_pul_ncname1", "") + "'";
+                SQL += ",'" + Pfield + "','" + ReqVal.TryGet("P1mod_pul_new_no", "") + "','" + ReqVal.TryGet("P1mod_pul_ncname1", "").ToBig5() + "'";
                 SQL += ",'" + ReqVal.TryGet("P1mod_pul_mod_type", "") + "')";
             } else if (pno == "2") {
                 SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
@@ -398,7 +398,7 @@
                 SQL += ") values (";
                 SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
                 SQL += ",'" + Pfield + "','" + ReqVal.TryGet("P4mod_pul_mod_type", "") + "','" + ReqVal.TryGet("P4mod_pul_new_no", "") + "','" + ReqVal.TryGet("P4mod_pul_mod_dclass", "") + "'";
-                SQL += ",'" + ReqVal.TryGet("P4mod_pul_ncname1", "") + "')";
+                SQL += ",'" + ReqVal.TryGet("P4mod_pul_ncname1", "").ToBig5() + "')";
             }
             conn.ExecuteNonQuery(SQL);
         } else if (Pfield == "mod_claim1") {
@@ -406,7 +406,7 @@
             SQL += ",mod_field,ncname1";
             SQL += ") values (";
             SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
-            SQL += ",'" + Pfield + "','" + ReqVal.TryGet("Pmod_claim1_ncname1", "") + "')";
+            SQL += ",'" + Pfield + "','" + ReqVal.TryGet("Pmod_claim1_ncname1", "").ToBig5() + "')";
             conn.ExecuteNonQuery(SQL);
         } else if (Pfield == "mod_aprep") {
             for (int i = 1; i <= Convert.ToInt32(pno); i++) {
@@ -414,7 +414,7 @@
                 SQL += ",mod_field,mod_count,ncname1,new_no";
                 SQL += ") values (";
                 SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
-                SQL += ",'" + Pfield + "'," + Util.dbnull(pno) + ",'" + ReqVal.TryGet("Pmod_aprep_ncname1" + i, "") + "'";
+                SQL += ",'" + Pfield + "'," + Util.dbnull(pno) + ",'" + ReqVal.TryGet("Pmod_aprep_ncname1" + i, "").ToBig5() + "'";
                 SQL += ",'" + ReqVal.TryGet("Pmod_aprep_new_no" + i, "") + "'";
                 conn.ExecuteNonQuery(SQL);
             }
@@ -423,16 +423,16 @@
             SQL += ",mod_field,ncname1,ncname2,nename1,nename2";
             SQL += ",ncrep) values (";
             SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
-            SQL += ",'" + Pfield + "','" + ReqVal.TryGet("Pmod_dmt_ncname1", "") + "','" + ReqVal.TryGet("Pmod_dmt_ncname2", "") + "'";
-            SQL += ",'" + ReqVal.TryGet("Pmod_dmt_nename1", "") + "','" + ReqVal.TryGet("Pmod_dmt_nename2", "") + "','" + ReqVal.TryGet("Pmod_dmt_ncrep", "") + "')";
+            SQL += ",'" + Pfield + "','" + ReqVal.TryGet("Pmod_dmt_ncname1", "").ToBig5() + "','" + ReqVal.TryGet("Pmod_dmt_ncname2", "").ToBig5() + "'";
+            SQL += ",'" + ReqVal.TryGet("Pmod_dmt_nename1", "").ToBig5() + "','" + ReqVal.TryGet("Pmod_dmt_nename2", "").ToBig5() + "','" + ReqVal.TryGet("Pmod_dmt_ncrep", "").ToBig5() + "')";
             conn.ExecuteNonQuery(SQL);
         } else if (Pfield == "mod_class") {
             SQL = "insert into opt_tranlist(opt_sqlno,Branch,Case_no";
             SQL += ",mod_field,ncname1,ncname2,nename1,nename2";
             SQL += ",ncrep) values (";
             SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
-            SQL += ",'" + Pfield + "','" + ReqVal.TryGet("Pmod_class_ncname1", "") + "','" + ReqVal.TryGet("Pmod_class_ncname2", "") + "'";
-            SQL += ",'" + ReqVal.TryGet("Pmod_class_nename1", "") + "','" + ReqVal.TryGet("Pmod_class_nename2", "") + "','" + ReqVal.TryGet("Pmod_class_ncrep", "") + "')";
+            SQL += ",'" + Pfield + "','" + ReqVal.TryGet("Pmod_class_ncname1", "").ToBig5() + "','" + ReqVal.TryGet("Pmod_class_ncname2", "").ToBig5() + "'";
+            SQL += ",'" + ReqVal.TryGet("Pmod_class_nename1", "").ToBig5() + "','" + ReqVal.TryGet("Pmod_class_nename2", "").ToBig5() + "','" + ReqVal.TryGet("Pmod_class_ncrep", "").ToBig5() + "')";
             conn.ExecuteNonQuery(SQL);
         }
     }
@@ -446,7 +446,7 @@
         SQL = "update br_opt set pr_hour=" + Util.dbzero(ReqVal.TryGet("pr_hour", "0")) + "";
         SQL += ",pr_per=" + Util.dbzero(ReqVal.TryGet("pr_per","0")) + "";
         SQL += ",pr_date=" + Util.dbnull(ReqVal.TryGet("pr_date",null)) + "";
-        SQL += ",pr_remark='" + ReqVal.TryGet("pr_remark", "") + "'";
+        SQL += ",pr_remark='" + ReqVal.TryGet("pr_remark", "").ToBig5() + "'";
         SQL += ",send_dept=" + Util.dbnull(ReqVal.TryGet("send_dept",null)) + "";
         SQL += ",mp_date=" + Util.dbnull(ReqVal.TryGet("mp_date",null)) + "";
         SQL += ",GS_date=" + Util.dbnull(ReqVal.TryGet("GS_date",null)) + "";
@@ -457,7 +457,7 @@
         SQL += ",rs_class=" + Util.dbnull(ReqVal.TryGet("rs_class",null)) + "";
         SQL += ",rs_code=" + Util.dbnull(ReqVal.TryGet("rs_code",null)) + "";
         SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code",null)) + "";
-        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail","") + "'";
+        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail","").ToBig5() + "'";
         SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees","0")) + "";
         SQL += ",tran_scode='" + Session["scode"] + "'";
         SQL += ",tran_date=getdate()";
@@ -520,10 +520,10 @@
         SQL += ",rs_class=" + Util.dbnull(ReqVal.TryGet("rs_class", null)) + "";
         SQL += ",rs_code=" + Util.dbnull(ReqVal.TryGet("rs_code", null)) + "";
         SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
-        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "") + "'";
+        SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "").ToBig5() + "'";
         SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees", "0")) + "";
         SQL += ",ap_date='" + DateTime.Today.ToShortDateString() + "'";
-        SQL += ",ap_remark='" + ReqVal.TryGet("ap_remark", "") + "'";
+        SQL += ",ap_remark='" + ReqVal.TryGet("ap_remark", "").ToBig5() + "'";
         if (ReqVal.TryGet("score_flag", "") == "Y") {
             SQL += ",score_flag=" + Util.dbnull(ReqVal.TryGet("score_flag", null)) + "";
             SQL += ",score=" + Util.dbzero(ReqVal.TryGet("Score", "0")) + "";
@@ -531,7 +531,7 @@
             SQL += ",score_flag='N'";
             SQL += ",score=0";
         }
-        SQL += ",remark='" + ReqVal.TryGet("opt_remark", "") + "'";
+        SQL += ",remark='" + ReqVal.TryGet("opt_remark", "").ToBig5() + "'";
         SQL += ",stat_code='YY'";
         SQL += ",tran_scode='" + Session["scode"] + "'";
         SQL += ",tran_date=getdate()";
@@ -585,9 +585,9 @@
                     SQL += popt_sqlno + ",'" + psource + "'";
                     SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                     SQL += ")";
@@ -597,10 +597,10 @@
                 Funcs.insert_log_table(conn, "U", prgid, "attach_opt", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") );
                 SQL = "Update attach_opt set Source='" + psource + "'";
                 SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "") + "'";
-                SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "") + "'";
+                SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "'";
+                SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                 SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
-                SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "") + "'";
+                SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
                 SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
                 SQL += ",doc_flag='" + ReqVal.TryGet(opt_uploadfield + "_doc_flag_" + i, "") + "'";
                 SQL += ",attach_flag='U'";
