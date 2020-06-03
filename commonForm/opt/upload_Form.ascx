@@ -64,7 +64,7 @@
 	            <input type='hidden' id='<%=uploadfield%>_path_##' name='<%=uploadfield%>_path_##' value=''>
 	            <input type='hidden' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
 	            <input type='hidden' id='<%=uploadfield%>_source_name_##' name='<%=uploadfield%>_source_name_##' value=''><br>
-	            文件種類：<Select id='<%=uploadfield%>_doc_type_##' name='<%=uploadfield%>_doc_type_##' Onchange="upload_form.getdesc('##')" class="BLock"><%=html_attach_doc%></Select>
+	            文件種類：<Select id='<%=uploadfield%>_doc_type_##' name='<%=uploadfield%>_doc_type_##' Onchange="upload_form.getdesc('##')" class="BLock YZLock"><%=html_attach_doc%></Select>
 	            附件說明：<input type=text id='<%=uploadfield%>_desc_##' name='<%=uploadfield%>_desc_##' class="BLock" size=50 maxlength=50 onblur="fChkDataLen(this,'附件說明')">
 	            上傳日期：<input type=text id='<%=uploadfield%>_add_date_##' name='<%=uploadfield%>_add_date_##' class="Lock" size=10 maxlength=10 onblur="fChkDataLen(this,'上傳日期')">
 	            <span id='span_<%=uploadfield%>_add_scodenm_##' style='display:none'>
