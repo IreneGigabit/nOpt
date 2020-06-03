@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -12,6 +12,8 @@
     protected string cgrs = "GS";
     protected string step_date = "";
     protected string rs_no = "";
+    protected string emg_scode = "";
+    protected string emg_agscode = "";
     
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -20,6 +22,8 @@
 
         step_date = (Request["step_date"] ?? "").Trim();
         rs_no = (Request["rs_no"] ?? "").Trim();
+        //emg_scode=getmgprscode(session("syscode"),session("dept"),"mg_pror")	//總管處程序人員-正本
+        //emg_agscode=getmgprscode(session("syscode"),session("dept"),"mg_prorm")	//總管處程序主管-副本
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
@@ -30,17 +34,6 @@
     }
     
     private void QueryPageLayout() {
-        SetRprtKind();//報表種類
-    }
-    
-    private void SetRprtKind(){
-        DataTable dtRprtKind = new DataTable();
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            string SQL = "select cust_code,code_name,mark1 from cust_code where code_type='rpt_GS_t' and cust_code<>'423' order by sortfld";
-            conn.DataTable(SQL, dtRprtKind);
-        }
-        rprtRepeater.DataSource = dtRprtKind;
-        rprtRepeater.DataBind();
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -82,12 +75,7 @@
 		    <TD class=lightbluetable align=right>報表種類：</TD>
 		    <TD class=whitetablebg align=left colspan=3>
 			    <input type="text" id=prtkind name=prtkind>
-                <asp:Repeater id="rprtRepeater" runat="server">
-			    <ItemTemplate>
-                    <label><input type=radio name="rprtkind" value="<%#Eval("cust_code")%>" onclick="rprtkind_click('<%#Eval("cust_code")%>','<%#Eval("mark1")%>')"><%#Eval("code_name")%>&nbsp;</label>
-                    <%#((Container.ItemIndex+1)%3)==0 ? "<br>":""%>
-			    </ItemTemplate>
-			    </asp:Repeater>
+                <span id="spanRprtKind"></span>
 		    </td>
 	    </tr>
 	    <tr id="tr_send_dept">
@@ -97,6 +85,16 @@
 			    <input type="radio" value="L" name="Send_dept">轉法律處發文
 			    <input type="radio" value="" name="Send_dept">全部
 		        <input type="text" id=qrySend_dept name=qrySend_dept>
+		    </td>
+	    </tr>
+	    <tr id="tr_send_way">
+		    <td class="lightbluetable" align="right">發文方式：</td>
+		    <td class="whitetablebg" align="left" colspan=3>
+			    <input type="text" id="hsend_way" name="hsend_way" value="">
+			    <input type="radio" name="send_way" id="send_wayM" value="M"><label for="send_wayM">非電子送件</label>
+			    <input type="radio" name="send_way" id="send_wayE" value="E"><label for="send_wayE">電子送件</label>
+			    <span id="span_Email_msg" style="display:none"><font color=darkred>【請先點「列印」產生各項報表檔案，再點Email通知總管處(電子送件)】</font></span>
+			    <input type="radio" name="send_way" id="send_wayAll" value=""><label for="send_wayAll">全部</label>
 		    </td>
 	    </tr>
 	    <tr id="tr_date">
@@ -135,6 +133,12 @@
 	    <tr>
         <td align="center">
 			<input type="button" value="列　印" class="cbutton" id="btnSubmit" name="btnSubmit">
+			<span id="span_gs_email" style="display:none">
+			<br><br>
+			發文日期：<input type="text" id="gs_date" name="gs_date" size="10" maxlength=10 class="dateField">
+			<input onClick="formEmail()" id="buttonE" name="buttonE" type="button" value="官方發文Email通知總管處(電子送件/註冊費電子送件)" class="cbutton" style="width:250pt">
+			</span>
+
 			<input type="button" value="重　填" class="cbutton" id="btnReset" name="btnReset">
 	    </td>
 	    </tr>
@@ -149,6 +153,16 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        $("#spanRprtKind").getRadio({//報表種類
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
+            data:{sql:"select cust_code,code_name,mark1 from cust_code where code_type='rpt_GS_t' and cust_code<>'423' order by sortfld"},
+            objName: "rprtkind",
+            valueFormat: "{cust_code}",
+            textFormat: "{code_name}",
+            attrFormat: " onclick=\"rprtkind_click('{cust_code}','{mark1}')\"",
+            mod:3
+        });
+
         $("#qryBranch,#cust_area").getOption({//區所別
             url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
@@ -190,6 +204,17 @@
     //發文單位
     $("input[name='Send_dept']").click(function () { 
         $("#qrySend_dept").val($(this).val());
+        getRsNo();
+    });
+
+    //發文方式
+    $("input[name='send_way']").click(function () {
+        $("#hsend_way").val($(this).val());
+        if($("#hsend_way").val()=="E"||$("#hsend_way").val()=="EA"){
+            $("#span_Email_msg,#span_gs_email").show();
+        }else{
+            $("#span_Email_msg,#span_gs_email").hide();
+        }
         getRsNo();
     });
 
@@ -310,5 +335,82 @@
 	
         
         ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&cc= "+CCtoList+"&body="+tbody;
+    }
+
+    function formEmail(){
+        //511:官方發文明細、512:官方發文規費明細、514:官方發文回條 是否已產生
+        //GSE-514T-20120106.doc、GSE-511T-20120106.doc、GSE-512T-20120106.doc
+        /*
+        attach_path = "D:\Inetpub\wwwroot\btbrt\brtam\reportword";
+        tdate = year(reg.gs_date.value) & string(2-len(month(reg.gs_date.value)),"0") & month(reg.gs_date.value) & string(2-len(day(reg.gs_date.value)),"0") & day(reg.gs_date.value);
+        attach_name = "GS"&reg.hsend_way.value&"-514T-"&tdate&".doc,GS"&reg.hsend_way.value&"-511T-"&tdate&".doc,GS"&reg.hsend_way.value&"-512T-"&tdate&".doc";
+        url = "../json/json_chkFile.aspx?cgrs=<%=cgrs%>&gs_date="+ reg.gs_date.value +"&attach_path="+ attach_path +"&attach_name="+ attach_name;
+        url +="&msg=官方發文回條,官方發文明細,官方發文規費明細";
+        Set xmldoc = CreateObject("Microsoft.XMLDOM")
+        xmldoc.async = false
+        xmldoc.validateOnParse = true
+        rtnmsg=""
+        If xmldoc.load(url) Then
+            if xmldoc.selectSingleNode("//xhead/Found").text = "Y" then
+                if xmldoc.selectSingleNode("//xhead/msg").text<>empty then
+                    rtnmsg=xmldoc.selectSingleNode("//xhead/msg").text
+                    msgbox xmldoc.selectSingleNode("//xhead/msg").text
+                end if
+            end if
+        end if
+        set xmldoc = nothing
+	
+        //Mail To 總收發文
+        //2016/11/16修改，簡協理指示不顯示區所主機
+                tsubject="";
+        <%if (Sys.Host.Left(3)=="web"){%>
+            tsubject +="測試-";
+        <%}%>
+        tsubject += "國內商標案件管理網路作業系統─每日<%=Session["se_branchnm"]%>官發發文明細通知";
+        if ($("#hsend_way").val()=="E"){
+            tsubject+= "【電子送件】";
+        }else if ($("#hsend_way").val()=="EA"){
+            tsubject+="【註冊費電子送件】";
+        }
+	
+        <%if (Sys.Host=="web02"){%>
+        StrToList = "m802;m1583;";
+        strcc="";
+        strbcc = "";
+        <%}else if(Sys.Host=="web01"){%>
+        StrToList = "<%=Session["scode"]%>;";
+        strcc="";
+        strbcc = "m802;";
+        <%}else{%>
+        StrToList = "<%=emg_scode%>;";
+        strcc = "<%=emg_agscode%>;";//2016/4/19修改
+        strbcc = "m802;";
+        <%}%>
+	
+        tbody = "致：總管處-總務部-程序組";
+        tbody += "%0A";
+        tbody += "%0A【通 知 日 期】：<%=Date%>"
+        tbody += "%0A【發 文 日 期】："& reg.gs_date.value
+        tbody += "%0A"
+        tbody += "%0A◎請至總收發網路系統→商標收發文→商標區所發文送件確認作業。"
+        tbody += "%0A"
+        tbody += "%0A附件如下："
+        tbody += "%0A%0A官方發文明細 http://<%=Sys.Host%>/btbrt/brtam/reportword/GS"+$("#hsend_way").val()+"-511T-"+tdate+".doc"
+        if InStr(rtnmsg,"官方發文明細檔案尚未產生")>0 then
+            tbody = tbody & " (本次發文未產生) "
+        end if
+	
+        tbody = tbody & "%0A%0A官方發文規費明細 http://<%=Sys.Host%>/btbrt/brtam/reportword/GS"+$("#hsend_way").val()+"-512T-"+tdate+".doc"
+        if InStr(rtnmsg,"官方發文規費明細檔案尚未產生")>0 then
+            tbody = tbody & " (本次發文未產生) "
+        end if
+	
+        tbody = tbody & "%0A%0A官方發文回條 http://<%=Sys.Host%>/btbrt/brtam/reportword/GS"+$("#hsend_way").val()+"-514T-"+tdate+".doc"
+        if InStr(rtnmsg,"官方發文回條檔案尚未產生")>0 then
+            tbody = tbody & " (本次發文未產生) "
+        end if
+	
+        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&body="+tbody+ "&cc=" + strcc;
+        */
     }
 </script>
