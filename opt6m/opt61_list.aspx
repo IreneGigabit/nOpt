@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -38,7 +38,7 @@
                 if ((Request["qryEopt_no"] ?? "") != "") {
                     isql += " and a.Opt_no<='" + Request["qryEopt_no"] + "'";
                 }
-            } else if ((Request["qryno_type"] ?? "") == "BSeq_no") {
+            } else if ((Request["qryno_type"] ?? "") == "Bseq_no") {
                 if ((Request["qryBranch"] ?? "") != "") {
                     isql += " and a.Branch='" + Request["qryBranch"] + "'";
                 }
