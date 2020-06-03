@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -216,7 +216,6 @@ public class IPOReport : OpenXmlHelper {
 		SetApcust();//抓申請人
 		SetAgent();//抓代理人
 		SetGoods();//抓商品服務類別
-		SetAttach();//抓附送書件
 		SetTran();//抓異動資料
 		SetModAP();//抓關係人
 	}
@@ -401,25 +400,6 @@ public class IPOReport : OpenXmlHelper {
 	}
 	#endregion
 
-	#region 抓附送書件資料 -void SetAttach()
-	/// <summary>
-	/// 抓附送書件資料
-	/// </summary>
-	private void SetAttach() {
-		//string SQL = "select a.att_sqlno,b.doc_type,c.code_name as doc_typenm,b.attach_desc,b.source_name ";
-		//SQL += ",case when b.doc_type='99' then 99 else 0 end sort ";
-		//SQL += " from attcase_dmt a ";
-		//SQL += " inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-		//SQL += " inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-		//SQL += " where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' ";
-		//SQL += " order by sort,charindex(','+c.code_name+',',',委任書,基本資料表,') desc,doc_type";
-        //
-		//DataTable dt = new DataTable();
-		//_connB.DataTable(SQL, dt);
-		//this.Attach = dt;
-	}
-	#endregion
-
 	#region 抓異動資料 -void SetTran()
 	/// <summary>
 	/// 抓異動資料
@@ -575,143 +555,11 @@ public class IPOReport : OpenXmlHelper {
 	}
 	#endregion
 
-	#region 產生附送書件區塊 +void CreateAttach(List<string[]> br_value)
-	/// <summary>
-	/// 產生附送書件區塊
-	/// </summary>
-    /*
-	public void CreateAttach(List<string[]> br_value) {
-		CopyBlock("b_attach1");
-
-		using (DataTable dtAttach = new DataTable()) {
-			//先產生必備的附送書件tag
-			string SQL = "";
-			SQL = "select * from( ";
-            SQL += "	select '1'src_type,c2.Cust_code,c2.Code_name as doc_typenm,c2.form_name,c.SortFld,c.form_name other_desc,c.mark1 other_source_name ";
-			SQL += "	,case when c.Cust_code='99' then 99 else 0 end sort ";
-			SQL += "	from Cust_code c ";
-			SQL += "	join cust_code c2 on c2.Code_type='Tdoc' and c2.ref_code='Eattach' and c.cust_code=c2.cust_code ";
-			SQL += "	where c.Code_type='erpt_" + this.ReportCode + "' and isnull(c.ref_code,'')='*' ";
-			SQL += ")z ";
-			SQL += "left join ( ";
-			SQL += "	select b.source_name,b.attach_desc,b.doc_type ";
-			SQL += "	from attcase_dmt a ";
-			SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-			SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-			SQL += "	where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
-			SQL += ")x on z.Cust_code=x.doc_type ";
-			SQL += "order by z.SortFld";
-			_conn.DataTable(SQL, dtAttach);
-
-			//產生非必備的附送書件tag(對應交辦內容設定,交辦有勾則顯示不論有無上傳)
-			if (br_value != null) {
-				foreach (var v in br_value) {
-					//交辦有勾則顯示不論有無上傳
-					SQL = "select * from( ";
-                    SQL += "	select '2'src_type,c2.Cust_code,c2.Code_name as doc_typenm,c2.form_name,c.SortFld,c.form_name other_desc,c.mark1 other_source_name ";
-					SQL += "	from Cust_code c ";
-					SQL += "	join cust_code c2 on c2.Code_type='Tdoc' and c2.ref_code='Eattach' and c.cust_code=c2.cust_code ";
-					SQL += "	where c.Code_type='erpt_" + this.ReportCode + "' and isnull(c.ref_code,'')<>'*' ";
-					//SQL += "	and charindex('|'+c.ref_code+'|','|'+'Z17|Z9-肖像或著名姓名之商標註冊同意書及申請人身分證影本-Z9|Z16|Z15|Z12|Z141|Z141C|')>0 ";
-					SQL += "	and charindex('|'+c.ref_code+'|','|" + v[0] + "|')>0 ";
-					if (v[1]!=null && v[1] != "") {
-						SQL += "	and c.code_name='" + v[1] + "' ";
-					}
-					SQL += ")z ";
-					SQL += "left join ( ";
-					SQL += "	select b.source_name,b.attach_desc,b.doc_type ";
-					SQL += "	,case when b.doc_type='99' then 99 else 0 end sort ";
-					SQL += "	from attcase_dmt a ";
-					SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-					SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-					SQL += "	where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
-					SQL += ")x on z.Cust_code=x.doc_type ";
-					SQL += "order by z.SortFld";
-					_conn.DataTable(SQL, dtAttach);
-
-					//交辦沒勾但有上傳
-					SQL = "select * from( ";
-                    SQL += "	select '3'src_type,c2.Cust_code,c2.Code_name as doc_typenm,c2.form_name,c.SortFld,c.form_name other_desc,c.mark1 other_source_name ";
-					SQL += "	from Cust_code c ";
-					SQL += "	join cust_code c2 on c2.Code_type='Tdoc' and c2.ref_code='Eattach' and c.cust_code=c2.cust_code ";
-					SQL += "	where c.Code_type='erpt_" + this.ReportCode + "' and isnull(c.ref_code,'')<>'*' ";
-					SQL += "	and charindex('|'+c.ref_code+'|','|" + v[0] + "|')=0 ";
-					if (v[1] != null && v[1] != "") {
-                        SQL += "	and c.code_name='" + v[1] + "' ";
-					}
-					SQL += ")z ";
-					SQL += "inner join ( ";
-					SQL += "	select b.source_name,b.attach_desc,b.doc_type ";
-					SQL += "	,case when b.doc_type='99' then 99 else 0 end sort ";
-					SQL += "	from attcase_dmt a ";
-					SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-					SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-					SQL += "	where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
-					SQL += ")x on z.Cust_code=x.doc_type ";
-					SQL += "order by z.SortFld";
-					_conn.DataTable(SQL, dtAttach);
-				}
-			}
-
-			//不在cust_code設定的附件tag
-			SQL = "select '4'src_type,c.Cust_code,b.doc_type,c.code_name as doc_typenm,b.attach_desc,b.source_name,c.SortFld ";
-			SQL += ",case when b.doc_type='99' then 99 else 0 end sort ";
-			SQL += "from attcase_dmt a ";
-			SQL += "inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-			SQL += "inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-			SQL += "where a.sign_stat='NN' and a.in_no='" + _in_no + "' ";
-			SQL += "and not exists( ";
-			SQL += "	select c2.cust_code ";
-			SQL += "	from Cust_code c1 ";
-			SQL += "	join cust_code c2 on c2.Code_type='Tdoc' and c2.ref_code='Eattach' and c1.cust_code=c2.cust_code ";
-			SQL += "	where c1.Code_type='erpt_" + this.ReportCode + "' and b.doc_type=c2.cust_code ";
-			SQL += "	and isnull(c1.ref_code,'')" + (br_value != null ? "<>''" : "='*'") + " ";
-			SQL += ") ";
-			SQL += "order by sort";
-			_conn.DataTable(SQL, dtAttach);
-
-			dtAttach.ShowTable();
-			if (dtAttach.Rows.Count != 0) {
-				for (int i = 0; i < dtAttach.Rows.Count; i++) {
-					if (dtAttach.Rows[i]["Cust_code"].ToString() != "99") {
-						CopyBlock("b_attach3");
-						string filename = dtAttach.Rows[i]["form_name"].ToString();
-						if (dtAttach.Rows[i]["source_name"].ToString() != "") {
-							filename = dtAttach.Rows[i]["source_name"].ToString();
-						}
-						string doc_typenm = dtAttach.Rows[i]["doc_typenm"].ToString().Trim();
-						ReplaceBookmark("doc_typenm", doc_typenm);
-						int padCount = (doc_typenm.Length > 11) ? 0 : 11 - doc_typenm.Length;
-						ReplaceBookmark("source_name", new string('　', padCount) + filename);//補齊全型空白
-					} else {
-						CopyBlock("b_attach4");
-                        //描述
-						string oth_desc = dtAttach.Rows[i]["other_desc"].ToString();
-						if (dtAttach.Rows[i]["attach_desc"].ToString() != "") {
-							oth_desc = dtAttach.Rows[i]["attach_desc"].ToString();
-						}
-                        //檔名
-                        string source_name = dtAttach.Rows[i]["other_source_name"].ToString();
-                        if (dtAttach.Rows[i]["source_name"].ToString() != "") {
-                            source_name = dtAttach.Rows[i]["source_name"].ToString();
-                        }
-                        ReplaceBookmark("oth_attach_desc", oth_desc);
-                        ReplaceBookmark("oth_source_name", source_name);
-					}
-				}
-			}
-		}
-		AddParagraph();
-	}
-    */
-    #endregion
-
     #region 產生附送書件區塊 +void CreateAttach(List<AttachMapping> brMap) {
     /// <summary>
     /// 產生附送書件區塊
     /// </summary>
     public void CreateAttach(List<AttachMapping> brMap) {
-        /*
         CopyBlock("b_attach1");
         using (DataTable dtAttach = new DataTable()) {
             string exclude = "";
@@ -723,35 +571,14 @@ public class IPOReport : OpenXmlHelper {
                     SQL = "select * from( ";
                     SQL += "	select '1'src_type,c2.cust_code,c2.Code_name as doc_typenm,c2.form_name ";
                     SQL += "	from Cust_code c2 ";
-                    SQL += "	where c2.Code_type='Tdoc' and c2.ref_code='Eattach' and c2.cust_code='" + brMap[y].docType + "' ";
+                    SQL += "	where c2.Code_type='ODoc_type' and c2.ref_code='Eattach' and c2.cust_code='" + brMap[y].docType + "' ";
                     SQL += ")z ";
                     SQL += "left join ( ";
                     SQL += "	select b.source_name,b.attach_desc,b.doc_type ";
-                    SQL += "	from attcase_dmt a ";
-                    SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-                    SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-                    SQL += "	where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' and b.doc_type='" + brMap[y].docType + "' ";
+                    SQL += "	from attach_opt b ";
+                    SQL += "	inner join cust_code c on c.code_type='ODoc_type' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
+                    SQL += "	where b.opt_sqlno='" + _opt_sqlno + "' and b.doc_type='" + brMap[y].docType + "' ";
                     SQL += ")x on z.cust_code=x.doc_type ";
-                    _conn.DataTable(SQL, dtAttach);
-                } else {
-                    //有對應交辦欄位,且有勾選,則顯示不論有無上傳
-                    string whereSQL = "	and 1=0 ";
-                    if (("|" + brMap[y].brColValue + "|").IndexOf("|" + brMap[y].mapValue + "|") > -1) {
-                        whereSQL = "	and 1=1 ";
-                        exclude += "," + brMap[y].docType;
-                    }
-                    SQL = "select * from( ";
-                    SQL += "	select '2'src_type,c2.cust_code,c2.Code_name as doc_typenm,c2.form_name ";
-                    SQL += "	from Cust_code c2 ";
-                    SQL += "	where c2.Code_type='Tdoc' and c2.ref_code='Eattach' and c2.cust_code='" + brMap[y].docType + "' " + whereSQL;
-                    SQL += ")z ";
-                    SQL += "left join ( ";
-                    SQL += "	select b.source_name,b.attach_desc,b.doc_type ";
-                    SQL += "	from attcase_dmt a ";
-                    SQL += "	inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-                    SQL += "	inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-                    SQL += "	where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' and b.doc_type='" + brMap[y].docType + "' ";
-                    SQL += ")x on z.Cust_code=x.doc_type ";
                     _conn.DataTable(SQL, dtAttach);
                 }
             }
@@ -759,10 +586,9 @@ public class IPOReport : OpenXmlHelper {
             //沒對應到的其他附件
             SQL = "select '4'src_type,c.Cust_code,c.code_name as doc_typenm,c.form_name,b.source_name,b.attach_desc,b.doc_type ";
             SQL += ",case when b.doc_type='99' then 99 else 0 end sort ";
-            SQL += "from attcase_dmt a ";
-            SQL += "inner join dmt_attach b on a.in_no=b.in_no and a.att_sqlno=b.att_sqlno and b.attach_flag<>'D' and b.doc_flag='E' ";//抓取電子送件
-            SQL += "inner join cust_code c on c.code_type='tdoc' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
-            SQL += "where a.sign_stat='NN' and a.in_no='" + _opt_sqlno + "' ";
+            SQL += "from attach_opt b ";
+            SQL += "inner join cust_code c on c.code_type='ODoc_type' and c.cust_code=b.doc_type and c.ref_code='Eattach' ";//抓取可顯示於附件書件之文件種類
+            SQL += "where b.opt_sqlno='" + _opt_sqlno + "' ";
             if (exclude != "") {
                 SQL += "and b.doc_type not in('" + exclude.Substring(1).Replace(",","','") + "') ";
             }
@@ -800,52 +626,10 @@ public class IPOReport : OpenXmlHelper {
                     }
                 }
             }
-        }*/
+        }
         AddParagraph();
     }
     #endregion
-
-    #region 產生附送書件區塊 +void CreateAttach()
-    public void CreateAttach() {
-		//附送書件
-		CopyBlock("b_attach1");
-		using (DataTable dtAttach = Attach) {
-			if (dtAttach.Rows.Count == 0) {
-				CopyBlock("b_attach2");
-				AddParagraph();
-			} else {
-				bool basic_flag = false;
-				//先產生不是【其他】的附件
-				for (int i = 0; i < dtAttach.Rows.Count; i++) {
-					//有基本資料表
-					if (dtAttach.Rows[i]["doc_type"].ToString() == "19") basic_flag = true;
-					if (dtAttach.Rows[i]["doc_type"].ToString() != "99") {
-						CopyBlock("b_attach3");
-						string doc_typenm = dtAttach.Rows[i]["doc_typenm"].ToString().Trim();
-						ReplaceBookmark("doc_typenm", doc_typenm);
-						int padCount = (doc_typenm.Length > 11) ? 0 : 11 - doc_typenm.Length;
-						ReplaceBookmark("source_name", new string('　', padCount) + dtAttach.Rows[i]["source_name"].ToString());
-					}
-				}
-				//如果尚未上傳基本資料表則先產生tag
-				if (!basic_flag) {
-					CopyBlock("b_attach3");
-					ReplaceBookmark("doc_typenm", "基本資料表");
-					ReplaceBookmark("source_name", "　　　　　　Contact.pdf");
-				}
-				//最後產生【其他】的附件
-				for (int i = 0; i < dtAttach.Rows.Count; i++) {
-					if (dtAttach.Rows[i]["doc_type"].ToString() == "99") {
-						CopyBlock("b_attach4");
-						ReplaceBookmark("oth_attach_desc", dtAttach.Rows[i]["attach_desc"].ToString());
-						ReplaceBookmark("oth_source_name", dtAttach.Rows[i]["source_name"].ToString());
-					}
-				}
-				AddParagraph();
-			}
-		}
-	}
-	#endregion
 
 	#region 產生基本資料表 +AppendBaseData(string baseDocName)
 	/// <summary>
@@ -925,11 +709,11 @@ public class IPOReport : OpenXmlHelper {
 					ReplaceBookmark("mod_ap_num", (i + 1).ToString());
 					ReplaceBookmark("mod_ap_cname_title", "中文名稱");
 					ReplaceBookmark("mod_ap_ename_title", "",true);
-					ReplaceBookmark("mod_ap_cname", TranListAP.Rows[i]["ncname1"].ToString());
+                    ReplaceBookmark("mod_ap_cname", TranListAP.Rows[i]["ncname1"].ToString().ToXmlUnicode());
 					ReplaceBookmark("mod_ap_ename", "",true);
-					ReplaceBookmark("mod_ap_addr", TranListAP.Rows[i]["naddr1"].ToString(), true);
+                    ReplaceBookmark("mod_ap_addr", TranListAP.Rows[i]["naddr1"].ToString().ToXmlUnicode(), true);
 					ReplaceBookmark("mod_ap_eddr", "", true);
-					ReplaceBookmark("mod_ap_crep", TranListAP.Rows[i]["ncrep"].ToString());
+                    ReplaceBookmark("mod_ap_crep", TranListAP.Rows[i]["ncrep"].ToString().ToXmlUnicode());
 				}
 			}
 		}
@@ -997,7 +781,7 @@ public class IPOReport : OpenXmlHelper {
 	/// 更新列印狀態
 	/// </summary>
 	public void SetPrint() {
-		string SQL = "update case_opt set new='P' " +
+        string SQL = "update case_opt set new='P',rectitle_name='" + this.RectitleName + "' " +
                     "where opt_sqlno='" + _opt_sqlno + "'";
 		_conn.ExecuteNonQuery(SQL);
 	}
