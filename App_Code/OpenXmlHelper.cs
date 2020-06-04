@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -232,6 +232,27 @@ public class OpenXmlHelper
 		}
 		this.Dispose();
 	}
+	#endregion
+
+    #region 輸出檔案(memory)且另存副本 +void SaveAndFlush(string outputPath,string outputName)
+    /// <summary>
+    /// 輸出檔案(memory)且另存副本
+	/// </summary>
+    public void SaveAndFlush(string outputPath, string outputName) {
+        outDoc.MainDocumentPart.Document.Save();
+        outDoc.Close();
+        using (FileStream fileStream = new FileStream(outputPath, FileMode.Create)) {
+            outMem.Position = 0;
+            outMem.WriteTo(fileStream);
+        }
+        HttpContext.Current.Response.Clear();
+        HttpContext.Current.Response.HeaderEncoding = System.Text.Encoding.GetEncoding("big5");
+        HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename=\"" + outputName + "\"");
+        HttpContext.Current.Response.ContentType = "application/octet-stream";
+        HttpContext.Current.Response.AddHeader("Content-Length", outMem.Length.ToString());
+        HttpContext.Current.Response.BinaryWrite(outMem.ToArray());
+        this.Dispose();
+    }
 	#endregion
 
 	#region 複製範本Block,回傳List +List<OpenXmlElement> CopyBlockList(string blockName)
