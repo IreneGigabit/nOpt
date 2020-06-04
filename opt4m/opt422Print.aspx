@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -186,6 +186,11 @@
 <body>
 <form id="reg" name="reg" method="post">
 	<asp:Repeater id="branchRepeater" runat="server" OnItemDataBound="branchRepeater_ItemDataBound">
+        <FooterTemplate>
+            <asp:Label ID="lblEmpty" runat="server" Visible='<%#bool.Parse((branchRepeater.Items.Count==0).ToString())%>'>
+                <div align="center"><font color="red" size=2>=== 查無資料===</font></div>
+            </asp:Label> 
+        </FooterTemplate>
 	    <ItemTemplate>
             <table border="0" width="100%" cellspacing="1" cellpadding="0" align="center">
 		        <tr>
