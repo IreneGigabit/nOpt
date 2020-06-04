@@ -105,3 +105,12 @@ function chkNum1(pObj, pmsg) {
         return false;
     }
 }
+
+function chkRadio(pFieldName, pmsg){
+    if($("input[name='"+pFieldName+"']:checked").length!=0){
+        return true;
+    }else{
+        alert("請選擇" + pmsg + "！");
+        return false;
+    }
+}
