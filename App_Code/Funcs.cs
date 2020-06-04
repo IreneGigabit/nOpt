@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -155,6 +155,27 @@ public class Funcs {
 		}
 	}
 	#endregion
+
+    #region GetRoleScode - 抓取系統角色人員
+    /// <summary>  
+    /// 抓取系統角色人員，psyscode=系統代碼NTBRT，pdept=部門T，proles=角色mg_pror=程序mg_prorm=主管
+    /// </summary>  
+    public static string GetRoleScode(string pSyscode, string pDept, string pRoles) {
+        string mgprscode = "";
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false)) {
+            string SQL = "select a.scode from scode_roles a inner join scode b on a.scode=b.scode ";
+            SQL += " where a.syscode='" + pSyscode + "' and a.dept='" + pDept + "' and a.roles='" + pRoles + "' ";
+            SQL += " and (b.end_date is null or b.end_date>='" + DateTime.Today.ToShortDateString() + "')";
+            SQL += " order by a.sort ";
+            using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
+                while (dr.Read()) {
+                    mgprscode += (mgprscode != "" ? ";" : "") + dr.SafeRead("scode", "");
+                }
+            }
+        }
+        return mgprscode;
+    }
+    #endregion
 
     #region insert_log_table
     /// <summary>
