@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -41,7 +41,10 @@
         _tplFile.Add("gsrpt", Server.MapPath("~/ReportTemplate/報表/發文回條.docx"));
         Rpt.CloneFromFile(_tplFile, true);
 
-        string docFileName = string.Format("GS{0}-514P-{1:yyyyMMdd}.docx", send_way, DateTime.Today);
+        string docFileName = Session["scode"] + "發文回條.docx";
+        if (send_way == "E" || send_way == "EA") {
+            docFileName = string.Format("GS{0}-514T-{1:yyyyMMdd}.docx", send_way, DateTime.Today);
+        }
 
         string SQL = "";
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(true)) {
@@ -192,12 +195,15 @@
 
             if (dt.Rows.Count > 0) {
                 Rpt.CopyPageFoot("gsrpt", false);//複製頁尾/邊界
-                Rpt.Flush(docFileName);
-                //Rpt.SaveTo(Server.MapPath("~/reportdata/" + docFileName));
+                if (send_way == "E" || send_way == "EA") {//電子送件才要保留副本
+                    Rpt.SaveAndFlush(Server.MapPath("~/ReportWord/" + docFileName), docFileName);
+                } else {
+                    Rpt.Flush(docFileName);
+                }
             } else {
                 strOut.AppendLine("<script language=\"javascript\">");
                 strOut.AppendLine("    alert(\"無資料需產生\");");
-                strOut.AppendLine("<"+"/script>");
+                strOut.AppendLine("<" + "/script>");
                 Response.Write(strOut.ToString());
             }
         }
