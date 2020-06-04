@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -24,21 +24,24 @@
 
         JArray obj = new JArray();
         for (int i = 0; i < arrMsg.Length; i++) {
-            FileInfo fi = new FileInfo(Server.MapPath(attach_path + @"\" + arrAttach_name[i]));
+            FileInfo fi = new FileInfo(Server.MapPath("~/" + attach_path + arrAttach_name[i]));
             if (fi.Exists) {
                 obj.Add(new JObject(
                                 new JProperty("fileexist", "Y"),
+                                new JProperty("path", fi.FullName),
                                 new JProperty("msg", "")
                             ));
             } else {
                 if (arrMsg[i] == "官方發文規費明細") {
                     obj.Add(new JObject(
                                     new JProperty("fileexist", "N"),
-                                    new JProperty("msg", arrMsg[i] + "檔案尚未產生\n若確定列印發文期間內案件皆無規費，則忽略規費明細表未產生提示訊息")
+                                    new JProperty("path", fi.FullName),
+                                    new JProperty("msg", arrMsg[i] + "檔案尚未產生\n\n若確定列印發文期間內案件皆無規費，則忽略規費明細表未產生提示訊息")
                                 ));
                 } else {
                     obj.Add(new JObject(
                                     new JProperty("fileexist", "N"),
+                                    new JProperty("path", fi.FullName),
                                     new JProperty("msg", arrMsg[i] + "檔案尚未產生")
                                 ));
                 }
