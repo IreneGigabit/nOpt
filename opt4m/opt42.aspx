@@ -1,5 +1,6 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
+<%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -22,8 +23,8 @@
 
         step_date = (Request["step_date"] ?? "").Trim();
         rs_no = (Request["rs_no"] ?? "").Trim();
-        //emg_scode=getmgprscode(session("syscode"),session("dept"),"mg_pror")	//總管處程序人員-正本
-        //emg_agscode=getmgprscode(session("syscode"),session("dept"),"mg_prorm")	//總管處程序主管-副本
+        emg_scode = Funcs.GetRoleScode(Sys.GetSession("syscode"), Sys.GetSession("dept"), "mg_pror");//總管處程序人員-正本
+        emg_agscode = Funcs.GetRoleScode(Sys.GetSession("syscode"), Sys.GetSession("dept"), "mg_prorm");//總管處程序人員-副本
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
@@ -134,9 +135,9 @@
         <td align="center">
 			<input type="button" value="列　印" class="cbutton" id="btnSubmit" name="btnSubmit">
 			<span id="span_gs_email" style="display:none">
-			<br><br>
-			發文日期：<input type="text" id="gs_date" name="gs_date" size="10" maxlength=10 class="dateField">
-			<input onClick="formEmail()" id="buttonE" name="buttonE" type="button" value="官方發文Email通知總管處(電子送件/註冊費電子送件)" class="cbutton" style="width:250pt">
+			    <br><br>
+			    發文日期：<input type="text" id="gs_date" name="gs_date" size="10" maxlength=10 class="dateField">
+			    <input onClick="formEmail()" id="buttonE" name="buttonE" type="button" value="官方發文Email通知總管處(電子送件)" class="cbutton">
 			</span>
 
 			<input type="button" value="重　填" class="cbutton" id="btnReset" name="btnReset">
@@ -187,6 +188,7 @@
         }
         $("#sdate").val((new Date()).format("yyyy/M/d"));
         $("#edate").val((new Date()).format("yyyy/M/d"));
+        $("#gs_date").val($("#edate").val());
         getRsNo();
         $("input[name='Send_dept'][value='']").prop("checked",true).triggerHandler("click");//發文單位:全部
     }
@@ -214,7 +216,7 @@
             $("#span_Email_msg,#span_gs_email").show();
         }else{
             $("#span_Email_msg,#span_gs_email").hide();
-        }
+        }$("#span_Email_msg,#span_gs_email").show();
         getRsNo();
     });
 
@@ -240,7 +242,11 @@
         });
     }
 
-    $("#sdate,#edate").blur(function (e) {
+    $("#sdate").blur(function (e) {
+        getRsNo();
+    });
+    $("#edate").blur(function (e) {
+        $("#gs_date").val($("#edate").val());
         getRsNo();
     });
 
@@ -275,7 +281,9 @@
             alert("報表種類必須選擇!!!");
             return false;
         }
-
+        if ($("#cgrs").val()=="GS"){
+            if (!chkRadio("send_way","發文方式"))return false;
+        }
         if ($("#srs_no").val()=="" && $("#ers_no").val()==""){
             getRsNo();
         }
@@ -309,7 +317,10 @@
             reg.submit();
         }else{
             //var url="opt"  + $("#prtkind").val() + "Print.asp?sdate="&reg.sdate.value&"&edate="&reg.edate.value&"&srs_no="&reg.srs_no.value&"&ers_no="&reg.ers_no.value&"&sseq="&reg.sseq.value&"&eseq="&reg.eseq.value&"&scust_seq="&reg.scust_seq.value&"&ecust_seq="&reg.ecust_seq.value&"&sctrl_date="&reg.sctrl_date.value&"&ectrl_date="&reg.ectrl_date.value&"&qrysend_dept="&reg.qrysend_dept.value;
-            var url="opt"  + $("#prtkind").val() + "Print.aspx?"+$("#reg").serialize();
+            var url="opt"  + $("#prtkind").val() + "Print.aspx?";
+            if($("#hsend_way").val()=="E")
+                url="opt"  + $("#prtkind").val() + "Print_word.aspx?";
+            url+=$("#reg").serialize();
             window.open(url,"myWindowOne1", "width=750px, height=550px, top=10, left=10, toolbar=no, menubar=no, location=no, directories=no, status=no, scrollbars=yes,titlebar=no");
         }
     });
@@ -319,98 +330,91 @@
         reg.reset();
         this_init();
     });
-
-    //契約書後補通知區所mail簽核
-    function tobrbutton_email(nRow,fseq,case_no,last_date,appl_name,gs_date,opt_sqlno,branch){
-        var StrToList=$("#mailto"+nRow).val();
-        var CCtoList=$("#mailcc"+nRow).val();
-	
-        var tsubject = "國內所爭救案系統－官發待契約書後補通知（區所編號： " + fseq + " ）";
-	
-        var tbody = "致: 國內所 程序、承辦" + "%0A%0A";
-        tbody += "【通 知 日 期 】: "+(new Date()).format("yyyy/M/d");
-        tbody += "%0A【區所編號】:" + fseq + "，交辦單號："+ case_no +"，法定期限："+ last_date+ "，預計發文日期："+ gs_date  ;
-        tbody += "%0A【案件名稱】:" + appl_name;
-        tbody += "%0A 請儘速後補契約書，以俾爭議組發文，如無法及時完成後補，請進行mail簽核作業，經主管同意後由資訊部開放可先官發。";
-	
-        
-        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&cc= "+CCtoList+"&body="+tbody;
-    }
-
+    
     function formEmail(){
+        <%
+        string tsubject = "";//主旨
+        string strto = "";//收件者
+        string strcc = "";//副本
+        string strbcc = "";//密件副本
+        string Sender=Sys.GetSession("scode");//寄件者
+        if (Sys.Host=="web08") {
+            strto = "m802;m1583;";
+            strcc="";
+            strbcc = "";
+            tsubject = "測試-";
+        } else if (Sys.Host == "web10") {
+            strto = Sys.GetSession("scode") + ";";
+            strcc = "";
+            strbcc = "m1583;";
+            tsubject = "測試-";
+        } else {
+            strto = emg_scode + ";";
+            strcc = emg_agscode + ";";//2016/4/19修改
+            strbcc = "m1583;";
+        }
+        tsubject += "國內商標爭救案件管理網路作業系統─每日官發發文明細通知";
+        %>
+        var tsubject="<%=tsubject%>";//主旨
+        var strto = "<%=strto%>";//收件者
+        var strcc = "<%=strcc%>";//副本
+        var strbcc = "<%=strbcc%>";//密件副本
+        var host=window.location.hostname;
+
         //511:官方發文明細、512:官方發文規費明細、514:官方發文回條 是否已產生
         //GSE-514T-20120106.doc、GSE-511T-20120106.doc、GSE-512T-20120106.doc
-        /*
-        attach_path = "D:\Inetpub\wwwroot\btbrt\brtam\reportword";
-        tdate = year(reg.gs_date.value) & string(2-len(month(reg.gs_date.value)),"0") & month(reg.gs_date.value) & string(2-len(day(reg.gs_date.value)),"0") & day(reg.gs_date.value);
-        attach_name = "GS"&reg.hsend_way.value&"-514T-"&tdate&".doc,GS"&reg.hsend_way.value&"-511T-"&tdate&".doc,GS"&reg.hsend_way.value&"-512T-"&tdate&".doc";
-        url = "../json/json_chkFile.aspx?cgrs=<%=cgrs%>&gs_date="+ reg.gs_date.value +"&attach_path="+ attach_path +"&attach_name="+ attach_name;
-        url +="&msg=官方發文回條,官方發文明細,官方發文規費明細";
-        Set xmldoc = CreateObject("Microsoft.XMLDOM")
-        xmldoc.async = false
-        xmldoc.validateOnParse = true
-        rtnmsg=""
-        If xmldoc.load(url) Then
-            if xmldoc.selectSingleNode("//xhead/Found").text = "Y" then
-                if xmldoc.selectSingleNode("//xhead/msg").text<>empty then
-                    rtnmsg=xmldoc.selectSingleNode("//xhead/msg").text
-                    msgbox xmldoc.selectSingleNode("//xhead/msg").text
-                end if
-            end if
-        end if
-        set xmldoc = nothing
-	
+        var attach_path = "reportword/";
+        var tdate=(new Date($("#gs_date").val())).format("yyyyMMdd");
+
+        var attach_name = "GS"+$("#hsend_way").val()+"-514T-"+tdate+".docx,GS"+$("#hsend_way").val()+"-511T-"+tdate+".docx,GS"+$("#hsend_way").val()+"-512T-"+tdate+".docx";
+        var arug = "cgrs="+$("#cgrs").val()+"&attach_path="+ attach_path +"&attach_name="+ attach_name;
+        arug +="&msg="+escape("官方發文回條,官方發文明細,官方發文規費明細");
+
+        var rtnmsg="";
+        //檢查檔案是否存在
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/ajax/json_chkFile.aspx?"+arug,
+            async: false,
+            cache: false,
+            success: function (json) {
+                var JSONdata = $.parseJSON(json);
+                $.each(JSONdata, function (i, item) {
+                    if(item.msg!="") rtnmsg+=item.msg+"\n\n";
+                });
+            },
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>檔案檢查失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        });
+        if(rtnmsg!="")alert(rtnmsg);
+
         //Mail To 總收發文
-        //2016/11/16修改，簡協理指示不顯示區所主機
-                tsubject="";
-        <%if (Sys.Host.Left(3)=="web"){%>
-            tsubject +="測試-";
-        <%}%>
-        tsubject += "國內商標案件管理網路作業系統─每日<%=Session["se_branchnm"]%>官發發文明細通知";
         if ($("#hsend_way").val()=="E"){
             tsubject+= "【電子送件】";
         }else if ($("#hsend_way").val()=="EA"){
             tsubject+="【註冊費電子送件】";
         }
-	
-        <%if (Sys.Host=="web02"){%>
-        StrToList = "m802;m1583;";
-        strcc="";
-        strbcc = "";
-        <%}else if(Sys.Host=="web01"){%>
-        StrToList = "<%=Session["scode"]%>;";
-        strcc="";
-        strbcc = "m802;";
-        <%}else{%>
-        StrToList = "<%=emg_scode%>;";
-        strcc = "<%=emg_agscode%>;";//2016/4/19修改
-        strbcc = "m802;";
-        <%}%>
-	
-        tbody = "致：總管處-總務部-程序組";
+
+        var tbody = "致：總管處-總務部-程序組";
         tbody += "%0A";
-        tbody += "%0A【通 知 日 期】：<%=Date%>"
-        tbody += "%0A【發 文 日 期】："& reg.gs_date.value
-        tbody += "%0A"
-        tbody += "%0A◎請至總收發網路系統→商標收發文→商標區所發文送件確認作業。"
-        tbody += "%0A"
-        tbody += "%0A附件如下："
-        tbody += "%0A%0A官方發文明細 http://<%=Sys.Host%>/btbrt/brtam/reportword/GS"+$("#hsend_way").val()+"-511T-"+tdate+".doc"
-        if InStr(rtnmsg,"官方發文明細檔案尚未產生")>0 then
-            tbody = tbody & " (本次發文未產生) "
-        end if
-	
-        tbody = tbody & "%0A%0A官方發文規費明細 http://<%=Sys.Host%>/btbrt/brtam/reportword/GS"+$("#hsend_way").val()+"-512T-"+tdate+".doc"
-        if InStr(rtnmsg,"官方發文規費明細檔案尚未產生")>0 then
-            tbody = tbody & " (本次發文未產生) "
-        end if
-	
-        tbody = tbody & "%0A%0A官方發文回條 http://<%=Sys.Host%>/btbrt/brtam/reportword/GS"+$("#hsend_way").val()+"-514T-"+tdate+".doc"
-        if InStr(rtnmsg,"官方發文回條檔案尚未產生")>0 then
-            tbody = tbody & " (本次發文未產生) "
-        end if
-	
-        ActFrame.location.href= "mailto:"+ StrToList +"?subject="+tsubject+"&body="+tbody+ "&cc=" + strcc;
-        */
+        tbody += "%0A【通 知 日 期】："+(new Date()).format("yyyy/M/d");
+        tbody += "%0A【發 文 日 期】："+$("#gs_date").val();
+        tbody += "%0A";
+        tbody += "%0A◎請至總收發網路系統→商標收發文→商標區所發文送件確認作業。";
+        tbody += "%0A";
+        tbody += "%0A附件如下：";
+        tbody += "%0A%0A官方發文明細 http://"+host+"/nopt/reportword/GS"+$("#hsend_way").val()+"-511T-"+tdate+".docx";
+        if(rtnmsg.indexOf("官方發文明細檔案尚未產生")>-1){
+            tbody += " (本次發文未產生) ";
+        }
+        tbody += "%0A%0A官方發文規費明細 http://"+host+"/nopt/reportword/GS"+$("#hsend_way").val()+"-512T-"+tdate+".docx";
+        if(rtnmsg.indexOf("官方發文規費明細檔案尚未產生")>-1){
+            tbody += " (本次發文未產生) ";
+        }
+        tbody+= "%0A%0A官方發文回條 http://"+host+"/nopt/reportword/GS"+$("#hsend_way").val()+"-514T-"+tdate+".docx";
+        if(rtnmsg.indexOf("官方發文回條檔案尚未產生")>-1){
+            tbody += " (本次發文未產生) ";
+        }
+
+        ActFrame.location.href= "mailto:"+ strto +"?subject="+tsubject+"&body="+tbody+ "&cc=" + strcc;//+"&bcc="+ strbcc;
     }
 </script>
