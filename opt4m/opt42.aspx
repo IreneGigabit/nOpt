@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -110,6 +110,7 @@
 		    <td class="whitetablebg" align="left" colspan=3>
 			    <input type="text" id="srs_no" name="srs_no" size="11" maxlength=10>～
 			    <input type="text" id="ers_no" name="ers_no" size="11" maxlength=10>
+			    <input type="text" id="rs_count" name="rs_count">
 		    </td>
 	    </tr>
 	    <tr>
@@ -233,9 +234,11 @@
                 if (JSONdata.length == 0) {
                     $("#srs_no").val("");
                     $("#ers_no").val("");
+                    $("#rs_count").val("0");
                 } else {
                     $("#srs_no").val(JSONdata[0].minrs_no);
                     $("#ers_no").val(JSONdata[0].maxrs_no);
+                    $("#rs_count").val(JSONdata[0].cc);
                 }
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>發文字號載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
@@ -317,10 +320,10 @@
             reg.submit();
         }else{
             //var url="opt"  + $("#prtkind").val() + "Print.asp?sdate="&reg.sdate.value&"&edate="&reg.edate.value&"&srs_no="&reg.srs_no.value&"&ers_no="&reg.ers_no.value&"&sseq="&reg.sseq.value&"&eseq="&reg.eseq.value&"&scust_seq="&reg.scust_seq.value&"&ecust_seq="&reg.ecust_seq.value&"&sctrl_date="&reg.sctrl_date.value&"&ectrl_date="&reg.ectrl_date.value&"&qrysend_dept="&reg.qrysend_dept.value;
-            var url="opt"  + $("#prtkind").val() + "Print.aspx?";
-            if($("#hsend_way").val()=="E")
-                url="opt"  + $("#prtkind").val() + "Print_word.aspx?";
-            url+=$("#reg").serialize();
+            var url="opt"  + $("#prtkind").val() + "Print.aspx";
+            if($("#hsend_way").val()=="E"||$("#hsend_way").val()=="EA")
+                url="opt"  + $("#prtkind").val() + "Print_word.aspx";
+            url+="?"+$("#reg").serialize();
             window.open(url,"myWindowOne1", "width=750px, height=550px, top=10, left=10, toolbar=no, menubar=no, location=no, directories=no, status=no, scrollbars=yes,titlebar=no");
         }
     });
