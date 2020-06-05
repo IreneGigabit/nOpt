@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -31,10 +31,12 @@
         DataTable dt = new DataTable();
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             if (cgrs=="GS"){
-	            SQL = "select min(rs_no) as minrs_no,max(rs_no) as maxrs_no from br_opt";
+                SQL = "select min(rs_no) as minrs_no,max(rs_no) as maxrs_no,count(rs_no)as cc";
+                SQL+= " from br_opt";
 	            SQL+= " where (rs_no is not null) and left(rs_no,1)='B'";
             }else{
-	            SQL = "select min(rs_no) as minrs_no,max(rs_no) as maxrs_no from step_dmt";
+	            SQL = "select min(rs_no) as minrs_no,max(rs_no) as maxrs_no,count(rs_no)as cc";
+                SQL += " from step_dmt";
                 SQL += " where branch='" + branch + "'";
                 SQL += " and cg='" + cgrs.Left(1) + "' ";
                 SQL += " and rs='" + cgrs.Mid(1,1) + "'";
