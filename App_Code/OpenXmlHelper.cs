@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -977,6 +977,30 @@ public class OpenXmlHelper
 		catch (Exception ex) {
 			throw new Exception("複製Table錯誤!!(" + index + ")", ex);
 		}
+	}
+	#endregion
+
+    #region 複製表格 +void CopyTable(string name)
+    public void CopyTable(string name) {
+        CopyTable(defTplDocName, name);
+    }
+    #endregion
+
+    #region 複製表格 +void CopyTable(string srcDocName, string name)
+    public void CopyTable(string srcDocName, string name) {
+        try {
+            WordprocessingDocument srcDoc = tplDoc[srcDocName];
+            IEnumerable<TableProperties> tableProperties = srcDoc.MainDocumentPart.RootElement.Descendants<TableProperties>().Where(tp => tp.TableCaption != null);
+            foreach (TableProperties tProp in tableProperties) {
+                if (tProp.TableCaption.Val.Equals(name)) {
+                    Table table = (Table)tProp.Parent;
+                    outBody.AppendChild(table.CloneNode(true));
+                }
+            }
+        }
+        catch (Exception ex) {
+            throw new Exception("複製Table錯誤!!(" + name + ")", ex);
+        }
 	}
 	#endregion
 
