@@ -46,7 +46,7 @@
         string SQL = "", wSQL = "";
         DataTable dt = new DataTable();
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(true)) {
-            //if ((Request["send_way"] ?? "") != "") wSQL += " and send_way='" + Request["send_way"] + "'";
+            if ((Request["send_way"] ?? "") != "") wSQL += " and send_way='" + Request["send_way"] + "'";
             if ((Request["sdate"] ?? "") != "") wSQL += " and GS_date>='" + Request["sdate"] + "'";
             if ((Request["edate"] ?? "") != "") wSQL += " and GS_date<='" + Request["edate"] + "'";
             if ((Request["srs_no"] ?? "") != "") wSQL += " and rs_no>='" + Request["srs_no"] + "'";
@@ -154,8 +154,8 @@
 
             if (dt.Rows.Count > 0) {
                 Rpt.CopyPageFoot("gsrpt", false);//複製頁尾/邊界
-                Rpt.Flush(docFileName);
-                //Rpt.SaveAndFlush(Server.MapPath("~/ReportWord/" + docFileName), docFileName);
+                //Rpt.Flush(docFileName);
+                Rpt.SaveAndFlush(Server.MapPath("~/ReportWord/" + docFileName), docFileName);
                 //Rpt.SaveTo(Server.MapPath("~/ReportWord/" + docFileName));
             } else {
                 strOut.AppendLine("<script language=\"javascript\">");
