@@ -173,14 +173,14 @@
 <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	<thead>
         <Tr>
-		<td class="lightbluetable"nowrap>北京案號</td>
-		<td class="lightbluetable"nowrap>類別</td>
-		<td class="lightbluetable"nowrap>商標圖樣</td>
-		<td class="lightbluetable"nowrap>裁決要旨</td>
-		<td class="lightbluetable"nowrap>條款成立狀態/<BR>裁決生效狀態</td>
-		<td class="lightbluetable"nowrap>引用條文法規</td>
-		<td class="lightbluetable"nowrap>判決/決定日期</td>
-		<td class="lightbluetable" nowrap>作業</td>
+		<td class="lightbluetable" align="center" nowrap>北京案號</td>
+		<td class="lightbluetable" align="center" nowrap>類別</td>
+		<td class="lightbluetable" align="center" nowrap>商標圖樣</td>
+		<td class="lightbluetable" align="center" nowrap>裁決要旨</td>
+		<td class="lightbluetable" align="center" nowrap>條款成立狀態/<BR>裁決生效狀態</td>
+		<td class="lightbluetable" align="center" nowrap>引用條文法規</td>
+		<td class="lightbluetable" align="center" nowrap>判決/決定日期</td>
+		<td class="lightbluetable" align="center" nowrap>作業</td>
         </tr>
 	</thead>
 	<tfoot style="display:none">
@@ -198,8 +198,9 @@
             <td nowrap align=left >{{opt_comfirm_str}}/<br>{{opt_check_str}}</td>
 		    <td nowrap align=left >{{law_detail_no}}</td>	
 		    <td nowrap align=left >{{pr_date}}</td>	
-		    <td nowrap>
+		    <td nowrap align="center">
 		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=Q&opt_no={{opt_no}}>" target="Eblank">[檢視]</a>
+		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=U&opt_no={{opt_no}}>" target="Eblank">[維護]</a>
 		    </td>
 	    </tr>
 	</tfoot>
