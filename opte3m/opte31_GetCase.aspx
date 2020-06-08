@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 
 <script runat="server">
@@ -155,15 +155,15 @@
 		<input type=button value="取消" class="cbutton" id="btnreset" name="btnreset">
 		<input type="hidden" id="submittask" name="submittask">
     </div>
-    <input type="text" id="Seq" name="Seq" value="<%=Seq%>">
-    <input type="text" id="Seq1" name="Seq1" value="<%=Seq1%>">
-    <input type="text" id="Branch" name="Branch" value="<%=Branch%>">
-    <input type="text" id="Case_no" name="Case_no" value="<%=Case_no%>">
-    <input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-    <input type="text" id="opt_no" name="opt_no" value="<%=opt_no%>">
-    <input type="text" id="br_source" name="br_source" value="<%=br_source%>">
-    <input type="text" id="step_grade" name="step_grade" value="<%=bstep_grade%>">
-    <input type="text" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="Seq" name="Seq" value="<%=Seq%>">
+    <input type="hidden" id="Seq1" name="Seq1" value="<%=Seq1%>">
+    <input type="hidden" id="Branch" name="Branch" value="<%=Branch%>">
+    <input type="hidden" id="Case_no" name="Case_no" value="<%=Case_no%>">
+    <input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+    <input type="hidden" id="opt_no" name="opt_no" value="<%=opt_no%>">
+    <input type="hidden" id="br_source" name="br_source" value="<%=br_source%>">
+    <input type="hidden" id="step_grade" name="step_grade" value="<%=bstep_grade%>">
+    <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
     <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
 </form>
 
