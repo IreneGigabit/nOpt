@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -209,8 +209,8 @@
                 }
             }
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             if (submitTask == "U") {
                 if (end_flag == "Y") {
@@ -313,8 +313,8 @@
             SQL += ",'" + case_no + "','" + Session["scode"] + "',getdate(),'BR','NN')";
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "退回成功";
             strOut.AppendLine("alert('" + msg + "');");
