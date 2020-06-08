@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -68,7 +68,7 @@
             }
 
             SQL = "update br_opt set confirm_scode='" + Session["scode"] + "'";
-            SQL += ",confirm_date='" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
+            SQL += ",confirm_date='" + DateTime.Now.ToString("yyyy/M/dd") + "'";
             SQL += ",stat_code='RR'";
             SQL += ",opt_no='" + opt_no + "'";
             SQL += ",Fees=" + (Request["nfy_fees"] ?? "0") + "";
@@ -84,14 +84,14 @@
             conn.ExecuteNonQuery(SQL);
     
             //入流程控制檔
-            SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no ";
-            SQL += ",in_scode,in_date,dowhat,job_status) values ( ";
+            SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no";
+            SQL += ",in_scode,in_date,dowhat,job_status) values (";
             SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
             SQL += ",'" + Session["scode"] + "',getdate(),'BR','NN')";
             conn.ExecuteNonQuery(SQL);
-            
-            //conn.Commit();
-            conn.RollBack();
+
+            conn.Commit();
+            //conn.RollBack();
             msg = "收件成功";
         }
         catch (Exception ex) {
@@ -225,7 +225,7 @@
             "【退件理由】 : <br>　　"+Request["Preject_reason"]+"<Br><Br><p>"+
             "◎請至承辦作業－＞國內案承辦交辦發文作業，重新交辦。 ";
 
-        Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
+        //Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
     }
 </script>
 
