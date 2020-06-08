@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -62,7 +62,7 @@
             }
         
             SQL = "update br_opt set in_scode='" + Session["scode"] + "'";
-            SQL += ",in_date='" + DateTime.Now.ToString("yyyy/MM/dd") + "'";
+            SQL += ",in_date='" + DateTime.Now.ToString("yyyy/M/d") + "'";
             SQL += ",last_date='" + Request["dfy_last_date"] + "'";
             SQL += ",ctrl_date='" + Request["ctrl_date"] + "'";
             SQL += ",pr_branch='" + Request["pr_branch"] + "'";
@@ -81,14 +81,14 @@
             conn.ExecuteNonQuery(SQL);
     
             //入流程控制檔
-            SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no ";
-            SQL += ",in_scode,in_date,dowhat,job_status) values ( ";
+            SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no";
+            SQL += ",in_scode,in_date,dowhat,job_status) values (";
             SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
             SQL += ",'" + Session["scode"] + "',getdate(),'PR','NN')";
             conn.ExecuteNonQuery(SQL);
-            
-            //conn.Commit();
-            conn.RollBack();
+
+            conn.Commit();
+            //conn.RollBack();
             msg = "分案成功";
         }
         catch (Exception ex) {
@@ -115,9 +115,9 @@
 	        SQL = "insert into br_opt(opt_no,branch,Bseq,Bseq1,Bcase_date,Last_date";
 	        SQL += ",in_scode,in_date,ctrl_date,pr_branch,pr_scode,br_remark,stat_code,mark,br_source,confirm_date) values (";
 	        SQL += "'"+opt_no+"','"+Request["branch"]+"',"+Request["Bseq"]+",'"+Request["Bseq1"]+"'";
-	        SQL += ",'"+DateTime.Now.ToString("yyyy/MM/dd")+"',"+Util.dbnull(Request["dfy_last_date"])+",'"+Session["scode"]+"','"+DateTime.Now.ToString("yyyy/MM/dd")+"'";
+	        SQL += ",'"+DateTime.Now.ToString("yyyy/M/d")+"',"+Util.dbnull(Request["dfy_last_date"])+",'"+Session["scode"]+"','"+DateTime.Now.ToString("yyyy/M/d")+"'";
 	        SQL += ","+Util.dbnull(Request["ctrl_date"])+",'"+Request["pr_branch"]+"','"+Request["pr_scode"]+"'";
-            SQL += ",'" + Request["br_remark"].ToBig5() + "','NN','N','opt','" + DateTime.Now.ToString("yyyy/MM/dd") + "')";
+            SQL += ",'" + Request["br_remark"].ToBig5() + "','NN','N','opt','" + DateTime.Now.ToString("yyyy/M/d") + "')";
             conn.ExecuteNonQuery(SQL);
 	
             //抓insert後的流水號
@@ -127,16 +127,17 @@
 
             //新增接洽記錄檔
 	        SQL = " insert into case_opt(opt_sqlno,branch,in_scode,seq,seq1,cust_area,cust_seq,att_sql,arcase_type,arcase_class,arcase ";
-	        SQL += ",service,fees,tot_num,ar_mark,remark,mark,new ";
+            SQL += ",service,fees,tot_num,ar_mark,remark,mark,new,send_way,receipt_type,receipt_title ";
 	        SQL += ") values ('"+opt_sqlno+"','"+Request["branch"]+"','"+Request["in_scode"]+"','"+Request["Bseq"]+"','"+Request["Bseq1"]+"'";
 	        SQL += ",'"+Request["cust_area"]+"','"+Request["cust_seq"]+"','"+Request["att_sql"]+"','"+Request["arcase_type"]+"'";
-            SQL += ",'" + Request["arcase_class"] + "','" + Request["arcase"] + "',0,0,1,'N','" + Request["remark"].ToBig5() + "','N','N')";
+            SQL += ",'" + Request["arcase_class"] + "','" + Request["arcase"] + "',0,0,1,'N','" + Request["remark"].ToBig5() + "','N','N'";
+            SQL += ",'" + Request["tfy_send_way"] + "','" + Request["tfy_receipt_type"] + "','" + Request["tfy_receipt_title"] + "')";
             conn.ExecuteNonQuery(SQL);
 	
 	        //新增接洽記錄暫存檔
 	        SQL = " insert into opt_detail(opt_sqlno,branch,seq,seq1,in_date,apsqlno,ap_cname,ap_ename,apply_date,apply_no,issue_date,issue_no ";
 	        SQL += ",appl_name,agt_no,open_date,rej_no,dmt_term1,dmt_term2 ";
-	        SQL += ") values ('"+opt_sqlno+"','"+Request["branch"]+"','"+Request["Bseq"]+"','"+Request["Bseq1"]+"','"+DateTime.Now.ToString("yyyy/MM/dd")+"','"+Request["apsqlno"]+"' ";
+	        SQL += ") values ('"+opt_sqlno+"','"+Request["branch"]+"','"+Request["Bseq"]+"','"+Request["Bseq1"]+"','"+DateTime.Now.ToString("yyyy/M/d")+"','"+Request["apsqlno"]+"' ";
             SQL += ",'" + Request["ap_cname"].ToBig5() + "','" + Request["ap_ename"].ToBig5() + "'," + Util.dbnull(Request["apply_date"]) + ",'" + Request["apply_no"] + "'";
             SQL += "," + Util.dbnull(Request["issue_date"]) + ",'" + Request["issue_no"] + "'," + Util.dbnull(Request["appl_name"].ToBig5()) + ",'" + Request["agt_no"] + "'";
 	        SQL += ","+Util.dbnull(Request["open_date"])+",'"+Request["rej_no"]+"',"+Util.dbnull(Request["dmt_term1"])+"";
@@ -158,11 +159,11 @@
 	        SQL+="'"+Session["syscode"]+"','"+ prgid +"',"+opt_sqlno+",'"+branch+"'";
 	        SQL+=",'"+Session["scode"]+"',getdate(),'PR','NN')" ;
             conn.ExecuteNonQuery(SQL);
-           
-            //conn.Commit();
-            //connB.Commit();
-            conn.RollBack();
-            connB.RollBack();
+
+            conn.Commit();
+            connB.Commit();
+            //conn.RollBack();
+            //connB.RollBack();
             msg = "新增分案成功";
         }
         catch (Exception ex) {
@@ -212,8 +213,8 @@
             SQL += " and sqlno=" + pre_sqlno;
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
             msg = "刪除分案成功";
         }
         catch (Exception ex) {
