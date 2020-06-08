@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -141,8 +141,8 @@
 		            <input type="hidden" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
 		            <input type="hidden" id="Bseq_{{nRow}}" name="Bseq_{{nRow}}" value="{{bseq}}">
 		            <input type="hidden" id="Bseq1_{{nRow}}" name="Bseq1_{{nRow}}" value="{{bseq1}}">
-		            <input type="text" id="attach_path_{{nRow}}" name="attach_path_{{nRow}}" value="{{attach_path}}">
-		            <input type="text" id="attach_name_{{nRow}}" name="attach_name_{{nRow}}" value="{{attach_name}}">
+		            <input type="hidden" id="attach_path_{{nRow}}" name="attach_path_{{nRow}}" value="{{attach_path}}">
+		            <input type="hidden" id="attach_name_{{nRow}}" name="attach_name_{{nRow}}" value="{{attach_name}}">
 		        </td>
 		        <td class="whitetablebg" align="center">{{opt_no}}</td>
 		        <td class="whitetablebg" align="center">{{fseq}}<br>
