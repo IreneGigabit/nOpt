@@ -30,10 +30,10 @@
 	    <TR>
 		    <TD align=center colspan=5 class=lightbluetable1>
                 <font color=white>承&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;辦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;資&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;料</font>
-	            <input type="text" id="<%=uploadfield%>_maxAttach_no" name="<%=uploadfield%>_maxAttach_no" value="<%=doc_maxAttach_no%>"><!--目前table裡最大值-->
+	            <input type="hidden" id="<%=uploadfield%>_maxAttach_no" name="<%=uploadfield%>_maxAttach_no" value="<%=doc_maxAttach_no%>"><!--目前table裡最大值-->
 	            <input type="hidden" id="<%=uploadfield%>_attach_cnt" name="<%=uploadfield%>_attach_cnt" value="<%=doc_attach_cnt%>">
-	            <input type="text" id="<%=uploadfield%>_filenum" name="<%=uploadfield%>_filenum" value="0"><!--attach_no-->
-	            <input type="text" id="<%=uploadfield%>_sqlnum" name="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
+	            <input type="hidden" id="<%=uploadfield%>_filenum" name="<%=uploadfield%>_filenum" value="0"><!--attach_no-->
+	            <input type="hidden" id="<%=uploadfield%>_sqlnum" name="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
 	            <input type="hidden" id="opt_uploadfield" name="opt_uploadfield" value="<%#uploadfield%>">
 	            <input type="hidden" id="opt_uploadsource" name="opt_uploadsource" value="<%=opt_source_type%>"><!--為了入區所opt.source的欄位-->
             </TD>
@@ -60,7 +60,7 @@
 	            <input type='hidden' id='<%=uploadfield%>_attach_sqlno_##' name='<%=uploadfield%>_attach_sqlno_##'>
 	            <input type='hidden' id='<%=uploadfield%>_size_##' name='<%=uploadfield%>_size_##'>
 	            <input type='hidden' id='<%=uploadfield%>_##' name='<%=uploadfield%>_##'>
-	            <input type='text' id='<%=uploadfield%>_attach_no_##' name='<%=uploadfield%>_attach_no_##' value='##'>
+	            <input type='hidden' id='<%=uploadfield%>_attach_no_##' name='<%=uploadfield%>_attach_no_##' value='##'>
 	            <input type='hidden' id='<%=uploadfield%>_path_##' name='<%=uploadfield%>_path_##' value=''>
 	            <input type='hidden' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
 	            <input type='hidden' id='<%=uploadfield%>_source_name_##' name='<%=uploadfield%>_source_name_##' value=''><br>
