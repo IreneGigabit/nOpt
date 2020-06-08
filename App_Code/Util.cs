@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -237,21 +237,23 @@ public static class Util
 				//HttpContext.Current.Response.Write("\r\n<HR>　　cInBig5　　　　　→" + cInBig5);
 				//if (c != "?" && cInBig5.IndexOf('?') > -1) {
 				if (c != cInBig5) {
-					if (cInBig5 == "??")//用到第二輔助平面的unicode
-						sb.AppendFormat("&#{0};", c.GetCharCode());
-					else
-						sb.Append(HttpUtility.HtmlEncode(c));
+                    if (cInBig5 == "??") {//用到第二輔助平面的unicode
+                        sb.AppendFormat("&#{0};", c.GetCharCode());
+                    } else {
+                        sb.AppendFormat("&#{0};", Convert.ToInt32(Convert.ToChar(c)));
+                        //sb.Append(HttpUtility.HtmlEncode(c));
+                    }
 				} else {
 					sb.Append(c);
 				}
 			}
 		} else {
-			foreach (char c in str) {
+            foreach (char c in str) {
 				string cInBig5 = big5.GetString(big5.GetBytes(new char[] { c }));
 				//if (c != '?' && cInBig5 == "?") {
 				if (c.ToString() != cInBig5) {
-					//sb.AppendFormat("&#{0};", Convert.ToInt32(c));
-					sb.Append(HttpUtility.HtmlEncode(c.ToString()));
+					sb.AppendFormat("&#{0};", Convert.ToInt32(c));
+					//sb.Append(HttpUtility.HtmlEncode(c.ToString()));
 				} else {
 					sb.Append(c);
 				}
