@@ -329,8 +329,8 @@
                     break;
             }
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "區所" + datasource_name + "資料複製成功！";
         }

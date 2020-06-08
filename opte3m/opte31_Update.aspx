@@ -87,8 +87,8 @@
             //    update_bropt_ap(conn);
             //}
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             if (submitTask == "U") {
                 if (end_flag == "Y") {
@@ -179,8 +179,8 @@
             SQL += ",'" + Session["scode"] + "',getdate(),'BR','NN')";
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "退回成功";
             strOut.AppendLine("alert('" + msg + "');");

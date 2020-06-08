@@ -41,8 +41,8 @@
             SQL = "update opte_detail Set your_no='" + your_no + "'";
             SQL += " where opt_sqlno=" + opt_sqlno;
             conn.ExecuteNonQuery(SQL);
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
             msg = "案件資料修改成功！";
         }
         catch (Exception ex) {

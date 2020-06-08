@@ -12,6 +12,7 @@
 
     protected string submitTask = "";
     protected string opt_no = "";
+    protected string htmlattach_type = "";
 
     protected string QLock = "false";
     protected string DLock = "false";
@@ -45,6 +46,10 @@
             QLock = "true";
             DLock = "true";
             ELock = "true";
+        }
+
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            htmlattach_type = Funcs.getcust_code("att_type", "", "").Option("{cust_code}", "{code_name}");
         }
     }
 </script>
@@ -185,7 +190,7 @@
                     判決要旨 :
                 </td>
                  <td class="whitetablebg" align="left" nowrap colspan="3">
-                    <input type="text" id="edit_opt_point" name="edit_opt_point" class="QLock" value="<%=edit_opt_point%>" size="100" maxlength="100">                                                                   
+                    <input type="text" id="edit_opt_point" name="edit_opt_point" class="QLock" size="100" maxlength="100">                                                                   
                 </td>
             </tr> 
             <tr>
@@ -193,7 +198,7 @@
                     判決/決定文號  :
                 </td>
                  <td class="whitetablebg" align="left" nowrap colspan="">
-                    <input type="text" id="edit_pr_no" name="edit_pr_no" class="QLock" value="<%=edit_pr_no%>" size="40" maxlength="25">
+                    <input type="text" id="edit_pr_no" name="edit_pr_no" class="QLock" size="40" maxlength="25">
                 </td>
                 <TD class=lightbluetable align=right nowrap>成立狀態：</TD>
 		        <TD class=whitetablebg align=left nowrap>
@@ -208,10 +213,10 @@
                     關鍵字 :
                 </td>
                  <td class="whitetablebg" align="left" nowrap colspan="">
-                    <input type="text" id='edit_opt_mark' name='edit_opt_mark' class="QLock"  value="<%=edit_opt_mark%>" size="70" maxlength="250"> ( 請用逗號隔開 )        
+                    <input type="text" id='edit_opt_mark' name='edit_opt_mark' class="QLock" size="70" maxlength="250"> ( 請用逗號隔開 )        
                 </td>
                 <TD class=lightbluetable align=right nowrap>生效狀態：</TD>
-		        <TD class=whitetablebg align=left nowrap  class="QLock">
+		        <TD class=whitetablebg align=left nowrap >
 			        <input type="radio" name='edit_opt_check' value='1' >確定已生效
 	                <input type="radio" name='edit_opt_check' value='2' >確定被推翻
 	                <input type="radio" name='edit_opt_check' value='3' >救濟中或尚未能確定
@@ -222,44 +227,60 @@
                     建檔人員/日期 :
                 </td>
                  <td class="whitetablebg" align="left" nowrap colspan="">
-                    <input type="text" id='edit_in_scode' name='edit_in_scode' value="<%=in_scode%>" size="5" maxlength="5" readonly class="SEdit" > / 
-                    <input type="text" id="edit_in_date" name="edit_in_date" value="<%=in_date%>" size="25" maxLength="10" readonly class="SEdit">
+                    <input type="text" id='edit_in_scode' name='edit_in_scode' size="5" maxlength="5" readonly class="SEdit" > / 
+                    <input type="text" id="edit_in_date" name="edit_in_date" size="25" maxLength="10" readonly class="SEdit">
                 </td>
                 <td class="lightbluetable" align="right" nowrap>
                     最近異動人員/日期 :
                 </td>
-                 <td class="whitetablebg" align="left" nowrap colspan="">
-                    <input type="text" id='edit_tran_scode' name='edit_tran_scode' value="<%=tran_scode%>" size="5" maxlength="5" readonly class="SEdit" > / 
-                    <input type="text" id="edit_tran_date" name="edit_tran_date" value="<%=tran_date%>" size="25" maxLength="10" readonly class="SEdit">
+                 <td class="whitetablebg" align="left">
+                    <input type="text" id='edit_tran_scode' name='edit_tran_scode' size="5" maxlength="5" readonly class="SEdit" > / 
+                    <input type="text" id="edit_tran_date" name="edit_tran_date" size="25" maxLength="10" readonly class="SEdit">
                 </td>
             </tr> 
             <tr>
-                <td class="lightbluetable" align="right" nowrap>
-                    <TABLE id=tr_low name=tr_low style="display:" border=0 class="bluetable"  cellspacing=1 cellpadding=2 width="100%">
+                <td class="whitetablebg" align="right" nowrap colspan="4">
+                    <TABLE id=tr_low style="display:" border=0 class="bluetable"  cellspacing=1 cellpadding=2 width="100%">
+	                    <thead>
 	                    <TR class=whitetablebg align=center>
 		                    <TD colspan=3 align=right>
                                 <input type=hidden id=class_num name=class_num value=0><!--進度筆數-->
 			                    <input type=button value ="增加一筆法條" class="cbutton QLock" id=Class_Add_button_law name=Class_Add_button_law>			
-			                    <input type=button value ="減少一筆法條" class="cbutton QLock" id=Class_Del_button_law name=Class_Del_button_law onclick="vbscript:deletelaw reg.class_num.value">
+			                    <input type=button value ="減少一筆法條" class="cbutton QLock" id=Class_Del_button_law name=Class_Del_button_law onclick="deletelaw(reg.class_num.value)">
 		                    </TD>
 	                    </TR>
 	                    <TR align=center class=lightbluetable>
 		                    <TD></TD><TD>引用法條</TD><TD>法條內文</TD>
 	                    </TR>
+                        </thead>
+                        <tfoot style="display:">
+		                    <TR>
+			                    <TD class=sfont9 align=center>
+		                            <input type=text id='class_num_##' name='class_num_##' class=SEdit readonly size=2 value='##.'>
+                                    <input type=hidden id='law_sqlno_##' name='law_sqlno_##'>
+			                    </TD>
+			                    <TD class=sfont9 align="left">
+                                    <select id='law_type_##' name='law_type_##' onchange="law_change('##')" class="QLock"></select>
+			                    </TD>
+			                    <TD class=sfont9 align="left">
+                                    <textarea rows=6 cols=120 id='law_mark_##' name='law_mark_##' class=SEdit readonly ></textarea>
+			                    </TD>
+		                    </TR>
+                        </tfoot>
+                        <tbody></tbody>
                     </TABLE>
-
                     <TABLE id=tabattach style="display:" border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
 	                    <TR class=whitetablebg align=center>
 		                    <TD align=center colspan=7 class=lightbluetable1>
-                                <input type=hidden id=attachnum name=attachnum value=0><!--進度筆數-->
-                                <input type=hidden id=tAttach_Flag name=tAttach_Flag value=<%=tAttach_Flag%>><!--進度筆數-->            
+                                <input type=text id=attachnum name=attachnum value=0><!--進度筆數-->
+                                <input type=text id=tAttach_Flag name=tAttach_Flag><!--進度筆數-->            
                                 <font color=white>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;傳</font>
 		                    </TD>
 	                    </TR>
 	                    <TR class=whitetablebg align=center>
 		                    <TD colspan=7 align=right>
-				                <input type=button value="增加一筆附件" class="cbutton QLock" id=attach_Add_button name=attach_Add_button>			
-				                <input type=button value="減少一筆附件" class="cbutton QLock" id=attach_Del_button name=attach_Del_button onclick="deleteattach reg.attachnum.value">
+				                <input type=button value="增加一筆附件" class="cbutton QLock" id=attach_Add_button name=attach_Add_button>
+				                <input type=button value="減少一筆附件" class="cbutton QLock" id=attach_Del_button name=attach_Del_button onclick="deleteattach(reg.attachnum.value)">
 			                    <input type="hidden" name="sqlno" id="sqlno">
 			                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		                    </TD>
@@ -293,6 +314,13 @@
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "0%,100%";
         }
+        $("select[name='law_type_##']").getOption({//引用法條
+            url: getRootPath() + "/ajax/json_Law.aspx",
+            data:{},
+            valueFormat: "{law_sqlno}",
+            textFormat: "{law_text}"
+        });
+
         $("#chkTest").click(function (e) {
             $("#ActFrame").showFor($(this).prop("checked"));
         });
@@ -329,23 +357,41 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-        var jLaw=law_data.law;
+        var jLaw=law_data.law[0];
         var jAttach=law_data.law_attach;
-        if(jLaw.length>0){
-            $("#edit_opt_no").html(jLaw.opt_no);
-            $("#edit_pr_date").html(dateReviver(jLaw.pr_date, "yyyy/M/d"));
-            $("#edit_BJTSeq").html(jLaw.bjtseq);
-            $("#edit_BJTSeq1").html(jLaw.bjtseq1);
-            $("#edit_BSeq").html(jLaw.bseq);
-            $("#edit_BSeq1").html(jLaw.bseq1);
-            $("#edit_opt_pic").html(jLaw.opt_pic);
-            $("#edit_opt_pic_path,#edit_opt_pic_path_name").html(jLaw.opt_pic_path);
-            $("#edit_Cust_no").html(jLaw.cust_no);
-            $("#edit_Cust_name").html(jLaw.cust_name);
+        if(jLaw!==undefined){
+            $("#edit_opt_no").val(jLaw.opt_no);
+            $("#edit_pr_date").val(dateReviver(jLaw.pr_date, "yyyy/M/d"));
 
-            $("#edit_opt_class").html(jLaw.opt_class);
-            $("#edit_opt_class_name").html(jLaw.opt_class_name);
-      }
+            $("#edit_BJTbranch").val(jLaw.bjtbranch);
+            $("#edit_BJTSeq").val(jLaw.bjtseq);
+            $("#edit_BJTSeq1").val(jLaw.bjtseq1);
+
+            $("#edit_branch").val(jLaw.branch);
+            $("#edit_BSeq").val(jLaw.bseq);
+            $("#edit_BSeq1").val(jLaw.bseq1);
+
+            $("#edit_opt_pic").val(jLaw.opt_pic);
+            $("#edit_opt_pic_path,#edit_opt_pic_path_name").val(jLaw.opt_pic_path);
+
+            $("#edit_Cbranch").val(jLaw.cbranch);
+            $("#edit_Cust_no").val(jLaw.cust_no);
+            $("#edit_Cust_name").val(jLaw.cust_name);
+
+            $("#edit_opt_class").val(jLaw.opt_class);
+            $("#edit_opt_class_name").val(jLaw.opt_class_name);
+
+            $("#edit_opt_point").val(jLaw.opt_point);
+            $("#edit_pr_no").val(jLaw.pr_no);
+            $("input[name='edit_opt_comfirm'][value='"+jLaw.opt_comfirm+"'").prop("checked",true);
+            $("#edit_opt_mark").val(jLaw.opt_mark);
+            $("input[name='edit_opt_check'][value='"+jLaw.opt_check+"'").prop("checked",true);
+
+            $("#edit_in_scode").val(jLaw.in_scode);
+            $("#edit_in_date").val(dateReviver(jLaw.in_date, "yyyy/M/d t HH:mm:ss"));
+            $("#edit_tran_scode").val(jLaw.tran_scode);
+            $("#edit_tran_date").val(dateReviver(jLaw.tran_date, "yyyy/M/d t HH:mm:ss"));
+        }
 
         $("#btnSubmit,#btnDel,#btnReset").hide();
     }

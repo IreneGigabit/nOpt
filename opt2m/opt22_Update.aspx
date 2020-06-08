@@ -138,8 +138,8 @@
             SQL += ",'" + Session["scode"] + "',getdate(),'MG_GS','NN')";
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "判行成功";
             strOut.AppendLine("alert('" + msg + "');");
@@ -394,8 +394,8 @@
 
             //CreateMail(conn, opt_sqlno, todo_scode);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "退回成功";
             strOut.AppendLine("alert('" + msg + "');");

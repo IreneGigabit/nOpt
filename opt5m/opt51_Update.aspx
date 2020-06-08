@@ -103,10 +103,10 @@
                     SQL += " where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "'";
                     conn.ExecuteNonQuery(SQL);
 
-                    //connB.Commit();
-                    //conn.Commit();
-                    connB.RollBack();
-                    conn.RollBack();
+                    connB.Commit();
+                    conn.Commit();
+                    //connB.RollBack();
+                    //conn.RollBack();
                 }
 
                 msg = "爭救案抽件成功";

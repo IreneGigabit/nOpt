@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -155,11 +155,11 @@
             conn.ExecuteNonQuery(SQL);
 
             CreateMail(conn,pre_sqlno,todo_scode);
-            
-            //conn.Commit();
-            //connB.Commit();
-            conn.RollBack();
-            connB.RollBack();
+
+            conn.Commit();
+            connB.Commit();
+            //conn.RollBack();
+            //connB.RollBack();
             msg = "退回成功";
         }
         catch (Exception ex) {

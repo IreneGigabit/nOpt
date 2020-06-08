@@ -286,14 +286,14 @@
                         }
                     }
 
-                    //conn.Commit();
-                    //connB.Commit();
-                    //connM.Commit();
-                    //conni.Commit();
-                    conn.RollBack();
-                    connB.RollBack();
-                    connM.RollBack();
-                    conni.RollBack();
+                    conn.Commit();
+                    connB.Commit();
+                    connM.Commit();
+                    conni.Commit();
+                    //conn.RollBack();
+                    //connB.RollBack();
+                    //connM.RollBack();
+                    //conni.RollBack();
 
                     msg = "官方發文成功";
                 }
@@ -368,8 +368,8 @@
                     SQL += ",'" + Session["scode"] + "',getdate(),'PR','NN')";
                     conn.ExecuteNonQuery(SQL);
 
-                    //conn.Commit();
-                    conn.RollBack();
+                    conn.Commit();
+                    //conn.RollBack();
 
                     msg = "退回成功";
                 }

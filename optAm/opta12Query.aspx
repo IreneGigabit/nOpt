@@ -199,8 +199,8 @@
 		    <td nowrap align=left >{{law_detail_no}}</td>	
 		    <td nowrap align=left >{{pr_date}}</td>	
 		    <td nowrap align="center">
-		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=Q&opt_no={{opt_no}}>" target="Eblank">[檢視]</a>
-		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=U&opt_no={{opt_no}}>" target="Eblank">[維護]</a>
+		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=Q&opt_no={{opt_no}}" target="Eblank">[檢視]</a>
+		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=U&opt_no={{opt_no}}" target="Eblank">[維護]</a>
 		    </td>
 	    </tr>
 	</tfoot>

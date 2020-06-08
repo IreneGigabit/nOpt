@@ -18,6 +18,7 @@
         opt_no = Request["opt_no"];
 
         DataTable dt_law = GetLaw(opt_no);//案例資料
+        DataTable dt_law_detail = GetLawDetail(opt_no);//法條
         DataTable dt_law_attach = GetLawAttach(opt_no);//附件資料
 
         var settings = new JsonSerializerSettings() {
@@ -28,6 +29,7 @@
 
         Response.Write("{");
         Response.Write("\"law\":" + JsonConvert.SerializeObject(dt_law, settings).ToUnicode() + "\n");
+        Response.Write(",\"law_detail\":" + JsonConvert.SerializeObject(dt_law_detail, settings).ToUnicode() + "\n");
         Response.Write(",\"law_attach\":" + JsonConvert.SerializeObject(dt_law_attach, settings).ToUnicode() + "\n");
         Response.Write("}");
 
@@ -38,6 +40,21 @@
     private DataTable GetLaw(string pOptNo) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             SQL = "Select *,''fseq,''drfile from law_opt where opt_no='" + pOptNo + "' ";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region GetLawDetail 法條
+    private DataTable GetLawDetail(string pOptNo) {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            SQL = "select opt_no,l.ref_law,ld.* ";
+            SQL += "from law_opt l ";
+            SQL += "inner join law_detail ld on CHARINDEX(','+cast(ld.law_sqlno as varchar)+',', ','+l.ref_law+',')>0 ";
+            SQL += "where opt_no='" + pOptNo + "' ";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 

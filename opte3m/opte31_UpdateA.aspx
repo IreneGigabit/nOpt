@@ -91,8 +91,8 @@
             //    update_bropt_ap(conn);
             //}
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             if (submitTask == "U") {
                 if (end_flag == "Y") {

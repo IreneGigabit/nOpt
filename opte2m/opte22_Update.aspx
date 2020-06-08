@@ -149,10 +149,10 @@
                 Sendmail_br(conn,opt_sqlno,job_scode);
             }
 
-            //conn.Commit();
-            //connB.Commit();
-            conn.RollBack();
-            connB.RollBack();
+            conn.Commit();
+            connB.Commit();
+            //conn.RollBack();
+            //connB.RollBack();
 
             msg = "判行成功";
             strOut.AppendLine("alert('" + msg + "');");
@@ -260,9 +260,9 @@
                     }
                 }
             }
-            
-            //conn.Commit();
-            conn.RollBack();
+
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "編修存檔成功，若有需要請通知區所重新抓取資料！";
             strOut.AppendLine("alert('" + msg + "');");
@@ -317,8 +317,8 @@
 
             Sendmail_back(conn, opt_sqlno, ReqVal.TryGet("pr_scode", ""));
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
 
             msg = "退回成功";
             strOut.AppendLine("alert('" + msg + "');");

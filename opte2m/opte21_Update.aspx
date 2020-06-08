@@ -85,8 +85,8 @@
             SQL += ",'" + Session["scode"] + "',getdate(),'PR','NN')";
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
             msg = "分案成功";
         }
         catch (Exception ex) {
@@ -161,10 +161,10 @@
             SQL += ",'" + Session["scode"] + "',getdate(),'PR','NN')";
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            //connB.Commit();
-            conn.RollBack();
-            connB.RollBack();
+            conn.Commit();
+            connB.Commit();
+            //conn.RollBack();
+            //connB.RollBack();
             msg = "新增分案成功";
         }
         catch (Exception ex) {
@@ -213,8 +213,8 @@
             SQL += " and sqlno=" + pre_sqlno;
             conn.ExecuteNonQuery(SQL);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
             msg = "刪除分案成功";
         }
         catch (Exception ex) {

@@ -79,9 +79,9 @@
             SQL+="'" + todo_sqlno +"','"+ Session["Syscode"] +"','"+ prgid +"','pr','" + opt_no + "',"+ opt_sqlno +",'"+ branch +"','"+ case_no + "'";
             SQL+=",'"+ Session["scode"] +"',getdate(),'BR','NN')" ;
             conn.ExecuteNonQuery(SQL);
-            
-            //conn.Commit();
-            conn.RollBack();
+
+            conn.Commit();
+            //conn.RollBack();
             msg = "收件成功";
         }
         catch (Exception ex) {
@@ -142,10 +142,10 @@
 
             CreateMail(conn,connB, todo_sqlno);
 
-            //conn.Commit();
-            //connB.Commit();
-            conn.RollBack();
-            connB.RollBack();
+            conn.Commit();
+            connB.Commit();
+            //conn.RollBack();
+            //connB.RollBack();
             msg = "退回成功";
         }
         catch (Exception ex) {

@@ -47,8 +47,8 @@
                     doDel(conn);
                 }
 
-                //conn.Commit();
-                conn.RollBack();
+                conn.Commit();
+                //conn.RollBack();
 
                 msg = "法條明細檔案作業入檔成功!!";
             }

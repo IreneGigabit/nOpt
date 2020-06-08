@@ -71,8 +71,8 @@
             //複製完成通知資訊部網管組
             Sendmail(conn, pno, filenum);
 
-            //conn.Commit();
-            conn.RollBack();
+            conn.Commit();
+            //conn.RollBack();
         }
         catch (Exception ex) {
             conn.RollBack();
