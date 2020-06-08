@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -139,17 +139,17 @@
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{ctrl_date}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{ap_date}}</a></td>
 		    <td align="center"><a href='{{urlasp}}' target='Eblank'>{{input_date}}</a>
-		        <input type="text" id="branch{{nRow}}" name="branch{{nRow}}" value="{{branch}}">
-		        <input type="text" id="bseq{{nRow}}" name="bseq{{nRow}}" value="{{bseq}}">
-		        <input type="text" id="bseq1_{{nRow}}" name="bseq1_{{nRow}}" value="{{bseq1}}">
-		        <input type="text" id="opt_sqlno{{nRow}}" name="opt_sqlno{{nRow}}">
-		        <input type="text" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
-		        <input type="text" id="input_scode{{nRow}}" name="input_scode{{nRow}}" value="{{input_scode}}">
-		        <input type="text" id="Pin_scode{{nRow}}" name="Pin_scode{{nRow}}" value="{{in_scode}}">
-		        <input type="text" id="in_scode{{nRow}}" name="in_scode{{nRow}}" value="">
-		        <input type="text" id="case_no{{nRow}}" name="case_no{{nRow}}" value="{{case_no}}">
-		        <input type="text" id="cancel_sqlno{{nRow}}" name="cancel_sqlno{{nRow}}" value="{{cancel_sqlno}}">
-		        <input type="text" id="todo_sqlno{{nRow}}" name="todo_sqlno{{nRow}}" value="{{todo_sqlno}}">
+		        <input type="hidden" id="branch{{nRow}}" name="branch{{nRow}}" value="{{branch}}">
+		        <input type="hidden" id="bseq{{nRow}}" name="bseq{{nRow}}" value="{{bseq}}">
+		        <input type="hidden" id="bseq1_{{nRow}}" name="bseq1_{{nRow}}" value="{{bseq1}}">
+		        <input type="hidden" id="opt_sqlno{{nRow}}" name="opt_sqlno{{nRow}}">
+		        <input type="hidden" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
+		        <input type="hidden" id="input_scode{{nRow}}" name="input_scode{{nRow}}" value="{{input_scode}}">
+		        <input type="hidden" id="Pin_scode{{nRow}}" name="Pin_scode{{nRow}}" value="{{in_scode}}">
+		        <input type="hidden" id="in_scode{{nRow}}" name="in_scode{{nRow}}" value="">
+		        <input type="hidden" id="case_no{{nRow}}" name="case_no{{nRow}}" value="{{case_no}}">
+		        <input type="hidden" id="cancel_sqlno{{nRow}}" name="cancel_sqlno{{nRow}}" value="{{cancel_sqlno}}">
+		        <input type="hidden" id="todo_sqlno{{nRow}}" name="todo_sqlno{{nRow}}" value="{{todo_sqlno}}">
 		    </td>
 	    </tr>
 	    <tr>
