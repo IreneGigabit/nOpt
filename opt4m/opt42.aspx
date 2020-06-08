@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -68,14 +68,14 @@
 </table>
 
 <form id="reg" name="reg" method="post" action="">
-    <input type="text" id="prgid" name="prgid" value="<%=prgid%>">
-    <input type="text" id="cgrs" name="cgrs" value="<%=cgrs%>">
-    <input type="text" id="haveword" name="haveword">
+    <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="cgrs" name="cgrs" value="<%=cgrs%>">
+    <input type="hidden" id="haveword" name="haveword">
     <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="90%" align="center">	
 	    <tr>
 		    <TD class=lightbluetable align=right>報表種類：</TD>
 		    <TD class=whitetablebg align=left colspan=3>
-			    <input type="text" id=prtkind name=prtkind>
+			    <input type="hidden" id=prtkind name=prtkind>
                 <span id="spanRprtKind"></span>
 		    </td>
 	    </tr>
@@ -85,13 +85,13 @@
 			    <input type="radio" value="B" name="Send_dept">自行發文
 			    <input type="radio" value="L" name="Send_dept">轉法律處發文
 			    <input type="radio" value="" name="Send_dept">全部
-		        <input type="text" id=qrySend_dept name=qrySend_dept>
+		        <input type="hidden" id=qrySend_dept name=qrySend_dept>
 		    </td>
 	    </tr>
 	    <tr id="tr_send_way">
 		    <td class="lightbluetable" align="right">發文方式：</td>
 		    <td class="whitetablebg" align="left" colspan=3>
-			    <input type="text" id="hsend_way" name="hsend_way" value="">
+			    <input type="hidden" id="hsend_way" name="hsend_way" value="">
 			    <input type="radio" name="send_way" id="send_wayM" value="M"><label for="send_wayM">非電子送件</label>
 			    <input type="radio" name="send_way" id="send_wayE" value="E"><label for="send_wayE">電子送件</label>
 			    <span id="span_Email_msg" style="display:none"><font color=darkred>【請先點「列印」產生各項報表檔案，再點Email通知總管處(電子送件)】</font></span>
@@ -110,7 +110,7 @@
 		    <td class="whitetablebg" align="left" colspan=3>
 			    <input type="text" id="srs_no" name="srs_no" size="11" maxlength=10>～
 			    <input type="text" id="ers_no" name="ers_no" size="11" maxlength=10>
-			    <input type="text" id="rs_count" name="rs_count">
+			    <input type="hidden" id="rs_count" name="rs_count">
 		    </td>
 	    </tr>
 	    <tr>
