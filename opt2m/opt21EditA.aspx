@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
@@ -90,7 +90,7 @@
 <form id="reg" name="reg" method="post">
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
@@ -256,6 +256,21 @@
         if ($("#arcase").val()==""){
             alert("請輸入交辦案性！！");
             $("#arcase").focus();
+            return false;
+        }
+        if ($("#tfy_send_way").val()==""){
+            alert("請輸入發文方式,！！");
+            $("#tfy_send_way").focus();
+            return false;
+        }
+        if ($("#tfy_receipt_type").val()==""){
+            alert("請輸入官發收據種類！！");
+            $("#tfy_receipt_type").focus();
+            return false;
+        }
+        if ($("#tfy_receipt_title").val()==""){
+            alert("請輸入收據抬頭！！");
+            $("#tfy_receipt_title").focus();
             return false;
         }
 
