@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -38,7 +38,7 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
-
+            
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -51,7 +51,7 @@
 
     private void PageLayout() {
         //決定要不要顯示案件主檔頁籤
-        if (Request["arcase"] == "DO1" || Request["arcase"] == "DI1" || Request["arcase"] == "DR1") {
+        if (Request["arcase"].ToString() == "DO1" || Request["arcase"].ToString() == "DI1" || Request["arcase"].ToString() == "DR1") {
             dmt_show_flag = "N";
         }
 
@@ -207,7 +207,7 @@
         $("input.dateField").datepick();
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" != "Y"));
+        $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" == "Y"));
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
@@ -268,6 +268,22 @@
 
     //收件確認
     $("#btnsearchSubmit").click(function () {
+        //if ($("#tfy_send_way").val()==""){
+        //    alert("無發文方式,請區所補入資料後重新抓取！！");
+        //    $("#tfy_send_way").focus();
+        //    return false;
+        //}
+        //if ($("#tfy_receipt_type").val()==""){
+        //    alert("無官發收據種類,請區所補入資料後重新抓取！！");
+        //    $("#tfy_receipt_type").focus();
+        //    return false;
+        //}
+        //if ($("#tfy_receipt_title").val()==""){
+        //    alert("無收據抬頭,請區所補入資料後重新抓取！！");
+        //    $("#tfy_receipt_title").focus();
+        //    return false;
+        //}
+
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
