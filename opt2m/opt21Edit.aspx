@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -181,7 +181,7 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "0%,100%";
+            window.parent.tt.rows = "20%,80%";
         }
         $("#chkTest").click(function (e) {
             $("#ActFrame").showFor($(this).prop("checked"));
@@ -198,7 +198,7 @@
         $("input.dateField").datepick();
         //欄位控制
         $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
-        $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" != "Y"));
+        $("#tr_Popt_show1").showFor(("<%#dmt_show_flag%>" == "Y"));
         $(".Lock").lock();
         $(".MLock").lock(<%#MLock%>);
         $(".QLock").lock(<%#QLock%>);
@@ -270,6 +270,22 @@
             $("#pr_scode").focus();
             return false;
         }
+
+        //if ($("#tfy_send_way").val()==""){
+        //    alert("無發文方式,請重抓區所資料！！");
+        //    $("#tfy_send_way").focus();
+        //    return false;
+        //}
+        //if ($("#tfy_receipt_type").val()==""){
+        //    alert("無官發收據種類,請重抓區所資料！！");
+        //    $("#tfy_receipt_type").focus();
+        //    return false;
+        //}
+        //if ($("#tfy_receipt_title").val()==""){
+        //    alert("無收據抬頭,請重抓區所資料！");
+        //    $("#tfy_receipt_title").focus();
+        //    return false;
+        //}
 
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit").lock(!$("#chkTest").prop("checked"));
