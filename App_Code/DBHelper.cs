@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Data;
@@ -50,7 +50,7 @@ public class DBHelper : IDisposable
 
     public void Commit() {
         if (this._debug) {
-            HttpContext.Current.Response.Write("Rollback...<HR>");
+            HttpContext.Current.Response.Write("Rollback...<HR>\n");
             if (this._tran != null) _tran.Rollback();
         } else {
             if (this._tran != null) _tran.Commit();
@@ -66,7 +66,7 @@ public class DBHelper : IDisposable
 	/// </summary>
 	public SqlDataReader ExecuteReader(string commandText) {
 		if (this._debug) {
-			HttpContext.Current.Response.Write(commandText + "<HR>");
+			HttpContext.Current.Response.Write(commandText + "<HR>\n");
 		}
         this.exeSQL.Add(commandText);
 		this._cmd.CommandText = commandText;
@@ -80,7 +80,7 @@ public class DBHelper : IDisposable
 	/// </summary>
 	public int ExecuteNonQuery(string commandText) {
 		if (this._debug) {
-			HttpContext.Current.Response.Write(commandText + "<HR>");
+            HttpContext.Current.Response.Write(commandText + "<HR>\n");
 		}
         this.exeSQL.Add(commandText);
 		this._cmd.CommandText = commandText;
@@ -92,7 +92,7 @@ public class DBHelper : IDisposable
 	/// </summary>
 	public object ExecuteScalar(string commandText) {
 		if (this._debug) {
-			HttpContext.Current.Response.Write(commandText + "<HR>");
+            HttpContext.Current.Response.Write(commandText + "<HR>\n");
 		}
         this.exeSQL.Add(commandText);
 		this._cmd.CommandText = commandText;
@@ -104,7 +104,7 @@ public class DBHelper : IDisposable
 	/// </summary>
 	public void DataTable(string commandText, DataTable dt) {
 		if (this._debug) {
-			HttpContext.Current.Response.Write(commandText + "<HR>");
+            HttpContext.Current.Response.Write(commandText + "<HR>\n");
 		}
         this.exeSQL.Add(commandText);
 		using (SqlDataAdapter adapter = new SqlDataAdapter(commandText, this._conn)) {
@@ -120,7 +120,7 @@ public class DBHelper : IDisposable
 	/// </summary>
 	public void DataSet(string commandText, DataSet ds) {
 		if (this._debug) {
-			HttpContext.Current.Response.Write(commandText + "<HR>");
+            HttpContext.Current.Response.Write(commandText + "<HR>\n");
 		}
         this.exeSQL.Add(commandText);
 		using (SqlDataAdapter adapter = new SqlDataAdapter(commandText, this._conn)) {
