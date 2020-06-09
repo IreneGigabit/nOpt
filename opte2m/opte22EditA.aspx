@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -32,7 +32,7 @@
     protected string BLock = "true";//承辦內容_承辦的控制
     protected string CLock = "true";//承辦內容_承辦的控制
     protected string SLock = "true";//承辦內容_發文的控制
-    protected string SELock = "true";
+    protected string SELock = "true";//有權限才可修改
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
     protected string YYLock = "true";//已判行維護控制
@@ -73,13 +73,6 @@
             HTProgCap = "出口爭救案內容查詢";
             submitTask = "Q";
         }
-        //欄位開關
-        if (submitTask != "Q") {
-            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
-                SELock = "false";
-            }
-        }
-
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -89,6 +82,13 @@
     }
 
     private void PageLayout() {
+        //欄位開關
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
+        }
+
         if ((Request["homelist"] ?? "") == "homelist") {
         } else {
             if ((Request["SubmitTask"] ?? "") == "Q") {
