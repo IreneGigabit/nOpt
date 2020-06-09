@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -38,18 +38,11 @@
         end_flag = (Request["End_flag"] ?? "").Trim();
         sameap_flag = (Request["sameap_flag"] ?? "").Trim();
 
-        ReqVal = Util.GetRequestParam(Context);
+        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            if (Request["chkTest"] == "TEST") {
-                foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>\n", p.Key, p.Value));
-                }
-                Response.Write("<HR>\n");
-            }
-
             if (submitTask == "U") {//承辦結辦
                 doConfirm();
             } else if (submitTask == "B") {//退回分案

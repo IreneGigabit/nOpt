@@ -343,6 +343,10 @@ public static class Util
     /// 將Request參數轉至Dictionary
     /// </summary>  
     public static Dictionary<string, string> GetRequestParam(HttpContext context) {
+        return GetRequestParam(context,false);
+    }
+
+    public static Dictionary<string, string> GetRequestParam(HttpContext context, bool debug) {
         var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         NameValueCollection col = null;
         if (context.Request.RequestType == "GET") {
@@ -352,8 +356,12 @@ public static class Util
         }
 
         foreach (var key in col.Keys) {
+            if (debug) {
+                context.Response.Write(string.Format("{0}:{1}<br>\n", key, col[key.ToString()]));
+            }
             dict.Add(key.ToString(), col[key.ToString()].ToBig5().Trim());
         }
+        if (debug) context.Response.Write("<HR>\n");
 
         return dict;
     }

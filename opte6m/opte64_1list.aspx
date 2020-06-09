@@ -40,21 +40,14 @@
 
         conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
 
-        ReqVal = Util.GetRequestParam(Context);
-
         submitTask = Request["submitTask"] ?? "";
+
+        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            if (Request["chkTest"] == "TEST") {
-                foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
-                }
-                Response.Write("<HR>");
-            }
-
-            QueryData();
+            QueryData();s
             ListPageLayout();
 
             this.DataBind();

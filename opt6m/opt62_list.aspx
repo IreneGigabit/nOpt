@@ -34,7 +34,7 @@
 
         conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
 
-        ReqVal = Util.GetRequestParam(Context);
+        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
         foreach (KeyValuePair<string, string> p in ReqVal) {
             if (String.Compare(p.Key, "GoPage", true) != 0
                 && String.Compare(p.Key, "PerPage", true) != 0
@@ -59,13 +59,6 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            if (Request["chkTest"] == "TEST") {
-                foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
-                }
-                Response.Write("<HR>");
-            }
-
             QueryData();
             ListPageLayout();
 

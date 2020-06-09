@@ -40,18 +40,11 @@
         end_flag = (Request["End_flag"] ?? "").Trim();
         sameap_flag = (Request["sameap_flag"] ?? "").Trim();
 
-        ReqVal = Util.GetRequestParam(Context);
+        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            if (Request["chkTest"] == "TEST") {
-                foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
-                }
-                Response.Write("<HR>");
-            }
-
             if (submitTask == "U") {//承辦結辦
                 doConfirm();
             } else if (submitTask == "B") {//退回分案

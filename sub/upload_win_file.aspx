@@ -10,13 +10,15 @@
     protected int attach_size = 0;
     
     protected Dictionary<string, string> SrvrVal = new Dictionary<string, string>();
- 
+    protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
         QueryString = Request.ServerVariables["QUERY_STRING"];
+        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
         
         type = Request["type"] ?? "";
         submitTask = (Request["submitTask"] ?? "").ToUpper();
@@ -60,14 +62,6 @@
                 break;
         }
 
-        if (Request["chkTest"] == "TEST") {
-            Response.Write(QueryString + "<HR>");
-            foreach (KeyValuePair<string, string> p in SrvrVal) {
-                Response.Write(string.Format("{0} : {1}<br>", p.Key, p.Value));
-            }
-            Response.Write("<HR>");
-        }
-        
         if (submitTask == "UPLOAD")
             DoUpLoad(); //上傳
 

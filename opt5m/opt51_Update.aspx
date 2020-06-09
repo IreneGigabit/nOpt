@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -28,18 +28,11 @@
         submitTask = (Request["submittask"] ?? "").Trim();
         count = Convert.ToInt32("0" + Request["count"]);
 
-        ReqVal = Util.GetRequestParam(Context);
+        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            if (Request["chkTest"] == "TEST") {
-                foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>\n", p.Key, p.Value));
-                }
-                Response.Write("<HR>\n");
-            }
-
             if (submitTask == "U") {//發文確認
                 doConfirm();
             }
