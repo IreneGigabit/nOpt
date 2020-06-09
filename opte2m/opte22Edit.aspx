@@ -40,7 +40,7 @@
     protected string RLock = "true";//承辦內容_分案的控制
     protected string BLock = "true";//承辦內容_承辦的控制
     protected string SLock = "true";//承辦內容_發文的控制
-    protected string SELock = "true";
+    protected string SELock = "true";//有權限才可修改
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
     protected string YYLock = "true";//已判行維護控制
