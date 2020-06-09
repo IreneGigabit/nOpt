@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ public class Funcs {
     /// </summary>  
     public static DataTable getdoc_type() {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            string SQL = "select cust_code,code_name from cust_code where code_type='Odoc_type' order by sortfld";
+            string SQL = "select cust_code,code_name,remark from cust_code where code_type='Odoc_type' order by sortfld";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
