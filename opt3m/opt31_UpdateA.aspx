@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -45,9 +45,9 @@
         if (HTProgRight >= 0) {
             if (Request["chkTest"] == "TEST") {
                 foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                    Response.Write(string.Format("{0}:{1}<br>\n", p.Key, p.Value));
                 }
-                Response.Write("<HR>");
+                Response.Write("<HR>\n");
             }
 
             if (submitTask == "U") {//承辦結辦
@@ -148,19 +148,19 @@
                 }
             }
 
-            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "' ";
-            SQL += ",approve_desc='" + ReqVal.TryGet("Preject_reason", "").ToBig5() + "' ";
-            SQL += ",resp_date=getdate() ";
-            SQL += ",job_status='XX' ";
-            SQL += " where apcode='opt21' and opt_sqlno='" + opt_sqlno + "' ";
-            SQL += " and dowhat='PR' and syscode='" + Session["Syscode"] + "' ";
+            SQL = "update todo_opt set approve_scode='" + Session["scode"] + "'";
+            SQL += ",approve_desc='" + ReqVal.TryGet("Preject_reason", "").ToBig5() + "'";
+            SQL += ",resp_date=getdate()";
+            SQL += ",job_status='XX'";
+            SQL += " where apcode='opt21' and opt_sqlno='" + opt_sqlno + "'";
+            SQL += " and dowhat='PR' and syscode='" + Session["Syscode"] + "'";
             SQL += " and sqlno='" + pre_sqlno + "'";
             conn.ExecuteNonQuery(SQL);
 
             //入流程控制檔
             SQL = " insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,Branch";
             SQL += ",case_no,in_scode,in_date,dowhat,job_status) values (";
-            SQL += " '" + pre_sqlno + "','" + Session["syscode"] + "','opt11'," + opt_sqlno + ",'" + branch + "'";
+            SQL += "'" + pre_sqlno + "','" + Session["syscode"] + "','opt11'," + opt_sqlno + ",'" + branch + "'";
             SQL += ",'" + case_no + "','" + Session["scode"] + "',getdate(),'BR','NN')";
             conn.ExecuteNonQuery(SQL);
 
@@ -243,7 +243,7 @@
         //入流程控制檔
         SQL = " insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no,in_scode,in_date";
         SQL += ",dowhat,job_scode,job_status) values (";
-        SQL += " '" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
+        SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','" + prgid + "'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
         SQL += ",'" + Session["scode"] + "',getdate(),'AP','" + Job_Scode + "','NN')";
         conn.ExecuteNonQuery(SQL);
     }
@@ -302,7 +302,7 @@
         //入流程控制檔
         SQL = " insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no,in_scode,in_date";
         SQL += ",dowhat,job_status) values (";
-        SQL += " '" + pre_sqlno + "','" + Session["Syscode"] + "','opt22'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
+        SQL += "'" + pre_sqlno + "','" + Session["Syscode"] + "','opt22'," + opt_sqlno + ",'" + branch + "','" + case_no + "'";
         SQL += ",'" + Session["scode"] + "',getdate(),'MG_GS','NN')";
         conn.ExecuteNonQuery(SQL);
     }
