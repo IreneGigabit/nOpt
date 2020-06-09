@@ -225,7 +225,7 @@
             "【退件理由】 : <br>　　"+Request["Preject_reason"]+"<Br><Br><p>"+
             "◎請至承辦作業－＞國內案承辦交辦發文作業，重新交辦。 ";
 
-        //Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
+        Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
     }
 </script>
 
