@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
@@ -258,21 +258,21 @@
             $("#arcase").focus();
             return false;
         }
-        if ($("#tfy_send_way").val()==""){
-            alert("請輸入發文方式,！！");
-            $("#tfy_send_way").focus();
-            return false;
-        }
-        if ($("#tfy_receipt_type").val()==""){
-            alert("請輸入官發收據種類！！");
-            $("#tfy_receipt_type").focus();
-            return false;
-        }
-        if ($("#tfy_receipt_title").val()==""){
-            alert("請輸入收據抬頭！！");
-            $("#tfy_receipt_title").focus();
-            return false;
-        }
+        //if ($("#tfy_send_way").val()==""){
+        //    alert("請輸入發文方式,！！");
+        //    $("#tfy_send_way").focus();
+        //    return false;
+        //}
+        //if ($("#tfy_receipt_type").val()==""){
+        //    alert("請輸入官發收據種類！！");
+        //    $("#tfy_receipt_type").focus();
+        //    return false;
+        //}
+        //if ($("#tfy_receipt_title").val()==""){
+        //    alert("請輸入收據抬頭！！");
+        //    $("#tfy_receipt_title").focus();
+        //    return false;
+        //}
 
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit1,#btnsearchSubmit2").lock(!$("#chkTest").prop("checked"));
