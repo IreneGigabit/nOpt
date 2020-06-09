@@ -99,11 +99,11 @@
 	</TR>
     <TR id=tr_send_way>
 	    <TD class=lightbluetable align=right>發文方式：</TD>
-	    <TD class=whitetablebg><SELECT id="send_way" name="send_way" class="QLock"><%#send_way%></select>
+	    <TD class=whitetablebg><SELECT id="send_way" name="send_way" class="SELock"><%#send_way%></select>
 	    </TD>
 	    <TD class=lightbluetable align=right>官發收據種類：</TD>
 	    <TD class=whitetablebg>
-		    <select id="receipt_type" name="receipt_type" class="QLock">
+		    <select id="receipt_type" name="receipt_type" class="SELock">
 			    <option value='' style='color:blue'>請選擇</option>
 			    <option value="P">紙本收據</option>
 			    <option value="E">電子收據</option>
@@ -111,7 +111,7 @@
 	    </TD>
 	    <TD class=lightbluetable align=right>收據抬頭：</TD>
 	    <TD class=whitetablebg>
-		    <select id="receipt_title" name="receipt_title" class="QLock"><%#receipt_title%></select>
+		    <select id="receipt_title" name="receipt_title" class="SELock"><%#receipt_title%></select>
 		    <input type="hidden" id="rectitle_name" name="rectitle_name">
 	    </TD>
     </tr>
@@ -205,6 +205,13 @@
                     break;
             }
         }
+        //電子送件之總發文日為當天
+        if ($("#prgid").val() == "opt31" || $("#prgid").val() == "opt31_1") {//承辦結辦
+            if ($("#send_way").val() == "E" || $("#send_way").val() == "EA") {
+                $("#mp_date").val(new Date().format("yyyy/M/d"));
+            }
+        }
+
         //發文單位
         $("input[name='send_dept'][value='" + jOpt.send_dept + "']").prop("checked", true);
 
@@ -304,7 +311,7 @@
         if ($("#rs_class").val()!="" && $("#rs_code").val()!=""){
             send_form.getcode_br_agt_no();
         }
-        send_form.setSendWay();//依案性預設發文方式
+        //send_form.setSendWay();//依案性預設發文方式
     });
 
     //依處理事項代發文內容
