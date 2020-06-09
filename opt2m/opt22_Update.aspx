@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -57,9 +57,9 @@
         if (HTProgRight >= 0) {
             if (Request["chkTest"] == "TEST") {
                 foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                    Response.Write(string.Format("{0}:{1}<br>\n", p.Key, p.Value));
                 }
-                Response.Write("<HR>");
+                Response.Write("<HR>\n");
             }
 
             if (submitTask == "U") {//判行
