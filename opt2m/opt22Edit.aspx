@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -37,7 +37,7 @@
     protected string RLock = "true";//承辦內容_分案的控制
     protected string BLock = "true";//承辦內容_承辦的控制
     protected string SLock = "true";//承辦內容_發文的控制
-    protected string SELock = "true";
+    protected string SELock = "true";//有權限才可修改
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
     protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
@@ -63,6 +63,8 @@
             HTProgCap = "爭救案判行作業";
             SLock = "false";
             ALock = "false";
+            YYLock = "false";
+            YZLock = "false";
         } else if (prgid == "opt24") {
             HTProgCap = "已判行維護作業";
             if (stat_code == "YY") {//已判行,未發文
@@ -78,12 +80,6 @@
             submitTask = "Q";
         }
 
-        if (submitTask != "Q") {
-            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
-                SELock = "false";
-            }
-        }
-
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
@@ -93,6 +89,12 @@
     }
 
     private void PageLayout() {
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
+            }
+        }
+
         if ((Request["back_flag"] ?? "") == "Y") {
             StrFormBtnTop += "<a href=\"javascript:history.go(-1);void(0);\">[回上一頁]</a>";
         }
