@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -35,9 +35,9 @@
         if (HTProgRight >= 0) {
             if (Request["chkTest"] == "TEST") {
                 foreach (KeyValuePair<string, string> p in ReqVal) {
-                    Response.Write(string.Format("{0}:{1}<br>", p.Key, p.Value));
+                    Response.Write(string.Format("{0}:{1}<br>\n", p.Key, p.Value));
                 }
-                Response.Write("<HR>");
+                Response.Write("<HR>\n");
             }
 
             if (submitTask == "U") {//發文確認
@@ -165,7 +165,7 @@
                     SQL += "," + Util.dbdate(mp_date, "yyyy/M/d") + ",'G','S','" + send_cl + "','" + send_cl1 + "','" + send_sel + "'";
                     SQL += ",'" + rs_type + "','" + rs_class + "','" + rs_code + "','" + act_code + "','" + rs_detail + "'";
                     SQL += "," + fees + ",'" + case_no + "','" + ReqVal.TryGet("opt_sqlno" + i, "") + "','" + rs_agt_no + "'";
-                    SQL += "," + send_way + ",'" + rectitle_name + "','" + receipt_type + "','" + receipt_title + "')";
+                    SQL += ",'" + send_way + "','" + rectitle_name + "','" + receipt_type + "','" + receipt_title + "')";
                     connB.ExecuteNonQuery(SQL);
 
                     //[區所]:爭救案專案室所上傳的檔案
