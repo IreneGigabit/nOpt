@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -101,11 +101,6 @@
 
         if (Request["qrytodo"] == "recopy" && Request["recopy_flag"] == "Y") {
             tfoldername += "/重新複製";
-        }
-
-        //測試環境放置測試目錄下
-        if (Sys.Host.IndexOf("web") > -1) {
-            tfoldername = "測試/" + tfoldername;
         }
 
         //要將檔案copy至sin07/ToBJ
