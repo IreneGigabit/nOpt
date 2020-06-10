@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="opte_upload_form" %>
+<%@ Control Language="C#" ClassName="opte_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -140,7 +140,7 @@
             }
 
             $("#" + fld + "_dbflag_" + nRow).val("U");//當讀取資料時,預設都是 U ,需要入DB(因為除了檔案之外,還可以修改說明之類,無法逐一判斷,故直接用sqlno修改所有欄位)
-            $("#" + fld + "_filenum").val(item.attach_no);
+            $("#" + fld + "_filenum").val(nRow);
             $("#" + fld + "_maxAttach_no").val(Math.max($("#" + fld + "_maxAttach_no").val(), item.attach_no));
         });
     }
