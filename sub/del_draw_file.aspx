@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
 
 <script runat="server">
@@ -24,8 +24,9 @@
         cust_area = (Request["cust_area"] ?? "").Left(1)+gdept;
         btnname = Request["btnname"] ?? "";
 
-        file_path = "/nopt/opt_file/";
-        if (type == "law_opt") file_path = "/nopt/law_opt/";
+        //file_path = "/nopt/opt_file/";
+        //if (type == "law_opt") file_path = "/nopt/law_opt/";
+        file_path = Sys.FileDir(type);
 
         //Response.Write("draw_file=" + draw_file + "<BR>");
         //Response.Write("file_name=" + file_name + "<BR>");
@@ -36,8 +37,8 @@
         System.IO.FileInfo fi = new System.IO.FileInfo(Server.MapPath(draw_file));
         if (fi.Exists) {
             string File_name_new = String.Format("{0}_{1}{2}", System.IO.Path.GetFileNameWithoutExtension(file_name), DateTime.Now.ToString("yyyyMMddHHmmss"), fi.Extension);
-            //Response.Write("backup_name=" + file_path+folder_name + "/" + File_name_new + "<BR>");
-            fi.MoveTo(Server.MapPath(file_path+folder_name + "/" + File_name_new));
+            //Response.Write("backup_name=" + file_path + "/" + folder_name + "/" + File_name_new + "<BR>");
+            fi.MoveTo(Server.MapPath(file_path + "/" + folder_name + "/" + File_name_new));
         }
 
         this.DataBind();
