@@ -47,7 +47,7 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         if (HTProgRight >= 0) {
-            QueryData();s
+            QueryData();
             ListPageLayout();
 
             this.DataBind();
