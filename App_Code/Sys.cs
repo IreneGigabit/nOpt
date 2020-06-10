@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -218,11 +218,38 @@ public class Sys
 	/// <summary>
 	/// 爭救案北京專區檔案目錄
 	/// </summary>
-	public static string BJDir {
-		get {
-			return "/nopt/ToBJ";
-		}
-	}
+    public static string BJDir {
+        get {
+            if (Sys.Host.IndexOf("web") > -1) {
+                return "/nopt/ToBJ/測試";
+            } else {
+                return "/nopt/ToBJ";
+            }
+        }
+    }
+
+	/// <summary>
+	/// 電子送件總管處檔案目錄
+	/// </summary>
+    public static string IPODir {
+        get {
+            if (Sys.Host.IndexOf("web") > -1) {
+                return "/nopt/IPOSend/_商標電子送件區/web02";
+            } else {
+                return "/nopt/IPOSend/_商標電子送件區";
+            }
+        }
+    }
+
+	/// <summary>
+	/// 文件上傳目錄
+	/// </summary>
+    public static string FileDir(string pType) {
+        if (pType.ToLower() == "law_opt")
+            return "/nopt/law_opt";
+        else
+            return "/nopt/opt_file";
+    }
 
     /// <summary>
     /// 發送郵件
