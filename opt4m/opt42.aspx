@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -217,7 +217,7 @@
             $("#span_Email_msg,#span_gs_email").show();
         }else{
             $("#span_Email_msg,#span_gs_email").hide();
-        }$("#span_Email_msg,#span_gs_email").show();
+        }
         getRsNo();
     });
 
