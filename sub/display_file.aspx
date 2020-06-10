@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <script runat="server">
     protected string strtype = "";
@@ -33,19 +33,22 @@
     }
 
     private void PageLayout() {
-        file_path = "/nopt/opt_file";
-        if (strtype == "law_opt") {
-            file_path = "/nopt/law_opt";
-        }
+        //file_path = "/nopt/opt_file";
+        //if (strtype == "law_opt") {
+        //    file_path = "/nopt/law_opt";
+        //}
+        file_path = Sys.FileDir(strtype);
 
         if (gs_date != "") {
-            //Response.Write("file_path="+file_path+"<HR>");
-            //Response.Write("folder_name="+folder_name+"<HR>");
-            //Response.Write("file_name="+file_name+"<HR>");
+            //Response.Write("1file_path="+file_path+"<HR>");
+            //Response.Write("1folder_name="+folder_name+"<HR>");
+            //Response.Write("1file_name="+file_name+"<HR>");
             //Response.End();
 
-            DateTime dgs_date1 = DateTime.ParseExact(gs_date, "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
-            DateTime dgs_date2 = DateTime.ParseExact("2009/3/9", "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime dgs_date1 = DateTime.ParseExact(gs_date, "yyyy/M/d", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime dgs_date2 = DateTime.ParseExact("2009/3/9", "yyyy/M/d", System.Globalization.CultureInfo.InvariantCulture);
+            //Response.Write("dgs_date1=" + dgs_date1.ToShortDateString() + "<HR>");
+            //Response.Write("dgs_date2=" + dgs_date2.ToShortDateString() + "<HR>");
 
             if (dgs_date1 <= dgs_date2) {
                 if (chkFolderExist(file_path + "/" + folder_name)) {
@@ -59,8 +62,8 @@
                 }
             } else {
                 if (chkFolderExist(file_path)) {
-                    if (chkFileExist(file_path + "/" + file_name)) {
-                        show_photo(file_path + "/" + file_name);
+                    if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
+                        show_photo(file_path + "/" + folder_name + "/" + file_name);
                     } else {
                         error_msg("圖檔");
                     }
@@ -69,9 +72,9 @@
                 }
             }
         } else {
-            //Response.Write("file_path="+file_path+"<HR>");
-            //Response.Write("folder_name="+folder_name+"<HR>");
-            //Response.Write("file_name="+file_name+"<HR>");
+            //Response.Write("2file_path="+file_path+"<HR>");
+            //Response.Write("2folder_name="+folder_name+"<HR>");
+            //Response.Write("2file_name="+file_name+"<HR>");
             //Response.End();
 
             if (chkFolderExist(file_path)) {
@@ -88,11 +91,13 @@
 
     //檢查目錄是否存在
     private bool chkFolderExist(string strFolder) {
+        //Response.Write("chkFolderExist=" + Server.MapPath(strFolder) + "<HR>");
         return System.IO.Directory.Exists(Server.MapPath(strFolder));
     }
 
     //檢查檔案是否存在
     private bool chkFileExist(string strFile) {
+        //Response.Write("chkFileExist=" + Server.MapPath(strFile) + "<HR>");
         return System.IO.File.Exists(Server.MapPath(strFile));
     }
 
