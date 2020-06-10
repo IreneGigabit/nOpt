@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
 
 <script runat="server">
@@ -69,10 +69,11 @@
     }
 
     private void DoUpLoad() {
-        string mappath_name = @"\nopt\opt_file\";
-        if (type == "law_opt") mappath_name = @"\nopt\law_opt\";
-
-        string file_path = mappath_name + SrvrVal["folder_name"] + "\\";//指定儲存路徑
+        //string mappath_name = @"\nopt\opt_file\";
+        //if (type == "law_opt") mappath_name = @"\nopt\law_opt\";
+        string mappath_name = Sys.FileDir(type);
+        
+        string file_path = mappath_name +"/"+ SrvrVal["folder_name"] + "/";//指定儲存路徑
         if (!System.IO.Directory.Exists(Server.MapPath(file_path))) {
             //新增資料夾
             System.IO.Directory.CreateDirectory(Server.MapPath(file_path));
@@ -206,39 +207,6 @@
         if ("<%#Sys.IsDebug()%>" == "True") {//☑測試
             $("#labTest").show();
         }
-
-        //傳回window.opener之欄位
-        /*
-        var form_name="<%#SrvrVal["form_name"]%>";
-        var gsize_name = "<%#SrvrVal["size_name"]%>";
-        var gfile_name = "<%#SrvrVal["file_name"]%>";
-        var gbtnname = "<%#SrvrVal["btnname"]%>";
-        var doc_add_scode = "<%#SrvrVal["doc_add_scode"]%>";
-        var doc_add_date = "<%#SrvrVal["doc_add_date"]%>";
-        var gsource_name  = "<%#SrvrVal["source_name"]%>";
-        var gdesc  = "<%#SrvrVal["desc"]%>";
-
-        if ("<%#submitTask%>" == "UPLOAD") {
-            if ("<%#msg%>" != "")
-                alert("<%=msg%>");
-            window.opener.document.getElementById(form_name).value = "<%#SrvrVal["aa"]%>";
-            if (gsize_name.length > 0)
-                window.opener.document.getElementById(gsize_name).value = "<%#attach_size%>";
-            if (gfile_name.length > 0)
-                window.opener.document.getElementById(gfile_name).value = "<%#SrvrVal["ee"]%>";
-            if (doc_add_date.length > 0)
-                window.opener.document.getElementById(doc_add_date).value = "<%=DateTime.Now.ToShortDateString()%>";
-            if (doc_add_scode.length > 0)
-                window.opener.document.getElementById(doc_add_scode).value = "<%=Session["scode"]%>";
-            if (gsource_name.length > 0)
-                window.opener.document.getElementById(gsource_name).value = "<%#SrvrVal["bb"]%>";
-            if (gdesc.length > 0)
-                window.opener.document.getElementById(gdesc).value = "<%#SrvrVal["zz"]%>";
-            if (gbtnname.length > 0)
-                window.opener.document.getElementById(gbtnname).disabled = true;
-
-            window.close();
-        }*/
     });
 
     function AttachFile() {
