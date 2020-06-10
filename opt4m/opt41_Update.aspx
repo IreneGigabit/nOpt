@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -165,14 +165,21 @@
                     SQL = "Select * from attach_opt where opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "' and attach_flag<>'D'";
                     using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                         while (dr.Read()) {
+
+                            //電子送件檔要複製到總收發
+                            if (dr.SafeRead("doc_flag", "").Trim() == "E") {
+                                copy_attach_opte(Branch, seq, seq1, "", rs_detail, dr.SafeRead("attach_name", "").Trim(), dr.SafeRead("attach_path", "").Trim());
+                            }
                             SQL = "insert into bdmt_attach_temp(rs_no,Seq,Seq1,Source,attach_no,attach_path";
-                            SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,in_date,in_scode";
+                            SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,doc_flag";
+                            SQL += ",in_date,in_scode";
                             SQL += ") values (";
                             SQL += " '" + rs_no + "'," + seq + ",'" + seq1 + "','OPT','" + dr.SafeRead("attach_no", "").Trim() + "'";
                             SQL += ",'" + dr.SafeRead("attach_path", "").Trim() + "','" + dr.SafeRead("attach_desc", "").Trim() + "'";
                             SQL += ",'" + dr.SafeRead("attach_name", "").Trim() + "','" + dr.SafeRead("source_name", "").Trim() + "'";
                             SQL += ",'" + dr.SafeRead("attach_size", "").Trim() + "','" + dr.SafeRead("attach_flag", "").Trim() + "'";
-                            SQL += ",'" + dr.SafeRead("doc_type", "").Trim() + "',getdate(),'" + Session["scode"] + "'";
+                            SQL += ",'" + dr.SafeRead("doc_type", "").Trim() + "','" + dr.SafeRead("doc_flag", "").Trim() + "'";
+                            SQL += ",getdate(),'" + Session["scode"] + "'";
                             SQL += ")";
                             connB.ExecuteNonQuery(SQL);
                         }
@@ -234,7 +241,7 @@
                     connM.ExecuteNonQuery(SQL);
 
                     //[帳款]區所account db
-                    //DateTime tgs_date = DateTime.ParseExact(gs_date, "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
+                    //DateTime tgs_date = DateTime.ParseExact(gs_date, "yyyy/M/d", System.Globalization.CultureInfo.InvariantCulture);
                     //string step_date = tgs_date.ToString("MM/dd/YYYY");
                     //string step_date = Util.dbdate(gs_date, "MM/dd/YYYY");
                     SQL = "select case_no,Bfees,arcase as case_arcase,ar_mark from vbr_opt a where rs_no='" + rs_no + "'";
@@ -313,6 +320,43 @@
         }
         strOut.AppendLine("alert('" + msg + "');");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
+    }
+
+    //複製到iposend
+    private bool copy_attach_opte(string branch,string bseq,string bseq1, string brstepgrade,string rs_detail,string attach_name,string attach_path) {
+        string strpath = attach_path;
+        //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
+        strpath = strpath.Replace(@"\opt\", @"\nopt\");
+
+        //第一層目錄：日期+區所別，如20160907-NT
+        string tfoldername = String.Format("{0}-{1}", DateTime.Now.ToString("yyyyMMdd"), branch + Sys.GetSession("dept"));
+        //第二層目錄：案號+副碼+進度+案性前6碼，如NT12345-_-2-申請商標註冊
+        tfoldername += "/" + String.Format("{0}-{1}-{2}-{3}"
+            , branch + Sys.GetSession("dept") + bseq
+            , bseq1
+            , brstepgrade
+            , rs_detail.ToUnicode().Left(6).Trim());
+
+        //要將檔案copy至sin07/iposend
+        string sendt_path = Sys.IPODir + "/" + tfoldername;
+        Check_CreateFolder_virtual(sendt_path);
+
+        if (Request["chkTest"] == "TEST") {
+            Response.Write("create..<BR>" + sendt_path + "→" + Server.MapPath(sendt_path) + "<HR>");
+            Response.Write("copy..虛擬目錄..<BR>" + strpath + "→" + sendt_path + "/" + attach_name + "<HR>");
+            Response.Write("copy..實體目錄..<BR>" + Server.MapPath(strpath) + "→" + Server.MapPath(sendt_path + "/" + attach_name) + "<HR>");
+        }
+        System.IO.File.Copy(Server.MapPath(strpath), Server.MapPath(sendt_path + "/" + attach_name), true);
+
+        return true;
+    }
+
+    //檢查目錄是否存在,若不存在則建立
+    private void Check_CreateFolder_virtual(string strFolder) {
+        if (!System.IO.Directory.Exists(Server.MapPath(strFolder))) {
+            //新增資料夾
+            System.IO.Directory.CreateDirectory(Server.MapPath(strFolder));
+        }
     }
 
     private void doBack() {
