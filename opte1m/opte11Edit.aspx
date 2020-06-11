@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -83,12 +83,12 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="text" id="case_no" name="case_no" value="<%=case_no%>">
-	<input type="text" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
-	<input type="text" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
-	<input type="text" id="bstep_grade" name="bstep_grade">
-	<input type="text" id="submittask" name="submittask">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
+	<input type="hidden" id="bstep_grade" name="bstep_grade">
+	<input type="hidden" id="submittask" name="submittask">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
