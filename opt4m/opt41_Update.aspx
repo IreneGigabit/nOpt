@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -214,7 +214,7 @@
                     SQL += ",mp_date,cappl_name,eappl_name,s_mark1,country,apply_date,apply_no";
                     SQL += ",issue_date,issue_no2,issue_no3,open_date,pay_times,pay_date";
                     SQL += ",term1,term2,end_date,end_code,source,send_status,branch_date";
-                    SQL += ",branch_scode,tran_date,tran_scode,agt_no";
+                    SQL += ",branch_scode,tran_date,tran_scode,agt_no,send_way,receipt_type,receipt_title";
                     SQL += ") values (";
                     SQL += "'B','" + Branch + "','" + seq + "','" + seq1 + "'," + Util.dbdate(br_in_date,"yyyy/M/d");
                     SQL += ",0,0,'" + mseq + "','" + mseq1 + "','" + rs_no + "'";
@@ -228,7 +228,7 @@
                     SQL += ",'" + issue_no + "','" + rej_no + "'," + Util.dbdate(open_date,"yyyy/M/d") + ",''";
                     SQL += ",null," + Util.dbnull(term1) + "," + Util.dbnull(term2) + "," + Util.dbdate(end_date,"yyyy/M/d");
                     SQL += ",'" + end_code + "','B','NN',getdate(),'" + Session["scode"] + "',getdate()";
-                    SQL += ",'" + Session["scode"] + "','" + rs_agt_no + "'";
+                    SQL += ",'" + Session["scode"] + "','" + rs_agt_no + "','" + send_way + "','" + receipt_type + "','" + receipt_title + "'";
                     SQL += ")";
                     connM.ExecuteNonQuery(SQL);
 
@@ -241,9 +241,6 @@
                     connM.ExecuteNonQuery(SQL);
 
                     //[帳款]區所account db
-                    //DateTime tgs_date = DateTime.ParseExact(gs_date, "yyyy/M/d", System.Globalization.CultureInfo.InvariantCulture);
-                    //string step_date = tgs_date.ToString("MM/dd/YYYY");
-                    //string step_date = Util.dbdate(gs_date, "MM/dd/YYYY");
                     SQL = "select case_no,Bfees,arcase as case_arcase,ar_mark from vbr_opt a where rs_no='" + rs_no + "'";
                     using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                         string chk_type = "N";
