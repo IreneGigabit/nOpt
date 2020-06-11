@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -154,12 +154,13 @@
 		        <input type="hidden" id="sqlno{{nRow}}" name="sqlno{{nRow}}" value="{{opt_sqlno}}">
 		        <input type="hidden" id="send_dept{{nRow}}" name="send_dept{{nRow}}" value="{{send_dept}}">
 		        <input type="hidden" id="gs_date{{nRow}}" name="gs_date{{nRow}}" value="{{gs_date}}">
-		        <input type="hidden" id="mp_date{{nRow}}" name="mp_date{{nRow}}" value="{{mp_date}}">
+		        <input type="text" id="mp_date{{nRow}}" name="mp_date{{nRow}}" value="{{mp_date}}">
 		        <input type="hidden" id="contract_flag{{nRow}}" name="contract_flag{{nRow}}" value="{{contract_flag}}">
 		        <input type="hidden" id="fseq{{nRow}}" name="fseq{{nRow}}" value="{{fseq}}">
 		        <input type="hidden" id="case_no{{nRow}}" value="{{case_no}}">
 		        <input type="hidden" id="mailto{{nRow}}" value="{{mailto}}">
 		        <input type="hidden" id="mailcc{{nRow}}" value="{{mailcc}}">
+		        <input type="text" id="send_way{{nRow}}" value="{{send_way}}">
 		    </td>
 	    </tr>
 	    </tfoot>
@@ -291,6 +292,7 @@
                         strLine1 = strLine1.replace(/{{arcase}}/g, item.arcase);
                         strLine1 = strLine1.replace(/{{mailto}}/g, item.mailto);
                         strLine1 = strLine1.replace(/{{mailcc}}/g, item.mailcc);
+                        strLine1 = strLine1.replace(/{{send_way}}/g, item.send_way);
 
                         var urlasp="";
                         if(item.case_no!=""){
@@ -469,8 +471,12 @@
         if(ChkDate($("#step_date"+nRow)[0])) {
             return false;
         }else{
-            var mpdate=new Date($("#step_date"+nRow).val()).addDays(1).format("yyyy/M/d");
-            $("#mp_date"+nRow).val(mpdate);
+            if($("#send_way"+nRow).val()=="E" ||$("#send_way"+nRow).val()=="EA"){
+                $("#mp_date"+nRow).val($("#step_date"+nRow).val());
+            }else{
+                var mpdate=new Date($("#step_date"+nRow).val()).addDays(1).format("yyyy/M/d");
+                $("#mp_date"+nRow).val(mpdate);
+            }
         }
     }
 
