@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -112,8 +112,8 @@
                                 SQL += ",agt_no1='" + dr.SafeRead("agt_no1", "").Trim() + "'";
                                 SQL += ",end_date=" + Util.dbdate(dr.SafeRead("end_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",end_code='" + dr.SafeRead("end_code", "").Trim() + "'";
-                                SQL += ",ext_term1=" + Util.dbnull(dr.SafeRead("ext_term1", ""));
-                                SQL += ",ext_term2=" + Util.dbnull(dr.SafeRead("ext_term2", ""));
+                                SQL += ",ext_term1=" + Util.dbdate(dr.SafeRead("ext_term1", ""), "yyyy/M/d HH:mm:ss");
+                                SQL += ",ext_term2=" + Util.dbdate(dr.SafeRead("ext_term2", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",renewal_date=" + Util.dbdate(dr.SafeRead("renewal_date", ""), "yyyy/M/d HH:mm:ss");
                                 SQL += ",renewal_no='" + dr.SafeRead("renewal_no", "").Trim() + "'";
                                 SQL += ",renewal_agt_no='" + dr.SafeRead("renewal_agt_no", "").Trim() + "'";
@@ -351,9 +351,9 @@
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
-        if (!(window.parent.parent.tt === undefined)) {
+        if (window.parent.parent.tt !== undefined) {
             window.parent.this_init();
-            window.parent.parent.tt.rows = "100%,0%";
+            //window.parent.parent.tt.rows = "100%,0%";
         } else {
             window.opener.this_init();
             window.close();
