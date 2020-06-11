@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -60,7 +60,7 @@
 <script language="javascript" type="text/javascript">
     alert("<%#msg%>");
     if ("<%#Request["chkTest"]%>" != "TEST") {
-        if (!(window.parent.parent.tt === undefined)) {
+        if (window.parent.parent.tt !== undefined) {
             window.parent.parent.tt.rows = "100%,0%";
         }
     }
