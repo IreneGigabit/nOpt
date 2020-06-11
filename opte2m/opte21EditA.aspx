@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -152,10 +152,10 @@
         $("#btnsearchSubmit2").showFor($("#submittask").val()=="U");//分案時顯示[分　　案]
         $("#btnsearchSubmit3").showFor($("#submittask").val()=="DEL");//刪除分案時顯示[刪除分案]
         $(".Lock").lock();
-        $(".QLock").lock(<%#QLock%>);
-        $(".QHide").hideFor(<%#QHide%>);
         $(".RLock").lock(<%#RLock%>);
         $(".CLock").lock(<%#CLock%>);
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").hideFor(<%#QHide%>);
 
         //取得案件資料
         $.ajax({
