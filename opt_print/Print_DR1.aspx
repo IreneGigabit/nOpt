@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -141,21 +141,29 @@
             using (DataTable dtTran = ipoRpt.Tran) {
                 if (dtTran.Rows.Count > 0) {
                     //註冊已滿3年之使用情形說明
-                    ipoRpt.ReplaceBookmark("tran_remark4", dtTran.Rows[0]["tran_remark4"].ToString());
+                    ipoRpt.ReplaceBookmark("tran_remark4", dtTran.Rows[0]["tran_remark4"].ToString(),true);
                     //事實及理由
                     ipoRpt.ReplaceBookmark("tran_remark1", dtTran.Rows[0]["tran_remark1"].ToString());
                     //相關聯案件
-                    string[] oitem = dtTran.Rows[0]["other_item"].ToString().Trim().Split(';');
-                    if (oitem.Length > 1) {
-                        DateTime dateValue;
-                        if (DateTime.TryParse(oitem[0].ToString(), out dateValue)) {
-                            ipoRpt.ReplaceBookmark("O1", dateValue.ToLongTwDate().Replace("民國", ""));
+                    if (dtTran.Rows[0]["other_item"].ToString().Trim().IndexOf(";") > -1) {
+                        string[] oitem = dtTran.Rows[0]["other_item"].ToString().Trim().Split(';');
+                        if (oitem.Length > 0) {
+                            DateTime dateValue;
+                            if (DateTime.TryParse(oitem[0].ToString(), out dateValue)) {
+                                ipoRpt.ReplaceBookmark("tran_ymd", dateValue.ToLongTwDate().Replace("民國", ""));
+                            }
+                            if (oitem.Length > 1) ipoRpt.ReplaceBookmark("O1", oitem[1].ToString());
+                            if (oitem.Length > 2) ipoRpt.ReplaceBookmark("O2", oitem[2].ToString());
                         }
-                        if (oitem.Length > 1) ipoRpt.ReplaceBookmark("O1", oitem[1].ToString());
-                        if (oitem.Length > 2) ipoRpt.ReplaceBookmark("O2", oitem[2].ToString());
                     } else {
-                        ipoRpt.ReplaceBookmark("O1", "", true);
+                        ipoRpt.ReplaceBookmark("tran_ymd", "　");
+                        ipoRpt.ReplaceBookmark("O1", "　");
+                        ipoRpt.ReplaceBookmark("O2", "　");
                     }
+                } else {
+                    ipoRpt.ReplaceBookmark("tran_ymd", "　");
+                    ipoRpt.ReplaceBookmark("O1", "　");
+                    ipoRpt.ReplaceBookmark("O2", "　");
                 }
             }
 
@@ -198,14 +206,16 @@
                         string[] fileArr = { "ncname1", "ncname2", "nename1", "nename2", "ncrep", "nerep", "neaddr1", "neaddr2", "neaddr3", "neaddr4" };
                         foreach (string file in fileArr) {
                             if (!r.IsNull(file)) {
-                                ipoRpt.CopyBlock("b_view3");
+                                ipoRpt.CopyBlock("b_view2");
                                 string drawPath = r[file].ToString();
                                 try {
                                     if (drawPath.IndexOf(@"/btbrt/") == 0) {//『/btbrt/』開頭要換掉
-                                        drawPath = "~/" + drawPath.Substring(7);
+                                        drawPath = drawPath.Substring(7);
                                     } else if (drawPath.ToString().ToLower().IndexOf(@"d:\data\document\") == 0) {//『D:\Data\document\』開頭要換掉
-                                        drawPath = "~/" + drawPath.Substring(17).Replace("\\", "/");
+                                        drawPath = drawPath.Substring(17);
                                     }
+                                    //實體目錄
+                                    drawPath = @"\\" + Sys.uploadservername(branch) + @"\" + drawPath.Replace("/", @"\");
                                     ipoRpt.AppendImage(new ImageFile(drawPath));
                                 }
                                 catch (FileNotFoundException) {
