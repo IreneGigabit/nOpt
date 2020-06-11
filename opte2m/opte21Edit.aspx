@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -191,6 +191,8 @@
         $(".QHide").hideFor(<%#QHide%>);
         $(".PLock").lock(<%#PLock%>);
         $(".RLock").lock(<%#RLock%>);
+        $(".BLock").lock(<%#BLock%>);
+        $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
 
         //取得案件資料
