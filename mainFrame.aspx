@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" %>
+<%@ Page Language="C#" CodePage="65001" %>
 <script runat="server">
     protected string mainSrc = "";
     protected string leftSrc = "";
@@ -10,7 +10,8 @@
         Response.Expires = -1;
 
         if (Convert.ToBoolean(Session["Password"])) {
-            mainSrc = "homelist.aspx";
+            //mainSrc = "homelist.aspx";
+            mainSrc = "opt_main.htm";
             leftSrc = "leftmenu.aspx";
         } else {
             mainSrc = "login.aspx";
