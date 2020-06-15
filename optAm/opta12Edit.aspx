@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -240,24 +240,24 @@
             </tr> 
             <tr>
                 <td class="whitetablebg" align="right" nowrap colspan="4">
-                    <TABLE id=tr_low style="display:" border=0 class="bluetable"  cellspacing=1 cellpadding=2 width="100%">
+                    <TABLE id=tbl_detail border=0 class="bluetable"  cellspacing=1 cellpadding=2 width="100%">
 	                    <thead>
-	                    <TR class=whitetablebg align=center>
-		                    <TD colspan=3 align=right>
-                                <input type=hidden id=class_num name=class_num value=0><!--進度筆數-->
-			                    <input type=button value ="增加一筆法條" class="cbutton QLock" id=Class_Add_button_law name=Class_Add_button_law>			
-			                    <input type=button value ="減少一筆法條" class="cbutton QLock" id=Class_Del_button_law name=Class_Del_button_law onclick="deletelaw(reg.class_num.value)">
-		                    </TD>
-	                    </TR>
-	                    <TR align=center class=lightbluetable>
-		                    <TD></TD><TD>引用法條</TD><TD>法條內文</TD>
-	                    </TR>
+	                        <TR class=whitetablebg align=center>
+		                        <TD colspan=3 align=right>
+                                    <input type=text id=class_num name=class_num value=0><!--進度筆數-->
+			                        <input type=button value ="增加一筆法條" class="cbutton QLock" id=Class_Add_button_law name=Class_Add_button_law>
+			                        <input type=button value ="減少一筆法條" class="cbutton QLock" id=Class_Del_button_law name=Class_Del_button_law>
+		                        </TD>
+	                        </TR>
+	                        <TR align=center class=lightbluetable>
+		                        <TD></TD><TD>引用法條</TD><TD>法條內文</TD>
+	                        </TR>
                         </thead>
-                        <tfoot style="display:">
+                        <tfoot style="display:none">
 		                    <TR>
 			                    <TD class=sfont9 align=center>
 		                            <input type=text id='class_num_##' name='class_num_##' class=SEdit readonly size=2 value='##.'>
-                                    <input type=hidden id='law_sqlno_##' name='law_sqlno_##'>
+                                    <input type=text id='law_sqlno_##' name='law_sqlno_##'>
 			                    </TD>
 			                    <TD class=sfont9 align="left">
                                     <select id='law_type_##' name='law_type_##' onchange="law_change('##')" class="QLock"></select>
@@ -270,25 +270,62 @@
                         <tbody></tbody>
                     </TABLE>
                     <TABLE id=tabattach style="display:" border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
-	                    <TR class=whitetablebg align=center>
-		                    <TD align=center colspan=7 class=lightbluetable1>
-                                <input type=text id=attachnum name=attachnum value=0><!--進度筆數-->
-                                <input type=text id=tAttach_Flag name=tAttach_Flag><!--進度筆數-->            
-                                <font color=white>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;傳</font>
-		                    </TD>
-	                    </TR>
-	                    <TR class=whitetablebg align=center>
-		                    <TD colspan=7 align=right>
-				                <input type=button value="增加一筆附件" class="cbutton QLock" id=attach_Add_button name=attach_Add_button>
-				                <input type=button value="減少一筆附件" class="cbutton QLock" id=attach_Del_button name=attach_Del_button onclick="deleteattach(reg.attachnum.value)">
-			                    <input type="hidden" name="sqlno" id="sqlno">
-			                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    </TD>
-	                    </TR>
-	                    <TR align=center class=lightbluetable>
-		                    <TD></TD><TD>附件種類</TD><TD>附件名稱</TD><TD>上傳人員/日期</TD><TD>附件說明</TD><TD>停用日期</TD>
-	                    </TR>
-                    </TABLE>                                                              
+	                    <thead>
+	                        <TR class=whitetablebg align=center>
+		                        <TD align=center colspan=7 class=lightbluetable1>
+                                    <input type=text id=attachnum name=attachnum value=0><!--進度筆數-->
+                                    <input type=text id=tAttach_Flag name=tAttach_Flag><!--進度筆數-->            
+                                    <font color=white>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;傳</font>
+		                        </TD>
+	                        </TR>
+	                        <TR class=whitetablebg align=center>
+		                        <TD colspan=7 align=right>
+				                    <input type=button value="增加一筆附件" class="cbutton QLock" id=attach_Add_button name=attach_Add_button>
+				                    <input type=button value="減少一筆附件" class="cbutton QLock" id=attach_Del_button name=attach_Del_button>
+			                        <input type="hidden" name="sqlno" id="sqlno">
+			                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                        </TD>
+	                        </TR>
+	                        <TR align=center class=lightbluetable>
+		                        <TD></TD><TD>附件種類</TD><TD>附件名稱</TD><TD>上傳人員/日期</TD><TD>附件說明</TD><TD>停用日期</TD>
+	                        </TR>
+                        </thead>
+                        <tfoot style="display:">
+		                    <TR>
+			                    <TD class=sfont9 align=center>
+	                                <input type=text id='attachnum##' name='attachnum##' class=SEdit readonly size=2 value='##.'>
+	                                <input type=text id='attach_sqlno##' name='attach_sqlno##'>
+			                    </TD>
+			                    <TD class=sfont9 align=center>
+	                                <select class="QLock" id='attach_type##' name='attach_type##'><%=htmlattach_type%></select>
+			                    </TD>
+			                    <TD class=sfont9 align="left">
+	                                <input type='text' id='edit_opt_pic_path##' name='edit_opt_pic_path##'>
+	                                <input type='text' id='edit_opt_pic_path_name##' name='edit_opt_pic_path_name##' size='30' class=SEdit readonly>
+	                                <input type='text' id='edit_opt_pic_path_size##' name='edit_opt_pic_path_size##' class=SEdit readonly>
+	                                <input type='text' id='edit_opt_pic_path_source_name##' name='edit_opt_pic_path_source_name##' class=SEdit readonly>
+	                                <input type='text' id='edit_opt_pic_path_desc##' name='edit_opt_pic_path_desc##' class=SEdit readonly>
+	                                <br>
+	                                <input type='button' class='cbutton QLock' id='butUpload##' name='btnedit_opt_pic_path_##' value='上傳' onclick="UploadAttach('##','Y')">
+	                                <input type='button' class='delbutton QLock' id='btnDelAtt##' name='btnDelAtt##' value='刪除' onclick="DelOptAttach('##','Y')">
+	                                <input type='button' class='cbutton' id='btnDisplay##' name='btnDisplay##' value='檢視' onclick="PreviewOptAttach('##')">
+			                    </TD>
+			                    <TD class=sfont9 align=center>
+	                                <input type='text' name='edit_opt_pic_path_add_date##' size='10' readonly class='SEdit'>
+	                                <input type='text' name='edit_opt_pic_path_add_scode##' readonly class='SEdit'>
+			                    </TD>
+			                    <TD class=sfont9>
+	                                <input type=text name="attach_remark##" size=40 maxlength=80>
+			                    </TD>
+			                    <TD class=sfont9>
+                                    <input type=text name=mEnd_date## size=11 maxlength=10 class="Lock QLock ELock dateField">
+                                    <input type=hidden name=O_mEnd_date##>
+			                    </TD>
+		                    </TR>
+
+                        </tfoot>
+                        <tbody></tbody>
+                    </TABLE>
                 </td>
             </tr> 
         </table>
@@ -312,8 +349,13 @@
 <script language="javascript" type="text/javascript">
     $(function () {
         if (!(window.parent.tt === undefined)) {
-            window.parent.tt.rows = "0%,100%";
+            if($("#submittask").val()=="A"){
+                window.parent.tt.rows = "0%,100%";
+            }else{
+                window.parent.tt.rows = "50%,50%";
+            }
         }
+
         $("select[name='law_type_##']").getOption({//引用法條
             url: getRootPath() + "/ajax/json_Law.aspx",
             data:{},
@@ -357,9 +399,8 @@
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
 
-        var jLaw=law_data.law[0];
-        var jAttach=law_data.law_attach;
-        if(jLaw!==undefined){
+        if(law_data.law.length>0){
+            var jLaw=law_data.law[0];
             $("#edit_opt_no").val(jLaw.opt_no);
             $("#edit_pr_date").val(dateReviver(jLaw.pr_date, "yyyy/M/d"));
 
@@ -393,7 +434,115 @@
             $("#edit_tran_date").val(dateReviver(jLaw.tran_date, "yyyy/M/d t HH:mm:ss"));
         }
 
+        //法條
+        var jDetail=law_data.law_detail;
+        $("#tbl_detail>tbody").empty();
+        if (jDetail.length > 0) {
+            $.each(jDetail, function (i, item) {
+                //增加一筆法條
+                appendDetail();
+                //填資料
+                var nRow = $("#class_num").val();
+                $("#law_sqlno_" + nRow).val(item.law_sqlno);
+                $("#law_type_" + nRow).val(item.law_sqlno);
+                $("#law_mark_" + nRow).val(item.law_mark);
+            });
+        }
+
+        //附件
+        var jAttach=law_data.law_attach;
+        $("#tabattach>tbody").empty();
+        if (jAttach.length > 0) {
+            $.each(jAttach, function (i, item) {
+                //增加一筆附件
+                appendAttach();
+                //填資料
+                var nRow = $("#attachnum").val();
+                //$("#law_sqlno_" + nRow).val(item.law_sqlno);
+                //$("#law_type_" + nRow).val(item.law_sqlno);
+                //$("#law_mark_" + nRow).val(item.law_mark);
+            });
+        }
+
         $("#btnSubmit,#btnDel,#btnReset").hide();
+    }
+
+    //增加一筆法條
+    $("#Class_Add_button_law").click(function () { appendDetail(); });
+    function appendDetail() {
+        var nRow = parseInt($("#class_num").val(), 10) + 1;
+        //複製樣板
+        var copyStr = "";
+        $("#tbl_detail>tfoot tr").each(function (i) {
+            copyStr += "<tr name='tr_dtl_" + nRow + "'>" + $(this).html().replace(/##/g, nRow) + "</tr>"
+        });
+        $("#tbl_detail>tbody").append(copyStr);
+        $("#class_num").val(nRow)
+    }
+
+    //減少一筆法條
+    $("#Class_Del_button_law").click(function () { deleteDetail(); });
+    function deleteDetail() {
+        var nRow = parseInt($("#class_num").val(), 10);
+        $("tr[name='tr_dtl_" + nRow + "']").remove();
+        $("#class_num").val(Math.max(0, nRow - 1));
+    }
+
+    //增加一筆附件
+    $("#attach_Add_button").click(function () { appendAttach(); });
+    function appendAttach() {
+        var nRow = parseInt($("#attachnum").val(), 10) + 1;
+        //複製樣板
+        var copyStr = "";
+        $("#tabattach>tfoot tr").each(function (i) {
+            copyStr += "<tr name='tr_attach_" + nRow + "'>" + $(this).html().replace(/##/g, nRow) + "</tr>"
+        });
+        $("#tabattach>tbody").append(copyStr);
+        $("#attachnum").val(nRow)
+    }
+
+    //減少一筆附件
+    $("#attach_Del_button").click(function () { deleteAttach(); });
+    function deleteAttach() {
+        var nRow = parseInt($("#attachnum").val(), 10);
+        $("tr[name='tr_attach_" + nRow + "']").remove();
+        $("#attachnum").val(Math.max(0, nRow - 1));
+    }
+
+    //依法條帶內文
+    function law_change(pno){
+        var searchSql = " SELECT law_mark from law_detail where law_sqlno = '"+$("#law_type_"+ pno).val()+"'";
+
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
+            data: { sql:searchSql },
+            async: false,
+            cache: false,
+            success: function (json) {
+                var JSONdata = $.parseJSON(json);
+                if (JSONdata.length == 0) {
+                    $("#law_mark_"+pno).val("");
+                } else {
+                    $("#law_mark_"+pno).val(JSONdata[0].law_mark);
+                }
+            },
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>法條內文載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        });
+    }
+    
+    //檢視圖檔
+    function PreviewOptAttach(nRow){
+        var fld = "edit_opt_pic_path";
+        if ($("#" + fld + "_name" + nRow).val() == "") {
+            alert("請先上傳附件 !!");
+            return false;
+        }
+        var popt_no=$("#edit_opt_no").val();
+        var tfolder="attach/"+ popt_no;
+
+        var url = "../sub/display_file.aspx?type=law_opt&folder_name=" + tfolder + "&draw_file=" + $("#" + fld + nRow).val();
+        window.open(url, "window", "width=700,height=600,toolbar=yes,menubar=yes,resizable=yes,scrollbars=yes,status=0,top=50,left=80");
     }
 
     //關閉視窗
