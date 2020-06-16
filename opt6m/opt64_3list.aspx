@@ -324,7 +324,7 @@
     </tr>
 </table>
 
-<form style="margin:0;" id="reg" name="reg" method="post">
+<form id="reg" name="reg" method="post">
     <%#hiddenText%>
     <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">

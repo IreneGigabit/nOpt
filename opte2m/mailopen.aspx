@@ -4,6 +4,8 @@
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "Newtonsoft.Json"%>
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 
 <script runat="server">
     protected string HTProgCap = "出口爭救案系統-發文信函查詢";//HttpContext.Current.Request["prgname"];//功能名稱
@@ -37,6 +39,7 @@
         tlink += "&tfsend_no=" + tfsend_no;
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             if (json == "Y") QueryData();
 
@@ -111,7 +114,8 @@
     <input type="hidden" id="job_sqlno" name="job_sqlno" value="<%=job_sqlno%>">
     <input type="hidden" id="tfsend_no" name="tfsend_no" value="<%=tfsend_no%>">
 
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
 
     <div id="divPaging" style="display:none">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
@@ -161,7 +165,6 @@
 		<td nowrap>{{to_email}}</td>
 		<td nowrap>{{email_title}}</td>
 		<td nowrap  align="center">
-			<font style="cursor:pointer;color:darkblue" onclick="getstep('{{nRow}}')">[選取]</font>
 			<a href="opte23_mailpreview.aspx?submitTask=Q&opt_sqlno={{job_sqlno}}&email_sqlno={{email_sqlno}}<%#tlink%>&winact=1&FrameBlank=50" target="Eblank">[查詢]</a>
 		</td>
       </tr>
@@ -190,7 +193,7 @@
         nRow = 0;
 
         $.ajax({
-            url: "ext_yournolist.aspx?json=Y",
+            url: "mailopen.aspx?json=Y",
             type: "get",
             async: false,
             cache: false,
@@ -238,13 +241,12 @@
                         strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
                         strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
 
-                        strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{seq}}/g, item.seq);
-                        strLine1 = strLine1.replace(/{{seq1}}/g, item.seq1);
-                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fext_seq);
-                        strLine1 = strLine1.replace(/{{class}}/g, item.fclass);
-                        strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
-                        strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
+                        strLine1 = strLine1.replace(/{{in_date}}/g, dateReviver(item.in_date, "yyyy/M/d t HH:mm:ss"));
+                        strLine1 = strLine1.replace(/{{in_scode_name}}/g, item.in_scode_name);
+                        strLine1 = strLine1.replace(/{{to_email}}/g, item.to_email);
+                        strLine1 = strLine1.replace(/{{email_title}}/g, item.email_title);
+                        strLine1 = strLine1.replace(/{{job_sqlno}}/g, item.job_sqlno);
+                        strLine1 = strLine1.replace(/{{email_sqlno}}/g, item.email_sqlno);
 
                         $("#dataList>tbody").append(strLine1);
                     });

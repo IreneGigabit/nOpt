@@ -2,6 +2,8 @@
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -31,6 +33,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -49,7 +52,7 @@
         }
 
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            htmlattach_type = Funcs.getcust_code("att_type", "", "").Option("{cust_code}", "{code_name}");
+            htmlattach_type = Funcs.getcust_code("att_type", "", "").Option("{cust_code}", "{cust_code}_{code_name}");
         }
     }
 </script>
@@ -139,10 +142,10 @@
                     商標名稱 :
                 </td>
                  <td class="whitetablebg" align="left" nowrap colspan="3">
-                    <input type="text" class="QLock" id='edit_opt_pic' name='edit_opt_pic' size="50" maxlength="50">                                                                                                                 
-                    <input type=button class="QLock cbutton" id="btnedit_opt_pic_path_" name="btnedit_opt_pic_path_" value='上傳' onclick='UploadAttach("","N")' >
+                    <input type="text" class="QLock" id='edit_opt_pic' name='edit_opt_pic' size="50" maxlength="50">
+                    <input type=button class="QLock cbutton" id="btnedit_opt_pic_path_" name="btnedit_opt_pic_path_" value='上傳' onclick='UploadAttach("")' >
                     <input type=button id="PreviewBtn" name="PreviewBtn" class='cbutton' value='檢視' onclick='PreviewOptAttach("")' >
-                    <input type=button class="QLock cbutton" id="xxxxx" name="xxxxx" value='刪除' onclick='DelOptAttach("","Y")' >                    
+                    <input type=button class="QLock cbutton" id="xxxxx" name="xxxxx" value='刪除' onclick='DelOptAttach("")' >
                     <input type="hidden" id="edit_opt_pic_path" name="edit_opt_pic_path">
                     <input type="hidden" id="edit_opt_pic_path_size" name="edit_opt_pic_path_size" >
                     <input type="text" id="edit_opt_pic_path_name" name="edit_opt_pic_path_name" size="40" maxlength="200" readonly class="SEdit" >
@@ -269,7 +272,7 @@
                         </tfoot>
                         <tbody></tbody>
                     </TABLE>
-                    <TABLE id=tabattach style="display:" border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
+                    <TABLE id=tabattach border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
 	                    <thead>
 	                        <TR class=whitetablebg align=center>
 		                        <TD align=center colspan=7 class=lightbluetable1>
@@ -290,7 +293,7 @@
 		                        <TD></TD><TD>附件種類</TD><TD>附件名稱</TD><TD>上傳人員/日期</TD><TD>附件說明</TD><TD>停用日期</TD>
 	                        </TR>
                         </thead>
-                        <tfoot style="display:">
+                        <tfoot style="display:none">
 		                    <TR>
 			                    <TD class=sfont9 align=center>
 	                                <input type=text id='attachnum##' name='attachnum##' class=SEdit readonly size=2 value='##.'>
@@ -306,20 +309,20 @@
 	                                <input type='text' id='edit_opt_pic_path_source_name##' name='edit_opt_pic_path_source_name##' class=SEdit readonly>
 	                                <input type='text' id='edit_opt_pic_path_desc##' name='edit_opt_pic_path_desc##' class=SEdit readonly>
 	                                <br>
-	                                <input type='button' class='cbutton QLock' id='butUpload##' name='btnedit_opt_pic_path_##' value='上傳' onclick="UploadAttach('##','Y')">
-	                                <input type='button' class='delbutton QLock' id='btnDelAtt##' name='btnDelAtt##' value='刪除' onclick="DelOptAttach('##','Y')">
+	                                <input type='button' class='cbutton QLock' id='btnedit_opt_pic_path_##' name='btnedit_opt_pic_path_##' value='上傳' onclick="UploadAttach('##')">
+	                                <input type='button' class='delbutton QLock' id='btnDelAtt##' name='btnDelAtt##' value='刪除' onclick="DelOptAttach('##')">
 	                                <input type='button' class='cbutton' id='btnDisplay##' name='btnDisplay##' value='檢視' onclick="PreviewOptAttach('##')">
 			                    </TD>
 			                    <TD class=sfont9 align=center>
-	                                <input type='text' name='edit_opt_pic_path_add_date##' size='10' readonly class='SEdit'>
-	                                <input type='text' name='edit_opt_pic_path_add_scode##' readonly class='SEdit'>
+	                                <input type='text' id='edit_opt_pic_path_add_date##' name='edit_opt_pic_path_add_date##' size='10' readonly class='SEdit'>
+	                                <input type='text' id='edit_opt_pic_path_add_scode##' name='edit_opt_pic_path_add_scode##' readonly class='SEdit'>
 			                    </TD>
 			                    <TD class=sfont9>
-	                                <input type=text name="attach_remark##" size=40 maxlength=80>
+	                                <input type=text id="attach_remark##" name="attach_remark##" size=40 maxlength=80>
 			                    </TD>
 			                    <TD class=sfont9>
-                                    <input type=text name=mEnd_date## size=11 maxlength=10 class="Lock QLock ELock dateField">
-                                    <input type=hidden name=O_mEnd_date##>
+                                    <input type=text id="mEnd_date##" name="mEnd_date##" size=11 maxlength=10 class="Lock QLock ELock dateField">
+                                    <input type=hidden id="O_mEnd_date##" name="O_mEnd_date##">
 			                    </TD>
 		                    </TR>
 
@@ -329,7 +332,8 @@
                 </td>
             </tr> 
         </table>
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
@@ -363,9 +367,9 @@
             textFormat: "{law_text}"
         });
 
-        $("#chkTest").click(function (e) {
-            $("#ActFrame").showFor($(this).prop("checked"));
-        });
+        //$("#chkTest").click(function (e) {
+        //    $("#ActFrame").showFor($(this).prop("checked"));
+        //});
 
         this_init();
     });
@@ -373,7 +377,7 @@
     var law_data = {};
     //初始化
     function this_init() {
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $(".Lock").lock();
@@ -458,9 +462,14 @@
                 appendAttach();
                 //填資料
                 var nRow = $("#attachnum").val();
-                //$("#law_sqlno_" + nRow).val(item.law_sqlno);
-                //$("#law_type_" + nRow).val(item.law_sqlno);
-                //$("#law_mark_" + nRow).val(item.law_mark);
+                $("#attach_sqlno" + nRow).val(item.sqlno);
+                $("#attach_type" + nRow).val(item.attach_type);
+                $("#edit_opt_pic_path" + nRow).val(item.attach_path);
+                $("#edit_opt_pic_path_name" + nRow).val(item.attach_name);
+                $("#attach_remark" + nRow).val(item.attach_remark);
+                $("#edit_opt_pic_path_add_date" + nRow).val(dateReviver(item.attach_in_date, "yyyy/M/d"));
+                $("#edit_opt_pic_path_add_scode" + nRow).val(item.attach_scode);
+                $("#mEnd_date" + nRow).val(item.end_date);
             });
         }
 
@@ -543,6 +552,42 @@
 
         var url = "../sub/display_file.aspx?type=law_opt&folder_name=" + tfolder + "&draw_file=" + $("#" + fld + nRow).val();
         window.open(url, "window", "width=700,height=600,toolbar=yes,menubar=yes,resizable=yes,scrollbars=yes,status=0,top=50,left=80");
+    }
+
+    function UploadAttach(nRow) {
+        var fld = "edit_opt_pic_path";
+        var popt_no = $("#edit_opt_no").val();
+        var tfolder = "attach" + "/" + popt_no;
+
+        var url = "../sub/upload_win_file.aspx?type=law_opt" +
+            "&folder_name=" + tfolder + "&form_name=" + fld + nRow + "&size_name=" + fld + "_size" + nRow +
+            "&file_name=" + fld + "_name" + nRow +
+            "&add_date=" + fld + "_add_date" + nRow +
+            "&add_scode=" + fld + "_add_scode" + nRow +
+            "&btnname=btn" + fld + "_" + nRow +
+            "&source_name=" + fld + "_source_name" + nRow +
+            "&desc=" + fld + "_desc" + nRow;
+        window.open(url, "", "width=700 height=600 top=50 left=50 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+    }
+
+    //刪除圖檔上傳
+    function DelOptAttach(nRow) {
+        var fld = "edit_opt_pic_path";
+        var popt_no = $("#edit_opt_no").val();
+        var tfolder = "attach" + "/" + popt_no;
+
+        if ($("#" + fld + "_name" + nRow).val() == "") {
+            return false;
+        }
+        if (confirm("確定刪除上傳附件？")) {
+            var url = "../sub/del_draw_file.aspx?type=law_opt&folder_name=" + tfolder + "&draw_file=" + $("#" + fld + nRow).val() + "&btnname=btn" + fld + "_" + nRow + "&form_name=" + fld + nRow;
+            window.open(url, "myWindowOne1", "width=700 height=600 top=10 left=10 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbar=no");
+
+            $("#" + fld + nRow).val("");
+            $("#" + fld + "_name" + nRow).val("");
+            $("#" + fld + "_add_date" + nRow).val("");
+            $("#" + fld + "_add_scode" + nRow).val("");
+        }
     }
 
     //關閉視窗

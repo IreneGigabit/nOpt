@@ -84,6 +84,11 @@
     var upload_form = {};
     upload_form.init = function () {
         upload_form.getOptattach("<%=uploadfield%>");
+        //電子送件才可勾選電子送件檔
+        if ($("#tfy_send_way").val() != "E" && $("#tfy_send_way").val() != "EA") {
+            $("input[name^='<%=uploadfield%>_doc_flag_']").prop("checked", false).prop("disabled", true);
+        }
+
         $(".delcol").showFor($("#submittask").val() == "D");
     }
 

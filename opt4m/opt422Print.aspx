@@ -81,7 +81,6 @@
                             dtRpt.Rows[i]["cust_name"] = dr.SafeRead("cust_name", "");
                         }
                     }
-
                 }
             }
 

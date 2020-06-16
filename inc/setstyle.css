@@ -4,6 +4,10 @@ body
 	font-size: 10pt;
 	font-family: Verdana, Arial;
 }
+form
+{
+	margin:0;
+}
 .tabon
 {
     FONT-SIZE: 10pt;

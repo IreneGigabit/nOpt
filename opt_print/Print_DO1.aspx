@@ -152,17 +152,25 @@
                     //事實及理由
                     ipoRpt.ReplaceBookmark("tran_remark1", dtTran.Rows[0]["tran_remark1"].ToString());
                     //相關聯案件
-                    string[] oitem = dtTran.Rows[0]["other_item"].ToString().Trim().Split(';');
-                    if(oitem.Length>1){
-                        DateTime dateValue;
-                        if (DateTime.TryParse(oitem[0].ToString(), out dateValue)){
-                            ipoRpt.ReplaceBookmark("O1", dateValue.ToLongTwDate().Replace("民國",""));
+                    if (dtTran.Rows[0]["other_item"].ToString().Trim().IndexOf(";") > -1) {
+                        string[] oitem = dtTran.Rows[0]["other_item"].ToString().Trim().Split(';');
+                        if (oitem.Length > 0) {
+                            DateTime dateValue;
+                            if (DateTime.TryParse(oitem[0].ToString(), out dateValue)) {
+                                ipoRpt.ReplaceBookmark("tran_ymd", dateValue.ToLongTwDate().Replace("民國", ""));
+                            }
+                            if (oitem.Length > 1) ipoRpt.ReplaceBookmark("O1", oitem[1].ToString());
+                            if (oitem.Length > 2) ipoRpt.ReplaceBookmark("O2", oitem[2].ToString());
                         }
-			            if (oitem.Length>1) ipoRpt.ReplaceBookmark("O1", oitem[1].ToString());
-			            if (oitem.Length>2) ipoRpt.ReplaceBookmark("O2", oitem[2].ToString());
                     } else {
-                        ipoRpt.ReplaceBookmark("O1", "", true);
+                        ipoRpt.ReplaceBookmark("tran_ymd", "　");
+                        ipoRpt.ReplaceBookmark("O1", "　");
+                        ipoRpt.ReplaceBookmark("O2", "　");
                     }
+                } else {
+                    ipoRpt.ReplaceBookmark("tran_ymd", "　");
+                    ipoRpt.ReplaceBookmark("O1", "　");
+                    ipoRpt.ReplaceBookmark("O2", "　");
                 }
             }
 

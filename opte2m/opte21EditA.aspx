@@ -2,6 +2,8 @@
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 
 
 
@@ -36,6 +38,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -105,7 +108,8 @@
     </tr>
     </table>
     <br />
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
@@ -133,9 +137,9 @@
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "0%,100%";
         }
-        $("#chkTest").click(function (e) {
-            $("#ActFrame").showFor($(this).prop("checked"));
-        });
+        //$("#chkTest").click(function (e) {
+        //    $("#ActFrame").showFor($(this).prop("checked"));
+        //});
 
         this_init();
     });
@@ -144,7 +148,7 @@
     //初始化
     function this_init() {
         settab("#br");
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $("#span_sopt_no").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號

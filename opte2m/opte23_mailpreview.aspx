@@ -5,6 +5,8 @@
 <%@ Import Namespace = "System.Linq" %>
 
 <%@ Register Src="~/opte2m/opte23_email_form.ascx" TagPrefix="uc1" TagName="opte23_email_form" %>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 
 <script runat="server">
     protected string HTProgCap = "交辦北京承辦作業(Email預覽)";//功能名稱
@@ -36,6 +38,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -101,7 +104,7 @@
             //設定收件者
             switch (Sys.Host) {
                 case "web08":
-                    opte23_email_form.att_email = "wixigag567@jupiterm.com";
+                    opte23_email_form.att_email = Session["scode"] + "@saint-island.com.tw";
                     opte23_email_form.bcc_email = Session["scode"] + "@saint-island.com.tw";
                     break;
                 case "web10":
@@ -179,7 +182,8 @@
     </tr>
     </table>
     <br />
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
 </form>
 
 <table id="tblBtn" border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -206,16 +210,16 @@
         if (!(window.parent.tt === undefined)) {
             window.parent.tt.rows = "25%,75%";
         }
-        $("#chkTest").click(function (e) {
-            $("#ActFrame").showFor($(this).prop("checked"));
-        });
+        //$("#chkTest").click(function (e) {
+        //    $("#ActFrame").showFor($(this).prop("checked"));
+        //});
 
         this_init();
     });
 
     //初始化
     function this_init() {
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         
         $(".Lock").lock();
         $("#span_btn1,#span_btn2").hide();

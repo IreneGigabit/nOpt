@@ -1,6 +1,8 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -28,6 +30,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             QueryPageLayout();
             this.DataBind();
@@ -130,8 +133,9 @@
     </table>
 
     <br>
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
-    <table id="btnTable" border="0" width="98%" cellspacing="0" cellpadding="0" align="center">
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
+        <table id="btnTable" border="0" width="98%" cellspacing="0" cellpadding="0" align="center">
 	    <tr>
         <td align="center">
 			<input type="button" value="列　印" class="cbutton" id="btnSubmit" name="btnSubmit">
@@ -173,10 +177,10 @@
         });
 
         $("input.dateField").datepick();
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
-        $("#chkTest").click(function (e) {
-            $("#ActFrame").showFor($(this).prop("checked"));
-        });
+        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
+        //$("#chkTest").click(function (e) {
+        //    $("#ActFrame").showFor($(this).prop("checked"));
+        //});
        
         $("#btnTable").showFor((<%#HTProgRight%> & 32)); //列印/重填
 

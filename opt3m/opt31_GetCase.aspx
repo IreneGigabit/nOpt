@@ -1,5 +1,7 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"] ?? "爭救案區所交辦資料複製";//功能名稱
@@ -39,6 +41,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -169,7 +172,8 @@
     <input type="hidden" id="in_no" name="in_no" value="<%=in_no%>">
     <input type="hidden" id="in_scode" name="in_scode" value="<%=in_scode%>">
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
 </form>
 
 <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
@@ -184,13 +188,13 @@
         this_init();
     });
 
-    $("#chkTest").click(function (e) {
-        $("#ActFrame").showFor($(this).prop("checked"));
-    });
+    //$("#chkTest").click(function (e) {
+    //    $("#ActFrame").showFor($(this).prop("checked"));
+    //});
 
     //初始化
     function this_init() {
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",true).triggerHandler("click");//☑測試
+        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
 
         //欄位控制
         $(".qBrN").showFor($("#qBr").val() == "N");//區所交辦

@@ -14,7 +14,7 @@
 
         StringBuilder sb = new StringBuilder();
         string strChk = CheckUser();
-         //sb.Append("alert(\"" + Session["Password"] + " !\");\n");
+        //sb.Append("alert(\"" + Session["Password"] + " !\");\n");
         if (strChk.Length > 0) sb = sb.Append("alert(\"" + strChk + "\");\n");
         if (exMsg.Length == 0) sb = sb.Append("top.location.href = \"Default.aspx\";\n");
 
@@ -30,7 +30,7 @@
         string Uid = Request["tfx_scode"] ?? "";//帳號
         string sys_pwd = Request["sys_pwd"] ?? "";//密碼
         string tfx_sys_password = Request["tfx_sys_password"] ?? "";//明碼
-        Sys.errorLog(new Exception("tfx_scode(ref:" + HttpContext.Current.Request.UrlReferrer + ")"), Uid, "checklogin");
+        //Sys.errorLog(new Exception("tfx_scode(ref:" + HttpContext.Current.Request.UrlReferrer + ")"), Uid, "checklogin");
         if (tfx_sys_password != "") {
             sys_pwd = Util.GetHashValueMD5(tfx_sys_password.ToLower());//明碼轉md5
         }
@@ -50,7 +50,7 @@
                 SQL += " AND a.scode='" + Uid + "' ";
                 SQL += " AND a.sys_pwd ='" + sys_pwd + "' ";
                 SQL += " AND GETDATE() BETWEEN a.beg_date AND isnull(a.end_date,'2079/06/06') ";
-                Sys.errorLog(new Exception(Conn.ODBCDSN), SQL, "checklogin");
+                //Sys.errorLog(new Exception(Conn.ODBCDSN), SQL, "checklogin");
                 SqlDataReader dr = conn.ExecuteReader(SQL);
                 if (dr.Read())
                 {

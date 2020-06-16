@@ -1,4 +1,7 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
+
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -16,6 +19,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             QueryPageLayout();
             this.DataBind();
@@ -158,9 +162,9 @@
                     <input type="hidden" id="email_cnt_{{nRow}}" name="email_cnt_{{nRow}}" value="{{email_cnt}}">
 		            <input type="hidden" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
 		            <input type="hidden" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
-		            <input type="hidden" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
                     <input type="hidden" id="email_sqlno_{{nRow}}" name="email_sqlno_{{nRow}}" value="{{email_sqlno}}">
                     <input type="hidden" id="maxemail_sqlno_{{nRow}}" name="maxemail_sqlno_{{nRow}}" value="{{maxemail_sqlno}}">
+		            <input type="hidden" id="branch_{{nRow}}" name="branch_{{nRow}}" value="{{branch}}">
                     <input type="hidden" id="task_{{nRow}}" name="task_{{nRow}}" value="{{task}}">
                     <input type="hidden" id="mail_status_{{nRow}}" name="mail_status_{{nRow}}" value="{{mail_status}}">
 		        </td>
@@ -179,19 +183,17 @@
 		        <td class="whitetablebg" nowrap align="center">
                     <span id="todo_send_{{nRow}}">
 			            定稿：<select name="tf_code_{{nRow}}" id="tf_code_{{nRow}}"><%#tf_code_html%></select>
-			            <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkblue" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
+			            <span onclick="formemail('','{{nRow}}')" style="cursor:pointer;color:darkblue" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
 			                [{{todoname}}]
 			            </span>
 
 				        <span id="span_openmail_{{nRow}}">
-				            (<span onclick="open_email('{{opt_sqlno}}','{{opt_no}}')" title="檢視發文信函" style="cursor:pointer;color:red" onmouseover="this.style.color='darkblue'" onmouseout="this.style.color='red'">
-                                {{email_cnt}}
-				                <span id="span_copymail_{{nRow}}">
-				                    <span onclick="formemail('{{nRow}}')" style="cursor:pointer;color:darkgreen" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
-				                    [複製E-mail]
-				                    </span>
+				            (<span onclick="open_email('{{opt_sqlno}}','{{opt_no}}')" title="檢視發文信函" style="cursor:pointer;color:red" onmouseover="this.style.color='darkblue'" onmouseout="this.style.color='red'">{{email_cnt}}</span>)
+				            <span id="span_copymail_{{nRow}}">
+				                <span onclick="formemail('copy','{{nRow}}')" style="cursor:pointer;color:darkgreen" onmouseover="this.style.color='red'" onmouseout="this.style.color='darkblue'">
+				                [複製E-mail]
 				                </span>
-				            </span>)
+				            </span>
                         </span>
 			            <br>
                         <a id="tr_edit_{{nRow}}" href="../opte3m/opte31Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&Case_no={{case_no}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
@@ -213,7 +215,8 @@
 	    </tbody>
     </TABLE>
     <br>
-    <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
+    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+    <uc1:chkTest runat="server" ID="chkTest" />
     <table border="0" cellspacing="1" cellpadding="2" width="98%" id="formSend">
     <tr align=center>
 	    <td nowrap align="center">
@@ -261,10 +264,10 @@
         });
 
         $("input.dateField").datepick();
-        $("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
-        $("#chkTest").click(function (e) {
-            $("#ActFrame").showFor($(this).prop("checked"));
-        });
+        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
+        //$("#chkTest").click(function (e) {
+        //    $("#ActFrame").showFor($(this).prop("checked"));
+        //});
 
         $("#btnSrch").click();
     });
@@ -464,7 +467,7 @@
     }
 
     //Email發送
-    function formemail(pnum){
+    function formemail(dowhat,pnum){
         //檢查新增email時要選擇定稿，才能Email，草稿Email及複製Email不用選定稿
         if($("#email_sqlno_"+pnum).val()=="0" &&$("#maxemail_sqlno_"+pnum).val()=="0"){
             if($("#tf_code_"+pnum).val()==""){
@@ -473,10 +476,13 @@
             }
         }
 
+        var email_sqlno=$("#email_sqlno_"+pnum).val();
+        if (dowhat=="copy") email_sqlno=$("#maxemail_sqlno_"+pnum).val();
+
         var purl="opte23_mailpreview.aspx?submittask=" + $("#task_"+pnum).val() +
                  "&branch=" + $("#branch_"+pnum).val() +
                  "&opt_sqlno=" + $("#opt_sqlno_"+pnum).val() +
-                 "&email_sqlno=" + $("#email_sqlno_"+pnum).val() + 
+                 "&email_sqlno=" + email_sqlno + 
                  "&mail_status=" + $("#mail_status_"+pnum).val() +
                  "&recordnum=" + pnum+
                  "&tf_code=" +$("#tf_code_"+pnum).val()+
@@ -486,7 +492,7 @@
 
     //檢視發送Email
     function open_email(pjob_sqlno,ptfsend_no){
-        window.open("mailframe.aspx?prgid="+$("#prgid").val()+"&source=BJ_email&job_sqlno=" + pjob_sqlno + "&tfsend_no=" + ptfsend_no,"MyMailWindow");
+        window.open("mailframe.aspx?prgid="+$("#prgid").val()+"&source=BJ_email&job_sqlno=" + pjob_sqlno + "&tfsend_no=" + ptfsend_no,"MyMailWindow1");
     }
 
     //入檔

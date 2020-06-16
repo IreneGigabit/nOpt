@@ -1,5 +1,7 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
+<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
+
 
 <script runat="server">
     protected string QueryString = "";
@@ -153,6 +155,7 @@
 <title>文件上傳</title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -197,8 +200,9 @@
                 </td>
             </tr>
         </table>
-          <label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label>
-    </form>
+        <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
+        <uc1:chkTest runat="server" ID="chkTest" />
+      </form>
     </center>
 </body>
 </html>

@@ -14,6 +14,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="IE=10">
 <title></title>
 </head>
     <frameset rows="100%,*" name="tt" id="tt">

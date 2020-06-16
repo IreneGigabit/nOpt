@@ -18,6 +18,11 @@
         draw_file = draw_file.Replace("\\", "/");
         file_name = draw_file.Substr((draw_file.LastIndexOf("/")+1));
         folder_name = Request["folder_name"] ?? "";
+        //if (draw_file.IndexOf("/opt/") > -1 || draw_file.IndexOf("/nopt/") > -1) {
+        //    folder_name = draw_file.Replace("/opt/", "/nopt/");
+        //    folder_name = folder_name.Left(folder_name.Length - file_name.Length);
+        //}
+        Response.Write("**" + folder_name + "**<BR>");
         gs_date = Request["gs_date"] ?? "";
 
         if (strtype != "doc" && strtype != "law_opt") {
@@ -55,20 +60,20 @@
                     if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
                         show_photo(file_path + "/" + folder_name + "/" + file_name);
                     } else {
-                        error_msg("圖檔");
+                        error_msg("圖檔1");
                     }
                 } else {
-                    error_msg("圖檔目錄");
+                    error_msg("圖檔目錄1");
                 }
             } else {
-                if (chkFolderExist(file_path)) {
+                if (chkFolderExist(file_path + "/" + folder_name)) {
                     if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
                         show_photo(file_path + "/" + folder_name + "/" + file_name);
                     } else {
-                        error_msg("圖檔");
+                        error_msg("圖檔2");
                     }
                 } else {
-                    error_msg("圖檔目錄");
+                    error_msg("圖檔目錄2");
                 }
             }
         } else {
@@ -78,26 +83,26 @@
             //Response.End();
 
             if (chkFolderExist(file_path)) {
-                if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
-                    show_photo(file_path + "/" + folder_name + "/" + file_name);
+                if (chkFileExist(file_path + "/" + file_name)) {
+                    show_photo(file_path + "/" + file_name);
                 } else {
-                    error_msg("圖檔");
+                    error_msg("圖檔3");
                 }
             } else {
-                error_msg("圖檔目錄");
+                error_msg("圖檔目錄3");
             }
         }
     }
 
     //檢查目錄是否存在
     private bool chkFolderExist(string strFolder) {
-        //Response.Write("chkFolderExist=" + Server.MapPath(strFolder) + "<HR>");
+        Response.Write("chkFolderExist=" + Server.MapPath(strFolder) + "<HR>");
         return System.IO.Directory.Exists(Server.MapPath(strFolder));
     }
 
     //檢查檔案是否存在
     private bool chkFileExist(string strFile) {
-        //Response.Write("chkFileExist=" + Server.MapPath(strFile) + "<HR>");
+        Response.Write("chkFileExist=" + Server.MapPath(strFile) + "<HR>");
         return System.IO.File.Exists(Server.MapPath(strFile));
     }
 
