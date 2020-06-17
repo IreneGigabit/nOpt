@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <script runat="server">
     protected string strtype = "";
@@ -16,13 +16,9 @@
         strtype = (Request["type"] ?? "").ToLower();
         draw_file = Request["draw_file"] ?? "";
         draw_file = draw_file.Replace("\\", "/");
+        draw_file = draw_file.Replace("/opt/", "/nopt/");
         file_name = draw_file.Substr((draw_file.LastIndexOf("/")+1));
         folder_name = Request["folder_name"] ?? "";
-        //if (draw_file.IndexOf("/opt/") > -1 || draw_file.IndexOf("/nopt/") > -1) {
-        //    folder_name = draw_file.Replace("/opt/", "/nopt/");
-        //    folder_name = folder_name.Left(folder_name.Length - file_name.Length);
-        //}
-        Response.Write("**" + folder_name + "**<BR>");
         gs_date = Request["gs_date"] ?? "";
 
         if (strtype != "doc" && strtype != "law_opt") {
@@ -45,9 +41,9 @@
         file_path = Sys.FileDir(strtype);
 
         if (gs_date != "") {
-            //Response.Write("1file_path="+file_path+"<HR>");
-            //Response.Write("1folder_name="+folder_name+"<HR>");
-            //Response.Write("1file_name="+file_name+"<HR>");
+            Response.Write("1_file_path="+file_path+"<HR>");
+            Response.Write("1_folder_name="+folder_name+"<HR>");
+            Response.Write("1_file_name="+file_name+"<HR>");
             //Response.End();
 
             DateTime dgs_date1 = DateTime.ParseExact(gs_date, "yyyy/M/d", System.Globalization.CultureInfo.InvariantCulture);
@@ -60,36 +56,44 @@
                     if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
                         show_photo(file_path + "/" + folder_name + "/" + file_name);
                     } else {
-                        error_msg("圖檔1");
+                        error_msg("圖檔", "⑴");
                     }
                 } else {
-                    error_msg("圖檔目錄1");
+                    error_msg("①圖檔目錄", "⑴");
                 }
             } else {
                 if (chkFolderExist(file_path + "/" + folder_name)) {
                     if (chkFileExist(file_path + "/" + folder_name + "/" + file_name)) {
                         show_photo(file_path + "/" + folder_name + "/" + file_name);
                     } else {
-                        error_msg("圖檔2");
+                        error_msg("圖檔", "⑵");
                     }
                 } else {
-                    error_msg("圖檔目錄2");
+                    error_msg("圖檔目錄", "⑵");
                 }
             }
         } else {
-            //Response.Write("2file_path="+file_path+"<HR>");
-            //Response.Write("2folder_name="+folder_name+"<HR>");
-            //Response.Write("2file_name="+file_name+"<HR>");
+            Response.Write("2_file_path="+file_path+"<HR>");
+            Response.Write("2_folder_name="+folder_name+"<HR>");
+            Response.Write("2_file_name="+file_name+"<HR>");
             //Response.End();
 
-            if (chkFolderExist(file_path)) {
-                if (chkFileExist(file_path + "/" + file_name)) {
-                    show_photo(file_path + "/" + file_name);
+            if (draw_file.IndexOf(file_path) > -1) {
+                if (chkFileExist(draw_file)) {
+                    show_photo(draw_file);
                 } else {
-                    error_msg("圖檔3");
+                    error_msg("圖檔", "⑶");
                 }
             } else {
-                error_msg("圖檔目錄3");
+                if (chkFolderExist(file_path)) {
+                    if (chkFileExist(file_path + "/" + file_name)) {
+                        show_photo(file_path + "/" + file_name);
+                    } else {
+                        error_msg("圖檔", "⑶");
+                    }
+                } else {
+                    error_msg("圖檔目錄", "⑶");
+                }
             }
         }
     }
@@ -106,10 +110,10 @@
         return System.IO.File.Exists(Server.MapPath(strFile));
     }
 
-    private void error_msg(string a) {
+    private void error_msg(string a, string sign) {
         StringBuilder strOut = new StringBuilder();
         strOut.AppendLine("<script language=javascript>");
-        strOut.AppendLine("alert('◎此"+a+"不存在，請確認之後再查!');");
+        strOut.AppendLine("alert('◎此"+a+"不存在，請確認之後再查！"+sign+"');");
         strOut.AppendLine("window.close();");
         strOut.AppendLine("<" + "/script>");
 
