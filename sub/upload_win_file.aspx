@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
 <%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
 
@@ -201,7 +201,7 @@
             </tr>
         </table>
         <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-        <uc1:chkTest runat="server" ID="chkTest" />
+        <br /><uc1:chkTest runat="server" ID="chkTest" />
       </form>
     </center>
 </body>
