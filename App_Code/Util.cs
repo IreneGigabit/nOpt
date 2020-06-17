@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -126,6 +126,9 @@ public static class Util
     #endregion
 
     #region Right
+    /// <summary>
+    /// 從右邊取N個字元
+    /// </summary>
     public static string Right(this string str, int ln) {
         //string sret = s.Substring(str.Length - ln, ln);
         //return sret;
@@ -264,7 +267,10 @@ public static class Util
 	#endregion
 
 	#region  取得CharCode(支援罕字)
-	public static int GetCharCode(this string character) {
+    /// <summary>
+    /// 取得CharCode(支援罕字)
+    /// </summary>
+    public static int GetCharCode(this string character) {
 		UTF32Encoding encoding = new UTF32Encoding();
 		byte[] bytes = encoding.GetBytes(character.ToCharArray());
 		return BitConverter.ToInt32(bytes, 0);
@@ -317,7 +323,9 @@ public static class Util
 	#endregion
 
     #region GetHashValueMD5 - 依據帶入的字串，產生MD5
-    //依據帶入的字串，產生MD5
+    /// <summary>
+    /// 依據帶入的字串，產生MD5
+    /// </summary>
     public static string GetHashValueMD5(this String data) {
         MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
 
@@ -329,12 +337,6 @@ public static class Util
         }
 
         return sBuilder.ToString();
-    }
-    #endregion
-
-    #region Request - 同Request["xxxx"]
-    public static string Request(string s) {
-        return (HttpContext.Current.Request[s] ?? "").ToString();
     }
     #endregion
 
@@ -368,6 +370,9 @@ public static class Util
     #endregion
 
     #region IsNumeric - 判斷是否為數值
+    /// <summary>
+    /// 判斷是否為數值
+    /// </summary>
     public static bool IsNumeric(object Expresion) {
         bool isNum = true;
         double retNum = 0.0;
@@ -379,6 +384,9 @@ public static class Util
     #endregion
 
     #region dbnull - 寫入db用,若是空白則回傳null,否則回傳'xxxxx'
+    /// <summary>
+    /// 寫入db用,若是空白則回傳null,否則回傳'xxxxx'
+    /// </summary>
     public static string dbnull(string iStr) {
         if (iStr == null || iStr == "") return "null";
 
@@ -388,6 +396,9 @@ public static class Util
     #endregion
 
     #region dbchar - 寫入db用,若有單引號則改為’
+    /// <summary>
+    /// 寫入db用,若有單引號則改為’
+    /// </summary>
     public static string dbchar(string iStr) {
         if (iStr == null || iStr == "") return "''";
 
@@ -397,6 +408,9 @@ public static class Util
     #endregion
 
     #region dbzero - 寫入db用,若是空白則回傳0,否則回傳數值
+    /// <summary>
+    /// 寫入db用,若是空白則回傳0,否則回傳數值
+    /// </summary>
     public static string dbzero(string iStr) {
         if (iStr == null || iStr == "") return "0";
 
@@ -404,8 +418,11 @@ public static class Util
     }
     #endregion
 
-    #region dbdate - 寫入db用,若是空白則回傳nul,否則回傳日期
-    public static string dbdate(string iStr,string format) {
+    #region dbdate - 寫入db用,若是空白則回傳null,否則回傳'日期'
+    /// <summary>
+    /// 寫入db用,若是空白則回傳null,否則回傳'日期'
+    /// </summary>
+    public static string dbdate(string iStr, string format) {
         if (iStr == null || iStr == "") return "null";
 
 		iStr = DateTime.ParseExact(iStr.Trim(), "yyyy/M/d tt hh:mm:ss", new System.Globalization.CultureInfo("zh-TW")).ToString(format);
@@ -414,6 +431,9 @@ public static class Util
     #endregion
 
     #region parseDBDate - 將db讀出之日期(ex:2014/12/29 上午 12:00:00)轉成指定格式
+    /// <summary>
+    /// 將db讀出之日期(ex:2014/12/29 上午 12:00:00)轉成指定格式
+    /// </summary>
     public static string parseDBDate(string iStr, string format) {
         if (iStr == null || iStr == "") return "";
 
@@ -422,6 +442,9 @@ public static class Util
     #endregion
 
     #region str2Dateime - 將字串日期(ex:2014/12/29)轉成DateTime
+    /// <summary>
+    /// 將字串日期(ex:2014/12/29)轉成DateTime
+    /// </summary>
     public static DateTime str2Dateime(string iStr) {
         return DateTime.ParseExact(iStr.Trim(), "yyyy/M/d", new System.Globalization.CultureInfo("zh-TW"));
     }
