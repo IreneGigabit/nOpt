@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
 
 <script runat="server">
@@ -19,7 +19,8 @@
         type = Request["type"] ?? "";
         draw_file = Request["draw_file"] ?? "";
         draw_file = draw_file.Replace("\\", "/");
-        file_name = draw_file.Substr((draw_file.LastIndexOf("/")+1));
+        draw_file = draw_file.Replace("/opt/", "/nopt/");
+        file_name = draw_file.Substr((draw_file.LastIndexOf("/") + 1));
         folder_name = Request["folder_name"] ?? "";
         cust_area = (Request["cust_area"] ?? "").Left(1)+gdept;
         btnname = Request["btnname"] ?? "";
@@ -32,6 +33,7 @@
         //Response.Write("file_name=" + file_name + "<BR>");
         //Response.Write("folder_name=" + folder_name + "<BR>");
         //Response.Write("file_name_w=" + System.IO.Path.GetFileNameWithoutExtension(file_name) + "<BR>");
+        //Response.End();
         
         //刪除檔案是將原檔改名,改名規則：檔名_年月日時分秒
         System.IO.FileInfo fi = new System.IO.FileInfo(Server.MapPath(draw_file));
