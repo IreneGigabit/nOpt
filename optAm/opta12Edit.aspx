@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -185,7 +185,7 @@
                     商品 :
                 </td>
                  <td class="whitetablebg" align="left" nowrap colspan="3">
-                    <textarea rows=6 cols=120 id="edit_opt_class_name" name="edit_opt_class_name" class="QLock" >></textarea>
+                    <textarea rows=6 cols=120 id="edit_opt_class_name" name="edit_opt_class_name" class="QLock" ></textarea>
                 </td>
             </tr> 
             <tr>
@@ -339,9 +339,10 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td align="center">
-        <input type=button value="新　增/修　改" class="cbutton" id="btnSubmit">
-        <input type=button value="停  用" class="cbutton" id="btnDel">
-        <input type=button value="重　填" class="cbutton" id="btnReset">
+        <input type="button" value="新　增" class="cbutton" id="btnAdd">
+        <input type="button" value="修　改" class="cbutton" id="btnEdit">
+        <input type="button" value="停  用" class="cbutton" id="btnDel">
+        <input type="button" value="重　填" class="cbutton" id="btnReset">
     </td>
 </tr>
 </table>
@@ -380,6 +381,10 @@
         //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
+        $("#btnAdd").showFor($("#submittask").val() == "A");
+        $("#btnEdit").showFor($("#submittask").val() == "U");
+        $("#btnDel").showFor($("#submittask").val() == "D");
+        $("#btnReset").hideFor($("#submittask").val() == "Q");
         $(".Lock").lock();
         $(".QLock").lock(<%#QLock%>);
         $(".DLock").lock(<%#DLock%>);
@@ -472,8 +477,6 @@
                 $("#mEnd_date" + nRow).val(item.end_date);
             });
         }
-
-        $("#btnSubmit,#btnDel,#btnReset").hide();
     }
 
     //增加一筆法條
@@ -600,42 +603,25 @@
     })
 
     //新增/修改
-    $("#btnSubmit").click(function () {
-        if ($("#edit_law_type").val() == "") {
-            alert("請選擇法條大項！");
-            $("#edit_law_type").focus();
-            return false;
-        }
-        if ($("#edit_law_no1").val() == "") {
-            alert("請輸入條文法規_條！");
-            $("#edit_law_no1").focus();
-            return false;
-        }
-        if ($("#edit_law_no2").val() == "") {
-            alert("請輸入條文法規_款！");
-            $("#edit_law_no2").focus();
-            return false;
-        }
-        if ($("#edit_law_no3").val() == "") {
-            alert("請輸入條文法規_項！");
-            $("#edit_law_no3").focus();
-            return false;
-        }
-        if ($("#edit_law_mark").val() == "") {
-            alert("請輸入法條內文！");
-            $("#edit_law_mark").focus();
-            return false;
-        }
-	
-        if($("#submittask").val()=="A"){
-            if(!Check_law()){
-                alert("請輸入法條代碼重複，請重新輸入 ");
+    $("#btnAdd,#btnEdit").click(function () {
+        for (var i = 1; i <= parseInt($("#class_num").val(), 10) ; i++) {
+            if ($("#law_type_" + i).val() == "") {
+                alert("引用法條第" + i + "筆，請選擇 !");
                 return false;
+            }
+            for (var j = 1; j <= parseInt($("#class_num").val(), 10) ; j++) {
+                if (i != j) {
+                    if ($("#law_type_" + i).val() == $("#law_type_" + j).val()) {
+                        alert("引用法條第" + i + "筆，與第" + j + "筆資料重複，請重新選擇 !");
+                        $("#law_type_" + j).focus();
+                        return false;
+                    }
+                }
             }
         }
 
         $("select,textarea,input").unlock();
-        $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
+        $("#btnAdd,#btnEdit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         reg.submit();
@@ -644,7 +630,7 @@
     //刪除
     $("#btnDel").click(function () {
         $("select,textarea,input").unlock();
-        $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
+        $("#btnAdd,#btnEdit,,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         reg.submit();
@@ -656,31 +642,35 @@
         this_init();
     });
 
-    function Check_law(){
-        var rtn=false;
+    $("#edit_BJTSeq").blur(function () {
+        chkNum1($(this)[0],"北京案號");
+    });
 
-        var searchSql="SELECT count(*) as count from law_detail where 1=1 ";
-        searchSql+= " AND law_type = '" + $("#edit_law_type").val() + "'" ;
-        searchSql+= " AND law_no1 = '" + $("#edit_law_no1").val()+ "'" ;
-        searchSql+= " AND law_no2 = '" + $("#edit_law_no2").val() + "'" ;
-        searchSql+= " AND law_no3 = '" + $("#edit_law_no3").val() + "'";
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
-            data: { sql:searchSql},
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length > 0) {
-                    if(JSONdata[0].count==0){
-                        rtn=true;
-                    }
-                }
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>檢查法條代碼失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-        });
+    $("#edit_BSeq").blur(function () {
+        chkNum1($(this)[0],"本所編號");
+    });
 
-        return rtn;
-    }
+    $("#edit_pr_date").blur(function () {
+        ChkDate($(this)[0]);
+    });
+
+    $("#edit_opt_pic").blur(function () {
+        fDataLen($(this).val(),50, "商標名稱");
+    });
+
+    $("#edit_opt_class").blur(function () {
+        fDataLen($(this).val(),50, "類別");
+    });
+
+    $("#edit_opt_point").blur(function () {
+        fDataLen($(this).val(),500, "判決要旨");
+    });
+
+    $("#edit_opt_mark").blur(function () {
+        fDataLen($(this).val(),250, "關鍵字");
+    });
+
+    $("#edit_pr_no").blur(function () {
+        fDataLen($(this).val(),50, "判決/決定文號");
+    });
 </script>
