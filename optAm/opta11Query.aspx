@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
 
@@ -151,10 +151,10 @@
 <table style="display:none" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	<thead>
         <Tr>
-		<td class="lightbluetable"nowrap>條文流水編號</td>
-		<td class="lightbluetable"nowrap>條文法規</td>
-		<td class="lightbluetable"nowrap>法規內文</td>
-		<td class="lightbluetable" nowrap>作業</td>
+		<td class="lightbluetable" align="center">條文流水編號</td>
+		<td class="lightbluetable" align="center">條文法規</td>
+		<td class="lightbluetable" align="center">法規內文</td>
+		<td class="lightbluetable" align="center">作業</td>
         </tr>
 	</thead>
 	<tfoot style="display:none">
@@ -162,12 +162,12 @@
             <td nowrap align=center >{{law_sqlno}}</td>
 		    <td nowrap align=left >{{law_detail_no}}</td>
 		    <td nowrap align=left title="{{law_mark}}" >{{law_mark_str}}</td>
-		    <td nowrap>
+		    <td nowrap align="center">
                 <span id="edit8_{{nRow}}">
-		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=U&law_sqlno={{law_sqlno}}" target="Eblank">[維護]</a>
+		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=U&law_sqlno={{law_sqlno}}&prgname=<%#HTProgCap%>" target="Eblank">[維護]</a>
                 </span>
                 <span id="edit16_{{nRow}}">
-		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=D&law_sqlno={{law_sqlno}}" target="Eblank">[停用]</a>
+		            <a href="optA11edit.aspx?prgid=<%=prgid%>&submitTask=D&law_sqlno={{law_sqlno}}&prgname=<%#HTProgCap%>" target="Eblank">[停用]</a>
                 </span>
 		    </td>
 	    </tr>
