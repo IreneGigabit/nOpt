@@ -69,6 +69,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 <body>
@@ -86,9 +87,9 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="text" id="law_sqlno" name="law_sqlno">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="law_sqlno" name="law_sqlno">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
         <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">
             <tr>
@@ -205,9 +206,9 @@
                 </td>
                 <TD class=lightbluetable align=right nowrap>成立狀態：</TD>
 		        <TD class=whitetablebg align=left nowrap>
-			        <input type="radio" name='edit_opt_comfirm' value='1' >全部成立
-	                <input type="radio" name='edit_opt_comfirm' value='2' >部分成立
-	                <input type="radio" name='edit_opt_comfirm' value='3' >全部不成立
+			        <label><input type="radio" name='edit_opt_comfirm' value='1' >全部成立</labdl>
+	                <label><input type="radio" name='edit_opt_comfirm' value='2' >部分成立</labdl>
+	                <label><input type="radio" name='edit_opt_comfirm' value='3' >全部不成立</labdl>
 		        </td> 
                 
             </tr>            
@@ -220,9 +221,9 @@
                 </td>
                 <TD class=lightbluetable align=right nowrap>生效狀態：</TD>
 		        <TD class=whitetablebg align=left nowrap >
-			        <input type="radio" name='edit_opt_check' value='1' >確定已生效
-	                <input type="radio" name='edit_opt_check' value='2' >確定被推翻
-	                <input type="radio" name='edit_opt_check' value='3' >救濟中或尚未能確定
+			        <label><input type="radio" name='edit_opt_check' value='1' >確定已生效</labdl>
+	                <label><input type="radio" name='edit_opt_check' value='2' >確定被推翻</labdl>
+	                <label><input type="radio" name='edit_opt_check' value='3' >救濟中或尚未能確定</labdl>
 		        </td> 	
             </tr>                                               
             <tr>
@@ -247,7 +248,7 @@
 	                    <thead>
 	                        <TR class=whitetablebg align=center>
 		                        <TD colspan=3 align=right>
-                                    <input type=text id=class_num name=class_num value=0><!--進度筆數-->
+                                    <input type=hidden id=class_num name=class_num value=0><!--進度筆數-->
 			                        <input type=button value ="增加一筆法條" class="cbutton QLock" id=Class_Add_button_law name=Class_Add_button_law>
 			                        <input type=button value ="減少一筆法條" class="cbutton QLock" id=Class_Del_button_law name=Class_Del_button_law>
 		                        </TD>
@@ -260,7 +261,7 @@
 		                    <TR>
 			                    <TD class=sfont9 align=center>
 		                            <input type=text id='class_num_##' name='class_num_##' class=SEdit readonly size=2 value='##.'>
-                                    <input type=text id='law_sqlno_##' name='law_sqlno_##'>
+                                    <input type=hidden id='law_sqlno_##' name='law_sqlno_##'>
 			                    </TD>
 			                    <TD class=sfont9 align="left">
                                     <select id='law_type_##' name='law_type_##' onchange="law_change('##')" class="QLock"></select>
@@ -272,21 +273,24 @@
                         </tfoot>
                         <tbody></tbody>
                     </TABLE>
+                </td>
+            </tr> 
+            <tr>
+                <td class="whitetablebg" align="right" nowrap colspan="4">
                     <TABLE id=tabattach border=0 class="bluetable" cellspacing=1 cellpadding=2 width="100%">
 	                    <thead>
 	                        <TR class=whitetablebg align=center>
 		                        <TD align=center colspan=7 class=lightbluetable1>
-                                    <input type=text id=attachnum name=attachnum value=0><!--進度筆數-->
-                                    <input type=text id=tAttach_Flag name=tAttach_Flag><!--進度筆數-->            
+                                    <input type=hidden id=attachnum name=attachnum value=0><!--進度筆數-->
+                                    <input type=hidden id=tAttach_Flag name=tAttach_Flag><!--進度筆數-->            
                                     <font color=white>附&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;傳</font>
 		                        </TD>
 	                        </TR>
 	                        <TR class=whitetablebg align=center>
 		                        <TD colspan=7 align=right>
+			                        <input type="hidden" name="sqlno" id="sqlno">
 				                    <input type=button value="增加一筆附件" class="cbutton QLock" id=attach_Add_button name=attach_Add_button>
 				                    <input type=button value="減少一筆附件" class="cbutton QLock" id=attach_Del_button name=attach_Del_button>
-			                        <input type="hidden" name="sqlno" id="sqlno">
-			                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		                        </TD>
 	                        </TR>
 	                        <TR align=center class=lightbluetable>
@@ -297,31 +301,31 @@
 		                    <TR>
 			                    <TD class=sfont9 align=center>
 	                                <input type=text id='attachnum##' name='attachnum##' class=SEdit readonly size=2 value='##.'>
-	                                <input type=text id='attach_sqlno##' name='attach_sqlno##'>
+	                                <input type=hidden id='attach_sqlno##' name='attach_sqlno##'>
 			                    </TD>
 			                    <TD class=sfont9 align=center>
 	                                <select class="QLock" id='attach_type##' name='attach_type##'><%=htmlattach_type%></select>
 			                    </TD>
 			                    <TD class=sfont9 align="left">
-	                                <input type='text' id='edit_opt_pic_path##' name='edit_opt_pic_path##'>
-	                                <input type='text' id='edit_opt_pic_path_name##' name='edit_opt_pic_path_name##' size='30' class=SEdit readonly>
-	                                <input type='text' id='edit_opt_pic_path_size##' name='edit_opt_pic_path_size##' class=SEdit readonly>
-	                                <input type='text' id='edit_opt_pic_path_source_name##' name='edit_opt_pic_path_source_name##' class=SEdit readonly>
-	                                <input type='text' id='edit_opt_pic_path_desc##' name='edit_opt_pic_path_desc##' class=SEdit readonly>
+	                                <input type='hidden' id='edit_opt_pic_path##' name='edit_opt_pic_path##'>
+	                                <input type='text' id='edit_opt_pic_path_name##' name='edit_opt_pic_path_name##' size='30' class="Lock SEdit">
+	                                <input type='hidden' id='edit_opt_pic_path_size##' name='edit_opt_pic_path_size##'>
+	                                <input type='hidden' id='edit_opt_pic_path_source_name##' name='edit_opt_pic_path_source_name##'>
+	                                <input type='hidden' id='edit_opt_pic_path_desc##' name='edit_opt_pic_path_desc##'>
 	                                <br>
 	                                <input type='button' class='cbutton QLock' id='btnedit_opt_pic_path_##' name='btnedit_opt_pic_path_##' value='上傳' onclick="UploadAttach('##')">
 	                                <input type='button' class='delbutton QLock' id='btnDelAtt##' name='btnDelAtt##' value='刪除' onclick="DelOptAttach('##')">
 	                                <input type='button' class='cbutton' id='btnDisplay##' name='btnDisplay##' value='檢視' onclick="PreviewOptAttach('##')">
 			                    </TD>
 			                    <TD class=sfont9 align=center>
-	                                <input type='text' id='edit_opt_pic_path_add_date##' name='edit_opt_pic_path_add_date##' size='10' readonly class='SEdit'>
-	                                <input type='text' id='edit_opt_pic_path_add_scode##' name='edit_opt_pic_path_add_scode##' readonly class='SEdit'>
+	                                <input type='text' id='edit_opt_pic_path_add_date##' name='edit_opt_pic_path_add_date##' size='10' class="Lock SEdit">
+	                                <input type='text' id='edit_opt_pic_path_add_scode##' name='edit_opt_pic_path_add_scode##' class="Lock SEdit">
 			                    </TD>
 			                    <TD class=sfont9>
 	                                <input type=text id="attach_remark##" name="attach_remark##" size=40 maxlength=80>
 			                    </TD>
 			                    <TD class=sfont9>
-                                    <input type=text id="mEnd_date##" name="mEnd_date##" size=11 maxlength=10 class="Lock QLock ELock dateField">
+                                    <input type=text id="mEnd_date##" name="mEnd_date##" size=11 maxlength=10 class="Lock QLock ELock">
                                     <input type=hidden id="O_mEnd_date##" name="O_mEnd_date##">
 			                    </TD>
 		                    </TR>
@@ -390,92 +394,113 @@
         $(".DLock").lock(<%#DLock%>);
         $(".ELock").lock(<%#ELock%>);
 
-        //取得案例資料
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/ajax/_LawData.aspx?opt_no=<%=opt_no%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無案例資料可載入！");
-                    return false;
-                }
-                law_data = JSONdata;
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-        });
-
-        if(law_data.law.length>0){
-            var jLaw=law_data.law[0];
-            $("#edit_opt_no").val(jLaw.opt_no);
-            $("#edit_pr_date").val(dateReviver(jLaw.pr_date, "yyyy/M/d"));
-
-            $("#edit_BJTbranch").val(jLaw.bjtbranch);
-            $("#edit_BJTSeq").val(jLaw.bjtseq);
-            $("#edit_BJTSeq1").val(jLaw.bjtseq1);
-
-            $("#edit_branch").val(jLaw.branch);
-            $("#edit_BSeq").val(jLaw.bseq);
-            $("#edit_BSeq1").val(jLaw.bseq1);
-
-            $("#edit_opt_pic").val(jLaw.opt_pic);
-            $("#edit_opt_pic_path,#edit_opt_pic_path_name").val(jLaw.opt_pic_path);
-
-            $("#edit_Cbranch").val(jLaw.cbranch);
-            $("#edit_Cust_no").val(jLaw.cust_no);
-            $("#edit_Cust_name").val(jLaw.cust_name);
-
-            $("#edit_opt_class").val(jLaw.opt_class);
-            $("#edit_opt_class_name").val(jLaw.opt_class_name);
-
-            $("#edit_opt_point").val(jLaw.opt_point);
-            $("#edit_pr_no").val(jLaw.pr_no);
-            $("input[name='edit_opt_comfirm'][value='"+jLaw.opt_comfirm+"'").prop("checked",true);
-            $("#edit_opt_mark").val(jLaw.opt_mark);
-            $("input[name='edit_opt_check'][value='"+jLaw.opt_check+"'").prop("checked",true);
-
-            $("#edit_in_scode").val(jLaw.in_scode);
-            $("#edit_in_date").val(dateReviver(jLaw.in_date, "yyyy/M/d t HH:mm:ss"));
-            $("#edit_tran_scode").val(jLaw.tran_scode);
-            $("#edit_tran_date").val(dateReviver(jLaw.tran_date, "yyyy/M/d t HH:mm:ss"));
-        }
-
-        //法條
-        var jDetail=law_data.law_detail;
-        $("#tbl_detail>tbody").empty();
-        if (jDetail.length > 0) {
-            $.each(jDetail, function (i, item) {
-                //增加一筆法條
-                appendDetail();
-                //填資料
-                var nRow = $("#class_num").val();
-                $("#law_sqlno_" + nRow).val(item.law_sqlno);
-                $("#law_type_" + nRow).val(item.law_sqlno);
-                $("#law_mark_" + nRow).val(item.law_mark);
+        if ($("#submittask").val() == "A") {
+            $("#edit_opt_no").val("1");
+            var searchSql = "select IDENT_CURRENT('law_opt')+1 as opt_no";
+            $.ajax({
+                type: "get",
+                url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
+                data: { sql: searchSql },
+                async: false,
+                cache: false,
+                success: function (json) {
+                    if ($("#chkTest").prop("checked")) toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                    var JSONdata = $.parseJSON(json);
+                    if (JSONdata.length != 0) {
+                        $("#edit_opt_no").val(JSONdata[0].opt_no);
+                    }
+                },
+                error: function () { toastr.error("<a href='" + this.url + "' target='_new'>取得案件流水號失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
             });
-        }
-
-        //附件
-        var jAttach=law_data.law_attach;
-        $("#tabattach>tbody").empty();
-        if (jAttach.length > 0) {
-            $.each(jAttach, function (i, item) {
-                //增加一筆附件
-                appendAttach();
-                //填資料
-                var nRow = $("#attachnum").val();
-                $("#attach_sqlno" + nRow).val(item.sqlno);
-                $("#attach_type" + nRow).val(item.attach_type);
-                $("#edit_opt_pic_path" + nRow).val(item.attach_path);
-                $("#edit_opt_pic_path_name" + nRow).val(item.attach_name);
-                $("#attach_remark" + nRow).val(item.attach_remark);
-                $("#edit_opt_pic_path_add_date" + nRow).val(dateReviver(item.attach_in_date, "yyyy/M/d"));
-                $("#edit_opt_pic_path_add_scode" + nRow).val(item.attach_scode);
-                $("#mEnd_date" + nRow).val(item.end_date);
+        } else {
+            //取得案例資料
+            $.ajax({
+                type: "get",
+                url: getRootPath() + "/ajax/_LawData.aspx?opt_no=<%=opt_no%>",
+                async: false,
+                cache: false,
+                success: function (json) {
+                    if ($("#chkTest").prop("checked")) toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                    var JSONdata = $.parseJSON(json);
+                    if (JSONdata.length == 0) {
+                        toastr.warning("無案例資料可載入！");
+                        return false;
+                    }
+                    law_data = JSONdata;
+                },
+                error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
             });
+
+            if (law_data.law.length > 0) {
+                var jLaw = law_data.law[0];
+                $("#edit_opt_no").val(jLaw.opt_no);
+                $("#edit_pr_date").val(dateReviver(jLaw.pr_date, "yyyy/M/d"));
+
+                $("#edit_BJTbranch").val(jLaw.bjtbranch);
+                $("#edit_BJTSeq").val(jLaw.bjtseq);
+                $("#edit_BJTSeq1").val(jLaw.bjtseq1);
+
+                $("#edit_branch").val(jLaw.branch);
+                $("#edit_BSeq").val(jLaw.bseq);
+                $("#edit_BSeq1").val(jLaw.bseq1);
+
+                $("#edit_opt_pic").val(jLaw.opt_pic);
+                $("#edit_opt_pic_path,#edit_opt_pic_path_name").val(jLaw.opt_pic_path);
+
+                $("#edit_Cbranch").val(jLaw.cbranch);
+                $("#edit_Cust_no").val(jLaw.cust_no);
+                $("#edit_Cust_name").val(jLaw.cust_name);
+
+                $("#edit_opt_class").val(jLaw.opt_class);
+                $("#edit_opt_class_name").val(jLaw.opt_class_name);
+
+                $("#edit_opt_point").val(jLaw.opt_point);
+                $("#edit_pr_no").val(jLaw.pr_no);
+                $("input[name='edit_opt_comfirm'][value='" + jLaw.opt_comfirm + "'").prop("checked", true);
+                $("#edit_opt_mark").val(jLaw.opt_mark);
+                $("input[name='edit_opt_check'][value='" + jLaw.opt_check + "'").prop("checked", true);
+
+                $("#edit_in_scode").val(jLaw.in_scode);
+                $("#edit_in_date").val(dateReviver(jLaw.in_date, "yyyy/M/d t HH:mm:ss"));
+                $("#edit_tran_scode").val(jLaw.tran_scode);
+                $("#edit_tran_date").val(dateReviver(jLaw.tran_date, "yyyy/M/d t HH:mm:ss"));
+            }
+
+            //法條
+            var jDetail = law_data.law_detail;
+            $("#tbl_detail>tbody").empty();
+            if (jDetail.length > 0) {
+                $.each(jDetail, function (i, item) {
+                    //增加一筆法條
+                    appendDetail();
+                    //填資料
+                    var nRow = $("#class_num").val();
+                    $("#law_sqlno_" + nRow).val(item.law_sqlno);
+                    $("#law_type_" + nRow).val(item.law_sqlno);
+                    $("#law_mark_" + nRow).val(item.law_mark);
+                });
+            }
+
+            //附件
+            var jAttach = law_data.law_attach;
+            $("#tabattach>tbody").empty();
+            if (jAttach.length > 0) {
+                $.each(jAttach, function (i, item) {
+                    //增加一筆附件
+                    appendAttach();
+                    //填資料
+                    var nRow = $("#attachnum").val();
+                    $("#attach_sqlno" + nRow).val(item.sqlno);
+                    $("#attach_type" + nRow).val(item.attach_type);
+                    $("#edit_opt_pic_path" + nRow).val(item.attach_path);
+                    $("#edit_opt_pic_path_name" + nRow).val(item.attach_name);
+                    $("#attach_remark" + nRow).val(item.attach_remark);
+                    $("#edit_opt_pic_path_add_date" + nRow).val(dateReviver(item.attach_in_date, "yyyy/M/d"));
+                    $("#edit_opt_pic_path_add_scode" + nRow).val(item.attach_scode);
+                    $("#mEnd_date" + nRow).val(item.end_date);
+                    $("#mEnd_date" + nRow).datepick();
+                });
+            }
         }
     }
 
