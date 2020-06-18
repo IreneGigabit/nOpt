@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -91,9 +91,9 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="text" id="law_sqlno" name="law_sqlno" value="<%=law_sqlno%>">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="law_sqlno" name="law_sqlno" value="<%=law_sqlno%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="70%" align="center">	
 	    <tr>
