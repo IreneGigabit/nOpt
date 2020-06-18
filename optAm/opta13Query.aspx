@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
 
@@ -312,7 +312,7 @@
 		    <td nowrap align=left >{{law_detail_no}}</td>	
 		    <td nowrap align=left >{{pr_date}}</td>	
 		    <td nowrap>
-		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=Q&opt_no={{opt_no}}" target="Eblank">[檢視]</a>
+		        <a href="optA12edit.aspx?prgid=<%=prgid%>&submitTask=Q&opt_no={{opt_no}}&prgname=<%#HTProgCap%>" target="Eblank">[檢視]</a>
 		    </td>
 	    </tr>
 	</tfoot>
