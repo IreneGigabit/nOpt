@@ -42,7 +42,7 @@
 
                 conn.Commit();
                 //conn.RollBack();
-
+                
                 msg = "大陸爭救案案例維護入檔成功!!";
             }
             catch (Exception ex) {
@@ -81,19 +81,19 @@
 	    SQL += ", '" + Request["edit_BJTbranch"]  + "'";
 	    SQL += ", '" + Request["edit_BJTSeq"]  + "'";
 	    SQL += ", '" + Request["edit_BJTSeq1"]  + "'";
-	    SQL += ", '" + Request["edit_opt_pic"]  + "'";
-	    SQL += ", '" + Request["edit_opt_pic_path"]  + "'";
+	    SQL += ", '" + ReqVal.TryGet("edit_opt_pic", "").ToBig5()  + "'";
+        SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path", "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"/opt/") + "'";//因舊系統儲存路徑為opt為了統一照舊
 	    SQL += ", '" + Request["edit_opt_class"]  + "'";
-	    SQL += ", '" + Request["edit_opt_class_name"]  + "'";
-	    SQL += ", '" + Request["edit_opt_point"]  + "'";
+	    SQL += ", '" + ReqVal.TryGet("edit_opt_class_name", "").ToBig5()  + "'";
+	    SQL += ", '" + ReqVal.TryGet("edit_opt_point", "").ToBig5()  + "'";
 	    SQL += ", '" + Request["edit_Cbranch"]  + "'";
 	    SQL += ", '" + Request["edit_Cust_no"]  + "'";
-	    SQL += ", '" + Request["edit_Cust_name"]  + "'";
-	    SQL += ", '" + Request["edit_opt_mark"]  + "'";
-	    SQL += ", '" + Request["edit_opt_comfirm"]  + "'";
-	    SQL += ", '" + Request["edit_opt_check"]  + "'";
+	    SQL += ", '" + ReqVal.TryGet("edit_Cust_name", "").ToBig5() + "'";
+	    SQL += ", '" + ReqVal.TryGet("edit_opt_mark", "").ToBig5() + "'";
+	    SQL += ", '" + Request["edit_opt_comfirm"] + "'";
+	    SQL += ", '" + Request["edit_opt_check"] + "'";
 	    SQL += ", ''";
-	    SQL += ", '" + Request["edit_pr_no"]  + "'";
+	    SQL += ", '" + ReqVal.TryGet("edit_pr_no", "").ToBig5()  + "'";
 	    SQL += ", " + Util.dbnull(Request["edit_pr_date"])  + "";
 	    SQL += ", ''";
 	    SQL += ", '" +law_string+ "'";
@@ -132,18 +132,18 @@
         SQL += ", BJTbranch = '" + Request["edit_BJTbranch"] + "'";
         SQL += ", BJTSeq = '" + Request["edit_BJTSeq"] + "'";
         SQL += ", BJTSeq1 = '" + Request["edit_BJTSeq1"] + "'";
-        SQL += ", opt_pic = '" + Request["edit_opt_pic"] + "'";
-        SQL += ", opt_pic_path = '" + Request["edit_opt_pic_path"] + "'";
+        SQL += ", opt_pic = '" + ReqVal.TryGet("edit_opt_pic", "").ToBig5() + "'";
+        SQL += ", opt_pic_path = '" + ReqVal.TryGet("edit_opt_pic_path", "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"/opt/") + "'";//因舊系統儲存路徑為opt為了統一照舊
         SQL += ", opt_class = '" + Request["edit_opt_class"] + "'";
-        SQL += ", opt_class_name = '" + Request["edit_opt_class_name"] + "'";
-        SQL += ", opt_point = '" + Request["edit_opt_point"] + "'";
+        SQL += ", opt_class_name = '" + ReqVal.TryGet("edit_opt_class_name", "").ToBig5() + "'";
+        SQL += ", opt_point = '" + ReqVal.TryGet("edit_opt_point", "").ToBig5() + "'";
         SQL += ", Cbranch = '" + Request["edit_Cbranch"] + "'";
         SQL += ", Cust_no = '" + Request["edit_Cust_no"] + "'";
-        SQL += ", Cust_name = '" + Request["edit_Cust_name"] + "'";
-        SQL += ", opt_mark = '" + Request["edit_opt_mark"] + "'";
+        SQL += ", Cust_name = '" + ReqVal.TryGet("edit_Cust_name", "").ToBig5() + "'";
+        SQL += ", opt_mark = '" + ReqVal.TryGet("edit_opt_mark", "").ToBig5() + "'";
         SQL += ", opt_comfirm = '" + Request["edit_opt_comfirm"] + "'";
         SQL += ", opt_check = '" + Request["edit_opt_check"] + "'";
-        SQL += ", pr_no = '" + Request["edit_pr_no"] + "'";
+        SQL += ", pr_no = '" + ReqVal.TryGet("edit_pr_no", "").ToBig5() + "'";
         SQL += ", pr_date = " + Util.dbnull(Request["edit_pr_date"]) + "";
         SQL += ", ref_law = '" + law_string + "'";
         SQL += ", tran_date = GETDATE() ";
@@ -175,10 +175,10 @@
         SQL += ",end_date,attach_flag,attach_in_date , attach_scode";
         SQL += ") VALUES (";
         SQL += "  '" + edit_opt_no + "'";
-        SQL += ", '" + Request["edit_opt_pic_path_name" + pno] + "'";
-        SQL += ", '" + Request["edit_opt_pic_path" + pno] + "'";
+        SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path_name" + pno, "").ToBig5() + "'";
+        SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path" + pno, "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"/opt/") + "'";//因舊系統儲存路徑為opt為了統一照舊
         SQL += ", '" + Request["attach_type" + pno] + "'";
-        SQL += ", '" + Request["attach_remark" + pno] + "'";
+        SQL += ", '" + ReqVal.TryGet("attach_remark" + pno, "").ToBig5() + "'";
         SQL += ", NULL";
         SQL += ", 'A'";
         SQL += ", '" + Request["edit_opt_pic_path_add_date" + pno] + "'";
@@ -191,10 +191,10 @@
     private void Update_law_attach(DBHelper conn, int pno) {
         //Funcs.insert_log_table(conn,"U",prgid,"law_attach","sqlno",ReqVal.TryGet("attach_sqlno"+pno));
         SQL = " Update law_attach ";
-        SQL += "set attach_name = '" + Request["edit_opt_pic_path_name" + pno] + "'";
-        SQL += ", attach_path = '" + Request["edit_opt_pic_path" + pno] + "'";
+        SQL += "set attach_name = '" + ReqVal.TryGet("edit_opt_pic_path_name" + pno, "").ToBig5() + "'";
+        SQL += ", attach_path = '" + ReqVal.TryGet("edit_opt_pic_path" + pno, "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"/opt/") + "'";//因舊系統儲存路徑為opt為了統一照舊
         SQL += ", attach_type = '" + Request["attach_type" + pno] + "'";
-        SQL += ", attach_remark = '" + Request["attach_remark" + pno] + "'";
+        SQL += ", attach_remark = '" + ReqVal.TryGet("attach_remark" + pno, "").ToBig5() + "'";
         if (Request["mEnd_date" + pno] == "") {
             SQL += ", end_date = NULL ";
             SQL += ", attach_flag = 'U'";
