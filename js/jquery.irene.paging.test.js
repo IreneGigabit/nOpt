@@ -2,11 +2,11 @@
     //#region Paging
     $.fn.paging = function (settings) {
         var defaultSettings = {
-            submitForm:"",
+            noDataStr: "=== 目前無資料 ===",
             data:{},
             prePage: [10, 20, 30, 50],
             bind: 'mouseover',
-            callback: function () {},
+            callback: function () {}
         };
         //將傳入的settings 覆蓋預設的 defaultSettings
         var _settings = $.extend(defaultSettings, settings);
@@ -37,6 +37,7 @@
 </TABLE>';
         var render = function (obj) {
             $(obj).html(tmpl);
+            $(obj).hide();
 
             //每頁筆數
             var option = new Array(_settings.prePage.length);
@@ -64,12 +65,14 @@
             $("a.pgD", $(obj)).attr("v1", nowPage + 1);
             $("#id-div-slide", $(obj)).slideUp("fast");
 
-            //
-            //console.log($(obj).find("#PerPage").length);
-            //console.log($("#PerPage", $(obj)).length);
-            //console.log($("#NowPage", $(obj)).length);
-            //console.log($("#TotPage", $(obj)).length);
-            //console.log($("#TotRec", $(obj)).length);
+            if (totRow > 0) {
+                $(obj).show();
+            } else {
+                $(obj).html(_settings.noDataStr);
+                if (_settings.noDataStr != "") {
+                    $(obj).html("<font color='red'>" + _settings.noDataStr + "</font>");
+                }
+            }
         };
 
         //return 回去,this 指的是外面的 jQuey 物件
@@ -77,17 +80,17 @@
             var obj = this;
             render(obj);
 
-            //每頁幾筆
-            //$("#PerPage", $(this)).change(_settings.callback());
+            ////每頁幾筆
+            //$("#PerPage", obj).change(_settings.callback());
             ////指定第幾頁
-            //$("#divPaging", $(this)).on("change", "#GoPage", function (e) {
+            //$("#divPaging", obj).on("change", "#GoPage", function (e) {
             //    _settings.callback();
             //});
             ////上下頁
-            $(".pgU,.pgD", obj).click(function (e) {
-                $("#GoPage", obj).val($(this).attr("v1"));
-                _settings.callback();
-            });
+            //$(".pgU,.pgD", obj).click(function (e) {
+            //    $("#GoPage", obj).val($(this).attr("v1"));
+            //    _settings.callback();
+            //});
             ////排序
             //$(".setOdr", $(this)).click(function (e) {
             //    $("#dataList>thead tr .setOdr span").remove();
