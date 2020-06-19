@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -40,14 +40,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="IE=10">
 <title><%#HTProgCap%></title>
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.css")%>" />
+<link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/toastr.css")%>" />
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.datepick-zh-TW.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
-<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.paging.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.paging.test.js")%>"></script>
 </head>
 
 
@@ -180,42 +183,9 @@
 </table>          
 </div>
 
-
-<div id="divPaging" style="display:none">
-<TABLE border=0 cellspacing=1 cellpadding=0 width="85%" align="center">
-	<tr>
-		<td valign="top" align="right" nowrap="nowrap">
-			<a id="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
-			<HR color=#000080 SIZE=1 noShade>
-		</td>
-	</tr>
-	<tr>
-		<td colspan=2 align=center class=whitetablebg>
-			<font size="2" color="#3f8eba">
-				第<font color="red"><span id="NowPage"></span>/<span id="TotPage"></span></font>頁
-				| 資料共<font color="red"><span id="TotRec"></span></font>筆
-				| 跳至第
-				<select id="GoPage" name="GoPage" style="color:#FF0000"></select>
-				頁
-				<span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="">上一頁</a></span>
-				<span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="">下一頁</a></span>
-				| 每頁筆數:
-				<select id="PerPage" name="PerPage" style="color:#FF0000">
-					<option value="10" selected>10</option>
-					<option value="20">20</option>
-					<option value="30">30</option>
-					<option value="40">40</option>
-				</select>
-                <input type="hidden" name="SetOrder" id="SetOrder" />
-			</font>
-		</td>
-	</tr>
-</TABLE>
-</div>
-</form>
-
 <div id="divPaging2"></div>
 <div id="divPaging3"></div>
+</form>
 
 <TABLE style="display:none" border=0 class=greentable cellspacing=1 cellpadding=2 width="85%" align="center" id="dataList">
 	<thead>
@@ -246,9 +216,6 @@
 	</tbody>
 </TABLE>
 
-<div align="center" id="noData" style="display:none">
-	<font color="red">=== 目前無資料 ===</font>
-</div>
 </body>
 </html>
 
@@ -257,8 +224,11 @@
 <script type="text/javascript" language="javascript">
     //執行查詢
     function goSearch2() {
+        if (window.parent.tt !== undefined) {
+            window.parent.tt.rows = "100%,0%";
+        }
 
-        $("#divPaging,#noData,#dataList").hide();
+        $("#dataList").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
 
@@ -270,8 +240,7 @@
             cache: false,
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                $("#divPaging2").paging({ submitForm: "#reg", callback: goSearch2, data: JSONdata });
-                $("#divPaging3").paging({ submitForm: "#reg", callback: goSearch2, data: JSONdata });
+                $("#divPaging2").paging({ callback: goSearch2, data: JSONdata });
 
                 $.each(JSONdata.pagedTable, function (i, item) {
                     nRow++;
@@ -296,12 +265,17 @@
                 jqXHR.url = settings.url;
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert("\n資料擷取剖析錯誤 !\n" + jqXHR.url);
+                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
+
+        if (nRow > 0) {
+            $("#dataList").show();
+        }
     };
 
     //執行查詢
+    /*
     function goSearch() {
 
         $("#divPaging,#noData,#dataList").hide();
@@ -316,8 +290,6 @@
             cache: false,
             success: function (json) {
                 var JSONdata = $.parseJSON(json);
-                $("#divPaging2").paging({ submitForm: "#reg", callback:goSearch2, data: JSONdata });
-                $("#divPaging3").paging({ submitForm: "#reg", callback: goSearch2, data: JSONdata });
 
                 //////更新分頁變數
                 var totRow = parseInt(JSONdata.totRow, 10);
@@ -373,7 +345,7 @@
                 alert("\n資料擷取剖析錯誤 !\n" + jqXHR.url);
             }
         });
-    };
+    };*/
   
     $(function () {
         $("input.dateField").datepick();
@@ -419,7 +391,7 @@
             $("#dataList>thead tr .setOdr span").remove();
             $("#SetOrder").val("");
 
-            goSearch();
+            goSearch2();
         });
 
         function chkNum(e, obj) {
@@ -435,7 +407,7 @@
                 return reg.test(keychar);
             }
         }
-
+        /*
         //每頁幾筆
         $("#PerPage").change(function (e) {
             goSearch();
@@ -463,7 +435,7 @@
         //查詢條件
         $("#imgQry").click(function (e) {
             $("#id-div-slide").slideToggle("fast");
-        });
+        });*/
         //////////////////////
 
         $("#div_Agent_Type").on("click", "input:radio", function () {
