@@ -80,32 +80,40 @@
             var obj = this;
             render(obj);
 
-            ////每頁幾筆
-            //$("#PerPage", obj).change(_settings.callback());
-            ////指定第幾頁
-            //$("#divPaging", obj).on("change", "#GoPage", function (e) {
-            //    _settings.callback();
-            //});
-            ////上下頁
-            //$(".pgU,.pgD", obj).click(function (e) {
-            //    $("#GoPage", obj).val($(this).attr("v1"));
-            //    _settings.callback();
-            //});
-            ////排序
-            //$(".setOdr", $(this)).click(function (e) {
-            //    $("#dataList>thead tr .setOdr span").remove();
-            //    $(this).append("<span>▲</span>");
-            //    $("#SetOrder").val($(this).attr("v1"));
-            //    _settings.callback();
-            //});
-            ////重新整理
-            //$("#imgRefresh", $(this)).click(function (e) {
-            //    _settings.callback();
-            //});
-            ////查詢條件
-            //$("#imgQry", $(this)).click(function (e) {
-            //    $("#id-div-slide").slideToggle("fast");
-            //});
+            //每頁幾筆
+            $("#PerPage", obj).change(function (e) {
+                console.log("PerPage change");
+                _settings.callback()
+            });
+            //指定第幾頁
+            $("#GoPage", obj).change(function (e) {
+            //$("#GoPage", obj).on("change", "#GoPage", function (e) {
+                console.log("divPaging change");
+                _settings.callback();
+            });
+            //上下頁
+            $(".pgU,.pgD", obj).click(function (e) {
+                $("#GoPage", obj).val($(this).attr("v1"));
+                console.log("pgU pgD click");
+                _settings.callback();
+            });
+            //排序
+            $(".setOdr", $(this)).click(function (e) {
+                $("#dataList>thead tr .setOdr span").remove();
+                $(this).append("<span>▲</span>");
+                $("#SetOrder").val($(this).attr("v1"));
+                console.log("setOdr click");
+                _settings.callback();
+            });
+            //重新整理
+            $("#imgRefresh", $(this)).click(function (e) {
+                console.log("imgRefresh click");
+                _settings.callback();
+            });
+            //查詢條件
+            $("#imgQry", $(this)).click(function (e) {
+                $("#id-div-slide").slideToggle("fast");
+            });
 
             //console.log(this.id);
             //$(this).bind(_settings.bind, _settings.callback);
