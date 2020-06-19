@@ -163,3 +163,6 @@ insert into sysctrl
 select scode,branch,dept,sysdefault,syscode,logingrp,beg_date,end_date,null,null,null
 from web02.sysctrl.dbo.sysctrl where syscode='opt' and scode in('m1583')
 
+
+--區所程式
+--\\web02\wwwroot$\Btbrt\Brt1m\Brt18Update.asp
