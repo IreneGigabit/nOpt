@@ -1,4 +1,4 @@
-﻿//判斷字串是否為JSON格式
+//判斷字串是否為JSON格式
 function isJSON(str) {
     if (typeof str == 'string') {
         try {
@@ -56,6 +56,17 @@ function chkNull(pFieldName,pObj)
         return true;
     }
     return false;
+}
+
+//check field null:檢查物件值不可為空白
+function chkNull2(pFieldName,pObj)
+{
+    if (pObj.value=="") {
+        $(pObj).addClass("chkError");
+        return pFieldName + "必須輸入!!!<BR>";
+    }
+    $(pObj).removeClass("chkError");
+    return "";
 }
 
 //check field integer:檢查物件值不可為小數
