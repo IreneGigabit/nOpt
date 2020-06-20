@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 
 <!DOCTYPE html>
@@ -19,13 +19,14 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="x-ua-compatible" content="IE=10">
-    <title><%#StrProjectName%></title>
-    <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
-    <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.paging.test.js")%>"></script>
-    <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
-    <link href="inc/setstyle.css" rel="stylesheet" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="x-ua-compatible" content="IE=10">
+<title><%#StrProjectName%></title>
+<link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/toastr.css")%>" />
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
+<link href="inc/setstyle.css" rel="stylesheet" />
 </head>
 <body style="margin:0px;">
 <center>
@@ -69,19 +70,24 @@ function init_form() {
 }
 
 function formSubmit() {
-	if (chkNull("帳號", reg.tfx_scode)) {
-        return false;
-    }
-    
-    if (chkNull("密碼", reg.tfx_sys_password)) {
-        return false;
-    }
-    //var errflag=$("#tfx_scode,#tfx_sys_password").chkRequire();
-    //if (!errflag) {
+    //if (chkNull("帳號", reg.tfx_scode)) {
+    //    return false;
+    //}
+    //
+    //if (chkNull("密碼", reg.tfx_sys_password)) {
+    //    return false;
+    //}
+    var errmsg = "";
+    errmsg += chkNull2("帳號", reg.tfx_scode);
+    errmsg += chkNull2("密碼", reg.tfx_sys_password);
+    if (errmsg!="") {
+        //toastr.clear();
+        toastr.error(errmsg);
+    }else{
         reg.target = "_top";
         reg.action = "checklogin.aspx";
         reg.submit();
-    //}
+    }
 }
 
 document.body.onkeydown = function(e){
