@@ -4,35 +4,29 @@
         var defaultSettings = {
             noDataStr: "=== 目前無資料 ===",
             data:{},
-            prePage: [10, 20, 30, 50],
+            perPage: [10, 20, 30, 50],
             bind: 'mouseover',
-            callback: function () {}
+            callSearch: function () {}
         };
         //將傳入的settings 覆蓋預設的 defaultSettings
         var _settings = $.extend(defaultSettings, settings);
         var tmpl = '\
 <TABLE border=0 cellspacing=1 cellpadding=0 width="85%" align="center">\
-	<tr>\
-		<td valign="top" align="right" nowrap="nowrap">\
-			<a id="imgRefresh" href="javascript:void(0);" >[重新整理]</a>\
-			<HR class="style-one">\
-		</td>\
-	</tr>\
-	<tr>\
-		<td colspan=2 align=center class=whitetablebg>\
-			<font size="2" color="#3f8eba">\
-				第<font color="red"><span id="NowPage"></span>/<span id="TotPage"></span></font>頁\
-				| 資料共<font color="red"><span id="TotRec"></span></font>筆\
-				| 跳至第\
-				<select id="GoPage" name="GoPage" style="color:#FF0000"></select>\
-        頁\
-        <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="">上一頁</a></span>\
-        <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="">下一頁</a></span>\
-        | 每頁筆數:\
-        <select id="PerPage" name="PerPage" style="color:#FF0000"></select>\
-        <input type="hidden" name="SetOrder" id="SetOrder" />\
-    </font>\
-    </td>\
+    <tr>\
+        <td colspan=2 align=center class=whitetablebg>\
+            <font size="2" color="#3f8eba">\
+            第<font color="red"><span id="NowPage"></span>/<span id="TotPage"></span></font>頁\
+            | 資料共<font color="red"><span id="TotRec"></span></font>筆\
+            | 跳至第\
+            <select id="GoPage" name="GoPage" style="color:#FF0000"></select>\
+            頁\
+            <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="">上一頁</a></span>\
+            <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="">下一頁</a></span>\
+            | 每頁筆數:\
+            <select id="PerPage" name="PerPage" style="color:#FF0000"></select>\
+            <input type="hidden" name="SetOrder" id="SetOrder" />\
+            </font>\
+        </td>\
     </tr>\
 </TABLE>';
         var render = function (obj) {
@@ -40,15 +34,16 @@
             $(obj).hide();
 
             //每頁筆數
-            var option = new Array(_settings.prePage.length);
-            $.each(_settings.prePage, function (i, value) {
+            var option = new Array(_settings.perPage.length);
+            $.each(_settings.perPage, function (i, value) {
                 option[i] = ['<option value="' + value + '">' + value + '</option>'].join("");
             });
             $("#PerPage", $(obj)).replaceWith('<select id="PerPage" name="PerPage" style="color:#FF0000">' + option.join("") + '</select>');
-
-            var totRow = parseInt(_settings.data.totRow||0, 10);
-            var totPage = parseInt(_settings.data.totPage||0, 10);
-            var nowPage = parseInt(_settings.data.nowPage||0, 10);
+            //console.log(_settings.data);
+            var totRow = parseInt(_settings.data.totrow||0, 10);
+            var totPage = parseInt(_settings.data.totpage||0, 10);
+            var nowPage = parseInt(_settings.data.nowpage || 0, 10);
+            var perPage = parseInt(_settings.data.perpage || 0, 10);
             $("#NowPage", $(obj)).html(nowPage);
             $("#TotPage", $(obj)).html(totPage);
             $("#TotRec", $(obj)).html(totRow);
@@ -58,12 +53,13 @@
             }
             $("#GoPage", $(obj)).replaceWith('<select id="GoPage" name="GoPage" style="color:#FF0000">' + option.join("") + '</select>');
             $("#GoPage", $(obj)).val(nowPage);
+            $("#PerPage", $(obj)).val(perPage);
 
             nowPage > 1 ? $("#PageUp", $(obj)).show() : $("#PageUp", $(obj)).hide();
             nowPage < totPage ? $("#PageDown", $(obj)).show() : $("#PageDown", $(obj)).hide();
             $("a.pgU", $(obj)).attr("v1", nowPage - 1);
             $("a.pgD", $(obj)).attr("v1", nowPage + 1);
-            $("#id-div-slide", $(obj)).slideUp("fast");
+            //$("#id-div-slide", $(obj)).slideUp("fast");
 
             if (totRow > 0) {
                 $(obj).show();
@@ -82,41 +78,25 @@
 
             //每頁幾筆
             $("#PerPage", obj).change(function (e) {
-                console.log("PerPage change");
-                _settings.callback()
+                //console.log("PerPage change");
+                $("#GoPage", obj).val("1");
+                _settings.callSearch();
             });
             //指定第幾頁
             $("#GoPage", obj).change(function (e) {
             //$("#GoPage", obj).on("change", "#GoPage", function (e) {
-                console.log("divPaging change");
-                _settings.callback();
+                //console.log("divPaging change");
+                _settings.callSearch();
             });
             //上下頁
             $(".pgU,.pgD", obj).click(function (e) {
                 $("#GoPage", obj).val($(this).attr("v1"));
-                console.log("pgU pgD click");
-                _settings.callback();
-            });
-            //排序
-            $(".setOdr", $(this)).click(function (e) {
-                $("#dataList>thead tr .setOdr span").remove();
-                $(this).append("<span>▲</span>");
-                $("#SetOrder").val($(this).attr("v1"));
-                console.log("setOdr click");
-                _settings.callback();
-            });
-            //重新整理
-            $("#imgRefresh", $(this)).click(function (e) {
-                console.log("imgRefresh click");
-                _settings.callback();
-            });
-            //查詢條件
-            $("#imgQry", $(this)).click(function (e) {
-                $("#id-div-slide").slideToggle("fast");
+                //console.log("pgU pgD click");
+                _settings.callSearch();
             });
 
             //console.log(this.id);
-            //$(this).bind(_settings.bind, _settings.callback);
+            //$(this).bind(_settings.bind, _settings.callSearch);
         });
     }
     //#endregion
