@@ -311,7 +311,7 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         }
         theadOdr();//設定表頭排序圖示
@@ -353,7 +353,7 @@
 
     //關閉視窗
     $(".imgCls").click(function (e) {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         } else {
             window.close();

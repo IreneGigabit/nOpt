@@ -171,14 +171,14 @@
         $("#btnSubmit,#btnDel,#btnReset").hide();
 
         if($("#submittask").val()=="A"){
-            if (!(window.parent.tt === undefined)) {
+            if (window.parent.tt !== undefined) {
                 window.parent.tt.rows = "0%,100%";
             }
             $("#tr_end_date").hide();
             $("#btnSubmit,#btnReset").show();
             $("#btnSubmit").val("新　增");
         }else if($("#submittask").val()=="U"){
-            if (!(window.parent.tt === undefined)) {
+            if (window.parent.tt !== undefined) {
                 window.parent.tt.rows = "50%,50%";
             }
             $("#tr_end_date").hide();
@@ -193,7 +193,7 @@
             $("#edit_law_mark").val("<%#RS.TryGet("law_mark","")%>");
             $("#edit_end_date").val("<%#Util.parseDBDate(RS.TryGet("end_mark","").ToString(),"yyyy/M/d")%>");
         }else if($("#submittask").val()=="D"){
-            if (!(window.parent.tt === undefined)) {
+            if (window.parent.tt !== undefined) {
                 window.parent.tt.rows = "50%,50%";
             }
             $("#btnDel,#btnReset").show();
@@ -209,7 +209,7 @@
 
     //關閉視窗
     $(".imgCls").click(function (e) {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         } else {
             window.close();

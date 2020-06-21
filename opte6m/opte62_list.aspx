@@ -515,7 +515,7 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             if ($("#homelist") == "homelist") {
                 window.parent.tt.rows = "0%,100%";
             } else {
@@ -565,7 +565,7 @@
 
     //關閉視窗
     $(".imgCls").click(function (e) {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         } else {
             window.close();

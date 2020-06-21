@@ -219,7 +219,7 @@
     });
 
     function this_init(){
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         }
 
@@ -395,7 +395,7 @@
     $(".imgQry").click(function (e) { $("#id-div-slide").slideToggle("fast"); });
     //關閉視窗
     $(".imgCls").click(function (e) {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         } else {
             window.close();

@@ -201,7 +201,7 @@
     });
 
     function this_init(){
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         }
 

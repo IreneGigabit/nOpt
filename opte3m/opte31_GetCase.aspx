@@ -177,7 +177,7 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "20%,80%";
         }
         this_init();
@@ -203,7 +203,7 @@
 
     //關閉視窗
     $(".imgCls").click(function (e) {
-        if (!(window.parent.tt === undefined)) {
+        if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         } else {
             window.close();
