@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -49,6 +49,26 @@ public class Funcs {
             string SQL = "select cust_code,code_name,remark from cust_code where code_type='Odoc_type' order by sortfld";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region getcust_code_sys - 抓取sysctrl cust_code
+    /// <summary>  
+    /// 抓取sysctrl cust_code
+    /// </summary>  
+    public static DataTable getcust_code_sys(string code_type, string pwh2, string sortField) {
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false)) {
+            string SQL = "select cust_code,code_name from cust_code ";
+            SQL += " where code_type='" + code_type + "' " + pwh2;
+            if (sortField == "")
+                SQL += " order by cust_code";
+            else
+                SQL += " order by " + sortField;
+            DataTable dt = new DataTable();
+            cnn.DataTable(SQL, dt);
 
             return dt;
         }
