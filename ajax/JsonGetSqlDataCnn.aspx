@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -11,10 +11,14 @@
 
 <script runat="server">
     protected string SQL = "";
+    protected string mg = "";
     
     protected void Page_Load(object sender, EventArgs e)
     {
-        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false))
+        mg = Request["mg"] ?? "";
+        string connstr = Conn.Sysctrl;
+        if (mg != "") connstr = Conn.ODBCDSN;
+        using (DBHelper cnn = new DBHelper(connstr).Debug(false))
         {
             SQL = Request["SQL"];
             DataTable dt = new DataTable();
