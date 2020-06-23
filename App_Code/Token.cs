@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Data.SqlClient;
 using System.Text;
@@ -14,6 +14,8 @@ public class Token
     public string ConnectionString { get; set; }
     public string SysCode { get; set; }//系統
     public string APcode { get; set; }//程式
+    public string Title { get; set; }//程式名稱
+    public string Title2 { get; set; }//程式名稱2
     
     public string UGrpID { get; set; }//群組
     public int Rights { get; set; }//取得的權限值
@@ -134,7 +136,6 @@ public class Token
                     SqlCommand cmd = new SqlCommand(SQL, cn);
                     cn.Open();
                     dr = cmd.ExecuteReader();
-
                     if (dr.Read()) {
                         this.Rights = Convert.ToInt32(dr["Rights"]);
                         myRights = ((this.Rights & chkRight) == 1) ? true : false;
@@ -142,6 +143,18 @@ public class Token
                         //HttpContext.Current.Response.End();
                     }
                     dr.Close();
+
+                    SQL = "SELECT APnameC FROM AP " +
+                        " Where APcode = '" + APcode + "'" +
+                        " AND SYScode = '" + SysCode + "'";
+                    cmd.CommandText = SQL;
+                    dr = cmd.ExecuteReader();
+                    if (dr.Read()) {
+                        this.Title = dr["APnameC"] + "";
+                        this.Title2 = dr["APnameC"] + "&nbsp;管理";
+                    }
+                    dr.Close();
+
                     cn.Close();
 
                     if (!myRights) throw new Exception("該作業未授權 !");
