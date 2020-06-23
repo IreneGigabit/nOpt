@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
 
@@ -11,11 +11,17 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
 
+    protected string syscode = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
-        
+
+        //syscode = Sys.getAppSetting("Sysmenu");
+        syscode = Sys.GetSession("Syscode");
+        if ((Request["Syscode"] ?? "") != "") syscode = Request["Syscode"];
+
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         //chkTest.HTProgRight = HTProgRight;
@@ -47,7 +53,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0" align="center">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>‧<b style="color:Red">系統群組查詢引擎</b>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%#prgid%> <%#HTProgCap%>】<b style="color:Red">系統群組查詢引擎</b></td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
         </td>
     </tr>
@@ -87,11 +93,11 @@
 
         <br>
         <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-        <!--uc1:chkTest runat1="server" ID="chkTest" /-->
+        <uc1:chkTest runat="server" ID="chkTest" />
         <center>
         <div id="show_syscode" style="display:none">
-		    <input type="button" name="syscode1" value="新增系統代碼" onclick="addsys1('Add')" class="cbutton">
 		    <input type="button" name="syscode2" value="查詢系統代碼" onclick="addsys1('Query')" class="cbutton">
+		    <input type="button" name="syscode1" value="新增系統代碼" onclick="addsys1('Add')" class="cbutton">
 		    <input type="button" name="syscode3" value="重　填" onclick="cleardata()" class="cbutton">
 	    </div>
         <div id="show_menu" style="display:none">
@@ -133,7 +139,10 @@
             window.parent.tt.rows = "100%,0%";
         }
 
-        $("#Syscode").val("<%#Session["syscode"]%>").triggerHandler("change");
+        $('#Syscode option').each(function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+        $("#Syscode").val("<%#syscode.ToUpper()%>").triggerHandler("change");
     }
 
     function addsys1(y){//系統代碼作業
@@ -142,6 +151,27 @@
             reg.submit();
         }else if(y=="Query"){
             reg.action ="SyscodeList.aspx";
+            reg.submit();
+            /*$.ajax({
+                url: "SyscodeList.aspx",
+                type: "get",
+                async: false,
+                cache: false,
+                data: $("#reg").serialize(),
+                dataType: "html",
+                success: function (happy) {
+                    $("#tblData").html(happy);
+                }
+            });*/
+        }
+    }
+
+    function menu_control(x){//menu維護作業
+        if(x=="Add"){
+            reg.action ="APCatADD.aspx";
+            reg.submit();
+        }else if(x=="Query"){
+            reg.action ="APCatList.aspx";
             reg.submit();
         }
     }
@@ -152,16 +182,6 @@
             reg.submit();
         }else if(x=="Query"){
             reg.action ="APList.aspx";
-            reg.submit();
-        }
-    }
-
-    function menu_control(x){//程式代碼維護作業
-        if(x=="Add"){
-            reg.action ="APCatADD.aspx";
-            reg.submit();
-        }else if(x=="Query"){
-            reg.action ="APCatList.aspx";
             reg.submit();
         }
     }
