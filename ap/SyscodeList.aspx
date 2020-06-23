@@ -1,87 +1,75 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "Newtonsoft.Json"%>
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
-    protected string HTProgCap = "系統權限";//HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "系統資料";//HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "Syscode";//HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string Title = "";
 
     protected string SQL = "";
-    protected string json_data = "";
-    protected string json = "";
 
-    protected string branch = "";
-    protected string your_no = "";
-    protected string seq = "";
-    protected string seq1 = "";
+    protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
+    protected string hiddenText = "";
+    protected Paging page = new Paging(1, 10);
+    protected string syscode = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        branch = Request["branch"] ?? "";
-        your_no = Request["your_no"] ?? "";
-        seq = Request["seq"] ?? "";
-        seq1 = Request["seq1"] ?? "";
-        json = (Request["json"] ?? "").ToString().ToUpper();
+        syscode = Request["Syscode"] ?? "";
+        
+        ReqVal = Util.GetRequestParam(Context, Request["chkTest"] == "TEST");
+        foreach (KeyValuePair<string, string> p in ReqVal) {
+            if (String.Compare(p.Key, "GoPage", true) != 0
+                && String.Compare(p.Key, "PerPage", true) != 0
+                && String.Compare(p.Key, "SetOrder", true) != 0)
+                hiddenText += string.Format("<input type=\"hidden\" id=\"{0}\" name=\"{0}\" value=\"{1}\">\n", p.Key, p.Value);
+        }
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
-        chkTest.HTProgRight = HTProgRight;
+        Title = myToken.Title;
         if (HTProgRight >= 0) {
-            if (json=="Y") QueryData();
+            QueryData();
             
             this.DataBind();
         }
     }
 
     private void QueryData() {
-        using (DBHelper connB = new DBHelper(Conn.OptB(branch), false)) {
-            SQL = "Select b.seq,b.seq1,b.country,b.ext_seq,b.ext_seq1";
-            SQL+=",b.class,b.appl_name,b.your_no,''fseq,''fext_seq,b.class fclass";
-            SQL+=" from ext b ";
-            SQL+=" where b.your_no like '%" + your_no + "%'";
-            if (seq!="")
-	            SQL+=" and b.seq=" + seq;
-            if (seq1 != "")
-                SQL += " and b.seq1='" + seq1 + "'";
-            SQL+=" order by b.seq,b.seq1";
-
-    
+        using (DBHelper cnn = new DBHelper(Conn.ODBCDSN, false).Debug(Request["chkTest"] == "TEST")) {
+            SQL = "SELECT C.*,D.classnameC ";
+            SQL += "FROM SYScode As C ";
+            SQL += "LEFT JOIN sysclass As D ON D.sysclass = 'system' and D.classcode = C.classcode ";
+	        if (syscode!=""){
+                SQL += " Where C.syscode = '" + syscode + "' ";
+	        }
+            ReqVal["qryOrder"] = ReqVal.TryGet("SetOrder", ReqVal.TryGet("qryOrder", ""));
+            if (ReqVal.TryGet("qryOrder", "") != "") {
+                SQL += " order by " + ReqVal.TryGet("qryOrder", "");
+            } else {
+                SQL += " order by C.classcode,C.syssql";
+            }
             DataTable dt = new DataTable();
-            connB.DataTable(SQL, dt);
+            cnn.DataTable(SQL, dt);
 
             //處理分頁
             int nowPage = Convert.ToInt32(Request["GoPage"] ?? "1"); //第幾頁
             int PerPageSize = Convert.ToInt32(Request["PerPage"] ?? "10"); //每頁筆數
-            Paging page = new Paging(nowPage, PerPageSize, string.Join(";", connB.exeSQL.ToArray()));
+            page = new Paging(nowPage, PerPageSize, string.Join(";", cnn.exeSQL.ToArray()));
             page.GetPagedTable(dt);
 
             //分頁完再處理其他資料才不會虛耗資源
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
-                //組本所編號
-                page.pagedTable.Rows[i]["fseq"] = Funcs.formatSeq(
-                    page.pagedTable.Rows[i].SafeRead("seq", "")
-                    , page.pagedTable.Rows[i].SafeRead("seq1", "")
-                    , page.pagedTable.Rows[i].SafeRead("country", "")
-                    , page.pagedTable.Rows[i].SafeRead("Branch", "")
-                    , Sys.GetSession("dept") + "E");
-                //國外所編號
-                page.pagedTable.Rows[i]["fext_seq"] = Funcs.formatSeq(
-                    page.pagedTable.Rows[i].SafeRead("ext_seq", "")
-                    , page.pagedTable.Rows[i].SafeRead("ext_seq1", "")
-                    , ""
-                    , ""
-                    , Sys.GetSession("dept") + "E");
             }
 
             var settings = new JsonSerializerSettings()
@@ -91,9 +79,8 @@
                 Converters = new List<JsonConverter> { new DBNullCreationConverter(), new TrimCreationConverter() }//dbnull轉空字串且trim掉
             };
 
-            Response.Write(JsonConvert.SerializeObject(page, settings).ToUnicode());
-            Response.End();
-            //return JsonConvert.SerializeObject(dt, settings).ToUnicode().Replace("\\", "\\\\").Replace("\"", "\\\"");
+            dataRepeater.DataSource = page.pagedTable;
+            dataRepeater.DataBind();
         }
     }
 </script>
@@ -115,45 +102,38 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>查詢結果清單</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
+            <a class="imgAdd" href="<%#HTProgPrefix%>add.aspx?prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[新增]</a>
         </td>
     </tr>
     <tr>
         <td colspan="2"><hr class="style-one"/></td>
     </tr>
 </table>
-<br>
 <form id="reg" name="reg" method="post">
-    <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
-    <input type="hidden" id="branch" name="branch" value="<%=branch%>">
-    <input type="hidden" id="your_no" name="your_no" value="<%=your_no%>">
-    <input type="hidden" id="seq" name="seq" value="<%=seq%>">
-    <input type="hidden" id="seq1" name="seq1" value="<%=seq1%>">
-    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-    <uc1:chkTest runat="server" ID="chkTest" />
-
-    <div id="divPaging" style="display:none">
+    <%#hiddenText%>
+    <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
 	    <tr>
 		    <td colspan=2 align=center>
 			    <font size="2" color="#3f8eba">
-				    第<font color="red"><span id="NowPage"></span>/<span id="TotPage"></span></font>頁
-				    | 資料共<font color="red"><span id="TotRec"></span></font>筆
+				    第<font color="red"><span id="NowPage"><%#page.nowPage%></span>/<span id="TotPage"><%#page.totPage%></span></font>頁
+				    | 資料共<font color="red"><span id="TotRec"><%#page.totRow%></span></font>筆
 				    | 跳至第
-				    <select id="GoPage" name="GoPage" style="color:#FF0000"></select>
+				    <select id="GoPage" name="GoPage" style="color:#FF0000"><%#page.GetPageList()%></select>
 				    頁
-				    <span id="PageUp">| <a href="javascript:void(0)" class="pgU" v1="">上一頁</a></span>
-				    <span id="PageDown">| <a href="javascript:void(0)" class="pgD" v1="">下一頁</a></span>
+				    <span id="PageUp" style="display:<%#page.nowPage>1?"":"none"%>">| <a href="javascript:void(0)" class="pgU" v1="<%#page.nowPage-1%>">上一頁</a></span>
+				    <span id="PageDown" style="display:<%#page.nowPage<page.totPage?"":"none"%>">| <a href="javascript:void(0)" class="pgD" v1="<%#page.nowPage+1%>">下一頁</a></span>
 				    | 每頁筆數:
 				    <select id="PerPage" name="PerPage" style="color:#FF0000">
-					    <option value="10" selected>10</option>
-					    <option value="20">20</option>
-					    <option value="30">30</option>
-					    <option value="50">50</option>
+					    <option value="10" <%#page.perPage==10?"selected":""%>>10</option>
+					    <option value="20" <%#page.perPage==20?"selected":""%>>20</option>
+					    <option value="30" <%#page.perPage==30?"selected":""%>>30</option>
+					    <option value="50" <%#page.perPage==50?"selected":""%>>50</option>
 				    </select>
-                    <input type="hidden" name="SetOrder" id="SetOrder" />
+                    <input type="hidden" name="SetOrder" id="SetOrder" value="<%#ReqVal.TryGet("qryOrder", "")%>" />
 			    </font>
 		    </td>
 	    </tr>
@@ -161,133 +141,66 @@
     </div>
 </form>
 
-<div align="center" id="noData" style="display:none">
+<div align="center" id="noData" style="display:<%#page.totRow==0?"":"none"%>">
 	<font color="red">=== 目前無資料 ===</font>
 </div>
 
-<table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
-	<thead>
-      <Tr>
-		<TD class="lightbluetable" nowrap align="center">本所編號</TD>
-		<TD class="lightbluetable" nowrap align="center">國外所編號</TD>
-		<TD class="lightbluetable" align="center">類別</TD>
-		<TD class="lightbluetable" align="center">案件名稱</TD>
-		<TD class="lightbluetable" align="center">對方號</TD>
-		<TD class="lightbluetable" nowrap align="center">作業</TD>
-      </tr>
-	</thead>
-	<tfoot style="display:none">
-	  <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
-		<td nowrap>{{fseq}}
-            <input type="hidden" id="seq_{{nRow}}" name="seq_{{nRow}}" value="{{seq}}">
-		    <input type="hidden" id="seq1_{{nRow}}" name="seq1_{{nRow}}" value="{{seq1}}">
-		</td>
-		<td nowrap>{{fext_seq}}</td>
-		<td nowrap>{{class}}</td>
-		<td nowrap>{{appl_name}}</td>
-		<td nowrap>{{your_no}}</td>
-		<td nowrap  align="center">
-			<font style="cursor:pointer;color:darkblue" onclick="getstep('{{nRow}}')">[選取]</font>
-		</td>
-      </tr>
-	</tfoot>
-	<tbody>
-	</tbody>
-</TABLE>
-<br />
-<div >
-	<center><font color='blue'>***請按下 [選取] 帶回對應案件資料***</font></center>
-</div>
+<asp:Repeater id="dataRepeater" runat="server">
+<HeaderTemplate>
+    <table style="display:<%#page.totRow==0?"none":""%>" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
+	    <thead>
+            <Tr>
+                <td align=center class=lightbluetable>系統分類代碼</td>
+	            <td align=center class=lightbluetable><u class="setOdr" v1="c.syscode">網路作業代碼</td>
+	            <td align=center class=lightbluetable><u class="setOdr" v1="c.sysnameC">網路作業名稱(中)</td>
+	            <td align=center class=lightbluetable>網路作業名稱(英)</td>
+	            <td align=center class=lightbluetable>伺服器名稱</td>
+	            <td align=center class=lightbluetable>路徑</td>
+	            <td align=center class=lightbluetable>開始日期</td>
+	            <td align=center class=lightbluetable>結束日期</td>
+	            <td align=center class=lightbluetable>順序</td>
+	            <td align=center class=lightbluetable>menu作業</td>
+            </tr>
+	    </thead>
+	    <tbody>
+</HeaderTemplate>
+			<ItemTemplate>
+ 		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
+                    <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>" target="Eblank"><%#Eval("classCode")%>_<%#Eval("classnameC")%></TD>
+	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>" target="Eblank"><%#Eval("syscode")%></TD>
+	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>" target="Eblank"><%#Eval("sysnameC")%></TD>
+	                <TD align=center><%#Eval("sysnameE")%></TD>
+	                <TD align=center><%#Eval("sysserver")%></TD>
+	                <TD align=center><%#Eval("syspath")%></TD>
+	                <TD align=center><%#Eval("beg_date", "{0:d}")%></TD>
+	                <TD align=center><%#Eval("end_date", "{0:d}")%></TD>
+	                <TD align=center><%#Eval("syssql")%></TD>
+	                <TD align=center><a href="APCatList.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&flag=ap1">[查詢]</TD>
+				</tr>
+			</ItemTemplate>
+<FooterTemplate>
+	    </tbody>
+    </table>
+    <br />
+</FooterTemplate>
+</asp:Repeater>
 </body>
 </html>
 
 <script language="javascript" type="text/javascript">
     $(function () {
-        this_init();
-    });
+        if (window.parent.tt !== undefined) {
+            window.parent.tt.rows = "100%,0%";
+        }
+        $(".imgAdd").showFor((<%#HTProgRight%> & 4));//[新增]
 
-    //初始化
-    function this_init() {
-        goSearch();
-    }
+        theadOdr();//設定表頭排序圖示
+    });
 
     //執行查詢
     function goSearch() {
-        $("#divPaging,#noData,#dataList").hide();
-        $("#dataList>tbody tr").remove();
-        nRow = 0;
-
-        $.ajax({
-            url: "ext_yournolist.aspx?json=Y",
-            type: "get",
-            async: false,
-            cache: false,
-            data: $("#reg").serialize(),
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.totrow === undefined) {
-                    toastr.error("資料載入失敗（" + JSONdata.msg + "）");
-                    return false;
-                }
-                if ($("#chkTest").prop("checked")) toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-                //////更新分頁變數
-                var totRow = parseInt(JSONdata.totrow, 10);
-                if (totRow > 0) {
-                    $("#divPaging").show();
-                    $("#dataList").show();
-                } else {
-                    $("#noData").show();
-                }
-
-                var nowPage = parseInt(JSONdata.nowpage, 10);
-                var totPage = parseInt(JSONdata.totpage, 10);
-                $("#NowPage").html(nowPage);
-                $("#TotPage").html(totPage);
-                $("#TotRec").html(totRow);
-                var i = totPage + 1, option = new Array(i);
-                while (--i) {
-                    option[i] = ['<option value="' + i + '">' + i + '</option>'].join("");
-                }
-                $("#GoPage").replaceWith('<select id="GoPage" name="GoPage" style="color:#FF0000">' + option.join("") + '</select>');
-                $("#GoPage").val(nowPage);
-                nowPage > 1 ? $("#PageUp").show() : $("#PageUp").hide();
-                nowPage < totPage ? $("#PageDown").show() : $("#PageDown").hide();
-                $("a.pgU").attr("v1", nowPage - 1);
-                $("a.pgD").attr("v1", nowPage + 1);
-                //$("#id-div-slide").slideUp("fast");
-
-                $.each(JSONdata.pagedtable, function (i, item) {
-                    nRow++;
-                    //複製一筆
-                    $("#dataList>tfoot").each(function (i) {
-                        var strLine1 = $(this).html().replace(/##/g, nRow);
-                        var tclass = "";
-                        if (nRow % 2 == 1) tclass = "sfont9"; else tclass = "lightbluetable3";
-                        strLine1 = strLine1.replace(/{{tclass}}/g, tclass);
-                        strLine1 = strLine1.replace(/{{nRow}}/g, nRow);
-
-                        strLine1 = strLine1.replace(/{{fseq}}/g, item.fseq);
-                        strLine1 = strLine1.replace(/{{seq}}/g, item.seq);
-                        strLine1 = strLine1.replace(/{{seq1}}/g, item.seq1);
-                        strLine1 = strLine1.replace(/{{fext_seq}}/g, item.fext_seq);
-                        strLine1 = strLine1.replace(/{{class}}/g, item.fclass);
-                        strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
-                        strLine1 = strLine1.replace(/{{your_no}}/g, item.your_no);
-
-                        $("#dataList>tbody").append(strLine1);
-                    });
-                });
-            },
-            beforeSend: function (jqXHR, settings) {
-                jqXHR.url = settings.url;
-                //toastr.info("<a href='" + jqXHR.url + "' target='_new'>debug！\n" + jqXHR.url + "</a>");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-            }
-        });
+        $("#reg").submit();
     };
-
     //每頁幾筆
     $("#PerPage").change(function (e) {
         goSearch();
@@ -303,11 +216,25 @@
     });
     //排序
     $(".setOdr").click(function (e) {
-        $("#dataList>thead tr .setOdr span").remove();
-        $(this).append("<span>▲</span>");
+        //$("#dataList>thead tr .setOdr span").remove();
+        //$(this).append("<span class='odby'>▲</span>");
         $("#SetOrder").val($(this).attr("v1"));
         goSearch();
     });
+    //設定表頭排序圖示
+    function theadOdr() {
+        $(".setOdr").each(function (i) {
+            $(this).remove("span.odby");
+            if ($(this).attr("v1").toLowerCase() == $("#SetOrder").val().toLowerCase()) {
+                $(this).append("<span class='odby'>▲</span>");
+            }
+        });
+    }
+    //重新整理
+    $(".imgRefresh").click(function (e) {
+        goSearch();
+    });
+
     //關閉視窗
     $(".imgCls").click(function (e) {
         if (window.parent.tt !== undefined) {
@@ -316,16 +243,4 @@
             window.close();
         }
     })
-
-    //取回進度項目
-    function getstep(pno){
-        window.opener.reg.Bseq.value = $("#seq_" + pno).val();
-        window.opener.reg.Bseq1.value = $("#seq1_" + pno).val();
-        //window.opener.reg.btnBseq.click();
-        window.opener.br_formA.loadDmt();
-        //$('#Bseq', opener.document).val($("#seq_" + pno).val());
-        //$('#Bseq1', opener.document).val($("#seq1_" + pno).val());
-        //$('#btnBseq', opener.document).click();
-        window.close();
-    }
 </script>
