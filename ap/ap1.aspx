@@ -64,6 +64,7 @@
 
 <form id="reg" name="reg" method="post" action="<%#HTProgPrefix%>List.aspx">
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+    <input type="hidden" id="submittask" name="submittask">
 
     <div id="id-div-slide">
         <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="570" align="center">	
@@ -146,42 +147,40 @@
     }
 
     function addsys1(y){//系統代碼作業
-        if(y=="Add"){
-            reg.action ="Syscodeadd.aspx";
+        $("#submittask").val(x);
+        if (y == "Add") {
+            reg.action = "SyscodeAdd.aspx";
+            reg.target = "Eblank";
             reg.submit();
         }else if(y=="Query"){
             reg.action ="SyscodeList.aspx";
+            reg.target = "_self";
             reg.submit();
-            /*$.ajax({
-                url: "SyscodeList.aspx",
-                type: "get",
-                async: false,
-                cache: false,
-                data: $("#reg").serialize(),
-                dataType: "html",
-                success: function (happy) {
-                    $("#tblData").html(happy);
-                }
-            });*/
         }
     }
 
     function menu_control(x){//menu維護作業
+        $("#submittask").val(x);
         if(x=="Add"){
-            reg.action ="APCatADD.aspx";
+            reg.action = "APCatADD.aspx";
+            reg.target = "Eblank";
             reg.submit();
         }else if(x=="Query"){
-            reg.action ="APCatList.aspx";
+            reg.action = "APCatList.aspx";
+            reg.target = "_self";
             reg.submit();
         }
     }
 
     function ap_control(x){//程式代碼維護作業
-        if(x=="Add"){
-            reg.action ="APAdd.aspx";
+        $("#submittask").val(x);
+        if (x == "Add") {
+            reg.action = "APAdd.aspx";
+            reg.target = "Eblank";
             reg.submit();
         }else if(x=="Query"){
-            reg.action ="APList.aspx";
+            reg.action = "APList.aspx";
+            reg.target = "_self";
             reg.submit();
         }
     }
