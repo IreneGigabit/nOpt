@@ -11,13 +11,11 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string Title = "";
 
     protected string submitTask = "";
-    protected string law_sqlno = "";
-    protected string qry_law_type = "";
 
-    protected string QLock = "true";
-    protected string DLock = "true";
+    protected string ULock = "false";
 
     protected string SQL = "";
     protected Dictionary<string, object> RS = new Dictionary<string, object>();
@@ -28,10 +26,10 @@
         Response.Expires = -1;
 
         submitTask = Request["submitTask"] ?? "";
-        law_sqlno = Request["law_sqlno"] ?? "";
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        Title = myToken.Title;
         chkTest.HTProgRight = HTProgRight;
         if (HTProgRight >= 0) {
             PageLayout();
@@ -42,22 +40,16 @@
     private void PageLayout() {
         //欄位開關
         if (submitTask=="A") {
-            QLock = "false";
-            DLock = "false";
         }else if (submitTask=="U") {
-            QLock = "true";
-            DLock = "false";
+            ULock = "true";
         }
 
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            qry_law_type = SHtml.Option(conn, "SELECT cust_code,code_name from Cust_code where Code_type = 'law_type' order by sortfld", "{cust_code}", "{cust_code}_{code_name}");
-
-
-            SQL = "SELECT * FROM law_detail ";
-            SQL += " where law_sqlno='" + law_sqlno + "'";
-            DataTable dt = new DataTable();
-            conn.DataTable(SQL, dt);
-            RS = dt.ToDictionary().FirstOrDefault() ?? new Dictionary<string, object>();
+            //SQL = "SELECT * FROM law_detail ";
+            //SQL += " where law_sqlno='" + law_sqlno + "'";
+            //DataTable dt = new DataTable();
+            //conn.DataTable(SQL, dt);
+            //RS = dt.ToDictionary().FirstOrDefault() ?? new Dictionary<string, object>();
         }
     }
 </script>
@@ -79,10 +71,10 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>新增作業</td>
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
+            <a class="imgCls" href="javascript:void(0);" >[查詢]</a>
         </td>
     </tr>
     <tr>
@@ -91,45 +83,81 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-    <input type="hidden" id="law_sqlno" name="law_sqlno" value="<%=law_sqlno%>">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
-    <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="70%" align="center">	
-	    <tr>
-		    <td class="lightbluetable" align="right">法條大項 :</td>
-		    <td class="whitetablebg" align="left" colspan="5">
-			    <Select id="edit_law_type" name="edit_law_type" class="QLock" ><%#qry_law_type%></Select>
-		    </td> 
-	    </tr>
-	    <tr >
-		    <td class=lightbluetable align=right nowrap>條文法規_條：</td>
-		    <td class=whitetablebg > 
-			    <input type="text" id='edit_law_no1' name='edit_law_no1'  value='' size="4" maxLength="4" class="QLock">			
-		    </td>
-		    <td class=lightbluetable align=right nowrap>條文法規_款：</td>
-		    <td class=whitetablebg > 
-			    <input type="text" id='edit_law_no2' name='edit_law_no2'  value='' size="4" maxLength="4" class="QLock">			
-		    </td>
-		    <td class=lightbluetable align=right nowrap>條文法規_項：</td>
-		    <td class=whitetablebg > 
-			    <input type="text" id='edit_law_no3' name='edit_law_no3'  value='' size="4" maxLength="4" class="QLock">			
-		    </td>
-	    </tr>   
-	    <tr>		
-		    <td class="lightbluetable" align="right">法條內文 :</td>
-		    <td class="whitetablebg" align="left" colspan="5">
-			    <input type=hidden id="O_edit_law_mark" name="O_edit_law_mark">
-			    <textarea rows=6 cols=120 id="edit_law_mark" name="edit_law_mark" class="DLock"></textarea>
-		    </td> 
-	    </tr>
-	    <tr id="tr_end_date">	
-		    <td class="lightbluetable" align="right">停用日期 :</td>
-		    <td class="whitetablebg" align="left" colspan="5">
-			    <input type="text" id="edit_end_date" name="edit_end_date" size="10" maxLength="10" class="dateField" >
-		    </td> 
-	    </tr>		
-    </table>
+    <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="80%" align="center">	
+		<TR>
+		  <TD class=lightbluetable align=right>網路作業代碼：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=pfx_syscode NAME=pfx_syscode SIZE=10 MAXLENGTH=10 class="ULock"></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>網路作業名稱(中)：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_sysnameC NAME=tfx_sysnameC SIZE=30 MAXLENGTH=30></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>網路作業名稱(英)：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_sysnameE NAME=tfx_sysnameE SIZE=30 MAXLENGTH=50></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>伺服器名稱：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_sysserver NAME=tfx_sysserver SIZE=10 MAXLENGTH=10></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>路徑：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_syspath NAME=tfx_syspath SIZE=40 MAXLENGTH=40></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>區所別：</TD>
+		  <TD class=whitetablebg>
+		  <SELECT id=tfx_DataBranch NAME=tfx_DataBranch></select>
+		  </TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>分類代碼：</TD>
+		  <TD class=whitetablebg>
+		  <SELECT id=tfx_ClassCode NAME=tfx_ClassCode></SELECT>
+		  <input type=button value="新增" onclick="newopen()" class=cbutton >
+		  <input type=button value="重新整理"  class=cbutton id=button1 name=button1 onclick="getname()">
+		  </TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>系統順序：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_syssql NAME=tfx_syssql SIZE=2 MAXLENGTH=2></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>協調人員：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_corp_user NAME=tfx_corp_user SIZE=15 MAXLENGTH=30></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>開發人員：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_main_user NAME=tfx_main_user SIZE=15 MAXLENGTH=30></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>使用人員：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_sys_user NAME=tfx_sys_user SIZE=30 MAXLENGTH=60></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>上線日期：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=dfx_online_date NAME=dfx_online_date SIZE=10 class="dateField"></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>開始日期：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=dfx_beg_date NAME=dfx_beg_date SIZE=10 class="dateField"></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>結束日期：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=dfx_end_date NAME=dfx_end_date SIZE=10 class="dateField"></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>系統說明：</TD>
+		  <TD class=whitetablebg><textarea id=tfx_sysremark NAME=tfx_sysremark rows=6 cols=70></textarea></TD>
+		</TR>
+		<TR>
+		  <TD class=lightbluetable align=right>備註：</TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_mark NAME=tfx_mark SIZE=1 MAXLENGTH=1></TD>
+		</TR>
+    </TABLE>
 
     <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
     <uc1:chkTest runat="server" ID="chkTest" />
@@ -151,6 +179,15 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        $("#tfx_DataBranch").getOption({//區所別
+            url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
+            data: { mg: "Y", sql: "select branch,branchname from branch_code order by branch" },
+            valueFormat: "{branch}",
+            textFormat: "{branch}_{branchname}"
+        });
+
+        getname();//分類代碼重新整理
+
         //$("#chkTest").click(function (e) {
         //    $("#ActFrame").showFor($(this).prop("checked"));
         //});
@@ -158,19 +195,17 @@
         this_init();
     });
 
-    var br_opte = {};
     //初始化
     function this_init() {
         //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $(".Lock").lock();
-        $(".QLock").lock(<%#QLock%>);
-        $(".DLock").lock(<%#DLock%>);
+        $(".ULock").lock(<%#ULock%>);
 
         $("#btnSubmit,#btnDel,#btnReset").hide();
 
-        if($("#submittask").val()=="A"){
+        if($("#submittask").val()=="Add"){
             if (window.parent.tt !== undefined) {
                 window.parent.tt.rows = "0%,100%";
             }
@@ -218,48 +253,32 @@
 
     //新增/修改
     $("#btnSubmit").click(function () {
-        if ($("#edit_law_type").val() == "") {
-            alert("請選擇法條大項！");
-            $("#edit_law_type").focus();
+        if ($("#pfx_syscode").val() == "") {
+            alert("請務必填寫「網路作業代碼」，不得為空白！");
+            $("#pfx_syscode").focus();
             return false;
         }
-        if ($("#edit_law_no1").val() == "") {
-            alert("請輸入條文法規_條！");
-            $("#edit_law_no1").focus();
+        if ($("#tfx_sysnameC").val() == "") {
+            alert("請務必填寫「網路作業名稱」，不得為空白！");
+            $("#tfx_sysnameC").focus();
             return false;
         }
-        if ($("#edit_law_no2").val() == "") {
-            alert("請輸入條文法規_款！");
-            $("#edit_law_no2").focus();
+        if ($("#tfx_sysserver").val() == "") {
+            alert("請務必填寫「伺服器名稱」，不得為空白！");
+            $("#tfx_sysserver").focus();
             return false;
         }
-        if ($("#edit_law_no3").val() == "") {
-            alert("請輸入條文法規_項！");
-            $("#edit_law_no3").focus();
+        if ($("#tfx_syspath").val() == "") {
+            alert("請務必填寫「路徑」，不得為空白！");
+            $("#tfx_syspath").focus();
             return false;
         }
-        if ($("#edit_law_mark").val() == "") {
-            alert("請輸入法條內文！");
-            $("#edit_law_mark").focus();
+        if ($("#tfx_syspath").val().left(1) != "/") {
+            alert("「路徑」輸入錯誤，請重新輸入！");
+            $("#tfx_syspath").focus();
             return false;
-        }
-	
-        if($("#submittask").val()=="A"){
-            if(!Check_law()){
-                alert("請輸入法條代碼重複，請重新輸入 ");
-                return false;
-            }
         }
 
-        $("select,textarea,input").unlock();
-        $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
-        reg.action = "<%=HTProgPrefix%>_Update.aspx";
-        reg.target = "ActFrame";
-        reg.submit();
-    });
-
-    //刪除
-    $("#btnDel").click(function () {
         $("select,textarea,input").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -273,31 +292,18 @@
         this_init();
     });
 
-    function Check_law(){
-        var rtn=false;
+    //分類代碼新增
+    function newopen() {
+        window.open("DataBranch_ADD.aspx?prgid=" + $("#prgid").val());
+    }
 
-        var searchSql="SELECT count(*) as count from law_detail where 1=1 ";
-        searchSql+= " AND law_type = '" + $("#edit_law_type").val() + "'" ;
-        searchSql+= " AND law_no1 = '" + $("#edit_law_no1").val()+ "'" ;
-        searchSql+= " AND law_no2 = '" + $("#edit_law_no2").val() + "'" ;
-        searchSql+= " AND law_no3 = '" + $("#edit_law_no3").val() + "'";
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/ajax/JsonGetSqlData.aspx",
-            data: { sql:searchSql},
-            async: false,
-            cache: false,
-            success: function (json) {
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length > 0) {
-                    if(JSONdata[0].count==0){
-                        rtn=true;
-                    }
-                }
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>檢查法條代碼失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+    //分類代碼重新整理
+    function getname() {
+        $("#tfx_ClassCode").getOption({
+            url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
+            data: { mg: "Y", sql: "select classcode,classnameC from sysclass where sysclass = 'system' order by classcode" },
+            valueFormat: "{classcode}",
+            textFormat: "{classcode}_{classnameC}"
         });
-
-        return rtn;
     }
 </script>
