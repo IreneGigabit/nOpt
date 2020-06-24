@@ -105,7 +105,7 @@
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>查詢結果清單</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
 		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
-            <a class="imgAdd" href="<%#HTProgPrefix%>add.aspx?prgid=<%=prgid%>&prgname=<%#HTProgCap%>" target="Eblank">[新增]</a>
+            <a class="imgAdd" href="<%#HTProgPrefix%>Add.aspx?prgid=<%=prgid%>&prgname=<%#HTProgCap%>&submittask=A" target="Eblank">[新增]</a>
         </td>
     </tr>
     <tr>
