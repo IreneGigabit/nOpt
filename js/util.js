@@ -324,3 +324,10 @@ function showBlockUI(param) {
 })(jQuery);
 $(document).ajaxStart(function () { $.maskStart("資料載入中"); });
 $(document).ajaxStop(function () { $.maskStop(); });
+$(function () {
+    //若有 ☑測試 預設打勾
+    $("#chkTest").click(function (e) {
+        $("#ActFrame").showFor($(this).prop("checked"));
+    });
+    $("#chkTest").prop("checked", true).triggerHandler("click");
+});

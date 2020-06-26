@@ -1,7 +1,5 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"] ?? "出口爭救案區所交辦資料複製";//功能名稱
@@ -9,6 +7,7 @@
     protected string HTProgCode = (HttpContext.Current.Request["prgid"] ?? "");//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
     protected string SQL = "";
 
     protected string Branch = "";
@@ -40,7 +39,7 @@
         
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
-        chkTest.HTProgRight = HTProgRight;
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -167,8 +166,7 @@
     <input type="hidden" id="br_source" name="br_source" value="<%=br_source%>">
     <input type="hidden" id="step_grade" name="step_grade" value="<%=bstep_grade%>">
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
-    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-    <uc1:chkTest runat="server" ID="chkTest" />
+    <%#DebugStr%>
 </form>
 
 <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
@@ -183,14 +181,8 @@
         this_init();
     });
 
-    //$("#chkTest").click(function (e) {
-    //    $("#ActFrame").showFor($(this).prop("checked"));
-    //});
-
     //初始化
     function this_init() {
-        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
-
         //欄位控制
         $(".src_br").showFor($("#br_source").val() == "br");//區所交辦
         $(".src_opte").showFor($("#br_source").val() == "opte");//自行新增分案

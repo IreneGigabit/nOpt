@@ -1,9 +1,7 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
     protected string HTProgCap = "系統資料";//HttpContext.Current.Request["prgname"];//功能名稱
@@ -11,7 +9,9 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
     protected string Title = "";
+    protected string StrFormBtn = "";
 
     protected string submitTask = "";
 
@@ -30,7 +30,7 @@
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
         Title = myToken.Title;
-        chkTest.HTProgRight = HTProgRight;
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -39,8 +39,8 @@
 
     private void PageLayout() {
         //欄位開關
-        if (submitTask=="A") {
-        }else if (submitTask=="U") {
+        if (submitTask == "A") {
+        } else if (submitTask == "U") {
             ULock = "true";
         }
 
@@ -50,6 +50,22 @@
             //DataTable dt = new DataTable();
             //conn.DataTable(SQL, dt);
             //RS = dt.ToDictionary().FirstOrDefault() ?? new Dictionary<string, object>();
+        }
+
+        if (submitTask == "U") {
+            if ((HTProgRight & 8) > 0) {
+                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" id=\"btnSubmit\">";
+            }
+            if ((HTProgRight & 16) > 0) {
+                StrFormBtn += "<input type=button value=\"刪  除\" class=\"cbutton\" id=\"btnDel\">";
+            }
+            StrFormBtn += "<input type=button value=\"重　填\" class=\"cbutton\" id=\"btnReset\">";
+            StrFormBtn += "<input type=button value=\"回前頁\" class=\"cbutton\" id=\"btnClose\">";
+        } else {
+            if ((HTProgRight & 4) > 0) {
+                StrFormBtn += "<input type=button value=\"新增存檔\" class=\"cbutton\" id=\"btnSubmit\">";
+                StrFormBtn += "<input type=button value=\"重　填\" class=\"cbutton\" id=\"btnReset\">";
+            }
         }
     }
 </script>
@@ -71,10 +87,10 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>新增作業</td>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>新增作業
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a class="imgCls" href="javascript:void(0);" >[查詢]</a>
+            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
     <tr>
@@ -83,13 +99,13 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
-	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="80%" align="center">	
 		<TR>
 		  <TD class=lightbluetable align=right>網路作業代碼：</TD>
-		  <TD class=whitetablebg><INPUT TYPE=text id=pfx_syscode NAME=pfx_syscode SIZE=10 MAXLENGTH=10 class="ULock"></TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=pfx_syscode NAME=pfx_syscode SIZE=10 MAXLENGTH=16 class="ULock"></TD>
 		</TR>
 		<TR>
 		  <TD class=lightbluetable align=right>網路作業名稱(中)：</TD>
@@ -105,7 +121,7 @@
 		</TR>
 		<TR>
 		  <TD class=lightbluetable align=right>路徑：</TD>
-		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_syspath NAME=tfx_syspath SIZE=40 MAXLENGTH=40></TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_syspath NAME=tfx_syspath SIZE=40 MAXLENGTH=60></TD>
 		</TR>
 		<TR>
 		  <TD class=lightbluetable align=right>區所別：</TD>
@@ -159,8 +175,7 @@
 		</TR>
     </TABLE>
 
-    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-    <uc1:chkTest runat="server" ID="chkTest" />
+    <%#DebugStr%>
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
@@ -188,16 +203,11 @@
 
         getname();//分類代碼重新整理
 
-        //$("#chkTest").click(function (e) {
-        //    $("#ActFrame").showFor($(this).prop("checked"));
-        //});
-
         this_init();
     });
 
     //初始化
     function this_init() {
-        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $(".Lock").lock();

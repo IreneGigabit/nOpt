@@ -4,8 +4,6 @@
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "Newtonsoft.Json"%>
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
     protected string HTProgCap = "出口爭救案系統-發文信函查詢";//HttpContext.Current.Request["prgname"];//功能名稱
@@ -13,6 +11,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
 
     protected string SQL = "";
     protected string json_data = "";
@@ -39,7 +38,7 @@
         tlink += "&tfsend_no=" + tfsend_no;
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
-        chkTest.HTProgRight = HTProgRight;
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             if (json == "Y") QueryData();
 
@@ -114,8 +113,7 @@
     <input type="hidden" id="job_sqlno" name="job_sqlno" value="<%=job_sqlno%>">
     <input type="hidden" id="tfsend_no" name="tfsend_no" value="<%=tfsend_no%>">
 
-    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-    <uc1:chkTest runat="server" ID="chkTest" />
+    <%#DebugStr%>
 
     <div id="divPaging" style="display:none">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">

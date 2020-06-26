@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Web;
 using System.Data.SqlClient;
 using System.Text;
@@ -21,6 +21,22 @@ public class Token
     public int Rights { get; set; }//取得的權限值
     private bool _Passworded { get; set; }//是否已登入
 	//public int chkRight { get; set; }//要檢查的權限值
+
+    //public bool Debug { get; set; }//有無除錯權限
+    public string DebugStr {//☑測試
+        get {
+            if (this.APcode == "") {//沒有prgid就用Sys.IsDebug判斷
+                if (Sys.IsDebug()) {
+                    return "<label id=\"labTest\"><input type=\"checkbox\" id=\"chkTest\" name=\"chkTest\" value=\"TEST\" />測試</label>";
+                }
+            } else {
+                if ((this.Rights & 256) > 0) {//有prgid就用權限值判斷
+                    return "<label id=\"labTest\"><input type=\"checkbox\" id=\"chkTest\" name=\"chkTest\" value=\"TEST\" />測試</label>";
+                }
+            }
+            return "";
+        }
+    }
 
     public Token()
         : this(
@@ -154,7 +170,6 @@ public class Token
                         this.Title2 = dr["APnameC"] + "&nbsp;管理";
                     }
                     dr.Close();
-
                     cn.Close();
 
                     if (!myRights) throw new Exception("該作業未授權 !");

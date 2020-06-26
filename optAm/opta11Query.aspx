@@ -1,7 +1,5 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -10,6 +8,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
 
     protected string qry_law_type = "";
 
@@ -20,7 +19,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
-        chkTest.HTProgRight = HTProgRight;
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             QueryPageLayout();
             this.DataBind();
@@ -113,8 +112,7 @@
             </tr>
         </table>
         <br>
-        <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-        <uc1:chkTest runat="server" ID="chkTest" />
+        <%#DebugStr%>
     </div>
 
     <div id="divPaging" style="display:none">
@@ -188,7 +186,6 @@
 
         $("input.dateField").datepick();
         $(".Lock").lock();
-        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
     });
 
     //[重填]

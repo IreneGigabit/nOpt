@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -166,9 +166,9 @@
 </HeaderTemplate>
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-                    <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>" target="Eblank"><%#Eval("classCode")%>_<%#Eval("classnameC")%></TD>
-	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>" target="Eblank"><%#Eval("syscode")%></TD>
-	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>" target="Eblank"><%#Eval("sysnameC")%></TD>
+                    <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&submittask=U" target="Eblank"><%#Eval("classCode")%>_<%#Eval("classnameC")%></TD>
+	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&submittask=U" target="Eblank"><%#Eval("syscode")%></TD>
+	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&submittask=U" target="Eblank"><%#Eval("sysnameC")%></TD>
 	                <TD align=center><%#Eval("sysnameE")%></TD>
 	                <TD align=center><%#Eval("sysserver")%></TD>
 	                <TD align=center><%#Eval("syspath")%></TD>

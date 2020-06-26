@@ -1,9 +1,8 @@
 ﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
+    protected string DebugStr = "";
     protected string QueryString = "";
     protected string submitTask = "";
     protected string type = "";
@@ -19,6 +18,9 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
+        Token myToken = new Token();
+        DebugStr = myToken.DebugStr;
+       
         QueryString = Request.ServerVariables["QUERY_STRING"];
         ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
         
@@ -156,6 +158,8 @@
 <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -200,17 +204,13 @@
                 </td>
             </tr>
         </table>
-        <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-        <br /><uc1:chkTest runat="server" ID="chkTest" />
+        <br /><%#DebugStr%>
       </form>
     </center>
 </body>
 </html>
 <script language="javascript" type="text/javascript">
     $(function () {
-        if ("<%#Sys.IsDebug()%>" == "True") {//☑測試
-            $("#labTest").show();
-        }
     });
 
     function AttachFile() {

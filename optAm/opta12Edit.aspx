@@ -2,8 +2,6 @@
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -11,6 +9,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
 
     protected string submitTask = "";
     protected string opt_no = "";
@@ -33,7 +32,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
-        chkTest.HTProgRight = HTProgRight;
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -336,8 +335,7 @@
                 </td>
             </tr> 
         </table>
-    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-    <uc1:chkTest runat="server" ID="chkTest" />
+        <%#DebugStr%>
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
@@ -372,17 +370,12 @@
             textFormat: "{law_text}"
         });
 
-        //$("#chkTest").click(function (e) {
-        //    $("#ActFrame").showFor($(this).prop("checked"));
-        //});
-
         this_init();
     });
 
     var law_data = {};
     //初始化
     function this_init() {
-        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $("#btnAdd").showFor($("#submittask").val() == "A");

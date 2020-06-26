@@ -13,8 +13,6 @@
 <%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
 <%@ Register Src="~/commonForm/opte/Send_form.ascx" TagPrefix="uc1" TagName="Send_form" %>
 <%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
-<%@ Register Src="~/commonForm/chkTest.ascx" TagPrefix="uc1" TagName="chkTest" %>
-
 
 <script runat="server">
     protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
@@ -22,6 +20,7 @@
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
 
     protected string opt_job_scode1 = "", opt_job_scode2 = "";
 
@@ -76,7 +75,7 @@
         
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
-        chkTest.HTProgRight = HTProgRight;
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             PageLayout();
             this.DataBind();
@@ -233,8 +232,7 @@
 		</tr>
 	</table>
     <br />
-    <!--label id="labTest" style="display:none"><input type="checkbox" id="chkTest" name="chkTest" value="TEST" />測試</label-->
-    <uc1:chkTest runat="server" ID="chkTest" />
+    <%#DebugStr%>
 </form>
 
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
@@ -262,9 +260,6 @@
         if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "0%,100%";
         }
-        //$("#chkTest").click(function (e) {
-        //    $("#ActFrame").showFor($(this).prop("checked"));
-        //});
 
         this_init();
     });
@@ -273,7 +268,6 @@
     //初始化
     function this_init() {
         settab("#br");
-        //$("#labTest").showFor((<%#HTProgRight%> & 256)).find("input").prop("checked",false).triggerHandler("click");//☑測試
         $("input.dateField").datepick();
         //欄位控制
         $(".Lock").lock();
