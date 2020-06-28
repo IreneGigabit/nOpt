@@ -15,7 +15,7 @@
 <%@ Register Src="~/commonForm/opt/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 
 <script runat="server">
-    protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "";//HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt22";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -83,6 +83,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        HTProgCap = myToken.Title;
         DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             PageLayout();

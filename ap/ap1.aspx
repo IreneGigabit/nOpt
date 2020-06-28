@@ -23,6 +23,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        HTProgCap = myToken.Title;
         DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
             QueryPageLayout();
@@ -61,7 +62,7 @@
     </tr>
 </table>
 
-<form id="reg" name="reg" method="post" action="<%#HTProgPrefix%>List.aspx">
+<form id="reg" name="reg" method="post">
     <input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
     <input type="hidden" id="submittask" name="submittask">
 
@@ -95,18 +96,18 @@
         <%#DebugStr%>
         <center>
         <div id="show_syscode" style="display:none">
-		    <input type="button" name="syscode2" value="查詢系統代碼" onclick="addsys1('Query')" class="cbutton">
-		    <input type="button" name="syscode1" value="新增系統代碼" onclick="addsys1('Add')" class="cbutton">
+		    <input type="button" name="syscode2" value="查詢系統代碼" onclick="addsys1('Q')" class="cbutton">
+		    <input type="button" name="syscode1" value="新增系統代碼" onclick="addsys1('A')" class="cbutton">
 		    <input type="button" name="syscode3" value="重　填" onclick="cleardata()" class="cbutton">
 	    </div>
         <div id="show_menu" style="display:none">
-		    <input type="button" name="menu1" value="查詢Menu作業" onclick="menu_control('Query')" class="cbutton">
-		    <input type="button" name="menu2" value="新增Menu作業" onclick="menu_control('Add')" class="cbutton">
+		    <input type="button" name="menu1" value="查詢Menu作業" onclick="menu_control('Q')" class="cbutton">
+		    <input type="button" name="menu2" value="新增Menu作業" onclick="menu_control('A')" class="cbutton">
 		    <input type="button" name="menu3" value="重　填" onclick="cleardata()" class="cbutton">
         </div>
         <div id="show_ap" style="display:none">
-		    <input type="button" name="ap1" value="查詢程式代碼" onclick="ap_control('Query')" class="cbutton">
-		    <input type="button" name="ap2" value="新增程式代碼" onclick="ap_control('Add')" class="cbutton">
+		    <input type="button" name="ap1" value="查詢程式代碼" onclick="ap_control('Q')" class="cbutton">
+		    <input type="button" name="ap2" value="新增程式代碼" onclick="ap_control('A')" class="cbutton">
 		    <input type="button" name="ap3" value="重　填" onclick="cleardata()" class="cbutton">
         </div>
         </center>
@@ -145,12 +146,12 @@
 
     function addsys1(x){//系統代碼作業
         $("#submittask").val(x);
-        if (x == "Add") {
-            reg.action = "SyscodeEdit.aspx";
+        if (x == "A") {
+            reg.action = "Syscode_Edit.aspx";
             reg.target = "Eblank";
             reg.submit();
-        } else if (x == "Query") {
-            reg.action ="SyscodeList.aspx";
+        } else if (x == "Q") {
+            reg.action ="Syscode_List.aspx";
             reg.target = "_self";
             reg.submit();
         }
@@ -158,12 +159,12 @@
 
     function menu_control(x){//menu維護作業
         $("#submittask").val(x);
-        if(x=="Add"){
-            reg.action = "APCatADD.aspx";
+        if(x=="A"){
+            reg.action = "APCat_Edit.aspx";
             reg.target = "Eblank";
             reg.submit();
-        }else if(x=="Query"){
-            reg.action = "APCatList.aspx";
+        }else if(x=="Q"){
+            reg.action = "APCat_List.aspx";
             reg.target = "_self";
             reg.submit();
         }
@@ -171,12 +172,12 @@
 
     function ap_control(x){//程式代碼維護作業
         $("#submittask").val(x);
-        if (x == "Add") {
-            reg.action = "APAdd.aspx";
+        if (x == "A") {
+            reg.action = "AP_Edit.aspx";
             reg.target = "Eblank";
             reg.submit();
-        }else if(x=="Query"){
-            reg.action = "APList.aspx";
+        }else if(x=="Q"){
+            reg.action = "AP_List.aspx";
             reg.target = "_self";
             reg.submit();
         }

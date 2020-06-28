@@ -107,7 +107,9 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>查詢結果清單</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a href="<%#HTProgPrefix%>add.aspx">[新增]</a>
+            <a href="<%#HTProgPrefix%>_Edit.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>&Apcat=<%=apcat%>&submittask=A" target="Eblank">[新增]</a>
+            <a href="<%#prgid%>.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>">[查詢]</a>
+           	<a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
     </tr>
     <tr>
@@ -165,15 +167,15 @@
 </HeaderTemplate>
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-		            <TD align=center><a href="APEdit.asp?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("SYScode")%></A></TD>
-		            <TD align=center><a href="APEdit.asp?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("APCat")%>_<%#Eval("APCatCname")%></A></TD>
-		            <TD align=center><a href="APEdit.asp?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("APcode")%></A></TD>
+		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("SYScode")%></A></TD>
+		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("APCat")%>_<%#Eval("APCatCname")%></A></TD>
+		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("APcode")%></A></TD>
 		            <TD align=center><%#Eval("APnameE")%></TD>
 		            <TD align=center><%#Eval("APnameC")%></TD>
 		            <TD align=center><%#Eval("APorder")%></TD>
 		            <TD align=center>
-                        <a href="EditRegSys1.asp?prgid=<%#prgid%>&flag=A&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[新增]</a>
-                        <a href="EditRegSys1.asp?prgid=<%#prgid%>&flag=Q&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[編修]</a>
+                        <a href="EditRegSys1.aspx?prgid=<%#prgid%>&flag=A&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[新增]</a>
+                        <a href="EditRegSys1.aspx?prgid=<%#prgid%>&flag=Q&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[編修]</a>
 		            </TD>
 				</tr>
 			</ItemTemplate>
@@ -227,6 +229,10 @@
             }
         });
     }
+    //重新整理
+    $(".imgRefresh").click(function (e) {
+        goSearch();
+    });
 
     //關閉視窗
     $(".imgCls").click(function (e) {

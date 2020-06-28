@@ -21,11 +21,7 @@
         HTProgRight = myToken.CheckMe(false, true);
 
         ReqVal = Util.GetRequestParam(Context);
-
-        bool first_check = false;//判斷有無填寫條件
-        bool last_check = false;//判斷有無填寫條件
-        bool last_CNot_check = false;//判斷有無填寫條件
-        
+      
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "SELECT *,''fBJTseq,''opt_comfirm_str,''opt_check_str,''law_detail_no ";
             isql+="FROM law_opt where 1=1 ";

@@ -132,7 +132,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%> <%=HTProgCap%>】
             <font color="blue">案件編號：<span id="sopt_no"></span></font>　　
         </td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">

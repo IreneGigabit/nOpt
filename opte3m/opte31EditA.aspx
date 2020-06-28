@@ -156,7 +156,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%> <%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
 			<input type=button value ="重新抓取區所案件主檔資料(含申請人)" class="cbutton P1Lock" onClick="GetBranchData()">
         </td>

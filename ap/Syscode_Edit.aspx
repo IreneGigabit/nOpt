@@ -14,6 +14,7 @@
     protected string StrFormBtn = "";
 
     protected string submitTask = "";
+    protected string syscode = "";
 
     protected string ULock = "false";
 
@@ -26,6 +27,7 @@
         Response.Expires = -1;
 
         submitTask = Request["submitTask"] ?? "";
+        syscode = Request["syscode"] ?? "";
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
@@ -44,27 +46,26 @@
             ULock = "true";
         }
 
-        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            //SQL = "SELECT * FROM law_detail ";
-            //SQL += " where law_sqlno='" + law_sqlno + "'";
-            //DataTable dt = new DataTable();
-            //conn.DataTable(SQL, dt);
-            //RS = dt.ToDictionary().FirstOrDefault() ?? new Dictionary<string, object>();
+        using (DBHelper conn = new DBHelper(Conn.ODBCDSN, false)) {
+            SQL = "SELECT * FROM syscode WHERE syscode='" + syscode + "'";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+            RS = dt.ToDictionary().FirstOrDefault() ?? new Dictionary<string, object>();
         }
 
         if (submitTask == "U") {
             if ((HTProgRight & 8) > 0) {
-                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" id=\"btnSubmit\">";
+                StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" id=\"btnSubmit\">\n";
             }
             if ((HTProgRight & 16) > 0) {
-                StrFormBtn += "<input type=button value=\"刪  除\" class=\"cbutton\" id=\"btnDel\">";
+                StrFormBtn += "<input type=button value=\"刪　除\" class=\"cbutton\" id=\"btnDel\">\n";
             }
-            StrFormBtn += "<input type=button value=\"重　填\" class=\"cbutton\" id=\"btnReset\">";
-            StrFormBtn += "<input type=button value=\"回前頁\" class=\"cbutton\" id=\"btnClose\">";
+            StrFormBtn += "<input type=button value=\"重　填\" class=\"cbutton\" id=\"btnReset\">\n";
+            StrFormBtn += "<input type=button value=\"關閉視窗\" class=\"cbutton\" id=\"btnClose\">\n";
         } else {
             if ((HTProgRight & 4) > 0) {
-                StrFormBtn += "<input type=button value=\"新增存檔\" class=\"cbutton\" id=\"btnSubmit\">";
-                StrFormBtn += "<input type=button value=\"重　填\" class=\"cbutton\" id=\"btnReset\">";
+                StrFormBtn += "<input type=button value=\"新增存檔\" class=\"cbutton\" id=\"btnSubmit\">\n";
+                StrFormBtn += "<input type=button value=\"重　填\" class=\"cbutton\" id=\"btnReset\">\n";
             }
         }
     }
@@ -99,8 +100,8 @@
 </table>
 <br>
 <form id="reg" name="reg" method="post">
-	<input type="text" id="submittask" name="submittask" value="<%=submitTask%>">
-	<input type="text" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
     <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="80%" align="center">	
 		<TR>
@@ -181,9 +182,7 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0" >
 <tr id="tr_button1">
     <td align="center">
-        <input type=button value="新　增/修　改" class="cbutton" id="btnSubmit">
-        <input type=button value="停  用" class="cbutton" id="btnDel">
-        <input type=button value="重　填" class="cbutton" id="btnReset">
+        <%#StrFormBtn%>
     </td>
 </tr>
 </table>
@@ -194,6 +193,9 @@
 
 <script language="javascript" type="text/javascript">
     $(function () {
+        if (window.parent.tt !== undefined) {
+            window.parent.tt.rows = "0%,100%";
+        }
         $("#tfx_DataBranch").getOption({//區所別
             url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
             data: { mg: "Y", sql: "select branch,branchname from branch_code order by branch" },
@@ -213,47 +215,31 @@
         $(".Lock").lock();
         $(".ULock").lock(<%#ULock%>);
 
-        $("#btnSubmit,#btnDel,#btnReset").hide();
-
-        if($("#submittask").val()=="Add"){
+        if ($("#submittask").val() != "A") {
             if (window.parent.tt !== undefined) {
-                window.parent.tt.rows = "0%,100%";
+                window.parent.tt.rows = "*,2*";
             }
-            $("#tr_end_date").hide();
-            $("#btnSubmit,#btnReset").show();
-            $("#btnSubmit").val("新　增");
-        }else if($("#submittask").val()=="U"){
-            if (window.parent.tt !== undefined) {
-                window.parent.tt.rows = "50%,50%";
-            }
-            $("#tr_end_date").hide();
-            $("#btnSubmit,#btnReset").show();
-            $("#btnSubmit").val("修　改");
-
-            $("#edit_law_type").val("<%#RS.TryGet("law_type","")%>");
-            $("#edit_law_no1").val("<%#RS.TryGet("law_no1","")%>");
-            $("#edit_law_no2").val("<%#RS.TryGet("law_no2","")%>");
-            $("#edit_law_no3").val("<%#RS.TryGet("law_no3","")%>");
-            $("#O_edit_law_mark").val("<%#RS.TryGet("law_mark","").ToString().Trim()%>");
-            $("#edit_law_mark").val("<%#RS.TryGet("law_mark","")%>");
-            $("#edit_end_date").val("<%#Util.parseDBDate(RS.TryGet("end_mark","").ToString(),"yyyy/M/d")%>");
-        }else if($("#submittask").val()=="D"){
-            if (window.parent.tt !== undefined) {
-                window.parent.tt.rows = "50%,50%";
-            }
-            $("#btnDel,#btnReset").show();
-
-            $("#edit_law_type").val("<%#RS.TryGet("law_type","")%>");
-            $("#edit_law_no1").val("<%#RS.TryGet("law_no1","")%>");
-            $("#edit_law_no2").val("<%#RS.TryGet("law_no2","")%>");
-            $("#edit_law_no3").val("<%#RS.TryGet("law_no3","")%>");
-            $("#edit_law_mark").val("<%#RS.TryGet("law_mark","")%>");
-            $("#edit_end_date").val((new Date()).format("yyyy/M/d"));
+            $("#pfx_syscode").val("<%#RS.TryGet("syscode","")%>");
+            $("#tfx_sysnameC").val("<%#RS.TryGet("sysnameC","")%>");
+            $("#tfx_sysnameE").val("<%#RS.TryGet("sysnameE","")%>");
+            $("#tfx_sysserver").val("<%#RS.TryGet("sysserver","")%>");
+            $("#tfx_syspath").val("<%#RS.TryGet("syspath","").ToString()%>");
+            $("#tfx_DataBranch").val("<%#RS.TryGet("DataBranch","")%>");
+            $("#tfx_ClassCode").val("<%#RS.TryGet("ClassCode","")%>");
+            $("#tfx_syssql").val("<%#RS.TryGet("syssql","")%>");
+            $("#tfx_corp_user").val("<%#RS.TryGet("corp_user","")%>");
+            $("#tfx_main_user").val("<%#RS.TryGet("main_user","")%>");
+            $("#tfx_sys_user").val("<%#RS.TryGet("sys_user","")%>");
+            $("#dfx_online_date").val("<%#Util.parseDBDate(RS.TryGet("online_date","").ToString(),"yyyy/M/d")%>");
+            $("#dfx_beg_date").val("<%#Util.parseDBDate(RS.TryGet("beg_date","").ToString(),"yyyy/M/d")%>");
+            $("#dfx_end_date").val("<%#Util.parseDBDate(RS.TryGet("end_date","").ToString(),"yyyy/M/d")%>");
+            $("#tfx_sysremark").val("<%#RS.TryGet("sysremark","")%>");
+            $("#tfx_mark").val("<%#RS.TryGet("mark","")%>");
         }
     }
 
     //關閉視窗
-    $(".imgCls").click(function (e) {
+    $(".imgCls,#btnClose").click(function (e) {
         if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         } else {
@@ -283,7 +269,7 @@
             $("#tfx_syspath").focus();
             return false;
         }
-        if ($("#tfx_syspath").val().left(1) != "/") {
+        if ($("#tfx_syspath").val().Left(1) != "/") {
             alert("「路徑」輸入錯誤，請重新輸入！");
             $("#tfx_syspath").focus();
             return false;
@@ -294,6 +280,18 @@
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         reg.submit();
+    });
+
+    //刪除
+    $("#btnDel").click(function () {
+        if (confirm("注意！\n\n　你確定刪除資料嗎？")) {
+            $("select,textarea,input").unlock();
+            $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
+            $("#submittask").val("D");
+            reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.target = "ActFrame";
+            reg.submit();
+        }
     });
 
     //重置

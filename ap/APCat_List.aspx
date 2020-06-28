@@ -6,8 +6,8 @@
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
-    protected string HTProgCap = "系統資料";//HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "Syscode";//HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
+    protected string HTProgCap = "Menu資料";//HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgPrefix = "APcat";//HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
@@ -19,6 +19,7 @@
     protected string hiddenText = "";
     protected Paging page = new Paging(1, 10);
     protected string syscode = "";
+    protected string apcat = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -26,6 +27,7 @@
         Response.Expires = -1;
 
         syscode = Request["Syscode"] ?? "";
+        apcat = Request["apcat"] ?? "";
         
         ReqVal = Util.GetRequestParam(Context, Request["chkTest"] == "TEST");
         foreach (KeyValuePair<string, string> p in ReqVal) {
@@ -47,17 +49,20 @@
 
     private void QueryData() {
         using (DBHelper cnn = new DBHelper(Conn.ODBCDSN, false).Debug(Request["chkTest"] == "TEST")) {
-            SQL = "SELECT C.*,D.classnameC ";
-            SQL += "FROM SYScode As C ";
-            SQL += "LEFT JOIN sysclass As D ON D.sysclass = 'system' and D.classcode = C.classcode ";
+            SQL = "SELECT * ";
+            SQL += "FROM APcat ";
+            SQL += "WHERE 1=1 ";
 	        if (syscode!=""){
-                SQL += " Where C.syscode = '" + syscode + "' ";
+                SQL += " and syscode = '" + syscode + "' ";
+	        }
+            if (apcat != "") {
+                SQL += " and apcatid = '" + apcat + "' ";
 	        }
             ReqVal["qryOrder"] = ReqVal.TryGet("SetOrder", ReqVal.TryGet("qryOrder", ""));
             if (ReqVal.TryGet("qryOrder", "") != "") {
                 SQL += " order by " + ReqVal.TryGet("qryOrder", "");
             } else {
-                SQL += " order by C.classcode,C.syssql";
+                SQL += " order by apseq";
             }
             DataTable dt = new DataTable();
             cnn.DataTable(SQL, dt);
@@ -104,15 +109,16 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>查詢結果清單</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-		    <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
-            <a class="imgAdd" href="<%#HTProgPrefix%>Add.aspx?prgid=<%=prgid%>&prgname=<%#HTProgCap%>&submittask=A" target="Eblank">[新增]</a>
+            <a href="<%#HTProgPrefix%>_Edit.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>&submittask=A" target="Eblank">[新增]</a>
+            <a href="<%#prgid%>.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>">[查詢]</a>
+           	<a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
     </tr>
     <tr>
         <td colspan="2"><hr class="style-one"/></td>
     </tr>
 </table>
-<form id="reg" name="reg" method="post">
+<form id="regSYS" name="regSYS" method="post">
     <%#hiddenText%>
     <div id="divPaging" style="display:<%#page.totRow==0?"none":""%>">
     <TABLE border=0 cellspacing=1 cellpadding=0 width="98%" align="center">
@@ -150,32 +156,24 @@
     <table style="display:<%#page.totRow==0?"none":""%>" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
 	    <thead>
             <Tr>
-                <td align=center class=lightbluetable>系統分類代碼</td>
-	            <td align=center class=lightbluetable><u class="setOdr" v1="c.syscode">網路作業代碼</td>
-	            <td align=center class=lightbluetable><u class="setOdr" v1="c.sysnameC">網路作業名稱(中)</td>
-	            <td align=center class=lightbluetable>網路作業名稱(英)</td>
-	            <td align=center class=lightbluetable>伺服器名稱</td>
-	            <td align=center class=lightbluetable>路徑</td>
-	            <td align=center class=lightbluetable>開始日期</td>
-	            <td align=center class=lightbluetable>結束日期</td>
-	            <td align=center class=lightbluetable>順序</td>
-	            <td align=center class=lightbluetable>menu作業</td>
+	            <td align=center class=lightbluetable>網路作業系統代碼</td>
+	            <td align=center class=lightbluetable>Menu作業分類代碼</td>
+	            <td align=center class=lightbluetable>系統中文名稱</td>
+	            <td align=center class=lightbluetable>系統英文名稱</td>
+	            <td align=center class=lightbluetable>系統Menu顯示次序</td>
+	            <td align=center class=lightbluetable>程式作業</td>
             </tr>
 	    </thead>
 	    <tbody>
 </HeaderTemplate>
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-                    <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&submittask=U" target="Eblank"><%#Eval("classCode")%>_<%#Eval("classnameC")%></TD>
-	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&submittask=U" target="Eblank"><%#Eval("syscode")%></TD>
-	                <TD align=center><a href="<%=HTProgPrefix%>Edit.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&submittask=U" target="Eblank"><%#Eval("sysnameC")%></TD>
-	                <TD align=center><%#Eval("sysnameE")%></TD>
-	                <TD align=center><%#Eval("sysserver")%></TD>
-	                <TD align=center><%#Eval("syspath")%></TD>
-	                <TD align=center><%#Eval("beg_date", "{0:d}")%></TD>
-	                <TD align=center><%#Eval("end_date", "{0:d}")%></TD>
-	                <TD align=center><%#Eval("syssql")%></TD>
-	                <TD align=center><a href="APCatList.aspx?prgid=<%#prgid%>&syscode=<%#Eval("syscode")%>&flag=ap1">[查詢]</TD>
+	                <TD align=center><a href="APcat_Edit.aspx?prgid=<%#prgid%>&SYScode=<%#Eval("SYScode")%>&APcatID=<%#Eval("APcatID")%>&submittask=U" target="Eblank"><%#Eval("SYScode")%></A></TD>
+	                <TD align=center><a href="APcat_Edit.aspx?prgid=<%#prgid%>&SYScode=<%#Eval("SYScode")%>&APcatID=<%#Eval("APcatID")%>&submittask=U" target="Eblank"><%#Eval("APcatID")%></A></TD>
+	                <TD align=center><%#Eval("APcatCName")%></TD>
+	                <TD align=center><%#Eval("APcatEName")%></TD>
+	                <TD align=center><%#Eval("APseq")%></TD>
+	                <TD align=center><a href="AP_List.aspx?prgid=<%#prgid%>&SYScode=<%#Eval("SYScode")%>&APcat=<%#Eval("APcatID")%>&flag=menu1">[查詢]</A></TD>
 				</tr>
 			</ItemTemplate>
 <FooterTemplate>
@@ -192,14 +190,12 @@
         if (window.parent.tt !== undefined) {
             window.parent.tt.rows = "100%,0%";
         }
-        $(".imgAdd").showFor((<%#HTProgRight%> & 4));//[新增]
-
         theadOdr();//設定表頭排序圖示
     });
 
     //執行查詢
     function goSearch() {
-        $("#reg").submit();
+        $("#regSYS").submit();
     };
     //每頁幾筆
     $("#PerPage").change(function (e) {

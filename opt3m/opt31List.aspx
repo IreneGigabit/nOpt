@@ -15,7 +15,7 @@
 
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(HTProgCode);
-        myToken.CheckMe(false,true);
+        myToken.CheckMe(false, true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "select a.*,''fseq,''optap_cname ";

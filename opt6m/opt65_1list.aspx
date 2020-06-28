@@ -7,7 +7,7 @@
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
-    protected string HTProgCap = "爭救案承辦工作量統計表";// HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "";//"爭救案承辦工作量統計表";// HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -43,6 +43,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        HTProgCap = myToken.Title;
         if (HTProgRight >= 0) {
             QueryData();
             ListPageLayout();

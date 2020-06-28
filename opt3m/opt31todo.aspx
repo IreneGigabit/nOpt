@@ -6,7 +6,7 @@
 <%@ Import Namespace = "Newtonsoft.Json.Linq"%>
 
 <script runat="server">
-    protected string HTProgCap = "爭救案進度查詢";//HttpContext.Current.Request["prgname"];//功能名稱
+    protected string HTProgCap = "";//"爭救案進度查詢";//HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opt31";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
@@ -34,6 +34,7 @@
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        HTProgCap = myToken.Title;
         if (HTProgRight >= 0) {
             json_data = QueryData();
             this.DataBind();

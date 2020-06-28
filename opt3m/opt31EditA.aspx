@@ -187,7 +187,7 @@
 <body>
 <table cellspacing="1" cellpadding="0" width="98%" border="0">
     <tr>
-        <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=HTProgCap%>】
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%><%=HTProgCap%>】
             <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
             <input type=button value ="區所案件資料複製" class="cbutton" id="branchCopy" onClick="GetBranchData()">
         </td>
