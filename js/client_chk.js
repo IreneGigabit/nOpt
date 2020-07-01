@@ -90,6 +90,21 @@ function ChkDate(pObj) {//=chkdateformat
     }
 }
 
+/*
+chkSEDate: 起始日不可大於迄止日
+chkEDate:	檢查西元年輸入正確否
+*/
+function chkSEDate(pSdate, pEdate, pmsg){
+    if (pSdate == "" || pEdate == "") {
+        return true;
+    }
+    if (new Date(pSdate) > new Date(pEdate)) {
+        alert(pmsg + "起始日不可大於迄止日");
+        return false;
+    }
+    return true;
+}
+
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
