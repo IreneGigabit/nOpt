@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_formA" %>
+<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -13,9 +13,9 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         submitTask = Request["submitTask"] ?? "";
-        
-        using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
-            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
+
+        using (DBHelper connB = new DBHelper(Conn.OptB("K")).Debug(false)) {
+            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
             tfy_receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
         }
         
@@ -102,7 +102,7 @@
 		    <select id="tfy_receipt_type" name="tfy_receipt_type" class="QLock">
 			    <option value='' style='color:blue'>請選擇</option>
 			    <option value="P">紙本收據</option>
-			    <option value="E">電子收據</option>
+			    <!--option value="E">電子收據</option-->
 		    </select>
 	    </TD>
 	    <TD class=lightbluetable align=right>收據抬頭：</TD>
@@ -137,13 +137,13 @@
         });
         $("#agt_no").getOption({//出名代理人
             url: getRootPath() + "/ajax/LookupDataBranch.aspx",
-            data: { type: "getagtdata", branch: "<%#branch%>" },
+            data: { type: "getagtdata", branch: "K" },
             valueFormat: "{agt_no}",
             textFormat: "{strcomp_name}{agt_name}"
         });
         $("#Arcase").getOption({//交辦案性
             url: getRootPath() + "/ajax/LookupDataBranch.aspx",
-            data: { type: "getarcasedata", branch: "<%#branch%>" },
+            data: { type: "getarcasedata", branch: "K" },
             valueFormat: "{rs_code}",
             textFormat: "{rs_codenm}---{rs_detail}",
             attrFormat: "val1='{rs_type}' val2='{rs_class}'"
@@ -309,9 +309,9 @@
 
     //20200701 增加顯示發文方式
     br_formA.setSendWay = function () {
-        $("#tfy_send_way").getOption({//出名代理人
+        $("#tfy_send_way").getOption({//發文方式
             url: getRootPath() + "/ajax/json_sendway.aspx",
-            data: { branch: "<%#branch%>", rs_code: $("#Arcase").val() },
+            data: { branch: "K", rs_code: $("#Arcase").val() },
             valueFormat: "{cust_code}",
             textFormat: "{code_name}"
         });
