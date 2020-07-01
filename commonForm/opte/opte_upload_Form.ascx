@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="opte_upload_form" %>
+<%@ Control Language="C#" ClassName="opte_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -18,7 +18,7 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
 
-        html_attach_doc = Funcs.getdoc_type().Option("{cust_code}", "{code_name}");
+        html_attach_doc = Funcs.getdoc_typeE().Option("{cust_code}", "{code_name}");
 
         this.DataBind();
     }
