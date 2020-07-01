@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -114,7 +114,6 @@
 
     private string showBRDmtFile(string pBranch, string pFile, string tname) {
         string servername = Sys.webservername(pBranch);
-
         if (pFile.IndexOf(".") > -1) {//路徑包含檔案
             return "http://" + servername + pFile;
         } else {
@@ -486,7 +485,7 @@
             DataTable dt = new DataTable();
             connB.DataTable(SQL,dt);
             for (int i = 0; i < dt.Rows.Count; i++) {
-                dt.Rows[i]["preview_path"] = showBRDmtFile(dt.Rows[i].SafeRead("branch", ""), dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
+                dt.Rows[i]["preview_path"] = showBRDmtFile(branch, dt.Rows[i].SafeRead("attach_path", ""), dt.Rows[i].SafeRead("attach_name", ""));
             }
 
             return dt;
