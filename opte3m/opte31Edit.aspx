@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -329,6 +329,11 @@
         upload_form.init();
         send_form.init();
         back_form.init();
+
+        //無承辦人員不能執行結辦
+        if ($("#pr_scode").val() == "") {
+            $("#btnEnd").hide();
+        }
     }
 
     // 切換頁籤
