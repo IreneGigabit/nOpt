@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="dmt_form" %>
+<%@ Control Language="C#" ClassName="dmt_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -279,7 +279,7 @@
         //類別串接
         $("#tfzr_class").val($("#goodllist>tbody input[id^='class1_']").map(function () { return $(this).val(); }).get().join(','));
 
-        $("#tr_opt_show").showFor("<%#prgid%>" == "opt31" || "<%#prgid%>" == "opt31_1");//承辦/結辦作業要顯示 爭救案件編號
+        //$("#tr_opt_show").showFor("<%#prgid%>" == "opt31" || "<%#prgid%>" == "opt31_1");//承辦/結辦作業要顯示 爭救案件編號
     }
     
     dmt_form.Add_button = function (classCount) {
