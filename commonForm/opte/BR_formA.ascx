@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_br_formA" %>
+<%@ Control Language="C#" ClassName="ext_br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -66,7 +66,7 @@
 	</TR>
 	<tr>
 			<td class=lightbluetable align=right>國外所案號：</td>
-			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq name=ext_seq SIZE=5 MAXLENGTH=5 class="sedit" readonly>-<INPUT TYPE=text id=ext_seq1 name=ext_seq1 SIZE=3 MAXLENGTH=3  class="sedit" readonly value="_">	
+			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq name=ext_seq SIZE=5 MAXLENGTH=5 class="Lock">-<INPUT TYPE=text id=ext_seq1 name=ext_seq1 SIZE=3 MAXLENGTH=3  class="Lock" value="_">	
 			<td class=lightbluetable align=right>對方號：</td>
 			<td class=whitetablebg ><INPUT TYPE=text id=your_no name=your_no SIZE=20 MAXLENGTH=20 class="YZLock" >	
 			<input type="button" value="查詢" class="cbutton QHide" id="btnyour_no" name="btnyour_no">
@@ -75,11 +75,11 @@
 		<td class=lightbluetable align=right >代理人編號：</td>
 		<td class=whitetablebg colspan=3>
 		    <font color=blue>案件代理人</font>
-            <input type="text" id="agt_no" name="agt_no" SIZE="4" maxlength="4" class="sedit" readonly>
-            <input type="text" id="agt_no1" name="agt_no1" SIZE="1" maxlength="1" class="sedit" readonly><span id="span_agent_name"></span>
+            <input type="text" id="agt_no" name="agt_no" SIZE="4" maxlength="4" class="Lock">
+            <input type="text" id="agt_no1" name="agt_no1" SIZE="1" maxlength="1" class="Lock"><span id="span_agent_name"></span>
 		    <font color=blue>延展代理人</font>
-            <input type="text" id="renewal_agt_no" name="renewal_agt_no" SIZE="4" maxlength="4" class="sedit" readonly>
-            <input type="text" id="renewal_agt_no1" name="renewal_agt_no1" SIZE="1" maxlength="1" class="sedit" readonly><span id="span_renewal_agent_name"></span>
+            <input type="text" id="renewal_agt_no" name="renewal_agt_no" SIZE="4" maxlength="4" class="Lock">
+            <input type="text" id="renewal_agt_no1" name="renewal_agt_no1" SIZE="1" maxlength="1" class="Lock"><span id="span_renewal_agent_name"></span>
 		</td>
 	</tr>	
 	<TR>
@@ -139,13 +139,13 @@
         });
         $("#agt_no").getOption({//出名代理人
             url: getRootPath() + "/ajax/LookupDataBranch.aspx",
-            data: { type: "getagtdata", branch: "<%#branch%>" },
+            data: { type: "getagtdata", branch: "K" },
             valueFormat: "{agt_no}",
             textFormat: "{strcomp_name}{agt_name}"
         });
         $("#Arcase").getOption({//交辦案性
             url: getRootPath() + "/ajax/LookupDataBranch.aspx",
-            data: { type: "getarcasedata", branch: "<%#branch%>" },
+            data: { type: "getarcasedata", branch: "K" },
             valueFormat: "{rs_code}",
             textFormat: "{rs_codenm}---{rs_detail}",
             attrFormat: "val1='{rs_type}' val2='{rs_class}'"
