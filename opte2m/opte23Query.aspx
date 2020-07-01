@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -159,6 +159,7 @@
 	        <tr class='{{tclass}}' id='tr_data_{{nRow}}'>
 		        <td class="whitetablebg" align="center">
                     <input type=checkbox id="ckbox_{{nRow}}" name="ckbox_{{nRow}}" onclick="chkclick('{{nRow}}')">
+                    <input type="hidden" id="hchk_flag_{{nRow}}" name="hchk_flag_{{nRow}}" value="N">
                     <input type="hidden" id="email_cnt_{{nRow}}" name="email_cnt_{{nRow}}" value="{{email_cnt}}">
 		            <input type="hidden" id="opt_no_{{nRow}}" name="opt_no_{{nRow}}" value="{{opt_no}}">
 		            <input type="hidden" id="opt_sqlno_{{nRow}}" name="opt_sqlno_{{nRow}}" value="{{opt_sqlno}}">
