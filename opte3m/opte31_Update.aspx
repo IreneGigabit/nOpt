@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -249,14 +249,14 @@
             if (dbflag == "A") {
                 //當上傳路徑不為空的 and attach_sqlno為空的,才需要新增
                 if (ReqVal.TryGet(opt_uploadfield + "_" + i, "") != "" && ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
-                    SQL = "insert into attach_opte (Opt_sqlno,Source";
+                    SQL = "insert into attach_opte (Opt_sqlno,branch,Source";
                     SQL += ",add_date,add_scode,Attach_no,attach_path,attach_desc";
                     SQL += ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode";
                     SQL += ",Source_name,doc_type,attach_branch";
                     SQL += ") values (";
-                    SQL += popt_sqlno + ",'" + psource + "'";
+                    SQL += popt_sqlno + ",'" + branch + "','" + psource + "'";
                     SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
                     SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
@@ -268,7 +268,7 @@
             } else if (dbflag == "U") {
                 Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") );
                 SQL = "Update attach_opte set Source='" + psource + "'";
-                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
                 SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "'";
                 SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                 SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
