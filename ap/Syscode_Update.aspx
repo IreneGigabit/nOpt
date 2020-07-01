@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -61,9 +61,9 @@
         }
     }
 
-    private void doAdd(DBHelper conn) {
+    private void doAdd(DBHelper cnn) {
         SQL = "Select * From SYScode Where syscode='" + syscode + "'";
-	    using(SqlDataReader dr=conn.ExecuteReader(SQL)){
+        using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
             if(dr.HasRows){
                 msg = "資料已存在!!請重新輸入!";
                 strOut.AppendLine("alert('"+msg+"');");
@@ -94,13 +94,14 @@
         SQL += "," + Util.dbnull(Request["tfx_sysremark"].ToBig5()) + "";
         SQL += "," + Util.dbnull(Request["tfx_mark"].ToBig5()) + "";
         SQL += ")";
-        conn.ExecuteNonQuery(SQL);
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "新增完成！";
         strOut.AppendLine("alert('"+msg+"');");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
-    private void doUpdate(DBHelper conn) {
+    private void doUpdate(DBHelper cnn) {
         SQL = " Update syscode set";
         SQL += " sysnameC = " + Util.dbnull(Request["tfx_sysnameC"].ToBig5()) + "";
         SQL += ",sysnameE = " + Util.dbnull(Request["tfx_sysnameE"].ToBig5()) + "";
@@ -118,15 +119,17 @@
         SQL += ",sysremark = " + Util.dbnull(Request["tfx_sysremark"].ToBig5()) + "";
         SQL += ",mark = " + Util.dbnull(Request["tfx_mark"].ToBig5()) + "";
         SQL += " where syscode='" + syscode + "'";
-        conn.ExecuteNonQuery(SQL);
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "資料更新成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
-        strOut.AppendLine("window.parent.location.reload();");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
-    private void doDel(DBHelper conn) {
+    private void doDel(DBHelper cnn) {
         SQL = "DELETE FROM syscode WHERE syscode='" + syscode + "'";
-        conn.ExecuteNonQuery(SQL);
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "資料刪除成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
     }
