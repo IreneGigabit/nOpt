@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -210,6 +210,7 @@
         $("input.dateField").datepick();
         //欄位控制
         $("#tr_Popt_show1").show();
+        $("#tr_opt_show").show();
         $("#tr_button1,#tr_button2").showFor($("#submittask").val()!="Q");//按鈕
         $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
 
@@ -249,7 +250,6 @@
             },
             error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
         });
-
 
         $("#sopt_no").html(br_opt.opt[0].opt_no);
         br_formA.init();
