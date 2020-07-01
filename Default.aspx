@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="PageBase" %>
+<%@ Page Language="C#" Inherits="PageBase" %>
 <%@ Import Namespace = "System.Data"  %>
 <!DOCTYPE html>
 
@@ -139,7 +139,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="IE=10">
-    <title></title>
+    <title>聖島國際</title>
     <link href="inc/setstyle.css" rel="stylesheet" />
     <script type="text/javascript" src="js/lib/jquery-1.12.4.min.js"></script>
     <%--<script type="text/javascript"  src="js/lib/json2.js"></script>--%>
