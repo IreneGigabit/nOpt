@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -194,7 +194,7 @@
 		<td align="center" nowrap>
             <span id="tr_edit_{{nRow}}">
 			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&todo_sqlno={{todo_sqlno}}&arcase={{arcase}}&prgid=opte31" target="Eblank">[承辦]</a><br>
-			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&todo_sqlno={{todo_sqlno}}&arcase={{arcase}}&prgid=opte31_1&End_flag=Y" target="Eblank">[結辦]</a><br>
+			    <span id="a_end_{{nRow}}"><a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&todo_sqlno={{todo_sqlno}}&arcase={{arcase}}&prgid=opte31_1&End_flag=Y" target="Eblank">[結辦]</a><br></span>
 			    <a href="<%#HTProgPrefix%>Edit.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&branch={{Branch}}&case_no={{Case_no}}&todo_sqlno={{todo_sqlno}}&arcase={{arcase}}&prgid=opte31&Back_flag=B" target="Eblank">[退回]</a>
             </span>
             <span id="tr_editA_{{nRow}}">
@@ -304,7 +304,6 @@
                         strLine1 = strLine1.replace(/{{appl_name}}/g, item.appl_name);
                         strLine1 = strLine1.replace(/{{pr_rs_code_name}}/g, item.pr_rs_code_name);
                         strLine1 = strLine1.replace(/{{opt_in_date}}/g, dateReviver(item.opt_in_date, "yyyy/M/d"));
-                        strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
                         strLine1 = strLine1.replace(/{{confirm_date}}/g, dateReviver(item.confirm_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{ctrl_date}}/g, dateReviver(item.ctrl_date, "yyyy/M/d"));
                         strLine1 = strLine1.replace(/{{last_date}}/g, dateReviver(item.last_date, "yyyy/M/d"));
@@ -315,10 +314,17 @@
                         strLine1 = strLine1.replace(/{{scode_name}}/g, item.scode_name);
                         strLine1 = strLine1.replace(/{{todo_sqlno}}/g, item.todo_sqlno);
 
+                        if (item.pr_scode_name != "") {
+                            strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_scode_name);
+                        } else {
+                            strLine1 = strLine1.replace(/{{pr_scode_name}}/g, item.pr_branch + "-");
+                        }
+
                         $("#dataList>tbody").append(strLine1);
                         $("#todoBack_" + nRow).showFor(item.bstat_code.Right(1) == "X");
                         $("#tr_edit_"+nRow).showFor(item.case_no!="");
                         $("#tr_editA_" + nRow).showFor(item.case_no == "");
+                        $("#a_end_" + nRow).showFor(item.pr_scode_name != "");
                     });
                 });
             },
