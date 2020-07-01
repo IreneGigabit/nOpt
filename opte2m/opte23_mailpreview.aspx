@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
@@ -112,7 +112,7 @@
                     break;
                 default:
                     if (Sys.GetSession("scode") == "m1583") {
-                        opte23_email_form.att_email = "wixigag567@jupiterm.com";
+                        opte23_email_form.att_email = "ferafo6293@mail-dj.com";
                         opte23_email_form.bcc_email = "m1583@saint-island.com.tw";
                     } else {
                         List<string> bcc_email = new List<string>();
@@ -158,7 +158,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%> <%=HTProgCap%>】</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <%--<a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>--%>
+            <a class="imgCls" href="javascript:void(0);" >[關閉視窗]</a>
         </td>
     </tr>
     <tr>
