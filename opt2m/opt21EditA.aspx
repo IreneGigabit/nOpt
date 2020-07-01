@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
@@ -155,33 +155,32 @@
         $(".RLock").lock(<%#RLock%>);
         $(".CLock").lock(<%#CLock%>);
 
-        //取得案件資料
-        $.ajax({
-            type: "get",
-            url: getRootPath() + "/ajax/_OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
-            async: false,
-            cache: false,
-            success: function (json) {
-                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
-                var JSONdata = $.parseJSON(json);
-                if (JSONdata.length == 0) {
-                    toastr.warning("無案件資料可載入！");
-                    return false;
-                }
-                br_opt = JSONdata;
-                if(br_opt.opt.length>0){
-                    $("#sopt_no").html(br_opt.opt[0].opt_no);
-                    $("#sseq").html(br_opt.opt[0].fseq);
-                }
-            },
-            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
-        });
-
-
         br_formA.init();
         br_form.init();
 
         if ($("#submittask").val() != "ADD") {
+            //取得案件資料
+            $.ajax({
+                type: "get",
+                url: getRootPath() + "/ajax/_OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+                async: false,
+                cache: false,
+                success: function (json) {
+                    if ($("#chkTest").prop("checked")) toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                    var JSONdata = $.parseJSON(json);
+                    if (JSONdata.length == 0) {
+                        toastr.warning("無案件資料可載入！");
+                        return false;
+                    }
+                    br_opt = JSONdata;
+                    if (br_opt.opt.length > 0) {
+                        $("#sopt_no").html(br_opt.opt[0].opt_no);
+                        $("#sseq").html(br_opt.opt[0].fseq);
+                    }
+                },
+                error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+            });
+
             br_formA.loadOpt();
             br_form.loadOpt();
         }
