@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_form" %>
+<%@ Control Language="C#" ClassName="br_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -77,7 +77,7 @@
         $("#span_last_date").html(dateReviver(jOpt.last_date, "yyyy/M/d"));
 
         if (jOpt.ctrl_date == "") {
-            var Adate = dateConvert(jOpt.last_date).addDays(-1);
+            var Adate = dateConvert(jOpt.last_date).addDays(-5);
             if (Adate < (new Date()))
                 $("#ctrl_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
             else
