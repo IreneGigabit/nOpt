@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
-    protected string HTProgCap = "Menu資料-入檔";//功能名稱
-    protected string HTProgPrefix = "APCat";//程式檔名前綴
+    protected string HTProgCap = "程式資料-入檔";//功能名稱
+    protected string HTProgPrefix = "AP";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
@@ -15,7 +15,7 @@
 
     protected string submitTask = "";
     protected string syscode = "";
-    protected string APcatID = "";
+    protected string APcode = "";
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected StringBuilder strOut = new StringBuilder();
@@ -27,7 +27,7 @@
 
         submitTask = (Request["submittask"] ?? "");
         syscode = (Request["pfx_syscode"] ?? "");
-        APcatID = (Request["pfx_APcatID"] ?? "");
+        APcode = (Request["pfx_APcode"] ?? "");
 
         ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
 
@@ -44,8 +44,8 @@
                     doDel(cnn);
                 }
 
-                //cnn.Commit();
-                cnn.RollBack();
+                cnn.Commit();
+                //cnn.RollBack();
 
                 if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
             }
@@ -63,47 +63,72 @@
         }
     }
 
-    private void doAdd(DBHelper conn) {
-        SQL = "Select * From APcat Where syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-	    using(SqlDataReader dr=conn.ExecuteReader(SQL)){
-            if(dr.HasRows){
-                msg = "資料已存在!!請重新輸入!";
-                strOut.AppendLine("alert('"+msg+"');");
+    private void doAdd(DBHelper cnn) {
+        SQL = " INSERT into AP ";
+        SQL += "(syscode,APcode,APnameC,APnameE,APcat,APserver,APpath,ReMark";
+        SQL += ",APorder,APGrpClass,end_level,beg_date,end_date,tran_date,tran_scode";
+        SQL += ")VALUES(";
+        SQL += " " + Util.dbnull(Request["pfx_syscode"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["pfx_APcode"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APnameC"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APnameE"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APcat"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APserver"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APpath"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_ReMark"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APorder"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["tfx_APGrpClass"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["nfx_end_level"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["dfx_beg_date"].ToBig5()) + "";
+        SQL += "," + Util.dbnull(Request["dfx_end_date"].ToBig5()) + "";
+        SQL += ",getdate()";
+        SQL += ",'" + Session["scode"] + "'";
+        SQL += ")";
+        cnn.ExecuteNonQuery(SQL);
 
-                throw new Exception(msg);
+        SQL = "Select * From LoginAp Where syscode='" + syscode + "' AND LoginGrp='" + syscode + "admin'";
+        using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
+            if (!dr.HasRows) {
+                SQL = "insert into LoginAp (SYScode,LoginGrp,Apcode,Rights,beg_date,end_date,tran_date,tran_scode";
+                SQL += ")values(";
+                SQL += "'" + Request["pfx_syscode"] + "','" + Request["pfx_syscode"] + "admin','" + Request["pfx_APcode"] + "',255";
+                SQL += ",'" + DateTime.Today.ToShortDateString() + "','2079/6/6','" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "')";
+                cnn.ExecuteNonQuery(SQL);
             }
         }
 
-        SQL = " INSERT into APcat ";
-        SQL += "(syscode,APcatID,apcatcname,apcatename,apseq";
-        SQL += ")VALUES(";
-        SQL += " " + Util.dbnull(Request["pfx_syscode"].ToBig5()) + "";
-        SQL += "," + Util.dbnull(Request["pfx_APcatID"].ToBig5()) + "";
-        SQL += "," + Util.dbnull(Request["tfx_APcatCName"].ToBig5()) + "";
-        SQL += "," + Util.dbnull(Request["tfx_APcatEName"].ToBig5()) + "";
-        SQL += "," + Util.dbnull(Request["nfx_APseq"].ToBig5()) + "";
-        SQL += ")";
-        conn.ExecuteNonQuery(SQL);
         msg = "新增完成！";
-        strOut.AppendLine("alert('"+msg+"');");
-        strOut.AppendLine("window.parent.location.reload();");
+        strOut.AppendLine("alert('" + msg + "');");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
-    private void doUpdate(DBHelper conn) {
-        SQL = " Update APcat set";
-        SQL += " apcatcname = " + Util.dbnull(Request["tfx_APcatCName"].ToBig5()) + "";
-        SQL += ",apcatename = " + Util.dbnull(Request["tfx_APcatEName"].ToBig5()) + "";
-        SQL += ",apseq = " + Util.dbnull(Request["nfx_APseq"].ToBig5()) + "";
-        SQL += " where syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-        conn.ExecuteNonQuery(SQL);
+    private void doUpdate(DBHelper cnn) {
+        SQL = " Update AP set";
+        SQL += " APnameC = " + Util.dbnull(Request["tfx_APnameC"].ToBig5()) + "";
+        SQL += ",APnameE = " + Util.dbnull(Request["tfx_APnameE"].ToBig5()) + "";
+        SQL += ",APcat = " + Util.dbnull(Request["tfx_APcat"].ToBig5()) + "";
+        SQL += ",APserver = " + Util.dbnull(Request["tfx_APserver"].ToBig5()) + "";
+        SQL += ",APpath = " + Util.dbnull(Request["tfx_APpath"].ToBig5()) + "";
+        SQL += ",ReMark = " + Util.dbnull(Request["tfx_ReMark"].ToBig5()) + "";
+        SQL += ",APorder = " + Util.dbnull(Request["tfx_APorder"].ToBig5()) + "";
+        SQL += ",APGrpClass = " + Util.dbnull(Request["tfx_APGrpClass"].ToBig5()) + "";
+        SQL += ",end_level = " + Util.dbnull(Request["nfx_end_level"].ToBig5()) + "";
+        SQL += ",beg_date = " + Util.dbnull(Request["dfx_beg_date"].ToBig5()) + "";
+        SQL += ",end_date = " + Util.dbnull(Request["dfx_end_date"].ToBig5()) + "";
+        SQL += ",tran_date = getdate()";
+        SQL += ",tran_scode = '" + Session["scode"] + "'";
+        SQL += " where syscode='" + syscode + "' AND APcode='" + APcode + "'";
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "資料更新成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
-    private void doDel(DBHelper conn) {
-        SQL = "DELETE FROM APcat WHERE syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-        conn.ExecuteNonQuery(SQL);
+    private void doDel(DBHelper cnn) {
+        SQL = "DELETE FROM AP WHERE syscode='" + syscode + "' AND APcode='" + APcode + "'";
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "資料刪除成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
     }
