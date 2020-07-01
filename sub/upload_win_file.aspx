@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@Import Namespace = "System.Collections.Generic"%>
 
 <script runat="server">
@@ -117,7 +117,7 @@
             Response.Write("sExt=" + sExt + "<BR>");
             Response.Write("attach_size=" + attach_size + "<BR>");
             Response.Write("saveAs=" + Server.MapPath(file_path + ee + sExt) + "<BR>");
-            Response.End();
+            //Response.End();
         }
         uploadedFile.SaveAs(Server.MapPath(file_path + ee + sExt));
              
