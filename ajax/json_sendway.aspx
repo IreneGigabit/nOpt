@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -47,6 +47,7 @@
             SQL = "select cust_code,code_name from cust_code ";
             SQL += "where code_type='GSEND_WAY' ";
             SQL += "and cust_code in('" + strWhere.Replace("|", "','") + "') ";
+            SQL += "and cust_code='M' ";//電子送件上線再註記掉
             SQL += "order by CHARINDEX(Cust_code,'" + strWhere + "') ";
             connB.DataTable(SQL, dt);
         }
