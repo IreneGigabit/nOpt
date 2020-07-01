@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -375,8 +375,8 @@
                 //連結
                 string urlasp = "opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "") +
                         "&opt_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&branch=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&case_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
+                        "&branch=" + page.pagedTable.Rows[i].SafeRead("branch", "") +
+                        "&case_no=" + page.pagedTable.Rows[i].SafeRead("case_no", "") +
                         "&prgid=" + prgid + "&submitTask=Q&back_flag=" + Request["back_flag"];
                 if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
                     urlasp = "../opte2m/opte22Edit.aspx?" + urlasp;
@@ -482,8 +482,10 @@
 </HeaderTemplate>
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-		            <td rowspan="2" align="center"><%#Eval("link")%>
-                        <%#Eval("fseq")%></a>
+		            <td rowspan="2" align="center"><%#Eval("link")%><%#Eval("fseq")%></a>
+			            <a onclick="open_email('<%#Eval("opt_sqlno")%>','<%#Eval("opt_no")%>')" title="檢視發文信函" style="display:<%#(Convert.ToInt32(Eval("email_cnt"))>0?"":"none")%>">
+			            <img src="../images/mail10.gif" style="cursor:pointer" align="absmiddle" border="0" WIDTH="14" HEIGHT="11" title="檢視發文信函"></a>
+
 		            </td>
 		            <td rowspan="2"><%#Eval("link")%><%#Eval("fext_seq")%></a></td>
 		            <td rowspan="2"><%#Eval("link")%><%#Eval("your_no")%></a></td>
@@ -571,4 +573,9 @@
             window.close();
         }
     })
+
+    //檢視發送Email
+    function open_email(pjob_sqlno,ptfsend_no){
+        window.open("../opte2m/mailframe.aspx?prgid=<%=prgid%>&source=BJ_email&job_sqlno=" + pjob_sqlno + "&tfsend_no=" + ptfsend_no, "MyMailWindow1");
+    }
 </script>
