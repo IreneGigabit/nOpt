@@ -1,11 +1,11 @@
 <%@ Page Language="C#" CodePage="65001"%>
 
-<%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
-<%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
+<%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
+<%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
 
 <script runat="server">
     protected string HTProgCap = "";//HttpContext.Current.Request["prgname"];//功能名稱
-    protected string HTProgPrefix = "opt21";//程式檔名前綴
+    protected string HTProgPrefix = "opte21";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
@@ -15,12 +15,12 @@
     protected string branch = "";
     protected string opt_sqlno = "";
     protected string case_no = "";
+    protected string todo_sqlno = "";
 
-    protected string QLock = "true";//工作資料的控制
-    protected string QHide = "false";
     protected string RLock = "true";//承辦內容的控制
     protected string CLock = "true";
-    protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
+    protected string QLock = "true";//工作資料的控制
+    protected string QHide = "true";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -30,6 +30,7 @@
         branch = Request["branch"] ?? "";
         opt_sqlno = Request["opt_sqlno"] ?? "";
         case_no = Request["case_no"] ?? "";
+        todo_sqlno = Request["todo_sqlno"] ?? "";
         submitTask = Request["submitTask"] ?? "";
 
         Token myToken = new Token(HTProgCode);
@@ -47,11 +48,9 @@
             HTProgCap += "‧<b style='color:Red'>新增</b>";
             RLock = "false";
             QLock = "false";
-        } else if (submitTask == "Q") {
-            QHide = "true";
+            QHide = "false";
         }else if (submitTask == "U") {
             RLock = "false";
-            QHide = "true";
         }
 
     }
@@ -92,6 +91,7 @@
 <form id="reg" name="reg" method="post">
     <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
 	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 
@@ -99,9 +99,9 @@
     <tr>
         <td>
             <uc1:BR_formA runat="server" ID="BR_formA" />
-            <!--include file="../commonForm/opt/BR_formA.ascx"--><!--承辦內容-->
+            <!--include file="../commonForm/opte/BR_formA.ascx"--><!--承辦內容-->
             <uc1:BR_form runat="server" ID="BR_form" />
-            <!--include file="../commonForm/opt/BR_form.ascx"--><!--分案內容-->
+            <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
         </td>
     </tr>
     </table>
@@ -144,25 +144,21 @@
         settab("#br");
         $("input.dateField").datepick();
         //欄位控制
-        $("#CTab td.tab[href='#dmt']").showFor(("<%#dmt_show_flag%>" == "Y"));
         $("#span_sopt_no").hideFor($("#submittask").val()=="ADD");//新增分案時不顯示案件編號
         $("#btnsearchSubmit1").showFor($("#submittask").val()=="ADD");//新增分案時顯示[新增分案]
         $("#btnsearchSubmit2").showFor($("#submittask").val()=="U");//分案時顯示[分　　案]
         $("#btnsearchSubmit3").showFor($("#submittask").val()=="DEL");//刪除分案時顯示[刪除分案]
         $(".Lock").lock();
-        $(".QLock").lock(<%#QLock%>);
-        $(".QHide").hideFor(<%#QHide%>);
         $(".RLock").lock(<%#RLock%>);
         $(".CLock").lock(<%#CLock%>);
-
-        br_formA.init();
-        br_form.init();
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").hideFor(<%#QHide%>);
 
         if ($("#submittask").val() != "ADD") {
             //取得案件資料
             $.ajax({
                 type: "get",
-                url: getRootPath() + "/ajax/_OptData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+                url: getRootPath() + "/ajax/_OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
                 async: false,
                 cache: false,
                 success: function (json) {
@@ -172,17 +168,27 @@
                         toastr.warning("無案件資料可載入！");
                         return false;
                     }
-                    br_opt = JSONdata;
-                    if (br_opt.opt.length > 0) {
-                        $("#sopt_no").html(br_opt.opt[0].opt_no);
-                        $("#sseq").html(br_opt.opt[0].fseq);
+                    br_opte = JSONdata;
+                    if (br_opte.opte.length > 0) {
+                        $("#sopt_no").html(br_opte.opte[0].opt_no);
+                        $("#sseq").html(br_opte.opte[0].fseq);
                     }
                 },
                 error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
             });
+        }
 
-            br_formA.loadOpt();
-            br_form.loadOpt();
+        br_formA.init();
+        br_form.init();
+
+        if ($("#submittask").val() != "ADD") {
+            //br_formA.loadOpt();
+            //br_form.loadOpt();
+            //$("#btnBseq").click();
+            $("#span_last_date0").showFor($("#span_last_date").html()!= "");
+        } else {
+            $("#Bseq1").val("_");
+            $("#span_last_date0").hide();
         }
     }
 
@@ -250,26 +256,16 @@
             $("#pr_scode").focus();
             return false;
         }
-        if ($("#arcase").val()==""){
-            alert("請輸入交辦案性！！");
-            $("#arcase").focus();
+        if ($("#pr_rs_class").val()==""){
+            alert("請輸入承辦案性之「結構分類」！");
+            $("#pr_rs_class").focus();
             return false;
         }
-        //if ($("#tfy_send_way").val()==""){
-        //    alert("請輸入發文方式,！！");
-        //    $("#tfy_send_way").focus();
-        //    return false;
-        //}
-        //if ($("#tfy_receipt_type").val()==""){
-        //    alert("請輸入官發收據種類！！");
-        //    $("#tfy_receipt_type").focus();
-        //    return false;
-        //}
-        //if ($("#tfy_receipt_title").val()==""){
-        //    alert("請輸入收據抬頭！！");
-        //    $("#tfy_receipt_title").focus();
-        //    return false;
-        //}
+        if ($("#pr_rs_code").val()==""){
+            alert("請輸入承辦案性之「案性」！");
+            $("#pr_rs_code").focus();
+            return false;
+        }
 
         $("select,textarea,input").unlock();
         $("#btnsearchSubmit1,#btnsearchSubmit2").lock(!$("#chkTest").prop("checked"));
