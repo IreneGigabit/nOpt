@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -44,8 +44,8 @@
                     doDel(cnn);
                 }
 
-                //cnn.Commit();
-                cnn.RollBack();
+                cnn.Commit();
+                //cnn.RollBack();
 
                 if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
             }
@@ -63,9 +63,9 @@
         }
     }
 
-    private void doAdd(DBHelper conn) {
+    private void doAdd(DBHelper cnn) {
         SQL = "Select * From APcat Where syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-	    using(SqlDataReader dr=conn.ExecuteReader(SQL)){
+        using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
             if(dr.HasRows){
                 msg = "資料已存在!!請重新輸入!";
                 strOut.AppendLine("alert('"+msg+"');");
@@ -83,27 +83,30 @@
         SQL += "," + Util.dbnull(Request["tfx_APcatEName"].ToBig5()) + "";
         SQL += "," + Util.dbnull(Request["nfx_APseq"].ToBig5()) + "";
         SQL += ")";
-        conn.ExecuteNonQuery(SQL);
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "新增完成！";
         strOut.AppendLine("alert('"+msg+"');");
-        strOut.AppendLine("window.parent.location.reload();");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
-    private void doUpdate(DBHelper conn) {
+    private void doUpdate(DBHelper cnn) {
         SQL = " Update APcat set";
         SQL += " apcatcname = " + Util.dbnull(Request["tfx_APcatCName"].ToBig5()) + "";
         SQL += ",apcatename = " + Util.dbnull(Request["tfx_APcatEName"].ToBig5()) + "";
         SQL += ",apseq = " + Util.dbnull(Request["nfx_APseq"].ToBig5()) + "";
         SQL += " where syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-        conn.ExecuteNonQuery(SQL);
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "資料更新成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
-    private void doDel(DBHelper conn) {
+    private void doDel(DBHelper cnn) {
         SQL = "DELETE FROM APcat WHERE syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-        conn.ExecuteNonQuery(SQL);
+        cnn.ExecuteNonQuery(SQL);
+        
         msg = "資料刪除成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
     }
