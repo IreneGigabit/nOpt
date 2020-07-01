@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="dr1_form" %>
+<%@ Control Language="C#" ClassName="dr1_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -417,7 +417,7 @@
             if (jModDmt.neaddr4 != "") $("#Pmod_dmt_neaddr1_icon").show().find("a").attr("href", jModDmt.mod_dmt_neaddr4);
         }
 
-        $("#tr_opt_show").showFor("<%#prgid%>" == "opt21");//分案作業要顯示 爭救案件編號
+        //$("#tr_opt_show").showFor("<%#prgid%>" == "opt21");//分案作業要顯示 爭救案件編號
     }
 
     //增加一筆註冊人
