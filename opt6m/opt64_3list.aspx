@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -278,8 +278,8 @@
                 //連結
                 string urlasp = "opt_sqlno=" + page.pagedTable.Rows[i].SafeRead("opt_sqlno", "") +
                         "&opt_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&branch=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
-                        "&case_no=" + page.pagedTable.Rows[i].SafeRead("opt_no", "") +
+                        "&branch=" + page.pagedTable.Rows[i].SafeRead("branch", "") +
+                        "&case_no=" + page.pagedTable.Rows[i].SafeRead("case_no", "") +
                         "&arcase=" + page.pagedTable.Rows[i].SafeRead("arcase", "") +
                         "&prgid=" + prgid + "&Submittask=Q&back_flag=" + back_flag;
                 if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
