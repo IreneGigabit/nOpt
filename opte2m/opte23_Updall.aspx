@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -16,6 +16,7 @@
     protected string msg = "";
 
     string submitTask = "";
+    string task = "";
     int count = 0;
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
@@ -27,6 +28,7 @@
         Response.Expires = -1;
 
         submitTask = (Request["submittask"] ?? "").Trim();
+        task = (Request["task"] ?? "").Trim();
         count = Convert.ToInt32("0" + Request["count"]);
 
         ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
@@ -36,15 +38,16 @@
         if (HTProgRight >= 0) {
             DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
             try {
-                if (ReqVal.TryGet("task", "") == "send") {
+                if (task == "send") {
                     for (int i = 1; i <= count; i++) {
+                        Response.Write(ReqVal.TryGet("hchk_flag_" + i, ""));
                         if (ReqVal.TryGet("hchk_flag_" + i, "") == "Y") {
                             update_br_opte(conn,i);
                         }
                     }
 
                     msg="寄出確認作業完成!!";
-                } else if (ReqVal.TryGet("task", "") == "update") {
+                } else if (task == "update") {
                     for (int i = 1; i <= count; i++) {
                         if (ReqVal.TryGet("hchk_flag_" + i, "") == "Y") {
                             if (ReqVal.TryGet("pr_scode_" + i, "") != "") {
@@ -65,9 +68,9 @@
                 conn.RollBack();
                 Sys.errorLog(ex, conn.exeSQL, prgid);
 
-                if (ReqVal.TryGet("task", "") == "send") {
+                if (task == "send") {
                     msg = "補入承辦人員或對方號失敗!!";
-                } else if (ReqVal.TryGet("task", "") == "send") {
+                } else if (task == "send") {
                     msg = "補入承辦人員或對方號失敗!!";
                 }
 
@@ -89,7 +92,7 @@
     //修改分案主檔之寄出確認狀態
     private void update_br_opte(DBHelper conn, int pno) {
         //入cust_step_log
-        Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", Request["opt_sqlno" + pno] ?? "");
+        Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", Request["opt_sqlno_" + pno] ?? "");
 
         //更新分案主檔寄出日期及寄出狀態
         SQL = "update br_opte set opt_no = opt_no";
@@ -98,14 +101,14 @@
         SQL += ",emconf_date=getdate()";
         SQL += ",tran_date=getdate()";
         SQL += ",tran_scode='" + Session["scode"] + "'";
-        SQL += " where opt_sqlno = '" + Request["opt_sqlno" + pno] + "'";
+        SQL += " where opt_sqlno = '" + Request["opt_sqlno_" + pno] + "'";
         conn.ExecuteNonQuery(SQL);
     }
 
     //修改分案主檔之承辦人員
     private void update_br_opte_pr(DBHelper conn, int pno) {
         //入cust_step_log
-        Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", Request["opt_sqlno" + pno] ?? "");
+        Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", Request["opt_sqlno_" + pno] ?? "");
 
         //更新分案主檔承辦人員
         SQL = "update br_opte set opt_no = opt_no";
@@ -114,21 +117,21 @@
         SQL += ",email_scode='" + Session["scode"] + "'";
         SQL += ",tran_date=getdate()";
         SQL += ",tran_scode='" + Session["scode"] + "'";
-        SQL += " where opt_sqlno = '" + Request["opt_sqlno" + pno] + "'";
+        SQL += " where opt_sqlno = '" + Request["opt_sqlno_" + pno] + "'";
         conn.ExecuteNonQuery(SQL);
     }
 
     //修改案件主檔之對方號
     private void update_opte_detail(DBHelper conn, int pno) {
         //入cust_step_log
-        Funcs.insert_log_table(conn, "U", prgid, "opte_detail", "opt_sqlno", Request["opt_sqlno" + pno] ?? "");
+        Funcs.insert_log_table(conn, "U", prgid, "opte_detail", "opt_sqlno", Request["opt_sqlno_" + pno] ?? "");
 
         //更新案件主檔對方號
         SQL = "update opte_detail set opt_sqlno = opt_sqlno";
         SQL += ",your_no='" + Request["your_no_" + pno] + "'";
         SQL += ",tr_date=getdate()";
         SQL += ",where='" + Session["scode"] + "'";
-        SQL += " where opt_sqlno = '" + Request["opt_sqlno" + pno] + "'";
+        SQL += " where opt_sqlno = '" + Request["opt_sqlno_" + pno] + "'";
         conn.ExecuteNonQuery(SQL);
     }
 </script>
