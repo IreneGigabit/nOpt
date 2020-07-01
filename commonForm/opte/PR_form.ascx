@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_pr_form" %>
+<%@ Control Language="C#" ClassName="ext_pr_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -69,7 +69,7 @@
             $("#pr_date").val(dateReviver(jOpt.bpr_date, "yyyy/M/d"));
         }
 
-        $("#tr_pr_date").showFor($("#End_flag").val() == "Y");
+        $("#tr_pr_date").showFor($("#submittask").val() == "Q");
     }
 
     $("#Pr_hour").blur(function () {
