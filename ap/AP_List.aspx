@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -167,15 +167,14 @@
 </HeaderTemplate>
 			<ItemTemplate>
  		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("SYScode")%></A></TD>
-		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("APCat")%>_<%#Eval("APCatCname")%></A></TD>
-		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>" target=Eblank><%#Eval("APcode")%></A></TD>
+		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>&submittask=U" target=Eblank><%#Eval("SYScode")%></A></TD>
+		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>&submittask=U" target=Eblank><%#Eval("APCat")%>_<%#Eval("APCatCname")%></A></TD>
+		            <TD align=center><a href="AP_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("syscode")%>&Apcat=<%#Eval("Apcat")%>&APcode=<%#Eval("APcode")%>&ff=<%=Request["ff"]%>&submittask=U" target=Eblank><%#Eval("APcode")%></A></TD>
 		            <TD align=center><%#Eval("APnameE")%></TD>
 		            <TD align=center><%#Eval("APnameC")%></TD>
 		            <TD align=center><%#Eval("APorder")%></TD>
 		            <TD align=center>
-                        <a href="EditRegSys1.aspx?prgid=<%#prgid%>&flag=A&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[新增]</a>
-                        <a href="EditRegSys1.aspx?prgid=<%#prgid%>&flag=Q&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[編修]</a>
+                        <a href="EditRegSys.aspx?prgid=<%#prgid%>&submittask=A&Syscode=<%#Eval("syscode")%>&apcode=<%#Eval("apcode")%>&n1=<%#Eval("APCatCname")%>&n2=<%#Eval("APnameC")%>" target=Eblank>[設定]</a>
 		            </TD>
 				</tr>
 			</ItemTemplate>
