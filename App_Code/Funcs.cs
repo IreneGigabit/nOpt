@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -47,6 +47,21 @@ public class Funcs {
     public static DataTable getdoc_type() {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
             string SQL = "select cust_code,code_name,remark from cust_code where code_type='Odoc_type' order by sortfld";
+            DataTable dt = new DataTable();
+            conn.DataTable(SQL, dt);
+
+            return dt;
+        }
+    }
+    #endregion
+
+    #region getdoc_typeE - 抓取上傳附件種類(出口案)
+    /// <summary>  
+    /// 抓取上傳附件種類
+    /// </summary>  
+    public static DataTable getdoc_typeE() {
+        using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
+            string SQL = "select cust_code,code_name,remark from cust_code where code_type='Odoc_type' and ref_code is null order by sortfld";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
