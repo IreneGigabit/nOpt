@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -324,6 +324,7 @@
         string strpath = attach_path;
         //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
         strpath = strpath.Replace(@"\opt\", @"\nopt\");
+        strpath = strpath.Replace(@"/btbrt/", @"/nopt/");
 
         //第一層目錄：日期+區所別，如20160907-NT
         string tfoldername = String.Format("{0}-{1}", DateTime.Now.ToString("yyyyMMdd"), branch + Sys.GetSession("dept"));
