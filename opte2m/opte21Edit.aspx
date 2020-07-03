@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -212,7 +212,7 @@
 
         $("#sopt_no").html(br_opte.opte[0].opt_no);
         $("#sseq").html(br_opte.opte[0].fseq);
-        $("#bstep_grade").html(br_opte.opte[0].bstep_grade);
+        $("#bstep_grade").val(br_opte.opte[0].bstep_grade);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();
@@ -271,7 +271,7 @@
             return false;
         }
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnsearchSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
         reg.target = "ActFrame";
