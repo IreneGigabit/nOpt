@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -130,7 +130,7 @@
 
                 //新增流程控制檔
                 SQL = "insert into todo_ext(syscode,apcode,from_flag,branch,seq,seq1,step_grade,case_in_scode,in_no,case_no,att_no,in_scode,in_date,dowhat,job_scode,job_team,job_status) values ";
-                SQL += "('" + Session["Syscode"] + "','" + prgid + "','CGRS1','" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "");
+                SQL += "('" + Session["Syscode"] + "','" + prgid + "','CGRS1','" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "") + "'";
                 SQL += "," + ReqVal.TryGet("bstep_grade", "") + ",'" + ReqVal.TryGet("F_tscode", "").Trim() + "','" + ReqVal.TryGet("attach_in_no", "").Trim() + "'";
                 SQL += ",'" + case_no + "'," + Getbstep_sqlno + ",'" + Session["scode"] + "',getdate(),'DP_RR','" + job_scode + "','" + job_team + "','NN')";
                 connB.ExecuteNonQuery(SQL);
@@ -155,6 +155,7 @@
             conn.RollBack();
             connB.RollBack();
             Sys.errorLog(ex, conn.exeSQL, prgid);
+            Sys.errorLog(ex, connB.exeSQL, prgid);
 
             msg = "判行失敗";
             strOut.AppendLine("alert('" + msg + "');");
@@ -363,7 +364,7 @@
         string fseq = "", in_scode = "", in_scode_name = "";
         string ap_cname = "", appl_name = "", arcase_name = "", last_date = "";
         SQL = "select Bseq,Bseq1,branch,in_scode,scode_name ";
-        SQL += ",appl_name,arcase_name,Last_date,ap_cname ";
+        SQL += ",appl_name,arcase_name,Last_date ";
         SQL += "from vbr_opte where opt_sqlno='" + opt_sqlno + "'";
         using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
             if (dr.Read()) {
