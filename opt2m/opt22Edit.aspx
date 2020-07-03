@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -42,7 +42,7 @@
     protected string ALock = "true";//承辦內容_判行的控制
     protected string P1Lock = "true";//控制show圖檔
     protected string dmt_show_flag = "Y";//控制顯示案件主檔頁籤
-    protected string show_qu_form = "Y";//控制顯示品質評分欄位
+    protected string show_qu_form = "N";//控制顯示品質評分欄位
     protected string show_ap_form = "Y";//控制顯示判行內容欄位
     protected string YYLock = "true";//已判行未發文&已發文,總管處未確認
     protected string YZLock = "true";//已發文,總管處已確認
@@ -382,12 +382,11 @@
                 $("#Score").focus();
                 return false;
             }
-        }
-
-        if ($("#opt_Remark").val()==""){
-            alert("請輸入案件缺失及評語！");
-            $("#opt_Remark").focus();
-            return false;
+            //if ($("#opt_Remark").val()==""){
+            //    alert("請輸入案件缺失及評語！");
+            //    $("#opt_Remark").focus();
+            //    return false;
+            //}
         }
 
         if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
@@ -403,7 +402,7 @@
                 return false;
             }
         }
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -430,7 +429,7 @@
             return false;
         }
         
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
