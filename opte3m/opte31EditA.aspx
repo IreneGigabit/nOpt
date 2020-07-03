@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -345,7 +345,7 @@
 
     //編修存檔/[結辦處理]
     function formSaveSubmit(dowhat,opt_prgid){
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
@@ -371,7 +371,7 @@
         }
 
         reg.prgid.value="opte31";
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
@@ -406,7 +406,7 @@
                 return false;
             }
 
-            $("select,textarea,input").unlock();
+            $("select,textarea,input,span").unlock();
             $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
             reg.submittask.value = "B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
