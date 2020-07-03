@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -96,7 +96,7 @@
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
                 //檢視檔案路徑session("webservername") & trim(RSreg("attach_path"))
-                page.pagedTable.Rows[i]["pdf_path"] = Sys.Host+ page.pagedTable.Rows[i].SafeRead("attach_path", "").Replace("\\","/").Replace("/opt/","/nopt/");
+                page.pagedTable.Rows[i]["pdf_path"] = Sys.Host + page.pagedTable.Rows[i].SafeRead("attach_path", "").Replace("\\", "/").Replace("/opt/", "/nopt/").Replace(@"\opt\", "/nopt/").Replace(@"/btbrt/", @"/nopt/");
                 //檔案大小
                 page.pagedTable.Rows[i]["pdfsize"] = (Convert.ToInt32("0" + page.pagedTable.Rows[i].SafeRead("attach_size", "")) / 1024) + 1;
 
