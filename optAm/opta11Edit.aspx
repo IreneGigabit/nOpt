@@ -245,7 +245,7 @@
             }
         }
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
@@ -254,7 +254,7 @@
 
     //刪除
     $("#btnDel").click(function () {
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
