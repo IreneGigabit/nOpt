@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -315,7 +315,7 @@
         });
 
         $("#sopt_no").html(br_opte.opte[0].opt_no);
-        $("#bstep_grade").html(br_opte.opte[0].bstep_grade);
+        $("#bstep_grade").val(br_opte.opte[0].bstep_grade);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();
@@ -358,7 +358,7 @@
 
     //編修存檔/[結辦處理]
     function formSaveSubmit(dowhat,opt_prgid){
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
@@ -384,7 +384,7 @@
         }
 
         reg.prgid.value="opte31";
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -419,7 +419,7 @@
                 return false;
             }
 
-            $("select,textarea,input").unlock();
+            $("select,textarea,input,span").unlock();
             $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
             reg.submittask.value = "B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
