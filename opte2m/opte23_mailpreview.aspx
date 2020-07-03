@@ -244,7 +244,7 @@
     //暫存郵件
     function formSaveSubmit(){
         if(confirm("注意！\n你確定先暫存郵件嗎？")){
-            $("select,textarea,input").unlock();
+            $("select,textarea,input,span").unlock();
             reg.action = "opte23_mailsave.aspx";
             reg.target = "ActFrame";
             reg.submit();
@@ -276,7 +276,7 @@
         if(email_form.get_file_size()) return false;
         
         if(confirm("注意！\n你確定寄送此封Email嗎？")){
-            $("select,textarea,input").unlock();
+            $("select,textarea,input,span").unlock();
             reg.action = "opte23_mailsend.aspx";
             reg.target = "ActFrame";
             reg.submit();
