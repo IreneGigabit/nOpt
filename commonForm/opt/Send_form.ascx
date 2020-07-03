@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -244,7 +244,7 @@
         }else{
             $("input[name='score_flag'][value='" + $("#show_qu_form").val() + "']").prop("checked", true).triggerHandler("click");
         }
-        $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1);//承辦結辦作業不顯示
+        $("#tr_score_flag").hideFor($("#prgid").val().indexOf("opt31") > -1 && $("#sameap_flag").val() == "N");//承辦結辦作業且承辦不是判行人員則不顯示
 
         $("#rs_type").val(jOpt.rs_type);
         $("#rs_class").val(jOpt.rs_class);
