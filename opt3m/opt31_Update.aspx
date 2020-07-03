@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -362,7 +362,7 @@
         conn.ExecuteNonQuery(SQL);
     }
 
-    //案件異動名細檔opt_tranlist
+    //案件異動明細檔opt_tranlist
     private void insert_opttranlist(DBHelper conn, string Pfield, string pno) {
         if (Pfield == "mod_ap") {
         } else if (Pfield == "mod_pul") {
@@ -408,7 +408,7 @@
                 SQL += ") values (";
                 SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
                 SQL += ",'" + Pfield + "'," + Util.dbnull(pno) + ",'" + ReqVal.TryGet("Pmod_aprep_ncname1" + i, "").ToBig5() + "'";
-                SQL += ",'" + ReqVal.TryGet("Pmod_aprep_new_no" + i, "") + "'";
+                SQL += ",'" + ReqVal.TryGet("Pmod_aprep_new_no" + i, "") + "')";
                 conn.ExecuteNonQuery(SQL);
             }
         } else if (Pfield == "mod_dmt") {
