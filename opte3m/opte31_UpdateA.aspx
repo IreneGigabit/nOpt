@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -107,10 +107,10 @@
                         thref = "opte31Edit.aspx?prgid=opte31&opt_sqlno" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno" + todo_sqlno;
                     }
                     if (ReqVal.TryGet("from_prgid", "") == "opte23") {
-                        thref = "../opte2m/opte23List.aspx?prgid=" + Request["from_prgid"];
+                        thref = "../opte2m/opte23Query.aspx?prgid=" + Request["from_prgid"];
                     }
                     if (ReqVal.TryGet("from_prgid", "") == "opte25") {
-                        thref = "../opte2m/opte25List.aspx?prgid=" + Request["from_prgid"];
+                        thref = "../opte2m/opte25Query.aspx?prgid=" + Request["from_prgid"];
                     }
 
                     if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.href='" + thref + "';");
