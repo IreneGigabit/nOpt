@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -11,6 +11,7 @@
     protected string DebugStr = "";
 
     protected string qryPr_scode = "";
+    protected string LockScode = "true";
     
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
@@ -30,6 +31,10 @@
     private void QueryPageLayout() {
         if((HTProgRight & 128)!=0){
             qryPr_scode="";
+            LockScode = "false";
+        } else if((HTProgRight & 64)!=0){
+            qryPr_scode = Sys.GetSession("scode");
+            LockScode = "false";
         } else{
             qryPr_scode = Sys.GetSession("scode");
         }
@@ -72,7 +77,7 @@
         <table border="0" cellspacing="1" cellpadding="2" width="98%" align="center">
         <tr>
 	        <td class="text9">
-		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode"></Select>	
+		        ◎承辦人員:<Select id="qryPr_scode" name="qryPr_scode" class="LockScode"></Select>	
 	        </td>
 	        <td class="text9">
 		        ◎案件編號:
@@ -195,17 +200,19 @@
         $("#qryPr_scode").getOption({//爭議組承辦人員
             url: getRootPath() + "/ajax/LookupDataCnn.aspx?type=GetPrScode&submitTask=A",
             valueFormat: "{scode}",
-            textFormat: "{scode}_{sc_name}"
+            textFormat: "{scode}_{sc_name}",
+            setValue: "<%#qryPr_scode%>"
         })
 
         $("#qryBranch").getOption({//區所別
             url: getRootPath() + "/ajax/JsonGetSqlDataCnn.aspx",
-            data:{sql:"select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort"},
+            data: { sql: "select branch,branchname from branch_code where mark='Y' and branch<>'J' order by sort" },
             valueFormat: "{branch}",
             textFormat: "{branch}_{branchname}"
         });
 
         $("input.dateField").datepick();
+        $(".LockScode").lock(<%#LockScode%>);
 
         $("#btnSrch").click();
     });
@@ -224,7 +231,7 @@
         $("#divPaging,#noData,#dataList").hide();
         $("#dataList>tbody tr").remove();
         nRow = 0;
-
+        $(".LockScode").unlock();
         $.ajax({
             url: "<%#HTProgPrefix%>List.aspx",
             type: "get",
@@ -305,6 +312,7 @@
                 toastr.error("<a href='" + jqXHR.url + "' target='_new'>資料擷取剖析錯誤！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
             }
         });
+        $(".LockScode").lock(<%#LockScode%>);
     };
 
     //每頁幾筆
