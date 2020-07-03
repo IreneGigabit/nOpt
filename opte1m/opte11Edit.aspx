@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
 <%@ Register Src="~/commonForm/opte/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
@@ -216,7 +216,7 @@
         });
 
         $("#sseq").html(br_opte.opte[0].fseq);
-        $("#bstep_grade").html(br_opte.opte[0].bstep_grade);
+        $("#bstep_grade").val(br_opte.opte[0].bstep_grade);
         cust_form.init();
         attent_form.init();
         apcust_re_form.init();
@@ -248,7 +248,7 @@
 
     //收件確認
     $("#btnsearchSubmit").click(function () {
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -275,7 +275,7 @@
             return false;
         }
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnsearchSubmit,#btnback1Submit,#btnbackSubmit,#btnresetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
