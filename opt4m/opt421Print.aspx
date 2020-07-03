@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -87,6 +87,11 @@
 
     protected void branchRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e){
         if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem)) {
+            if (e.Item.ItemIndex == 0) {
+                totcnt = 0;
+                totfees = 0;
+            }
+            
             Repeater clRpt = (Repeater)e.Item.FindControl("clRepeater");
 
             if ((clRpt != null)) {
@@ -218,22 +223,22 @@
         </ItemTemplate>
         </asp:Repeater>
         <BR>
-        <FooterTemplate>
-            <br>
-            <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">	
-	            <tr class="lightbluetable" style="font-size:12pt;color:DarkBlue">
-		            <td colspan=3>發文總計：　　<%#totcnt%>件</td>
-		            <td colspan=4 align=right>規　費：<%#totfees%></td>
-	            </tr>
-            </table>
-        </FooterTemplate>
     </ItemTemplate>
     <FooterTemplate>
+        <asp:Label ID="Label1" runat="server" Visible='<%#bool.Parse((branchRepeater.Items.Count>0).ToString())%>'>
+        <br>
+        <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="100%">	
+            <tr class="lightbluetable" style="font-size:12pt;color:DarkBlue">
+            <td colspan=3>發文總計：　　<%#totcnt%>件</td>
+            <td colspan=4 align=right>規　費：<%#totfees%></td>
+            </tr>
+        </table>
+        </asp:Label> 
         <asp:Label ID="lblEmpty" runat="server" Visible='<%#bool.Parse((branchRepeater.Items.Count==0).ToString())%>'>
             <div align="center"><font color="red" size=2>=== 查無資料===</font></div>
         </asp:Label> 
     </FooterTemplate>
-     </asp:Repeater>
+    </asp:Repeater>
 </form>
 
 <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
