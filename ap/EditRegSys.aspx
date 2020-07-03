@@ -244,7 +244,7 @@
 
     //新增/修改
     $("#btnSubmit").click(function () {
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
