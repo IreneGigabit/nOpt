@@ -1,259 +1,447 @@
 <%@ Page Language="C#" CodePage="65001"%>
-<%@ Import Namespace = "System.Data.SqlClient"%>
-<%@ Import Namespace = "System.Collections.Generic"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
+<%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
+<%@ Register Src="~/commonForm/opte/Back_form.ascx" TagPrefix="uc1" TagName="Back_form" %>
+<%@ Register Src="~/commonForm/opte/PR_form.ascx" TagPrefix="uc1" TagName="PR_form" %>
+<%@ Register Src="~/commonForm/opte/opte_upload_Form.ascx" TagPrefix="uc1" TagName="opte_upload_Form" %>
+<%@ Register Src="~/commonForm/opte/AP_form.ascx" TagPrefix="uc1" TagName="AP_form" %>
 
 <script runat="server">
-    protected string HTProgCap = "出口爭救案承辦作業確認-入檔";//功能名稱
+    protected string HTProgCap = HttpContext.Current.Request["prgname"];//功能名稱
     protected string HTProgPrefix = "opte31";//程式檔名前綴
     protected string HTProgCode = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
+    protected string DebugStr = "";
 
-    protected string SQL = "";
-    protected string msg = "";
+    protected string opt_job_scode1 = "", opt_job_scode2 = "";
 
-    string case_no = "";
-    string branch = "";
-    string opt_no = "";
-    string opt_sqlno = "";
-    string todo_sqlno = "";
-    string submitTask = "";
-    string reportp = "";
-    string end_flag = "";
-    string sameap_flag = "";
+    protected string btnEnd = "";
 
-    protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
-    protected StringBuilder strOut = new StringBuilder();
+    protected string submitTask = "";
+    protected string branch = "";
+    protected string opt_sqlno = "";
+    protected string opt_no = "";
+    protected string case_no = "";
+    protected string todo_sqlno = "";
+    protected string Back_flag = "";//退回flag
+    protected string End_flag = "";//結辦flag
+    protected string from_prgid = "";
+
+    protected string MLock = "true";//案件客戶,客件連絡人,申請人,收費與接洽事項,案件主檔的控制
+    protected string QLock = "true";//收費與接洽事項的控制
+    protected string QHide = "true";
+    protected string PLock = "true";//交辦內容的控制
+    protected string PHide = "true";//交辦內容的控制
+    protected string RLock = "true";//承辦內容_分案的控制
+    protected string BLock = "true";//承辦內容_承辦的控制
+    protected string CLock = "true";//承辦內容_承辦的控制
+    protected string SLock = "true";//承辦內容_發文的控制
+    protected string SELock = "true";//有權限才可修改
+    protected string ALock = "true";//承辦內容_判行的控制
+    protected string P1Lock = "true";//控制show圖檔
+    protected string show_ap_form = "N";//控制顯示判行內容欄位
+    protected string sameap_flag = "N";//判行和承辦人員是否為同一人
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        case_no = (Request["case_no"] ?? "").Trim();
-        branch = (Request["Branch"] ?? "").Trim();
-        opt_no = (Request["opt_no"] ?? "").Trim();
-        opt_sqlno = (Request["opt_sqlno"] ?? "").Trim();
-        todo_sqlno = (Request["todo_sqlno"] ?? "").Trim();
-        submitTask = (Request["submittask"] ?? "").Trim();
-        end_flag = (Request["End_flag"] ?? "").Trim();
-        sameap_flag = (Request["sameap_flag"] ?? "").Trim();
+        submitTask = Request["submitTask"] ?? "";
+        branch = Request["branch"] ?? "";
+        opt_sqlno = Request["opt_sqlno"] ?? "";
+        opt_no = Request["opt_no"] ?? "";
+        case_no = Request["case_no"] ?? "";
+        todo_sqlno = Request["todo_sqlno"] ?? "";
+        Back_flag = Request["Back_flag"] ?? "N";//退回flag(B)
+        End_flag = Request["End_flag"] ?? "N";//結辦flag(Y)
+        from_prgid = Request["from_prgid"] ?? "";
 
-        ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
+        if (prgid == "opte31") {
+            HTProgCap = "出口爭救案承辦內容維護";
+            End_flag = "N";
+        } else if (prgid == "opte31_1") {
+            HTProgCap = "出口爭救案結辦作業";
+            HTProgCode = "opte31";
+            End_flag = "Y";
+        } else {
+            HTProgCap = "出口爭救案承辦內容查詢";
+            submitTask = "Q";
+        }
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
+        DebugStr = myToken.DebugStr;
         if (HTProgRight >= 0) {
-            if (submitTask == "U") {//承辦結辦
-                doConfirm();
-            } else if (submitTask == "B") {//退回分案
-                //doBack();//退回分案在opte31_update.aspx處理
-            }
+            PageLayout();
             this.DataBind();
         }
     }
 
-    private void doConfirm() {
-        DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
-        try {
-            //處理上傳文件
-            upin_attach_opt(conn, opt_sqlno, "PR");
+    private void PageLayout() {
+        using (DBHelper cnn = new DBHelper(Conn.Sysctrl).Debug(false)) {
+            string sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
+                        "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                        "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' And C.prgid = 'opte31' " +
+                        "Order By C.scode ";
+            opt_job_scode1 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
 
-            //判行人員
-            string Job_Scode = "";
-            if (ReqVal.TryGet("ap_type", "") == "1")
-                Job_Scode = ReqVal.TryGet("job_scode1", "");
-            else if (ReqVal.TryGet("ap_type", "") == "2")
-                Job_Scode = ReqVal.TryGet("job_scode2", "");
+            sql = "select DISTINCT C.scode,D.sc_name from scode_roles As C " +
+                        "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                        "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Manager' And C.prgid = 'opte31' " +
+                        "Order By C.scode ";
+            opt_job_scode2 = SHtml.Option(cnn, sql, "{scode}", "{sc_name}", false);
+        }
 
-            //修改分案主檔等資料
-            update_bropt(conn, Job_Scode);
-
-            //結辦-流程狀態修改
-            if (end_flag == "Y") {
-                //結辦與判行人員相同，修改流程狀態
-                if( sameap_flag=="Y")
-                    update_bropt_ap(conn);
-                else
-                    update_bropt_end(conn, Job_Scode);
+        //判行內容/品質評分欄位要不要顯示
+        if (End_flag == "Y") {
+            string dojob_scode = "";
+            using (DBHelper cnn = new DBHelper(Conn.Sysctrl, false).Debug(Request["chkTest"] == "TEST")) {
+                string SQL = "select DISTINCT C.scode from scode_roles As C " +
+                "LEFT JOIN scode AS D ON D.scode = C.scode " +
+                "Where C.branch = 'B' And C.syscode = 'OPT' And C.roles = 'Assist' " +
+                "And C.prgid = 'opte31' " +
+                "Order By C.scode ";
+                object objResult = cnn.ExecuteScalar(SQL);
+                dojob_scode = (objResult != DBNull.Value && objResult != null) ? objResult.ToString().Trim().ToLower() : "";
             }
-
-            //出口案先不提供結辦暨判行
-            //if (sameap_flag == "Y") {
-            //    update_bropt_ap(conn);
-            //}
-
-            conn.Commit();
-            //conn.RollBack();
-
-            if (submitTask == "U") {
-                if (end_flag == "Y") {
-                    if (sameap_flag == "Y")
-                        msg = "結案暨判行成功";
-                    else
-                        msg = "結案成功";
-                    strOut.AppendLine("alert('" + msg + "');");
-                    if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
-                } else {
-                    if (ReqVal.TryGet("progid", "") == "opte31") {
-                        msg = "編修存檔完成";
-                        strOut.AppendLine("alert('" + msg + "');");
-                    }
-                    string thref = "";
-                    if (ReqVal.TryGet("progid", "") != "") {
-                        thref = "opte31Edit.aspx?prgid=" + Request["progid"] + "&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno=" + todo_sqlno;
-                    } else {
-                        thref = "opte31Edit.aspx?prgid=opte31&opt_sqlno" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&todo_sqlno" + todo_sqlno;
-                    }
-                    if (ReqVal.TryGet("from_prgid", "") == "opte23") {
-                        thref = "../opte2m/opte23Query.aspx?prgid=" + Request["from_prgid"];
-                    }
-                    if (ReqVal.TryGet("from_prgid", "") == "opte25") {
-                        thref = "../opte2m/opte25Query.aspx?prgid=" + Request["from_prgid"];
-                    }
-
-                    if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.href='" + thref + "';");
-                }
+            //當為結案時,如果承辦人如為林雪貞
+            //則結辦後即可執行發文作業,
+            //所以判行須輸入的資料要出來
+            if (Sys.GetSession("scode").ToLower() == dojob_scode) {
+                //判行內容欄位要不要show的flag
+                show_ap_form = "Y";
+                //判行和承辦人員是否為同一人
+                sameap_flag = "Y";
             }
         }
-        catch (Exception ex) {
-            conn.RollBack();
-            Sys.errorLog(ex, conn.exeSQL, prgid);
-
-            if (submitTask == "U") {
-                if (end_flag == "Y") {
-                    if (sameap_flag == "Y")
-                        msg = "結案暨判行失敗";
-                    else
-                        msg = "結案失敗";
-                } else {
-                    msg = "存檔失敗";
-                }
-            }
-            strOut.AppendLine("alert('" + msg + "');");
-
-            throw new Exception(msg, ex);
-        }
-        finally {
-            conn.Dispose();
-        }
-    }
-
-    //修改分案主檔之承辦資料
-    private void update_bropt(DBHelper conn, string job_scode) {
-        Funcs.insert_log_table(conn, "U", prgid, "br_opte", "opt_sqlno", opt_sqlno );
-
-        SQL = "update br_opte set pr_hour=" + Util.dbzero(ReqVal.TryGet("pr_hour", "0")) + "";
-        SQL += ",pr_per=" + Util.dbzero(ReqVal.TryGet("pr_per", "0")) + "";
-        SQL += ",pr_remark=N'" + ReqVal.TryGet("pr_remark", "") + "'";
-        if (end_flag == "Y") {//結辦處理
-            SQL += ",pr_date=" + Util.dbnull(ReqVal.TryGet("pr_date", null)) + "";
-            SQL += ",ch_scode='" + Session["scode"] + "'";
-            SQL += ",ch_date=getdate()";
-            SQL += ",ap_scode='" + job_scode + "'";
-            SQL += ",send_dept='B'";
-            if (sameap_flag == "Y") {//承辦與判行同一人，修改判行資料
-                SQL += ",PRY_hour=" + Util.dbzero(ReqVal.TryGet("PRY_hour", "0")) + "";
-                SQL += ",AP_hour=" + Util.dbzero(ReqVal.TryGet("AP_hour", "0")) + "";
-                SQL += ",ap_date='" + DateTime.Today.ToShortDateString() + "'";
-                SQL += ",ap_remark='" + ReqVal.TryGet("ap_remark", "").ToBig5() + "'";
-                SQL += ",stat_code='YY'";
-            } else {
-                SQL += ",stat_code='NY'";
+        
+        //欄位開關
+        if (prgid.IndexOf("opte31") > -1) {
+            if (Back_flag != "B") {//不是退回
+                PLock = "false";
+                PHide = "false";
+                BLock = "false";
+                SLock = "false";
+                ALock = "false";
             }
         }
-        SQL += ",tran_scode='" + Session["scode"] + "'";
-        SQL += ",tran_date=getdate()";
-        SQL += " where opt_sqlno='" + opt_sqlno + "'";
-        conn.ExecuteNonQuery(SQL);
-    }
-
-    //結辦處理-修改流程狀態
-    private void update_bropt_end(DBHelper conn, string job_scode) {
-        //修改目前流程狀態
-        SQL = "update todo_opte set approve_scode='" + Session["scode"] + "'";
-        SQL += ",resp_date=getdate()";
-        SQL += ",job_status='YY'";
-        SQL += " where sqlno=" + todo_sqlno + " and syscode='" + Session["Syscode"] + "' ";
-        SQL += " and dowhat='PR' and job_status='NN' ";
-        conn.ExecuteNonQuery(SQL);
-
-        SQL = " insert into todo_opte(pre_sqlno,syscode,apcode,from_flag,opt_no,opt_sqlno,branch,in_scode,in_date";
-        SQL += ",dowhat,job_scode,job_status) values (";
-        SQL += "'" + todo_sqlno + "','" + Session["Syscode"] + "','" + prgid + "','pr_opt','" + opt_no + "'," + opt_sqlno + ",'" + branch + "'";
-        SQL += ",'" + Session["scode"] + "',getdate(),'AP','" + job_scode + "','NN')";
-        conn.ExecuteNonQuery(SQL);
-    }
-
-    //結辦且承辦與判行同一人，流程狀態修改
-    private void update_bropt_ap(DBHelper conn) {
-        SQL = "update todo_opte set approve_scode='" + Session["scode"] + "'";
-        SQL += ",resp_date=getdate()";
-        SQL += ",job_status='YY'";
-        SQL += " where sqlno=" + todo_sqlno + " and syscode='" + Session["Syscode"] + "' ";
-        SQL += " and dowhat='PR' and job_status='NN' ";
-        conn.ExecuteNonQuery(SQL);
-    }
-
-    //處理上傳圖檔的部份
-    private void upin_attach_opt(DBHelper conn, string popt_sqlno, string psource) {
-        //欄位名稱
-        string opt_uploadfield = ReqVal.TryGet("opt_uploadfield", "");
-        //目前畫面上的最大值
-        int sqlnum = Convert.ToInt32("0" + ReqVal.TryGet(opt_uploadfield + "_sqlnum", ""));
-
-        for (int i = 1; i <= sqlnum; i++) {
-            string dbflag = ReqVal.TryGet(opt_uploadfield + "_dbflag_" + i, "");
-            if (dbflag == "A") {
-                //當上傳路徑不為空的 and attach_sqlno為空的,才需要新增
-                if (ReqVal.TryGet(opt_uploadfield + "_" + i, "") != "" && ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
-                    SQL = "insert into attach_opte (Opt_sqlno,branch,Source";
-                    SQL += ",add_date,add_scode,Attach_no,attach_path,attach_desc";
-                    SQL += ",Attach_name,Attach_size,attach_flag,Mark,tran_date,tran_scode";
-                    SQL += ",Source_name,doc_type,attach_branch";
-                    SQL += ") values (";
-                    SQL += popt_sqlno + ",'" + branch + "','" + psource + "'";
-                    SQL += ",'" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
-                    SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_branch_" + i, "") + "'";
-                    SQL += ")";
-                    conn.ExecuteNonQuery(SQL);
-                }
-            } else if (dbflag == "U") {
-                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
-                SQL = "Update attach_opte set Source='" + psource + "'";
-                SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
-                SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "'";
-                SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
-                SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";
-                SQL += ",source_name='" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
-                SQL += ",doc_type='" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "'";
-                SQL += ",attach_branch='" + ReqVal.TryGet(opt_uploadfield + "_attach_branch_" + i, "") + "'";
-                SQL += ",attach_flag='U'";
-                SQL += ",tran_date=getdate()";
-                SQL += ",tran_scode='" + Session["scode"] + "'";
-                //SQL += " OUTPUT 'U', GETDATE(),'" + Session["scode"] + "'," + Util.dbnull(prgid) + "," + "DELETED.* INTO attach_opt_log";
-                SQL += " Where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
-                conn.ExecuteNonQuery(SQL);
-            } else if (dbflag == "D") {
-                Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") );
-                //當attach_sqlno <> empty時,表示db有值,必須刪除data(update attach_flag = 'D')
-                if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
-                    SQL = "update attach_opte set attach_flag='D'";
-                    //SQL += " OUTPUT 'U', GETDATE(),'" + Session["scode"] + "'," + Util.dbnull(prgid) + "," + "DELETED.* INTO attach_opt_log";
-                    SQL += " where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
-                    conn.ExecuteNonQuery(SQL);
-                }
+        if (submitTask != "Q") {
+            if ((HTProgRight & 64) > 0 || (HTProgRight & 256) > 0) {
+                SELock = "false";
             }
         }
     }
+
 </script>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><%=HTProgCap%></title>
+<link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/inc/setstyle.css")%>" />
+<link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.css")%>" />
+<link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/toastr.css")%>" />
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.datepick-zh-TW.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/client_chk.js")%>"></script>
+</head>
+
+<body>
+<table cellspacing="1" cellpadding="0" width="98%" border="0">
+    <tr>
+        <td class="text9" nowrap="nowrap">&nbsp;【<%=HTProgCode%> <%=HTProgCap%>】
+            <span id="span_sopt_no" style="color:blue">案件編號：<span id="sopt_no"></span></span>
+			<input type=button value ="重新抓取區所案件主檔資料(含申請人)" class="cbutton P1Lock" onClick="GetBranchData()">
+        </td>
+        <td class="FormLink" valign="top" align="right" nowrap="nowrap">
+            <a id="btnEnd" href="opte31EditA.aspx?prgid=opte31_1&opt_sqlno=<%=opt_sqlno%>&opt_no=<%#opt_no%>&todo_sqlno=<%#todo_sqlno%>&branch=<%#branch%>">[結辦處理]</a>
+            <a class="imgCls" href="javascript:void(0);" >[返回清單]</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><hr class="style-one"/></td>
+    </tr>
+</table>
+<br>
+<form id="reg" name="reg" method="post">
+    <input type="hidden" id="case_no" name="case_no" value="<%=case_no%>">
+	<input type="hidden" id="opt_sqlno" name="opt_sqlno" value="<%=opt_sqlno%>">
+	<input type="hidden" id="todo_sqlno" name="todo_sqlno" value="<%=todo_sqlno%>">
+	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+    <input type="hidden" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
+    <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
+	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
+	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="from_prgid" name="from_prgid" value="<%=from_prgid%>">
+	<input type="hidden" id="progid" name="progid">
+
+    <table cellspacing="1" cellpadding="0" width="98%" border="0">
+    <tr>
+        <td>
+            <uc1:BR_formA runat="server" ID="BR_formA" />
+            <!--include file="../commonForm/opte/BR_formA.ascx"--><!--承辦內容-->
+            <uc1:BR_form runat="server" ID="BR_form" />
+            <!--include file="../commonForm/opte/BR_form.ascx"--><!--分案內容-->
+            <uc1:Back_form runat="server" ID="Back_form" />
+            <!--include file="../commonForm/opte/Back_form.ascx"--><!--退回原因-->
+            <uc1:PR_form runat="server" ID="PR_form" />
+            <!--include file="../commonForm/opte/PR_form.ascx"--><!--承辦內容-->
+            <uc1:opte_upload_Form runat="server" ID="opte_upload_Form" />
+            <!--include file="../commonForm/opte/opte_upload_Form.ascx"--><!--上傳文件-->
+            <uc1:AP_form runat="server" ID="AP_form" />
+            <!--include file="../commonForm/opte/AP_form.ascx"--><!--判行資料-->
+        </td>
+    </tr>
+    </table>
+    <table id='tabjob' border="0" width="98%" cellspacing="0" cellpadding="0">
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr >
+			<td align="right">
+				<label for="ap_type1"><input type="radio" value="1" name="ap_type" id="ap_type1" checked >正常簽核：</label>
+				<select id='job_scode1' name='job_scode1' ><%#opt_job_scode1%></select>
+				&nbsp;&nbsp;&nbsp;				
+			</td>
+			<td align="left"> 
+				<label for="ap_type2"><input type="radio" value="2" name="ap_type" id="ap_type2" >例外簽核：</label>
+				<select id='job_scode2' name='job_scode2' disabled ><%#opt_job_scode2%></select>
+			</td>
+		</tr>
+	</table>
+    <br />
+    <%#DebugStr%>
+</form>
+
+<table border="0" width="98%" cellspacing="0" cellpadding="0" >
+<tr id="tr_button1">
+    <td width="100%" align="center">
+		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('U','opte31')" id="btnSaveSubmit">
+		<input type=button value="結辦" class="cbutton" onClick="formEndSubmit('U')" id="btnEndSubmit">
+		<input type=button value="退回分案" class="redbutton" id="btnBack1Submit">
+    </td>
+</tr>
+<tr id="tr_button2" style="display:none">
+    <td align="center">
+        <input type=button value="退回" class="redbutton" id="btnBackSubmit">
+        <input type=button value="取消" class="c1button" id="btnResetSubmit">
+    </td>
+</tr>
+</table>
+
+<iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
+</body>
+</html>
 
 <script language="javascript" type="text/javascript">
-    <%Response.Write(strOut.ToString());%>
+    $(function () {
+        if (window.parent.tt !== undefined) {
+            window.parent.tt.rows = "0%,100%";
+        }
+
+        this_init();
+    });
+
+    var br_opte = {};
+    //初始化
+    function this_init() {
+        settab("#br");
+        $("input.dateField").datepick();
+        //欄位控制
+        $("#tabAP").showFor($("#End_flag").val() == "Y" && ("<%#show_ap_form%>" == "Y"));//結辦時承辦&判行人同一個
+        $("#tabjob").showFor($("#End_flag").val() == "Y");//結辦顯示簽核欄位
+        $("#tr_Popt_show1").show();
+
+        $(".Lock").lock();
+        $(".MLock").lock(<%#MLock%>);
+        $(".QLock").lock(<%#QLock%>);
+        $(".QHide").hideFor(<%#QHide%>);
+        $(".PLock").lock(<%#PLock%>);
+        $(".PHide").lock(<%#PHide%>);
+        $(".RLock").lock(<%#RLock%>);
+        $(".CLock").lock(<%#CLock%>);
+        $(".BLock").lock(<%#BLock%>);
+        $(".SLock").lock(<%#SLock%>);
+        $(".SELock").lock(<%#SELock%>);
+        $(".ALock").lock(<%#ALock%>);
+        $(".P1Lock").lock(<%#P1Lock%>);
+        $("#btnSaveSubmit").showFor($("#prgid").val()=="opte31");//[編修存檔]
+        $("#btnEndSubmit").showFor($("#prgid").val()=="opte31_1");//[結辦]
+        $("#btnEnd").showFor($("#Back_flag").val() != "B"&&$("#prgid").val()=="opte31"&&$("#from_prgid").val()!="opte23"&&$("#from_prgid").val()!="opte25");//[結辦處理]
+
+        if($("#Back_flag").val() == "B"){
+            settab("#br");
+            $("#tabreject,#tr_button2").show();//退回視窗&按鈕
+            $("#tabPR,#tabSend,#tr_button1").hide();//承辦內容/發文視窗/承辦&結辦按鈕
+        }else{
+            $("#tabreject,#tr_button2").hide();//退回視窗//退回視窗&按鈕
+            $("#tabPR,#tabSend,#tr_button1").show();//承辦內容/發文視窗/承辦&結辦按鈕
+        }
+
+        if ($("#sameap_flag").val()=="Y"){
+            $("#btnSaveSubmit,#btnEndSubmit").val("結辦暨判行");
+        }
+
+        //取得案件資料
+        $.ajax({
+            type: "get",
+            url: getRootPath() + "/ajax/_OpteData.aspx?branch=<%=branch%>&opt_sqlno=<%=opt_sqlno%>",
+            async: false,
+            cache: false,
+            success: function (json) {
+                if($("#chkTest").prop("checked"))toastr.info("<a href='" + this.url + "' target='_new'>Debug！<BR><b><u>(點此顯示詳細訊息)</u></b></a>");
+                var JSONdata = $.parseJSON(json);
+                if (JSONdata.length == 0) {
+                    toastr.warning("無案件資料可載入！");
+                    return false;
+                }
+                br_opte = JSONdata;
+            },
+            error: function () { toastr.error("<a href='" + this.url + "' target='_new'>案件資料載入失敗！<BR><b><u>(點此顯示詳細訊息)</u></b></a>"); }
+        });
+
+        br_formA.init();
+        br_form.init();
+        back_form.init();
+        pr_form.init();
+        upload_form.init();
+        ap_form.init();
+
+        var jOpt = br_opte.opte[0];
+        $("#sopt_no").html(jOpt.opt_no);
+        //br_form.loadOpt();
+        //$("#Bseq").val(jOpt.bseq);
+        //$("#Bseq1").val(jOpt.bseq1);
+        //$("#btnBseq").click();
+        //$("#dfy_last_date").val(dateReviver(jOpt.last_date, "yyyy/M/d"));
+        //$("#remark").val(jOpt.remark);
+    }
+
+    // 切換頁籤
+    $("#CTab td.tab").click(function (e) {
+        settab($(this).attr('href'));
+    });
+    function settab(k) {
+        $("#CTab td.tab").removeClass("seltab").addClass("notab");
+        $("#CTab td.tab[href='" + k + "']").addClass("seltab").removeClass("notab");
+        $("div.tabCont").hide();
+        $("div.tabCont[id='" + k + "']").show();
+    }
+
+    //關閉視窗
+    $(".imgCls").click(function (e) {
+        if (window.parent.tt !== undefined) {
+            window.parent.tt.rows = "100%,0%";
+        } else {
+            window.close();
+        }
+    })
+
+    //編修存檔/[結辦處理]
+    function formSaveSubmit(dowhat,opt_prgid){
+        $("select,textarea,input,span").unlock();
+        $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
+        reg.submittask.value = dowhat;
+        reg.progid.value=opt_prgid;
+        reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
+        reg.target = "ActFrame";
+        reg.submit();
+    }
+
+    //結辦
+    function formEndSubmit(dowhat){
+        if ($("#Pr_hour").val()==""||$("#Pr_hour").val()=="0"){
+            if(!confirm("是否確定不輸入承辦時數？")) {
+                $("#Pr_hour").focus();
+                return false;
+            }
+        }
+
+        var fld = $("#opt_uploadfield").val();
+        if(parseInt($("#" + fld + "_filenum").val(), 10)==0){
+            if(!confirm("無上傳檔案，是否確定結辦？？")) {
+                return false;
+            }
+        }
+
+        reg.prgid.value="opte31";
+        $("select,textarea,input,span").unlock();
+        $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
+        reg.submittask.value = dowhat;
+        reg.action = "<%=HTProgPrefix%>_UpdateA.aspx";
+        reg.target = "ActFrame";
+        reg.submit();
+    }
+
+    //退回分案(1)
+    $("#btnBack1Submit").click(function () {
+        settab("#br");
+
+        if (confirm("是否確定退回重新分案？？")) {
+            $("#tr_button1,#tabpr,#tabSend").hide();
+            $("#tr_button2,#tabreject").show();
+        }else{
+            $("#tr_button1,#tabpr,#tabSend").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+    });
+
+    //退回(2)
+    $("#btnBackSubmit").click(function () {
+        var doback=true;
+        if ($("#Back_flag").val() == "B"){
+            doback=confirm("是否確定退回重新分案？？");
+        }
+
+        if (doback){
+            if ($("#Preject_reason").val() == "") {
+                alert("請輸入退回原因！");
+                $("#Preject_reason").focus();
+                return false;
+            }
+
+            $("select,textarea,input,span").unlock();
+            $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
+            reg.submittask.value = "B";
+            reg.action = "<%=HTProgPrefix%>_Update.aspx";
+            reg.target = "ActFrame";
+            reg.submit();
+        }
+    });
+
+    //取消
+    $("#btnResetSubmit").click(function () {
+        if($("#Back_flag").val() != "B"){//不是退回作業才開關
+            $("#tabPR,#tabSend,#tr_button1").show();
+            $("#tr_button2,#tabreject").hide();
+        }
+        $("#tr_button1 input:button").unlock();
+    });
+
+    //簽核人員
+    $("input[name='ap_type']").click(function () {
+        if($("input[name='ap_type']:checked").val()=="1"){
+            $("#job_scode1").unlock();
+            $("#job_scode2").lock();
+        }else{
+            $("#job_scode1").lock();
+            $("#job_scode2").unlock();
+        }
+    });
+
+    //重新抓取區所案件主檔資料(含申請人)
+    function GetBranchData(){
+        if (confirm("是否確定重新取得區所案件主檔資料？")) {
+            var url=getRootPath() + "/ajax/get_branchdata.aspx?prgid=<%=prgid%>&datasource=seq_ext&branch="+  $("#Branch").val() + 
+            "&seq=" +$("#Bseq").val() + "&seq1=" + $("#Bseq1").val()+"&opt_sqlno="+ $("#opt_sqlno").val() + "&chkTest=" + $("#chkTest:checked").val();
+            //window.open(url, "", "width=800 height=600 top=100 left=100 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=no scrollbars=yes");
+            ActFrame.location.href = url;
+        }
+    }
 </script>
