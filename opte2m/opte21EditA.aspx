@@ -267,7 +267,7 @@
             return false;
         }
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnsearchSubmit1,#btnsearchSubmit2").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.target = "ActFrame";
@@ -289,7 +289,7 @@
 
     //刪除分案(2)
     $("#btnDelSubmit").click(function () {
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         reg.submittask.value = "DEL";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
