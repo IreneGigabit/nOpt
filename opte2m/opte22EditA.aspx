@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -221,10 +221,10 @@
         $(".BLock").lock(<%#BLock%>);
         $(".SLock").lock(<%#SLock%>);
         $(".SELock").lock(<%#SELock%>);
-        $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
         $(".YYLock").lock(<%#YYLock%>);
         $(".YZLock").lock(<%#YZLock%>);
+        $(".ALock").lock(<%#ALock%>&&<%#YZLock%>);
 
         //取得案件資料
         $.ajax({
@@ -297,7 +297,7 @@
             }
         }
         
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -324,7 +324,7 @@
             return false;
         }
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -334,7 +334,7 @@
 
     //取消
     $("#btnResetSubmit").click(function () {
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1,#tabAP").show();
         $("#tr_button2,#tabreject").hide();
         $("#tr_button1 input:button").unlock();
