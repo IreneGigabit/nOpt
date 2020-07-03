@@ -207,6 +207,7 @@
     <input type="hidden" id="Back_flag" name="Back_flag" value="<%=Back_flag%>">
     <input type="hidden" id="End_flag" name="End_flag" value="<%=End_flag%>">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
+	<input type="hidden" id="show_qu_form" name="show_qu_form" value="<%=show_qu_form%>">
 	<input type="hidden" id="sameap_flag" name="sameap_flag" value="<%=sameap_flag%>">
 	<input type="hidden" id="progid" name="progid">
 
