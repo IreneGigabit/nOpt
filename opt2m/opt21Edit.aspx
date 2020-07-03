@@ -287,7 +287,7 @@
         //    return false;
         //}
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnsearchSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
