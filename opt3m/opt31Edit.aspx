@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -513,7 +513,7 @@
             return false;
         }
 
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.progid.value=opt_prgid;
@@ -661,7 +661,7 @@
         }
         
         reg.prgid.value="opt31";
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -696,7 +696,7 @@
                 return false;
             }
 
-            $("select,textarea,input").unlock();
+            $("select,textarea,input,span").unlock();
             $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
             reg.submittask.value = "B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
