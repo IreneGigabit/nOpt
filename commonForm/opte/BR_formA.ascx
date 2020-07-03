@@ -68,7 +68,7 @@
 			<td class=lightbluetable align=right>國外所案號：</td>
 			<td class=whitetablebg >TE-<INPUT TYPE=text id=ext_seq name=ext_seq SIZE=5 MAXLENGTH=5 class="Lock">-<INPUT TYPE=text id=ext_seq1 name=ext_seq1 SIZE=3 MAXLENGTH=3  class="Lock" value="_">	
 			<td class=lightbluetable align=right>對方號：</td>
-			<td class=whitetablebg ><INPUT TYPE=text id=your_no name=your_no SIZE=20 MAXLENGTH=20 class="YZLock" >	
+			<td class=whitetablebg ><INPUT TYPE=text id=your_no name=your_no SIZE=20 MAXLENGTH=20>	
 			<input type="button" value="查詢" class="cbutton QHide" id="btnyour_no" name="btnyour_no">
 	</tr>
 	<tr>
