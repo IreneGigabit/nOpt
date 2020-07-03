@@ -307,7 +307,7 @@
             }
         }
         
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
@@ -334,7 +334,7 @@
             return false;
         }
         
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnBackSubmit,#btnResetSubmit").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = "B";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
