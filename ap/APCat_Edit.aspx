@@ -202,7 +202,7 @@
             $("#tfx_APcatCName").focus();
             return false;
         }
-        $("select,textarea,input").unlock();
+        $("select,textarea,input,span").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
@@ -212,7 +212,7 @@
     //刪除
     $("#btnDel").click(function () {
         if (confirm("注意！\n\n　你確定刪除資料嗎？")) {
-            $("select,textarea,input").unlock();
+            $("select,textarea,input,span").unlock();
             $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
             $("#submittask").val("D");
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
