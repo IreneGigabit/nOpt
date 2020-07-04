@@ -82,7 +82,8 @@
 	    SQL += ", '" + Request["edit_BJTSeq"]  + "'";
 	    SQL += ", '" + Request["edit_BJTSeq1"]  + "'";
 	    SQL += ", '" + ReqVal.TryGet("edit_opt_pic", "").ToBig5()  + "'";
-        SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path", "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        //SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path", "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        SQL += ", '" + Sys.Path2Opt( ReqVal.TryGet("edit_opt_pic_path", "")) + "'";//因舊系統儲存路徑為opt為了統一照舊
 	    SQL += ", '" + Request["edit_opt_class"]  + "'";
 	    SQL += ", '" + ReqVal.TryGet("edit_opt_class_name", "").ToBig5()  + "'";
 	    SQL += ", '" + ReqVal.TryGet("edit_opt_point", "").ToBig5()  + "'";
@@ -133,7 +134,8 @@
         SQL += ", BJTSeq = '" + Request["edit_BJTSeq"] + "'";
         SQL += ", BJTSeq1 = '" + Request["edit_BJTSeq1"] + "'";
         SQL += ", opt_pic = '" + ReqVal.TryGet("edit_opt_pic", "").ToBig5() + "'";
-        SQL += ", opt_pic_path = '" + ReqVal.TryGet("edit_opt_pic_path", "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        //SQL += ", opt_pic_path = '" + ReqVal.TryGet("edit_opt_pic_path", "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        SQL += ", opt_pic_path = '" + Sys.Path2Opt(ReqVal.TryGet("edit_opt_pic_path", "")) + "'";//因舊系統儲存路徑為opt為了統一照舊
         SQL += ", opt_class = '" + Request["edit_opt_class"] + "'";
         SQL += ", opt_class_name = '" + ReqVal.TryGet("edit_opt_class_name", "").ToBig5() + "'";
         SQL += ", opt_point = '" + ReqVal.TryGet("edit_opt_point", "").ToBig5() + "'";
@@ -176,7 +178,8 @@
         SQL += ") VALUES (";
         SQL += "  '" + edit_opt_no + "'";
         SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path_name" + pno, "").ToBig5() + "'";
-        SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path" + pno, "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        //SQL += ", '" + ReqVal.TryGet("edit_opt_pic_path" + pno, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        SQL += ", '" + Sys.Path2Opt(ReqVal.TryGet("edit_opt_pic_path" + pno, "")) + "'";//因舊系統儲存路徑為opt為了統一照舊
         SQL += ", '" + Request["attach_type" + pno] + "'";
         SQL += ", '" + ReqVal.TryGet("attach_remark" + pno, "").ToBig5() + "'";
         SQL += ", NULL";
@@ -192,7 +195,8 @@
         //Funcs.insert_log_table(conn,"U",prgid,"law_attach","sqlno",ReqVal.TryGet("attach_sqlno"+pno));
         SQL = " Update law_attach ";
         SQL += "set attach_name = '" + ReqVal.TryGet("edit_opt_pic_path_name" + pno, "").ToBig5() + "'";
-        SQL += ", attach_path = '" + ReqVal.TryGet("edit_opt_pic_path" + pno, "").ToBig5().Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        //SQL += ", attach_path = '" + ReqVal.TryGet("edit_opt_pic_path" + pno, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+        SQL += ", attach_path = '" + Sys.Path2Opt(ReqVal.TryGet("edit_opt_pic_path" + pno, "")) + "'";//因舊系統儲存路徑為opt為了統一照舊
         SQL += ", attach_type = '" + Request["attach_type" + pno] + "'";
         SQL += ", attach_remark = '" + ReqVal.TryGet("attach_remark" + pno, "").ToBig5() + "'";
         if (Request["mEnd_date" + pno] == "") {

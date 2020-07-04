@@ -104,6 +104,7 @@ public class Sys
 
 			SqlCommand cmd = new SqlCommand(eSQL, cn);
 			cmd.ExecuteNonQuery();
+            cmd.Clone();
 		}
 	}
 
@@ -249,6 +250,23 @@ public class Sys
             return "/nopt/law_opt";
         else
             return "/nopt/opt_file";
+    }
+
+    /// <summary>
+    /// 檔案路徑轉換(檢視&複製檔案用)，OPT→NOPT
+    /// </summary>
+    public static string Path2Nopt(string path) {
+        path = path.Replace("/", @"\");
+        path = path.Replace(@"\opt\", @"\nopt\");
+        path = path.Replace(@"\btbrt\", @"\nopt\");
+        return path;
+    }
+
+    /// <summary>
+    /// 檔案路徑轉換(寫入DB用)，NOPT→OPT
+    /// </summary>
+    public static string Path2Opt(string path) {
+        return path.Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\");
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -217,7 +217,8 @@
                             SQL += ") values (";
                             SQL += opt_sqlno + ",'" + branch + "','PR'";
                             SQL += ",getdate(),'" + Session["scode"] + "','" + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "") + "'";
-                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                            //SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                            SQL += ",'" + Sys.Path2Opt(ReqVal.TryGet(opt_uploadfield + "_" + i, "")) + "'";//因舊系統儲存路徑為opt為了統一照舊
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "','A','',getdate(),'" + Session["scode"] + "'";
                             SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").ToBig5() + "'";
@@ -229,7 +230,8 @@
                     } else if (dbflag == "U") {
                         Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
                         SQL = "Update attach_opte set Source='PR'";
-                        SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                        //SQL += ",attach_path='" + ReqVal.TryGet(opt_uploadfield + "_" + i, "").Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\") + "'";//因舊系統儲存路徑為opt為了統一照舊
+                        SQL += ",attach_path='" + Sys.Path2Opt(ReqVal.TryGet(opt_uploadfield + "_" + i, "")) + "'";//因舊系統儲存路徑為opt為了統一照舊
                         SQL += ",attach_desc='" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").ToBig5() + "'";
                         SQL += ",attach_name='" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").ToBig5() + "'";
                         SQL += ",attach_size='" + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + "'";

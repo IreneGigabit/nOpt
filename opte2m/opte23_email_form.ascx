@@ -77,8 +77,8 @@
                 attcnt += 1;
 
                 //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
-                //dtAttach.Rows[i]["pdfpath"] = Sys.Host + dtAttach.Rows[i].SafeRead("attach_path", "").Trim().Replace(@"\opt\", @"\nopt\");
-                dtAttach.Rows[i]["pdfpath"] = Sys.Host + dtAttach.Rows[i].SafeRead("attach_path", "").Trim().Replace(@"\opt\", @"\nopt\").Replace(@"/btbrt/", @"/nopt/");
+                //dtAttach.Rows[i]["pdfpath"] = Sys.Host + dtAttach.Rows[i].SafeRead("attach_path", "").Trim().Replace(@"\opt\", @"\nopt\").Replace(@"/btbrt/", @"/nopt/");
+                dtAttach.Rows[i]["pdfpath"] = Sys.Host + Sys.Path2Nopt(dtAttach.Rows[i].SafeRead("attach_path", "").Trim());
                 dtAttach.Rows[i]["pdfsize"] = (Convert.ToDecimal("0" + dtAttach.Rows[i].SafeRead("attach_size", "")) / 1024) + 1;
                 if (dtAttach.Rows[i].SafeRead("attach_path", "").IndexOf(@"\opt\") > -1) {
                     dtAttach.Rows[i]["upload_branch_server"] = Sys.uploadservername("K");

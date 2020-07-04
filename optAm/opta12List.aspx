@@ -25,14 +25,14 @@
         bool first_check = false;//判斷有無填寫條件
         bool last_check = false;//判斷有無填寫條件
         bool last_CNot_check = false;//判斷有無填寫條件
-        
+
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "SELECT *,''fBJTseq,''opt_comfirm_str,''opt_check_str,''law_detail_no ";
             isql+="FROM law_opt where 1=1 ";
 
             if ((Request["qry_opt_no"] ?? "") != "") {
                 isql += " AND opt_no = '" + Request["qry_opt_no"] + "' ";
-		    }
+            }
             if ((Request["qry_BJTbranch"] ?? "") != "") {
                 isql += " and BJTbranch='" + Request["qry_BJTbranch"] + "'";
             }
@@ -121,7 +121,7 @@
                         break;
                     }
                 }
-                
+
                 if (first_check) {
                     isql += "  AND( ( ";
                     for (int i = 1; i <= int.Parse(ReqVal.TryGet("law_count", "0")); i++) {
@@ -516,7 +516,7 @@
                 }
             }
 
-                        
+
             if ((Request["qryOrder"] ?? "") != "") {
                 isql += " order by " + Request["qryOrder"];
             } else {
@@ -542,9 +542,10 @@
                     , ""
                     , page.pagedTable.Rows[i].SafeRead("BJTbranch", "")
                     , "");
-                
+
                 //商標圖樣
-                page.pagedTable.Rows[i]["opt_pic_path"] = page.pagedTable.Rows[i].SafeRead("opt_pic_path", "").Replace("/", @"\").Replace(@"\opt\", @"\nopt\");
+                //page.pagedTable.Rows[i]["opt_pic_path"] = page.pagedTable.Rows[i].SafeRead("opt_pic_path", "").Replace("/", @"\").Replace(@"\opt\", @"\nopt\");
+                page.pagedTable.Rows[i]["opt_pic_path"] = Sys.Path2Nopt(page.pagedTable.Rows[i].SafeRead("opt_pic_path", ""));
 
                 //條款成立狀態
                 switch (page.pagedTable.Rows[i].SafeRead("opt_comfirm", "")) {
@@ -591,8 +592,8 @@
                     page.pagedTable.Rows[i]["law_detail_no"] = law_detail_no;
                 }
             }
-            
-            
+
+
             var settings = new JsonSerializerSettings()
             {
                 Formatting = Formatting.Indented,
