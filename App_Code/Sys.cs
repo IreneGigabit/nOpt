@@ -99,7 +99,7 @@ public class Sys
             eSQL = eSQL + "'" + (Sys.getAppSetting("Sysmenu") == "" ? GetRootDir().Replace("/", "") : Sys.getAppSetting("Sysmenu")) + "',";
 			eSQL = eSQL + "'" + prgID + "',";
 			eSQL = eSQL + "'" + ex.Message.Replace("'", "''") + "',";
-			eSQL = eSQL + "'" + string.Join("\r\n=====\r\n", sqlList.ToArray()).Replace("'", "''") + "',";
+			eSQL = eSQL + "'" + string.Join("\r\n-----\r\n", sqlList.ToArray()).Replace("'", "''") + "',";
 			eSQL = eSQL + "'" + (ex.StackTrace??"").Replace("'", "''") + "')";
 
 			SqlCommand cmd = new SqlCommand(eSQL, cn);

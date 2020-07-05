@@ -50,7 +50,7 @@
     private void PageLayout() {
         //欄位開關
         using (DBHelper conn = new DBHelper(Conn.ODBCDSN, false)) {
-            SQL = "select c.syscode,c.logingrp,c.grpname,c.beg_date,c.end_date";
+            SQL = "select c.syscode,c.logingrp,c.grpname,d.beg_date,d.end_date";
             SQL += ",(select count(*) from SysCtrl where syscode=c.syscode and logingrp=d.logingrp)gcount";
             SQL += ",isnull(D.rights,0)rights";
             SQL += ",''chk001,''chk002,''chk004,''chk008,''chk016,''chk032,''chk064,''chk128,''chk256,''chk512 ";
@@ -120,7 +120,7 @@
 
     <table border="0" cellspacing="1" cellpadding="1" width="98%" class="ap-bg" align="center">
         <tr>
-            <td align="center" colspan="13" class="aprights">功能:&nbsp;<b style="color:red"><%#n1%>_<%#n2%></b></td>
+            <td align="center" colspan="13" class="aprights">功能:&nbsp;<b style="color:red"><%#APcode%>&nbsp;<%#n1%>_<%#n2%></b></td>
         </tr>
         <tr>
             <td align="center" class="aphead">群組</td>
@@ -141,7 +141,9 @@
         <ItemTemplate>
         <tr>
             <td align="left" class="apname">&nbsp;
+                <a href="sys14List.asp?SysCode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>">
                 <%#Eval("LoginGrp")%>_<%#Eval("GrpName")%>(<%#Eval("gcount")%>)
+                </a>
             </td>
             <td align="center" class="apname">
                 <input type="checkbox" name="chk_<%#Eval("LoginGrp")%>_001" value="1"<%#Eval("Chk001")%> />
@@ -209,22 +211,22 @@
     });
 
     //選單
-    $("input[name$=_001]").click(function () { chkme(this); });
-    function chkme(a) {
+    $("input[name$=_001]").click(function () {
+        var a = this;
         var ss = "input[name^=" + a.name.substr(0, a.name.length - 3) + "][type='checkbox']";
         if (a.checked) {
             ss += ":lt(6)";
             $(ss).prop('checked', true);
         } else
             $(ss).prop('checked', false);
-    }
+    });
 
     //全選
-    $("input[name$=_ALL]").click(function () { chkme(this); });
-    function chkme(a) {
-        var ss = "input[name^=" + a.name.substr(0, a.name.length - 3) + "][type='checkbox']:gt(0)";
+    $("input[name$=_ALL]").click(function () {
+        var a = this;
+        var ss = "input[name^=" + a.name.substr(0, a.name.length - 3) + "][type='checkbox']";//:gt(0)";
         $(ss).prop('checked', a.checked);
-    }
+    });
 
     //初始化
     function this_init() {

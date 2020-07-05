@@ -86,7 +86,8 @@
         SQL += ")";
         cnn.ExecuteNonQuery(SQL);
 
-        SQL = "Select * From LoginAp Where syscode='" + syscode + "' AND LoginGrp='" + syscode + "admin'";
+        SQL = "Select * From LoginAp ";
+        SQL += "Where syscode='" + Request["pfx_syscode"] + "' AND LoginGrp='" + Request["pfx_syscode"] + "admin' AND apcode='" + Request["pfx_APcode"] + "'";
         using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
             if (!dr.HasRows) {
                 SQL = "insert into LoginAp (SYScode,LoginGrp,Apcode,Rights,beg_date,end_date,tran_date,tran_scode";

@@ -41,17 +41,21 @@
                 cnn.Commit();
                 //cnn.RollBack();
 
-                if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
+                msg = "編修完成!!!";
             }
             catch (Exception ex) {
                 cnn.RollBack();
                 Sys.errorLog(ex, cnn.exeSQL, prgid);
+                msg = "編修失敗";
 
-                //throw new Exception(msg, ex);
+                throw new Exception(msg, ex);
             }
             finally {
                 cnn.Dispose();
             }
+
+            strOut.AppendLine("alert('" + msg + "');");
+            if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
 
             this.DataBind();
         }
@@ -61,10 +65,11 @@
         SQL = "DELETE FROM LoginAP WHERE SYScode='" + syscode + "' AND Apcode = '" + apcode + "'";
         cnn.ExecuteNonQuery(SQL);
    
-        SQL = "select C.*,D.LoginGrp from ap As C ";
+        SQL = "select D.LoginGrp from ap As C ";
 		SQL += "LEFT JOIN LoginGrp As D ON D.SYScode = C.SYScode ";
         SQL += "Where C.SYScode = '" + syscode + "' And C.Apcode = '" + apcode + "'";
         using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
+            SQL = "";
             while (dr.Read()) {
                 string logingrp = dr.SafeRead("LoginGrp", "");
                 int rights = 0;
@@ -73,12 +78,11 @@
                 string sEnd = "";
 
                 for (int z = 0; z <= 9; z++) {
-                    //Response.Write("2的" + z + "次方=" + Math.Pow(2, z) + "<BR>");
                     int pow = Convert.ToInt32(Math.Pow(2, z));
                     rwid = "chk_" + logingrp + "_" + pow.ToString().PadLeft(3, '0');
                     if (Request[rwid] != null) rights += int.Parse(Request[rwid]);
+                    //Response.Write(logingrp + " 2的" + z + "次方=" + Math.Pow(2, z) + "," + rwid + "=" + rights + "<BR>");
                 }
-
                 if (rights > 0) {
                     rwid = "Bgn_" + logingrp;
                     if (string.IsNullOrEmpty(Request[rwid]))
@@ -94,21 +98,14 @@
 
                     SQL += "INSERT INTO LoginAP (SYScode,LoginGrp, Apcode,Rights,beg_date,end_date,tran_date,Tran_scode";
                     SQL += ") VALUES ('" + syscode + "','" + logingrp + "','" + apcode + "'";
-                    SQL += ",'" + rights + "','" + sBgn + "','" + sEnd + "',getdate(),'" + Session["scode"] + "');";
+                    SQL += ",'" + rights + "','" + sBgn + "','" + sEnd + "',getdate(),'" + Session["scode"] + "');\n";
                 }
             }
         }
-                 
-        SQL = " Update APcat set";
-        SQL += " apcatcname = " + Util.dbnull(Request["tfx_APcatCName"].ToBig5()) + "";
-        SQL += ",apcatename = " + Util.dbnull(Request["tfx_APcatEName"].ToBig5()) + "";
-        SQL += ",apseq = " + Util.dbnull(Request["nfx_APseq"].ToBig5()) + "";
-        SQL += " where syscode='" + syscode + "' AND APcatID='" + APcatID + "'";
-        cnn.ExecuteNonQuery(SQL);
-        
-        msg = "資料更新成功!!!";
-        strOut.AppendLine("alert('" + msg + "');");
-        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
+
+        if (SQL.Length > 0) {
+            cnn.ExecuteNonQuery(SQL);
+        }
     }
 </script>
 
