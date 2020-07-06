@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="brdmt_upload_form" %>
+<%@ Control Language="C#" ClassName="brdmt_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -60,7 +60,7 @@
                 <br>檔案說明：<input type='hidden' id='doc_type_##' name='doc_type_##'>
                 <input type=text id='brdmt_desc_##' name='brdmt_desc_##' class="Lock" size=50 maxlength=50 >
                 <input type=checkbox name='brdmt_branch_##' class="Lock" value='B'><font color='blue'>交辦專案室</font>
-                <input type='hidden' id='open_path_##' name='open_path_##'>
+                <input type='hidden' id='bropen_path_##' name='bropen_path_##'>
 			</TD>
 		</TR>
     </tfoot>
@@ -87,7 +87,7 @@
             $("#attach_no_" + nRow).val(item.attach_no);
             $("#attach_flag_" + nRow).val("U");//維護時判斷是否要更名，即A表示新上傳的文件
             $("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
-            $("#open_path_" + nRow).val(item.preview_path);
+            $("#bropen_path_" + nRow).val(item.preview_path);
 
             if (i == 0) {
                 $("#attach_seq").val(item.seq);
@@ -113,6 +113,6 @@
     }
 
     brupload_form.PreviewAttach = function (nRow) {
-        window.open($("#open_path_" + nRow).val());
+        window.open($("#bropen_path_" + nRow).val());
     }
 </script>
