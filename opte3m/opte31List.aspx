@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -23,25 +23,25 @@
             isql += " inner join todo_opte b on b.opt_sqlno=a.opt_sqlno and b.dowhat='PR' and b.job_status='NN' ";
             isql += " where (a.Bstat_code like 'NN%' or a.Bstat_code like 'NX%') and a.Bmark='N'";
 
-            if ((Request["qrypr_branch"] ?? "") != "") {
+            if ((Request["qrypr_branch"] ?? "").Trim() != "") {
                 isql += " and a.pr_branch='" + Request["qrypr_branch"] + "'";
             }
-            if ((Request["qryPr_scode"] ?? "") != "") {
+            if ((Request["qryPr_scode"] ?? "").Trim() != "") {
                 isql += " and a.bPr_scode='" + Request["qryPr_scode"] + "'";
             }
-            if ((Request["qryopt_no"] ?? "") != "") {
+            if ((Request["qryopt_no"] ?? "").Trim() != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
-            if ((Request["qryBranch"] ?? "") != "") {
+            if ((Request["qryBranch"] ?? "").Trim() != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBSeq"] ?? "") != "") {
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
                 isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
             }
-            if ((Request["qryBSeq1"] ?? "") != "") {
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
-            if ((Request["qryyour_no"] ?? "") != "") {
+            if ((Request["qryyour_no"] ?? "").Trim() != "") {
                 isql += " and a.your_no like '%" + Request["qryyour_no"] + "%'";
             }
 
