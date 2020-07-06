@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -15,26 +15,26 @@
 
     protected void Page_Load(object sender, EventArgs e) {
         Token myToken = new Token(HTProgCode);
-        myToken.CheckMe(false, true);
+        myToken.CheckMe(false,true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             isql = "select a.*,''fseq,''optap_cname ";
             isql += "from vbr_opt a ";
             isql += "where (a.Bstat_code like 'NN%' or a.Bstat_code like 'NX%') and Bmark='N' ";
 
-            if ((Request["qryPr_scode"] ?? "") != "") {
+            if ((Request["qryPr_scode"] ?? "").Trim() != "") {
                 isql += " and a.Pr_scode='" + Request["qryPr_scode"] + "'";
             }
-            if ((Request["qryopt_no"] ?? "") != "") {
+            if ((Request["qryopt_no"] ?? "").Trim() != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
-            if ((Request["qryBranch"]??"")!=""){
+            if ((Request["qryBranch"] ?? "").Trim() != "") {
                 isql+=" and a.Branch='"+Request["qryBranch"]+"'";
             }
-            if ((Request["qryBSeq"]??"")!=""){
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
                 isql+=" and a.Bseq='"+Request["qryBSeq"]+"'";
             }
-            if ((Request["qryBSeq1"]??"")!=""){
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql+=" and a.Bseq1='"+Request["qryBSeq1"]+"'";
             }
 
