@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="ext_pr_form" %>
+<%@ Control Language="C#" ClassName="ext_pr_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -36,7 +36,7 @@
 	<TR>
 		<td class="lightbluetable"  align="right" nowrap>承辦時數 :</td>
 		<td class="whitetablebg"  align="left" >
-			<input type="text" id="Pr_hour" name="Pr_hour" SIZE=2 maxlength="3" class="BLock YZLock">
+			<input type="text" id="Pr_hour" name="Pr_hour" SIZE=3 maxlength="5" class="BLock YZLock">
 		</td>
 		<td class="lightbluetable" width="10%" align="right" nowrap>承辦完成百分比 :</td>
 		<td class="whitetablebg"  align="left">
