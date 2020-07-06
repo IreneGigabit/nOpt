@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -22,19 +22,19 @@
             isql += "from vbr_opt a ";
             isql += "where a.Bstat_code is null and Bmark='N' ";
 
-            if ((Request["qryBranch"]??"")!=""){
+            if ((Request["qryBranch"] ?? "").Trim() != "") {
                 isql+=" and a.Branch='"+Request["qryBranch"]+"'";
             }
-            if ((Request["qryBSeq"]??"")!=""){
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
                 isql+=" and a.Bseq='"+Request["qryBSeq"]+"'";
             }
-            if ((Request["qryBSeq1"]??"")!=""){
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql+=" and a.Bseq1='"+Request["qryBSeq1"]+"'";
             }
-            if ((Request["qryBCaseDateS"]??"")!=""){
+            if ((Request["qryBCaseDateS"] ?? "").Trim() != "") {
                 isql+=" and a.Bcase_date>='"+Request["qryBCaseDateS"]+"'";
             }
-            if ((Request["qryBCaseDateE"]??"")!=""){
+            if ((Request["qryBCaseDateE"] ?? "").Trim() != "") {
                 isql+=" and a.Bcase_date<='"+Request["qryBCaseDateE"]+"'";
             }
 
