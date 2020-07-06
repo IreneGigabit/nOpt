@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -266,7 +266,11 @@ public class Sys
     /// 檔案路徑轉換(寫入DB用)，NOPT→OPT
     /// </summary>
     public static string Path2Opt(string path) {
-        return path.Replace(@"\nopt\", @"\opt\").Replace(@"/nopt/", @"\opt\");
+        path = path.Replace(@"\nopt\", @"\opt\");
+        path = path.Replace(@"/nopt/", @"\opt\");
+        path = path.Replace(@"\opt_file/", @"\opt_file\");
+        path = path.Replace(@"\law_opt/", @"\law_opt\");
+        return path;
     }
 
     /// <summary>
