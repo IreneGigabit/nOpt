@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -147,6 +147,7 @@
 		            <input type="hidden" id="Bseq1_{{nRow}}" name="Bseq1_{{nRow}}" value="{{bseq1}}">
 		            <input type="hidden" id="attach_path_{{nRow}}" name="attach_path_{{nRow}}" value="{{attach_path}}">
 		            <input type="hidden" id="attach_name_{{nRow}}" name="attach_name_{{nRow}}" value="{{attach_name}}">
+		            <input type="hidden" id="pdf_path_{{nRow}}" name="pdf_path_{{nRow}}" value="{{pdf_path}}">
 		        </td>
 		        <td class="whitetablebg" align="center">{{opt_no}}</td>
 		        <td class="whitetablebg" align="center">{{fseq}}<br>
@@ -154,7 +155,7 @@
 			        <a id="tr_editA_{{nRow}}" href="../opte3m/opte31EditA.aspx?opt_sqlno={{opt_sqlno}}&opt_no={{opt_no}}&Branch={{branch}}&arcase={{arcase}}&prgid=opte31&prgname=<%#HTProgCap%>&from_prgid=<%=prgid%>" target="Eblank">[承辦文件上傳]</a>
 		        </td>
 		        <td class="whitetablebg" align="center">{{your_no}}</td>
-		        <td class="whitetablebg" align="center"><font color="darkblue" style="cursor:pointer" onclick="pdf_onclick('{{pdf_path}}')">{{attach_name}}</font>({{pdfsize}}KB)</td>
+		        <td class="whitetablebg" align="center"><font color="darkblue" style="cursor:pointer" onclick="pdf_onclick('{{nRow}}')">{{attach_name}}</font>({{pdfsize}}KB)</td>
 		        <td class="whitetablebg" align="center">{{attach_desc}}</td>
 		        <td class="whitetablebg">{{appl_name}}</td>
 		        <td class="whitetablebg" nowrap>{{pr_rs_code_name}}</td>
@@ -374,8 +375,8 @@
     }
 
     //檢視PDF
-    function pdf_onclick(pdfpath){
-        window.open("http://"+pdfpath,"","width=800 height=600 top=40 left=80 toolbar=no, menubar=yes, location=no, directories=no resizable=yes status=no scrollbars=yes");
+    function pdf_onclick(nRow) {
+        window.open("http://" + $("#pdf_path_" + nRow).val(), "", "width=800 height=600 top=40 left=80 toolbar=no, menubar=yes, location=no, directories=no resizable=yes status=no scrollbars=yes");
     }
 
     //入檔
