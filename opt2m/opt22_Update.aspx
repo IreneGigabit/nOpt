@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -388,7 +388,7 @@
             SQL += ",'" + case_no + "','" + Session["scode"] + "',getdate(),'PR','NN')";
             conn.ExecuteNonQuery(SQL);
 
-            CreateMail(conn, opt_sqlno, todo_scode);
+            //CreateMail(conn, opt_sqlno, todo_scode);
 
             conn.Commit();
             //conn.RollBack();
