@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -126,6 +126,7 @@
                 BLock = "false";
                 SLock = "false";
                 ALock = "false";
+                P1Lock = "false";
             }
         }
         if (submitTask != "Q") {
