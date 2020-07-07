@@ -32,20 +32,20 @@
             }
             
             if ((Request["qryno_type"] ?? "") == "opt_no") {
-                if ((Request["qrySopt_no"] ?? "") != "") {
+                if ((Request["qrySopt_no"] ?? "").Trim() != "") {
                     isql += " and a.Opt_no>='" + Request["qrySopt_no"] + "'";
                 }
-                if ((Request["qryEopt_no"] ?? "") != "") {
+                if ((Request["qryEopt_no"] ?? "").Trim() != "") {
                     isql += " and a.Opt_no<='" + Request["qryEopt_no"] + "'";
                 }
             } else if ((Request["qryno_type"] ?? "") == "Bseq_no") {
                 if ((Request["qryBranch"] ?? "") != "") {
                     isql += " and a.Branch='" + Request["qryBranch"] + "'";
                 }
-                if ((Request["qryBSeq"] ?? "") != "") {
+                if ((Request["qryBSeq"] ?? "").Trim() != "") {
                     isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
                 }
-                if ((Request["qryBSeq1"] ?? "") != "") {
+                if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                     isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
                 }
             }

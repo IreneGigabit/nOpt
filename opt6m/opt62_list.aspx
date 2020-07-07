@@ -97,10 +97,10 @@
         }
 
         string qryBseq_name = "";
-        if ((Request["qryBseq"] ?? "") != "") {
+        if ((Request["qryBseq"] ?? "").Trim() != "") {
             qryBseq_name = "&nbsp;<font color=blue>◎區所編號：</font>" + Request["qryBseq"];
         }
-        if ((Request["qryBseq1"] ?? "") != "" && (Request["qryBseq1"] ?? "") != "_") {
+        if ((Request["qryBseq1"] ?? "").Trim() != "" && (Request["qryBseq1"] ?? "") != "_") {
             qryBseq_name += "-" + Request["qryBseq1"];
         }
 

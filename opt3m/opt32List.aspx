@@ -26,19 +26,19 @@
             if ((Request["qryBranch"] ?? "") != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBSeq"] ?? "") != "") {
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
                 isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
             }
-            if ((Request["qryBSeq1"] ?? "") != "") {
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
-            if ((Request["qryCase_no"] ?? "") != "") {
+            if ((Request["qryCase_no"] ?? "").Trim() != "") {
                 isql += " and a.Case_no='" + Request["qryCase_no"] + "'";
             }
             if ((Request["qryCust_area"] ?? "") != "") {
                 isql += " and a.Cust_area='" + Request["qryCust_area"] + "'";
             }
-            if ((Request["qryCust_seq"] ?? "") != "") {
+            if ((Request["qryCust_seq"] ?? "").Trim() != "") {
                 isql += " and a.Cust_seq='" + Request["qryCust_seq"] + "'";
             }
             if ((Request["qryap_cname"] ?? "") != "") {

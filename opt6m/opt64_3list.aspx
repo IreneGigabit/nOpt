@@ -217,10 +217,10 @@
                 }
             }
 
-            if ((Request["qryBseq"] ?? "") != "") {
+            if ((Request["qryBseq"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq='" + Request["qryBseq"] + "'";
             }
-            if ((Request["qryBseq1"] ?? "") != "") {
+            if ((Request["qryBseq1"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq1='" + Request["qryBseq1"] + "'";
             }
             //2014/6/23增加交辦(分案)來源

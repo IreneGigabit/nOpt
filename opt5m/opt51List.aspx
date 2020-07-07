@@ -25,16 +25,16 @@
 		isql+= " on a.opt_sqlno=b.opt_sqlno ";
         isql += " where (b.tran_status='DY') and a.Bmark='N' ";
 
-            if ((Request["qryopt_no"] ?? "") != "") {
+            if ((Request["qryopt_no"] ?? "").Trim() != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
             if ((Request["qryBranch"] ?? "") != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBSeq"] ?? "") != "") {
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
                 isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
             }
-            if ((Request["qryBSeq1"] ?? "") != "") {
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
             if ((Request["qryinput_dateS"] ?? "") != "") {

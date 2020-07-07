@@ -74,10 +74,10 @@
         }
 
         string qryBseq_name = "";
-        if ((Request["qryBseq"] ?? "") != "") {
+        if ((Request["qryBseq"] ?? "").Trim() != "") {
             qryBseq_name = "&nbsp;<font color=blue>◎區所編號：</font>" + Request["qryBseq"];
         }
-        if ((Request["qryBseq1"] ?? "") != "" && (Request["qryBseq1"] ?? "") != "_") {
+        if ((Request["qryBseq1"] ?? "").Trim() != "" && (Request["qryBseq1"] ?? "").Trim() != "_") {
             qryBseq_name += "-" + Request["qryBseq1"];
         }
 
@@ -89,10 +89,10 @@
         }
 
         string qrycust_area_name = "";
-        if ((Request["qrycust_area"] ?? "") != "") {
+        if ((Request["qrycust_area"] ?? "").Trim() != "") {
             qrycust_area_name = "&nbsp;<font color=blue>◎客戶編號：</font>" + Request["qrycust_area"];
 
-            if ((Request["qrycust_seq"] ?? "") != "") {
+            if ((Request["qrycust_seq"] ?? "").Trim() != "") {
                 qrycust_area_name += "-" + Request["qrycust_seq"];
             }
         }
@@ -139,16 +139,16 @@
             if ((Request["qryBranch"] ?? "") != "") {
                 SQL += " and a.branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBseq"] ?? "") != "") {
+            if ((Request["qryBseq"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq='" + Request["qryBseq"] + "'";
             }
-            if ((Request["qryBseq1"] ?? "") != "") {
+            if ((Request["qryBseq1"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq1='" + Request["qryBseq1"] + "'";
             }
             if ((Request["qrycust_area"] ?? "") != "") {
                 SQL += " and a.cust_area='" + Request["qrycust_area"] + "'";
             }
-            if ((Request["qrycust_seq"] ?? "") != "") {
+            if ((Request["qrycust_seq"] ?? "").Trim() != "") {
                 SQL += " and a.cust_seq='" + Request["qrycust_seq"] + "'";
             }
             if ((Request["qryin_scode"] ?? "") != "") {

@@ -114,14 +114,14 @@
             SQL += " Left outer join cust_code as b on B.code_type='Oestatcode' and b.cust_code=a.bstat_code";
             SQL += " where Bmark='N' and confirm_date is not null and Bstat_code <>'YZ'";
 
-            if ((Request["qryBranch"] ?? "") != "") {
+            if ((Request["qryBranch"] ?? "").Trim() != "") {
                 SQL += " and branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryDay"] ?? "") != "") {
+            if ((Request["qryDay"] ?? "").Trim() != "") {
                 SQL += " and " + Request["qrykinddate"] + "<='" + DateTime.Today.AddDays(Convert.ToInt32(ReqVal.TryGet("qryDay", "0"))).ToShortDateString() + "'";
             }
             //2014/6/23增加交辦(分案)來源
-            if ((Request["qrybr_source"] ?? "") != "") {
+            if ((Request["qrybr_source"] ?? "").Trim() != "") {
                 SQL += " and a.br_source='" + Request["qrybr_source"] + "'";
             }
 

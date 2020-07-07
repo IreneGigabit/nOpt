@@ -274,16 +274,16 @@
             if ((Request["qrybranch"] ?? "") != "") {
                 SQL += " and a.branch='" + Request["qrybranch"] + "'";
             }
-            if ((Request["qryBseq"] ?? "") != "") {
+            if ((Request["qryBseq"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq='" + Request["qryBseq"] + "'";
             }
-            if ((Request["qryBseq1"] ?? "") != "") {
+            if ((Request["qryBseq1"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq1='" + Request["qryBseq1"] + "'";
             }
-            if ((Request["qryext_seq"] ?? "") != "") {
+            if ((Request["qryext_seq"] ?? "").Trim() != "") {
                 SQL += " and a.ext_seq='" + Request["qryext_seq"] + "'";
             }
-            if ((Request["qryext_seq1"] ?? "") != "") {
+            if ((Request["qryext_seq1"] ?? "").Trim() != "") {
                 SQL += " and a.ext_seq1='" + Request["qryext_seq1"] + "'";
             }
             if ((Request["qryinclude"] ?? "") == "Y") {
@@ -291,14 +291,14 @@
             } else if ((Request["qryinclude"] ?? "") == "N") {
                 SQL += " and a.ref_code is  null";
             }
-            if ((Request["qrycust_seq"] ?? "") != "") {
+            if ((Request["qrycust_seq"] ?? "").Trim() != "") {
                 SQL += " and a.cust_area='" + Request["qrycust_area"] + "'";
                 SQL += " and a.cust_seq='" + Request["qrycust_seq"] + "'";
             }
             if ((Request["qryin_scode"] ?? "") != "") {
                 SQL += " and a.in_scode='" + Request["qryin_scode"] + "'";
             }
-            if ((Request["qryappl_name"] ?? "") != "") {
+            if ((Request["qryappl_name"] ?? "").Trim() != "") {
                 SQL += " and a.appl_name like '%" + Request["qryappl_name"] + "%'";
             }
             if ((Request["qrykindno"] ?? "") != "" && (Request["qryno"] ?? "") != "") {

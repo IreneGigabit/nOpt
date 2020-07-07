@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -83,13 +83,13 @@ public class Sys
         return ConfigurationManager.AppSettings[parameter] ?? "";
 	}
 
-	public static void errorLog(Exception ex, string sqlStr, string prgID) {
+	public static string errorLog(Exception ex, string sqlStr, string prgID) {
 		List<string> sqlList = new List<string>();
 		sqlList.Add(sqlStr);
-		errorLog(ex, sqlList, prgID);
+		return errorLog(ex, sqlList, prgID);
 	}
 
-	public static void errorLog(Exception ex, List<string> sqlList, string prgID) {
+	public static string errorLog(Exception ex, List<string> sqlList, string prgID) {
 		using (SqlConnection cn = new SqlConnection(Conn.OptK)) {
 			cn.Open();
 			string eSQL = "INSERT INTO error_log(log_date, log_uid, syscode, prgid, MsgStr, SQLstr, StackStr) VALUES (";
@@ -104,7 +104,14 @@ public class Sys
 
 			SqlCommand cmd = new SqlCommand(eSQL, cn);
 			cmd.ExecuteNonQuery();
-            cmd.Clone();
+
+            //抓insert後的流水號
+            eSQL = "SELECT SCOPE_IDENTITY() AS Current_Identity";
+            cmd.CommandText = eSQL;
+            string sqlno = (cmd.ExecuteScalar()??"").ToString();
+            cmd.Dispose();
+
+            return sqlno;
 		}
 	}
 

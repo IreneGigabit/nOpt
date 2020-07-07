@@ -106,10 +106,10 @@
             }
 
             string qryBseq_name = "";
-            if ((Request["qryBseq"] ?? "") != "") {
+            if ((Request["qryBseq"] ?? "").Trim() != "") {
                 qryBseq_name = "&nbsp;<font color=blue>◎區所案件編號：</font>" + Request["qryBseq"];
             }
-            if ((Request["qryBseq1"] ?? "") != "" && (Request["qryBseq1"] ?? "") != "_") {
+            if ((Request["qryBseq1"] ?? "").Trim() != "" && (Request["qryBseq1"] ?? "").Trim() != "_") {
                 qryBseq_name += "-" + Request["qryBseq1"];
             }
 
@@ -222,10 +222,10 @@
                 }
             }
 
-            if ((Request["qryBseq"] ?? "") != "") {
+            if ((Request["qryBseq"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq='" + Request["qryBseq"] + "'";
             }
-            if ((Request["qryBseq1"] ?? "") != "") {
+            if ((Request["qryBseq1"] ?? "").Trim() != "") {
                 SQL += " and a.Bseq1='" + Request["qryBseq1"] + "'";
             }
             //2014/6/23增加交辦(分案)來源

@@ -1,4 +1,3 @@
 exception處理
 sys.path2opt後續
 lock mode
-list參數.Trim()

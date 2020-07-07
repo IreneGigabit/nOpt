@@ -32,14 +32,14 @@
             } else if ((Request["qrytodo"] ?? "") == "recopy") {
                 isql += " and b.attach_flagbj='Y' ";
             }
-            if ((Request["qryopt_no"] ?? "") != "") {
+            if ((Request["qryopt_no"] ?? "").Trim() != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
             if ((Request["qryBranch"] ?? "") != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
             isql += " and a.Bseq='" + Request["qryBSeq"] + "'";//必填條件
-            if ((Request["qryBSeq1"] ?? "") != "") {
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
             if ((Request["qryinput_dateS"] ?? "") != "") {

@@ -24,16 +24,16 @@
             isql += "from vbr_opt a ";
             isql += "where (a.Bstat_code like 'YY%') and a.Bmark='N' ";
 
-            if ((Request["qryopt_no"] ?? "") != "") {
+            if ((Request["qryopt_no"] ?? "").Trim() != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
             if ((Request["qryBranch"] ?? "") != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBSeq"] ?? "") != "") {
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
                 isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
             }
-            if ((Request["qryBSeq1"] ?? "") != "") {
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
             if ((Request["qryBMPDateS"] ?? "") != "") {

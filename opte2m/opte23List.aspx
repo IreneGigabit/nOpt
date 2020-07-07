@@ -32,19 +32,19 @@
 		       isql+= " and (a.bpr_scode is null or a.bpr_scode='') ";
 		    }
 
-            if ((Request["qryopt_no"] ?? "") != "") {
+            if ((Request["qryopt_no"] ?? "").Trim() != "") {
                 isql += " and a.Opt_no='" + Request["qryopt_no"] + "'";
             }
             if ((Request["qryBranch"] ?? "") != "") {
                 isql += " and a.Branch='" + Request["qryBranch"] + "'";
             }
-            if ((Request["qryBSeq"] ?? "") != "") {
+            if ((Request["qryBSeq"] ?? "").Trim() != "") {
             isql += " and a.Bseq='" + Request["qryBSeq"] + "'";
             }
-            if ((Request["qryBSeq1"] ?? "") != "") {
+            if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
             }
-            if ((Request["qryyour_no"] ?? "") != "") {
+            if ((Request["qryyour_no"] ?? "").Trim() != "") {
                 isql += " and a.your_no='" + Request["qryyour_no"] + "'";
             }
 

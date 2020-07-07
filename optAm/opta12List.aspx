@@ -36,22 +36,22 @@
             if ((Request["qry_BJTbranch"] ?? "") != "") {
                 isql += " and BJTbranch='" + Request["qry_BJTbranch"] + "'";
             }
-            if ((Request["qry_BJTSeq"] ?? "") != "") {
+            if ((Request["qry_BJTSeq"] ?? "").Trim() != "") {
                 isql += " AND BJTSeq='" + Request["qry_BJTSeq"] + "'";
             }
-            if ((Request["qry_BJTSeq1"] ?? "") != "") {
+            if ((Request["qry_BJTSeq1"] ?? "").Trim() != "") {
                 isql += " AND BJTSeq1='" + Request["qry_BJTSeq1"] + "'";
             }
             if ((Request["qry_branch"] ?? "") != "") {
                 isql += " AND branch='" + Request["qry_branch"] + "'";
             }
-            if ((Request["qry_BSeq"] ?? "") != "") {
+            if ((Request["qry_BSeq"] ?? "").Trim() != "") {
                 isql += " and Bseq='" + Request["qry_BSeq"] + "'";
             }
-            if ((Request["qry_BSeq1"] ?? "") != "") {
+            if ((Request["qry_BSeq1"] ?? "").Trim() != "") {
                 isql += " and Bseq1='" + Request["qry_BSeq1"] + "'";
             }
-            if ((Request["qry_pr_no"] ?? "") != "") {
+            if ((Request["qry_pr_no"] ?? "").Trim() != "") {
                 isql += " and pr_no='" + Request["qry_pr_no"] + "'";
             }
             if ((Request["qry_opt_comfirm"] ?? "") != "") {

@@ -39,7 +39,7 @@
             } else if (submitTask == "B") {//退回區所
                 doReturn();
             }
-            
+
             this.DataBind();
         }
     }
@@ -48,7 +48,7 @@
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
             //產生案件編號
-            SQL="select max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
+            SQL="select 1max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
             object objResult = conn.ExecuteScalar(SQL);
             string opt_no = (objResult == DBNull.Value || objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
 
@@ -82,7 +82,7 @@
             SQL += " and dowhat='RE' and syscode='" + branch + "TBRT'";
             SQL += " and sqlno=" + pre_sqlno;
             conn.ExecuteNonQuery(SQL);
-    
+
             //入流程控制檔
             SQL = "insert into todo_opt(pre_sqlno,syscode,apcode,opt_sqlno,branch,case_no";
             SQL += ",in_scode,in_date,dowhat,job_status) values (";
@@ -96,8 +96,8 @@
         }
         catch (Exception ex) {
             conn.RollBack();
-            Sys.errorLog(ex, conn.exeSQL, prgid);
-            msg = "收件失敗";
+            string sqlno = Sys.errorLog(ex, conn.exeSQL, prgid);
+            msg = "收件失敗\\n(" + sqlno + ")" + ex.Message;
             throw new Exception(msg, ex);
         }
         finally {
@@ -174,7 +174,7 @@
             connB.Dispose();
         }
     }
-    
+
     private void CreateMail(DBHelper conn,string pre_sqlno,string todo_scode){
         string fseq="",in_scode="",in_scode_name="",cust_area="",cust_seq="";
         string ap_cname="",appl_name="",arcase_name="",last_date="";
@@ -183,19 +183,19 @@
         SQL+="from vbr_opt where case_no='" + case_no + "' and branch='" + branch + "'";
         using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
             if (dr.Read()) {
-		        fseq=Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
-		        in_scode=dr.SafeRead("in_scode", "");
-		        in_scode_name=dr.SafeRead("scode_name", "");
-		        cust_area=dr.SafeRead("cust_area", "");
-		        cust_seq=dr.SafeRead("cust_seq", "");
-		        ap_cname=dr.SafeRead("ap_cname", "");
-		        appl_name=dr.SafeRead("appl_name", "");
-		        arcase_name =dr.SafeRead("arcase_name", "");
-		        last_date=dr.SafeRead("last_date", "");
+                fseq=Funcs.formatSeq(dr.SafeRead("Bseq", ""), dr.SafeRead("Bseq1", ""), "", dr.SafeRead("Branch", ""), Sys.GetSession("dept"));
+                in_scode=dr.SafeRead("in_scode", "");
+                in_scode_name=dr.SafeRead("scode_name", "");
+                cust_area=dr.SafeRead("cust_area", "");
+                cust_seq=dr.SafeRead("cust_seq", "");
+                ap_cname=dr.SafeRead("ap_cname", "");
+                appl_name=dr.SafeRead("appl_name", "");
+                arcase_name =dr.SafeRead("arcase_name", "");
+                last_date=dr.SafeRead("last_date", "");
             }
         }
-        
-	    string Subject = "專案室爭救案件退件通知";
+
+        string Subject = "專案室爭救案件退件通知";
         string strFrom = Session["scode"] + "@saint-island.com.tw";
         List<string> strTo = new List<string>();
         List<string> strCC = new List<string>();
