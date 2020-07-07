@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -407,7 +407,7 @@
 
     //Email通知承辦被退回
     private void Sendmail_back(DBHelper conn, string opt_sqlno, string pr_scode) {
-        string Subject = "國內所商標爭救案件管理系統－爭救案件判行退回通知";
+        string Subject = "國內所商標爭救案件管理系統－出口爭救案件判行退回通知";
         string strFrom = Session["sc_name"] + "<" + Session["scode"] + "@saint-island.com.tw>";
         List<string> strTo = new List<string>();
         List<string> strCC = new List<string>();
