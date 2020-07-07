@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -13,6 +13,10 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 
+/// <summary>
+/// Fix 編譯出現「缺少ExtensionAttribute ctor」錯誤
+/// ref:https://blog.darkthread.net/blog/extensionattribute-ctor-error/
+/// </summary>
 namespace System.Runtime.CompilerServices
 {
 	public class ExtensionAttribute : Attribute { }
@@ -269,7 +273,7 @@ public static class DataExt
         DateTime result = DateTime.Now;
         if (dr[colName] != DBNull.Value && dr[colName] != null) {
             if (!DateTime.TryParse(dr[colName].ToString(), out result))
-                throw new Exception("日期格式數據轉換失敗(" + colName + ")");
+                throw new Exception("日期格式轉換失敗(" + colName + ")");
         }
         return result;
     }
@@ -284,8 +288,24 @@ public static class DataExt
         DateTime time = DateTime.Now;
         if (dr[colName] != DBNull.Value && dr[colName] != null) {
             if (!DateTime.TryParse(dr[colName].ToString(), out time))
-                throw new Exception("日期格式數據轉換失敗(" + colName + ")");
+                throw new Exception("日期格式轉換失敗(" + colName + ")");
             result = time;
+        }
+        return result;
+    }
+    /// <summary>
+    /// 獲取DateTime Format後的字串
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>
+    /// <param name="format">ToString的Format</param>
+    /// <returns></returns>
+    public static string GetDateTimeString(this IDataReader dr, string colName, string format) {
+        string result = "";
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            DateTime time = DateTime.Now;
+            if (!DateTime.TryParse(dr[colName].ToString(), out time))
+                throw new Exception("日期格式轉換失敗(" + colName + ")");
+            result = time.ToString(format);
         }
         return result;
     }
@@ -299,7 +319,7 @@ public static class DataExt
         short result = 0;
         if (dr[colName] != DBNull.Value && dr[colName] != null) {
             if (!short.TryParse(dr[colName].ToString(), out result))
-                throw new Exception("短整形轉換失敗(" + colName + ")");
+                throw new Exception("短整數轉換失敗(" + colName + ")");
         }
         return result;
     }
@@ -314,7 +334,7 @@ public static class DataExt
 
         if (dr[colName] != DBNull.Value && dr[colName] != null) {
             if (!int.TryParse(dr[colName].ToString(), out result))
-                throw new Exception("整形轉換失敗(" + colName + ")");
+                throw new Exception("整數轉換失敗(" + colName + ")");
         }
         return result;
     }
@@ -328,7 +348,7 @@ public static class DataExt
         double result = 0.00;
         if (dr[colName] != DBNull.Value && dr[colName] != null) {
             if (!double.TryParse(dr[colName].ToString(), out result))
-                throw new Exception("雙精度類型轉換失敗(" + colName + ")");
+                throw new Exception("雙精數類型轉換失敗(" + colName + ")");
         }
         return result;
     }
@@ -341,7 +361,7 @@ public static class DataExt
         float result = 0.00f;
         if (dr[colName] != DBNull.Value && dr[colName] != null) {
             if (!float.TryParse(dr[colName].ToString(), out result))
-                throw new Exception("單精度類型轉換失敗(" + colName + ")");
+                throw new Exception("單精數類型轉換失敗(" + colName + ")");
         }
 
         return result;
@@ -405,9 +425,9 @@ public static class DataExt
     /// <param name="fieldName">欄位名稱</param>
     /// <param name="defaultValue">若是null時回傳預設值</param>
     /// <returns></returns>
-    public static T SafeRead<T>(this DataRow dr, string fieldName, T defaultValue) {
+    public static T SafeRead<T>(this DataRow row, string fieldName, T defaultValue) {
         try {
-            object obj = dr[fieldName];
+            object obj = row[fieldName];
             if (obj == null || obj == System.DBNull.Value)
                 return defaultValue;
 
@@ -458,6 +478,22 @@ public static class DataExt
 		return result;
 	}
 
+	/// <summary>
+    /// 獲取DateTime Format後的字串
+    /// </summary>
+    /// <param name="colName">欄位名稱</param>
+    /// <param name="format">ToString的Format</param>
+    /// <returns></returns>
+    public static string GetDateTimeString(this DataRow dr, string colName, string format) {
+        string result = "";
+        if (dr[colName] != DBNull.Value && dr[colName] != null) {
+            DateTime time = DateTime.Now;
+            if (!DateTime.TryParse(dr[colName].ToString(), out time))
+                throw new Exception("日期格式轉換失敗(" + colName + ")");
+            result = time.ToString(format);
+        }
+        return result;
+    }
 	/// <summary>
 	/// 獲取Int16
 	/// </summary>
