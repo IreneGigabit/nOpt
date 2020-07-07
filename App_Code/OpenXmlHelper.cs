@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -1018,6 +1018,16 @@ public class OpenXmlHelper
 	//public void AppendImage(string imgStr, bool isBase64, decimal scale) {
 	//	ImageData img= new ImageData(imgStr, isBase64, scale);
 	public void AppendImage(ImageFile img) {
+        outDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(GetImage(img))));
+        outDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph());
+    }
+    #endregion
+
+    #region 取得圖片物件 +void GetImage(ImageFile img)
+    /// <summary>
+    /// 取得圖片物件
+    /// </summary>
+    public Drawing GetImage(ImageFile img) {
 		ImagePart imagePart = outDoc.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
 		string relationshipId = outDoc.MainDocumentPart.GetIdOfPart(imagePart);
 		imagePart.FeedData(img.getDataStream());
@@ -1090,8 +1100,65 @@ public class OpenXmlHelper
 					 //EditId = "50D07946"
 				 });
 
-		outDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
-		outDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph());
+        return element;
+    }
+    #endregion
+
+    #region 取代書籤(插入圖片) +void ReplaceBookmark(Drawing img)
+    /// <summary>
+    /// 取代書籤(插入圖片)
+    /// </summary>
+    /// <param name="bookmarkName">書籤名稱</param>
+    public void ReplaceBookmark(string bookmarkName, Drawing img) {
+        try {
+            MainDocumentPart mainPart = outDoc.MainDocumentPart;
+            BookmarkStart bookmarkStart = mainPart.RootElement.Descendants<BookmarkStart>().Where(i => i.Name.Value.ToLower() == bookmarkName.ToLower()).FirstOrDefault();
+            if (bookmarkStart != null) {
+                if (bookmarkStart.Name.Value.ToLower() == bookmarkName.ToLower()) {
+                    string id = bookmarkStart.Id.Value;
+
+                    BookmarkEnd bookmarkEnd = bookmarkStart.Parent.Descendants<BookmarkEnd>().Where(i => i.Id.Value == id).FirstOrDefault();
+
+                    if (bookmarkStart.NextSibling() != null && bookmarkStart.NextSibling().GetType() == typeof(BookmarkEnd) && ((BookmarkEnd)bookmarkStart.NextSibling()).Id == id) {
+                        Paragraph LastRun = bookmarkStart.PreviousSibling<Paragraph>();
+                        if (LastRun == null) {
+                            LastRun = bookmarkStart.Ancestors<Paragraph>().FirstOrDefault();
+                        }
+                        LastRun.Append(img);
+                    } else {
+                        //留第一個run其他run刪除,從BookmarkStart刪到BookmarkEnd為止
+                        OpenXmlElement[] bookmarkItems = bookmarkStart.Parent.ChildElements.ToArray();
+
+                        bool canRemove = false;
+                        int bIndex = 0;
+                        foreach (OpenXmlElement item in bookmarkItems) {
+                            if (item.GetType() == typeof(BookmarkEnd) && bookmarkEnd != null && bookmarkEnd.Id == id) {
+                                break;
+                            }
+                            if (canRemove && item.GetType() == typeof(Run)) {
+                                if (bIndex == 0) {
+                                    Text t = item.Elements<Text>().First();
+                                    t.Text = "";
+                                    item.Append(img);
+                                } else {
+                                    item.Remove();
+                                }
+                                bIndex++;
+                            }
+                            if (item.Equals(bookmarkStart)) {
+                                canRemove = true;
+                            }
+                        }
+                    }
+
+                    bookmarkStart.Remove();
+                    if (bookmarkEnd != null) bookmarkEnd.Remove();
+                }
+            }
+        }
+        catch (Exception ex) {
+            throw new Exception("取代書籤錯誤!!(" + bookmarkName + ")", ex);
+        }
 	}
 	#endregion
 }
@@ -1292,7 +1359,7 @@ public class ImageFile {
 		BinaryData = data;
 		System.Drawing.Bitmap img = new System.Drawing.Bitmap(new MemoryStream(data));
 		int dpi = 300;
-		//int dpi = (int)(img.VerticalResolution < 300 ? 300 : img.VerticalResolution);
+        //int dpi = (int)(img.VerticalResolution < 300 ? img.VerticalResolution : 300);
 		int SourceWidth = img.Width;
 		int SourceHeight = img.Height;
 		//throw new Exception(string.Format("w:{0},h:{1},dpi:{2}", SourceWidth, SourceHeight, dpi));
