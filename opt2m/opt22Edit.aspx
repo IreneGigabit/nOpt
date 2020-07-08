@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -402,6 +402,12 @@
                 return false;
             }
         }
+
+        if ($("#nfy_fees").val() != $("#Send_Fees").val()) {
+            alert("區所交辦規費(" + $("#nfy_fees").val() + ")與規費支出(" + $("#Send_Fees").val() + ")不符");
+            return false;
+        }
+
         $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value = dowhat;
