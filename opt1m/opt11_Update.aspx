@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -48,7 +48,7 @@
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         try {
             //產生案件編號
-            SQL="select 1max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
+            SQL="select max(opt_no)+1 from br_opt where left(opt_no,4)=(year(getdate()))";
             object objResult = conn.ExecuteScalar(SQL);
             string opt_no = (objResult == DBNull.Value || objResult == null ? (DateTime.Now.Year + "000001") : objResult.ToString());
 
