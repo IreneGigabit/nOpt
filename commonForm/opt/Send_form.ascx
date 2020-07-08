@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -234,9 +234,9 @@
         $("#rs_detail").val(jOpt.rs_detail);
 
         //規費支出
-        var send_Fees = jOpt.bfees;
-        $("#Send_Fees").val(jOpt.bfees);
-        $("#old_Send_Fees").val(jOpt.bfees);
+        //var send_Fees = jOpt.bfees;
+        //$("#Send_Fees").val(jOpt.bfees);
+        //$("#old_Send_Fees").val(jOpt.bfees);
 
         //是否輸入評分
         if(jOpt.score_flag!=""){
@@ -259,6 +259,20 @@
         //if (jOpt.receipt_type !== undefined && jOpt.receipt_type != "") $("#receipt_type").val(jOpt.receipt_type);
         //if (jOpt.receipt_title !== undefined && jOpt.receipt_title != "") $("#receipt_title").val(jOpt.receipt_title);
         //if (jOpt.rectitle_name !== undefined && jOpt.rectitle_name != "") $("#rectitle_name").val(jOpt.rectitle_name);
+
+        //規費支出
+        if(jOpt.case_no==""){
+            $("#send_fees").val(jOpt.send_fees);
+        }else{
+            if(jOpt.bfees !== undefined&&jOpt.bfees != null){
+                $("#Send_Fees").val(jOpt.bfees);
+                $("#old_Send_Fees").val(jOpt.bfees);
+            }else{
+                $("#Send_Fees").val(jOpt.fees);
+                $("#old_Send_Fees").val(jOpt.fees);
+            }
+        }
+
         $("#send_way").val(jOpt.send_way);
         $("#receipt_type").val(jOpt.receipt_type);
         $("#receipt_title").val(jOpt.receipt_title);
