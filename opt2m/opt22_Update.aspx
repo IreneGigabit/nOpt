@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -156,6 +156,7 @@
         DBHelper conn = new DBHelper(Conn.OptK).Debug(Request["chkTest"] == "TEST");
         DBHelper connB = new DBHelper(Conn.OptB(Request["branch"])).Debug(Request["chkTest"] == "TEST");
         DBHelper connM = new DBHelper(Conn.OptBM).Debug(Request["chkTest"] == "TEST");
+        DBHelper conni = new DBHelper(Conn.Acc(Request["branch"])).Debug(Request["chkTest"] == "TEST");
         try {
             //Funcs.insert_log_table(conn, "U", prgid, "br_opt", "opt_sqlno", opt_sqlno);
 
@@ -177,6 +178,7 @@
                 SQL += ",Send_Sel=" + Util.dbnull(ReqVal.TryGet("Send_Sel", null)) + "";
                 SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
                 SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "").ToBig5() + "'";
+                SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees", "0")) + "";
             }
             SQL += ",tran_scode='" + Session["scode"] + "'";
             SQL += ",tran_date=getdate()";
@@ -290,6 +292,7 @@
                     SQL += ",rectitle_name='" + ReqVal.TryGet("rectitle_name", "").ToBig5() + "'";
                     SQL += ",receipt_type='" + ReqVal.TryGet("receipt_type", "") + "'";
                     SQL += ",receipt_title='" + ReqVal.TryGet("receipt_title", "") + "'";
+                    SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees", "0")) + " ";
                     SQL += "where Branch='" + Request["Branch"] + "' ";
                     SQL += "and seq='" + Request["bseq"] + "' ";
                     SQL += "and seq1='" + Request["bseq1"] + "' ";
@@ -311,6 +314,7 @@
                     SQL += ",act_code=" + Util.dbnull(ReqVal.TryGet("act_code", null)) + "";
                     SQL += ",act_code_name=" + Util.dbnull(act_code_name).ToBig5() + "";
                     SQL += ",RS_detail='" + ReqVal.TryGet("RS_detail", "").ToBig5() + "'";
+                    SQL += ",Fees=" + Util.dbzero(ReqVal.TryGet("Send_Fees", "0")) + " ";
                     SQL += ",tran_scode='" + Session["scode"] + "'";
                     SQL += ",tran_date=getdate()";
                     SQL += "where seq_area0='B' ";
@@ -319,15 +323,29 @@
                     SQL += "and seq1='" + Request["bseq1"] + "' ";
                     SQL += "and rs_no='" + rs_no + "' ";
                     connM.ExecuteNonQuery(SQL);
+
+                    //[帳款]區所account db,有改規費再update
+                    if (ReqVal.TryGet("Send_Fees", "") != ReqVal.TryGet("old_Send_Fees", "")) {
+                        SQL = "Update plus_temp ";
+                        SQL += "set tr_money=" + Util.dbzero(ReqVal.TryGet("Send_Fees", "0")) + " ";
+                        SQL += "OUTPUT 'U',getdate(),'" + Session["scode"] + "','" + prgid + "',DELETED.* INTO plus_temp_log ";
+                        SQL += "where Branch='" + Request["Branch"] + "' ";
+                        SQL += "and seq='" + Request["bseq"] + "' ";
+                        SQL += "and seq1='" + Request["bseq1"] + "' ";
+                        SQL += "and rs_no='" + rs_no + "' ";
+                        conni.ExecuteNonQuery(SQL);
+                    }
                 }
             }
             
             conn.Commit();
             connB.Commit();
             connM.Commit();
+            conni.Commit();
             //conn.RollBack();
             //connB.RollBack();
             //connM.RollBack();
+            //conni.RollBack();
 
             msg = "編修存檔成功，若有需要請通知區所重新抓取資料！";
             strOut.AppendLine("alert('" + msg + "');");
@@ -337,7 +355,11 @@
             conn.RollBack();
             connB.RollBack();
             connM.RollBack();
+            conni.RollBack();
             Sys.errorLog(ex, conn.exeSQL, prgid);
+            Sys.errorLog(ex, connB.exeSQL, prgid);
+            Sys.errorLog(ex, connM.exeSQL, prgid);
+            Sys.errorLog(ex, conni.exeSQL, prgid);
 
             msg = "存檔失敗！";
             strOut.AppendLine("alert('" + msg + "');");
@@ -348,6 +370,7 @@
             conn.Dispose();
             connB.Dispose();
             connM.Dispose();
+            conni.Dispose();
         }
     }
     
