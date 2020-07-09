@@ -17,7 +17,7 @@
         draw_file = Request["draw_file"] ?? "";
         draw_file = draw_file.Replace("\\", "/");
         draw_file = draw_file.Replace("/opt/", "/nopt/");
-        file_name = draw_file.Substr((draw_file.LastIndexOf("/")+1));
+        file_name = draw_file.Substring((draw_file.LastIndexOf("/") + 1));
         folder_name = Request["folder_name"] ?? "";
         gs_date = Request["gs_date"] ?? "";
 
