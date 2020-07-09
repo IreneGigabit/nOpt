@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -31,8 +31,6 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        strConnB = Conn.OptB(Request["branch"]);
-
         qBranch = (Request["qBranch"] ?? "").Trim();
         qSeq = (Request["qSeq"] ?? "").Trim();
         qSeq1 = (Request["qSeq1"] ?? "").Trim();
@@ -44,6 +42,8 @@
         in_scode=(Request["in_scode"] ?? "").Trim();
         qBr = (Request["qBr"] ?? "").Trim();//N代表區所交辦　//Y代表自行分案
         CItem = (Request["CItem"] ?? "").Trim();
+        
+        strConnB = Conn.OptB(qBranch);
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
