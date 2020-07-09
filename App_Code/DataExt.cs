@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -605,14 +605,22 @@ public static class DataExt
     #endregion
 
 	#region Dictionary 擴展
-	public static TValue TryGet<TKey, TValue>(this Dictionary<TKey, TValue> input, TKey key, TValue ifNotFound) {
+	public static string TryGet<TKey, TValue>(this Dictionary<TKey, TValue> input, TKey key) {
 		TValue val;
 		if (input.TryGetValue(key, out val)) {
-			return val;
+			return val.ToString();
 		}
 
-		return ifNotFound;
+		return "";
 	}
+    public static TValue TryGet<TKey, TValue>(this Dictionary<TKey, TValue> input, TKey key, TValue ifNotFound) {
+        TValue val;
+        if (input.TryGetValue(key, out val)) {
+            return val;
+        }
+
+        return ifNotFound;
+    }
 	#endregion
 }
 
