@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="opte_upload_form" %>
+<%@ Control Language="C#" ClassName="opte_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -124,7 +124,7 @@
             $("#btn" + fld + "_" + nRow).prop("disabled", true);
 
             $("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
-            $("#open_path_" + nRow).val(item.preview_path);
+            //$("#open_path_" + nRow).val(item.preview_path);
 
             if (item.add_scode != "<%#Session["scode"]%>") {
                 $("#btn" + fld + "_D_" + nRow).prop("disabled", true);
