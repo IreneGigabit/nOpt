@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Globalization;
@@ -110,7 +110,7 @@ public static class Util
     }
     #endregion
 
-    #region Left
+    #region Left - 從左邊取N個字元，若ln為負數0則是剩餘N個字元數 +static string Left(this string str, int ln)
     /// <summary>
     /// 從左邊取N個字元，若ln為負數0則是剩餘N個字元數
     /// </summary>
@@ -125,7 +125,7 @@ public static class Util
     }
     #endregion
 
-    #region Right
+    #region Right - 從右邊取N個字元 +static string Right(this string str, int ln)
     /// <summary>
     /// 從右邊取N個字元
     /// </summary>
@@ -186,6 +186,9 @@ public static class Util
     public static string ToXmlUnicode(this string str) {
         return str.ToXmlUnicode(false);
     }
+    /// <summary>
+    /// 將&amp;#nnnn;轉成word用格式
+    /// </summary>
     public static string ToXmlUnicode(this string str, bool isEng) {
 		foreach (System.Text.RegularExpressions.Match m
 			in System.Text.RegularExpressions.Regex.Matches(str, "&#(?<ncr>\\d+?);"))
@@ -205,7 +208,7 @@ public static class Util
     }
     #endregion
 
-    #region ToUnicode - 將字串內有&amp;#nnnn;格式字元轉成char字元
+    #region ToUnicode - 將字串內有&amp;#nnnn;格式字元轉成char字元 +static string ToUnicode(this string str)
     /// <summary>
     /// 將字串內有&amp;#nnnn;格式字元轉成char字元
     /// </summary>
@@ -218,7 +221,7 @@ public static class Util
     }
     #endregion
 
-    #region ToBig5 - 將難字轉成&#nnnn;
+    #region ToBig5 - 將難字轉成&#nnnn; +static string ToBig5(this string str)
 	/// <summary>
 	/// 將難字轉成&amp;#nnnn;
 	/// </summary>
@@ -295,17 +298,20 @@ public static class Util
 	/// 使用方法："字串".Substr(起始位置, 擷取長度);
 	/// 如果 startIndex 大於字數，則傳回 ""  (空字串)
 	/// 如果 startIndex + length > 字數，則傳回由 startIndex 起之剩餘的字數
-	///           </summary>
+	/// </summary>
 	/// <param name="s">待處理的字串</param>
 	/// <param name="startIndex">擷取的起始位置，不能大於字串長度</param>
 	/// <param name="length">擷取的長度，與起始位置相加，不能大於字串長度</param>
 	/// <returns>字串</returns>
 	public static string Substr(this string s, int startIndex, int length) {
 		byte[] byte32Array = Encoding.UTF32.GetBytes(s);
+        //HttpContext.Current.Response.Write(string.Format("length={0}<BR>", length));
 		startIndex *= 4;
-		length *= 4;
+        length *= 4;
 
 		if (startIndex >= byte32Array.Length) return "";
+        //HttpContext.Current.Response.Write(string.Format("startIndex={0}<BR>length={1}<br>byte32Array.Length={2}", startIndex, length, byte32Array.Length));
+        //HttpContext.Current.Response.End();
         length = (startIndex + length) > byte32Array.Length ? byte32Array.Length - startIndex : length;
 		return Encoding.UTF32.GetString(byte32Array, startIndex, length);
 	}
@@ -313,12 +319,14 @@ public static class Util
 	/// <summary>
 	/// 取得指定位置起算的右方所有子字串，字串會先轉成 UTF-32
 	/// 使用方法："字串".Substr(起始位置);
-	/// 如果 startIndex 大於字數，則傳回 ""  (空字串)</summary>
+	/// 如果 startIndex 大於字數，則傳回 ""  (空字串)
+    /// </summary>
 	/// <param name="s">待處理的字串</param>
 	/// <param name="startIndex">擷取的起始位置，不能大於字串長度</param>
 	/// <returns>字串</returns>
 	public static string Substr(this string s, int startIndex) {
 		return s.Substr(startIndex, s.Length);
+        //return s.Substr(startIndex, Int32.MaxValue);
 	}
 	#endregion
 
