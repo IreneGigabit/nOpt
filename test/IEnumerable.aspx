@@ -1,8 +1,8 @@
 ﻿<%@ Page Language="C#" CodePage="65001" %>
-<%@ Import Namespace="System.Data"%>
-<%@ Import Namespace="System.Data.SqlClient"%>
-
+<%@ Import Namespace = "System.Data" %>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <script runat="server">
 	private void Page_Load(Object sender, EventArgs e) {
         string SQL = "select row_number() OVER( PARTITION BY c.APseq,substring(a.APorder,1,1) ORDER BY a.APorder, a.APcode) AS grpnum " +

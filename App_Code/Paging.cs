@@ -9,6 +9,11 @@ using System.Data;
 public class Paging
 {
     /// <summary>
+    /// 執行SQL
+    /// </summary>
+    public string exeSQL { get; set; }
+
+    /// <summary>
     /// 第幾頁
     /// </summary>
     public int nowPage { get; set; }
@@ -33,6 +38,13 @@ public class Paging
     public Paging(int GoPage, int PerPage) {
         nowPage = GoPage;
         perPage = PerPage;
+        exeSQL = "";
+    }
+
+    public Paging(int GoPage, int PerPage,string ExeSQL) {
+        nowPage = GoPage;
+        perPage = PerPage;
+        exeSQL = ExeSQL;
     }
 
     public void GetPagedTable(DataTable dataTable) {
@@ -62,5 +74,16 @@ public class Paging
             }
             pagedTable = newdt;
         }
+    }
+
+    /// <summary>
+    /// 頁數清單
+    /// </summary>
+    public string GetPageList() {
+        string rtn = "";
+        for (int i = 1; i <= totPage; i++) {
+            rtn += "<option value=\"" + i + "\" " + (nowPage == i ? "selected" : "") + ">" + i + "</option>\n";
+        }
+        return rtn;
     }
 }

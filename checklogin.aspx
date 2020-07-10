@@ -14,8 +14,8 @@
 
         StringBuilder sb = new StringBuilder();
         string strChk = CheckUser();
-
-        if (strChk.Length > 0) sb = sb.Append("window.alert(\"" + strChk + " !\");\n");
+        //sb.Append("alert(\"" + Session["Password"] + " !\");\n");
+        if (strChk.Length > 0) sb = sb.Append("alert(\"" + strChk + "\");\n");
         if (exMsg.Length == 0) sb = sb.Append("top.location.href = \"Default.aspx\";\n");
 
         ScriptString = sb.ToString();
@@ -26,19 +26,19 @@
     {
         string strRet = "";
 
-        string syscode = Request["syscode"] ?? system.GetRootDir().Replace("/", "");//系統
+        string syscode = Request["syscode"] ?? Sys.GetRootDir().Replace("/", "");//系統
         string Uid = Request["tfx_scode"] ?? "";//帳號
         string sys_pwd = Request["sys_pwd"] ?? "";//密碼
         string tfx_sys_password = Request["tfx_sys_password"] ?? "";//明碼
-
-        if (tfx_sys_password != "")
+        //Sys.errorLog(new Exception("tfx_scode(ref:" + HttpContext.Current.Request.UrlReferrer + ")"), Uid, "checklogin");
+        if (tfx_sys_password != "") {
             sys_pwd = Util.GetHashValueMD5(tfx_sys_password.ToLower());//明碼轉md5
-
+        }
         string SQL = "";
         DBHelper conn = null;
         try
         {
-            conn = new DBHelper(Conn.Sysctrl, false);
+            conn = new DBHelper(Conn.ODBCDSN, false).Debug(false);
             if (Uid != "")
             {
                 SQL = "SELECT a.*,b.*,c.logingrp,c.GrpName ";
@@ -50,17 +50,18 @@
                 SQL += " AND a.scode='" + Uid + "' ";
                 SQL += " AND a.sys_pwd ='" + sys_pwd + "' ";
                 SQL += " AND GETDATE() BETWEEN a.beg_date AND isnull(a.end_date,'2079/06/06') ";
+                //Sys.errorLog(new Exception(Conn.ODBCDSN), SQL, "checklogin");
                 SqlDataReader dr = conn.ExecuteReader(SQL);
                 if (dr.Read())
                 {
                     Session["Password"] = true;
-                    Session["SeScode"] = dr["scode"].ToString();
-                    Session["Scode"] = dr["scode"].ToString();
+                    Session["se_scode"] = dr["scode"].ToString();
+                    Session["scode"] = dr["scode"].ToString();
                     Session["sc_name"] = dr["sc_name"].ToString();
                     Session["SeSysPwd"] = dr["sys_pwd"].ToString();
                     Session["SeBranch"] = dr["DataBranch"].ToString();
                     Session["Dept"] = dr["Dept"].ToString();
-                    Session["Syscode"] = dr["Syscode"].ToString();
+                    Session["Syscode"] = Sys.getAppSetting("syscode");// dr["Syscode"].ToString();//因有新舊資料問題,改用舊系統的syscode
                     Session["LoginGrp"] = dr["LoginGrp"].ToString();
                     Session["GrpName"] = dr["GrpName"].ToString();
                     dr.Close();
@@ -91,8 +92,8 @@
         }
         catch (Exception ex)
         {
-            exMsg = Conn.Sysctrl + "\n" + SQL;
-            system.errorLog(ex, conn.exeSQL, "0000");
+            exMsg = conn.ConnString + "\n" + SQL;
+            if (conn != null) Sys.errorLog(ex, conn.exeSQL, "checklogin");
             strRet = "執行錯誤 !" + ex.Message + "\\n\\n" + SQL;
             Session["Password"] = false;
             Session.Abandon();

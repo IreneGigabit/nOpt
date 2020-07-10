@@ -8,6 +8,9 @@ using System.Web;
 /// </summary>
 public static class Conn
 {
+    /// <summary>
+    /// IIS主機名(大寫)
+    /// </summary>
     private static string Host = HttpContext.Current.Request.ServerVariables["HTTP_HOST"].ToString().ToUpper();
 
     /// <summary>
@@ -16,141 +19,100 @@ public static class Conn
     public static string OptK {
         get {
             switch (Host) {
-                case "SIK08": return system.getConnString("prod_optk");//正式環境
-                case "WEB10": return system.getConnString("test_optk");//使用者測試環境
-                default: return system.getConnString("dev_optk");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optk");//正式環境
+                case "WEB10": return Sys.getConnString("test_optk");//使用者測試環境
+                default: return Sys.getConnString("dev_optk");//開發環境
             }
         }
     }
-    /// <summary>
-    /// 案件管理系統(北)
-    /// </summary>
-    public static string OptBN {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_optBN");//正式環境
-                case "WEB10": return system.getConnString("test_optBN");//使用者測試環境
-                default: return system.getConnString("dev_optBN");//開發環境
-            }
-        }
-    }
-    /// <summary>
-    /// 案件管理系統(中)
-    /// </summary>
-    public static string OptBC {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_optBC");//正式環境
-                case "WEB10": return system.getConnString("test_optBC");//使用者測試環境
-                default: return system.getConnString("dev_optBC");//開發環境
-            }
-        }
-    }
-    /// <summary>
-    /// 案件管理系統(南)
-    /// </summary>
-    public static string OptBS {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_optBS");//正式環境
-                case "WEB10": return system.getConnString("test_optBS");//使用者測試環境
-                default: return system.getConnString("dev_optBS");//開發環境
-            }
-        }
-    }
-    /// <summary>
-    /// 案件管理系統(雄)
-    /// </summary>
-    public static string OptBK {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_optBK");//正式環境
-                case "WEB10": return system.getConnString("test_optBK");//使用者測試環境
-                default: return system.getConnString("dev_optBK");//開發環境
-            }
-        }
-    }
+
+	/// <summary>
+	/// 區所案件管理系統
+	/// </summary>
+	public static string OptB(string pBranch) {
+		string rtnStr = "";
+		switch (Host) {
+			case "SIK10": //正式環境
+				if (pBranch.ToUpper() == "N") rtnStr = Sys.getConnString("prod_optBN");
+				if (pBranch.ToUpper() == "C") rtnStr = Sys.getConnString("prod_optBC");
+				if (pBranch.ToUpper() == "S") rtnStr = Sys.getConnString("prod_optBS");
+				if (pBranch.ToUpper() == "K") rtnStr = Sys.getConnString("prod_optBK");
+				break;
+			case "WEB10":
+				rtnStr = Sys.getConnString("test_optBN");//測試環境
+				break;
+			default:
+				rtnStr = Sys.getConnString("dev_optBN");//開發環境
+				break;
+		}
+		return rtnStr;
+	}
+
     /// <summary>
     /// 案件管理系統(總)
     /// </summary>
     public static string OptBM {
         get {
             switch (Host) {
-                case "SIK08": return system.getConnString("prod_optBM");//正式環境
-                case "WEB10": return system.getConnString("test_optBM");//使用者測試環境
-                default: return system.getConnString("dev_optBM");//開發環境
+                case "SIK10": return Sys.getConnString("prod_optBM");//正式環境
+				case "WEB10": return Sys.getConnString("test_optBM");//使用者測試環境
+                default: return Sys.getConnString("dev_optBM");//開發環境
             }
         }
     }
-    /// <summary>
-    /// 帳款資料使用(北)
-    /// </summary>
-    public static string AccN {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_Nacc");//正式環境
-                case "WEB10": return system.getConnString("test_Nacc");//使用者測試環境
-                default: return system.getConnString("dev_Nacc");//開發環境
-            }
-        }
-    }
-    /// <summary>
-    /// 帳款資料使用(中)
-    /// </summary>
-    public static string AccC {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_Cacc");//正式環境
-                case "WEB10": return system.getConnString("test_Cacc");//使用者測試環境
-                default: return system.getConnString("dev_Cacc");//開發環境
-            }
-        }
-    }
-    /// <summary>
-    /// 帳款資料使用(南)
-    /// </summary>
-    public static string AaccS {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_Sacc");//正式環境
-                case "WEB10": return system.getConnString("test_Sacc");//使用者測試環境
-                default: return system.getConnString("dev_Sacc");//開發環境
-            }
-        }
-    }
-    /// <summary>
-    /// 帳款資料使用(雄)
-    /// </summary>
-    public static string AccK {
-        get {
-            switch (Host) {
-                case "SIK08": return system.getConnString("prod_Kacc");//正式環境
-                case "WEB10": return system.getConnString("test_Kacc");//使用者測試環境
-                default: return system.getConnString("dev_Kacc");//開發環境
-            }
-        }
-    }
+
+	/// <summary>
+	/// 帳款資料使用
+	/// </summary>
+	public static string Acc(string pBranch) {
+		string rtnStr = "";
+		switch (Host) {
+			case "SIK10": //正式環境
+				if (pBranch.ToUpper() == "N") rtnStr = Sys.getConnString("prod_Nacc");
+				if (pBranch.ToUpper() == "C") rtnStr = Sys.getConnString("prod_Cacc");
+				if (pBranch.ToUpper() == "S") rtnStr = Sys.getConnString("prod_Sacc");
+				if (pBranch.ToUpper() == "K") rtnStr = Sys.getConnString("prod_Kacc");
+				break;
+			case "WEB10":
+				rtnStr = Sys.getConnString("test_Nacc");//測試環境
+				break;
+			default:
+				rtnStr = Sys.getConnString("dev_Nacc");//開發環境
+				break;
+		}
+		return rtnStr;
+	}
+
     /// <summary>
     /// Sysctrl
     /// </summary>
     public static string Sysctrl {
         get {
             switch (Host) {
-                case "SIK08": return system.getConnString("prod_sysctrl");//正式環境
-                case "WEB10": return system.getConnString("test_sysctrl");//使用者測試環境
-                default: return system.getConnString("dev_sysctrl");//開發環境
+                case "SINN05": return Sys.getConnString("prod_Nsysctrl");//正式環境北
+                case "SIC10": return Sys.getConnString("prod_Csysctrl");//正式環境中
+                case "SIS10": return Sys.getConnString("prod_Ssysctrl");//正式環境南
+                case "SIK10": return Sys.getConnString("prod_Ksysctrl");//正式環境雄
+                case "WEB10": return Sys.getConnString("test_sysctrl");//使用者測試環境
+                default: return Sys.getConnString("dev_sysctrl");//開發環境
+                //case "WEB10": return Sys.getConnString("test_mg_sysctrl");//使用者測試環境
+                //default: return Sys.getConnString("dev_mg_sysctrl");//開發環境
             }
         }
     }
+
     /// <summary>
-    /// ODBCDSN
+    /// ODBCDSN(for系統管理用，EX:權限，台北所指向總所sysctrl)
     /// </summary>
     public static string ODBCDSN {
         get {
             switch (Host) {
-                case "SIK08": return system.getConnString("prod_sysctrl");//正式環境
-                case "WEB10": return system.getConnString("test_sysctrl");//使用者測試環境
-                default: return system.getConnString("dev_sysctrl");//開發環境
+                case "SINN05": return Sys.getConnString("prod_mg_sysctrl");//正式環境北
+                case "SIC10": return Sys.getConnString("prod_Csysctrl");//正式環境中
+                case "SIS10": return Sys.getConnString("prod_Ssysctrl");//正式環境南
+                case "SIK10": return Sys.getConnString("prod_Ksysctrl");//正式環境雄
+                case "WEB10": return Sys.getConnString("test_mg_sysctrl");//使用者測試環境
+                default: return Sys.getConnString("dev_mg_sysctrl");//開發環境
             }
         }
     }

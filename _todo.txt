@@ -1,0 +1,5 @@
+exception處理
+sys.path2opt後續
+lock mode
+ajax整理
+權限設定

@@ -25,14 +25,14 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="x-ua-compatible" content="IE=9">
+    <meta http-equiv="x-ua-compatible" content="ie=10">
     <%--<meta name="viewport" content="width=device-width" />--%>
     <title></title>
     <link href="<%=ResolveClientUrl("~/inc/setmenu.css")%>" rel="stylesheet" />
     <link href="<%=ResolveClientUrl("~/inc/setstyle.css")%>" rel="stylesheet" />
-    <script src="<%=ResolveClientUrl("~/js/jquery-1.12.4.min.js")%>"></script>
-    <script src="<%=ResolveClientUrl("~/js/vue.min.js")%>"></script>
-    <script src="<%=ResolveClientUrl("~/js/jquery.blockUI.js")%>"></script>
+    <script src="<%=ResolveClientUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
+    <script src="<%=ResolveClientUrl("~/js/lib/vue.min.js")%>"></script>
+    <script src="<%=ResolveClientUrl("~/js/lib/jquery.blockUI.js")%>"></script>
     <script src="<%=ResolveClientUrl("~/js/util.js")%>"></script>
     <script src="<%=ResolveClientUrl("~/js/app/services/employeeService.js")%>"></script>
     <script src="<%=ResolveClientUrl("~/js/app/component/employeeComponent.js")%>"></script>

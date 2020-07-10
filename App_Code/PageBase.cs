@@ -36,7 +36,7 @@ public class PageBase : System.Web.UI.Page
                 //ClientScript.RegisterClientScriptBlock(this.GetType(), "RedirectScript", "window.top.location.href = '" + Request.ApplicationPath + "/Login.aspx';");
                 StringBuilder jsText = new StringBuilder();
                 jsText.AppendLine("<script type='text/javascript'>");
-                jsText.AppendLine("alert('系統停滯時間逾時，請重新登入！'); ");
+                jsText.AppendLine("alert('系統停滯時間逾時，請重新登入(base)！'); ");
                 jsText.AppendLine("if (typeof(window.opener)!='undefined'){");
                 jsText.AppendLine(" window.opener.top.location.href = '" + (Request.ApplicationPath == "/" ? "" : Request.ApplicationPath) + "/Login.aspx'; ");
                 jsText.AppendLine(" window.close();");

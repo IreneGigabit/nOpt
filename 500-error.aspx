@@ -1,11 +1,10 @@
-﻿<%@Page Language="C#" CodePage="65001"%>
-<%@Import Namespace = "System.IO"%>
-<%@Import Namespace = "System.Diagnostics"%>
-<%@Import Namespace = "System.CodeDom.Compiler"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.IO"%>
+<%@ Import Namespace = "System.Diagnostics"%>
+<%@ Import Namespace = "System.CodeDom.Compiler"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <script runat="server">
-
 	private string _expType;
 	private Exception _lastError;
 	private HttpCompileException _ccExp;
@@ -231,7 +230,7 @@ legend
 <form id="form1" runat="server">
 <div>
 <asp:Label id="lblType" CssClass="errType" runat="server" />
-<hr />
+<hr class="style-one"/>
 <fieldset><legend>錯誤描述</legend>
 <asp:Label id="lblMessage" CssClass="errorMessage" runat="server" />
 </fieldset><br />
