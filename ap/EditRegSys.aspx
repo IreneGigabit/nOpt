@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -48,35 +48,35 @@
     }
 
     private void PageLayout() {
-        //欄位開關
+        if (submitTask == "U") {
+            StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" id=\"btnSubmit\">\n";
+        } else {
+            StrFormBtn += "<input type=button value=\"確定存檔\" class=\"cbutton\" id=\"btnSubmit\">\n";
+        }
+        
         using (DBHelper conn = new DBHelper(Conn.ODBCDSN, false)) {
             SQL = "select c.syscode,c.logingrp,c.grpname,d.beg_date,d.end_date";
-            SQL += ",(select count(*) from SysCtrl where syscode=c.syscode and logingrp=d.logingrp)gcount";
+            SQL += ",(select count(*) from SysCtrl where syscode=c.syscode and logingrp=c.logingrp)gcount";
             SQL += ",isnull(D.rights,0)rights";
-            SQL += ",''chk001,''chk002,''chk004,''chk008,''chk016,''chk032,''chk064,''chk128,''chk256,''chk512 ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 1) = 1 THEN ' checked' ELSE '' END AS 'Chk001' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 2) = 2 THEN ' checked' ELSE '' END AS 'Chk002' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 4) = 4 THEN ' checked' ELSE '' END AS 'Chk004' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 8) = 8 THEN ' checked' ELSE '' END AS 'Chk008' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 16) = 16 THEN ' checked' ELSE '' END AS 'Chk016' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 32) = 32 THEN ' checked' ELSE '' END AS 'Chk032' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 64) = 64 THEN ' checked' ELSE '' END AS 'Chk064' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 128) = 128 THEN ' checked' ELSE '' END AS 'Chk128' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 256) = 256 THEN ' checked' ELSE '' END AS 'Chk256' ";
+            SQL += ",CASE WHEN (isnull(D.rights,0) & 512) = 512 THEN ' checked' ELSE '' END AS 'Chk512' ";
             SQL += "from Logingrp As C ";
             SQL += "LEFT JOIN Loginap As D ON D.SYScode = C.SYScode And D.LoginGrp = C.LoginGrp And D.Apcode = '" + APcode + "'";
             SQL += "Where C.SYScode = '" + syscode + "'";
             SQL += "Order By C.LoginGrp";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
-            for (int i = 0; i < dt.Rows.Count; i++) {
-                for (int z = 0; z <= 9; z++) {
-                    //Response.Write("2的" + z + "次方=" + Math.Pow(2, z) + "<BR>");
-                    int pow = Convert.ToInt32(Math.Pow(2, z));
-                    if ((Convert.ToInt32(dt.Rows[i]["rights"]) & pow) > 0)
-                        dt.Rows[i]["Chk" + pow.ToString().PadLeft(3, '0')] = " checked";
-                }
-            }
 
             dataRepeater.DataSource = dt;
             dataRepeater.DataBind();
-        }
-
-        if (submitTask == "U") {
-            StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" id=\"btnSubmit\">\n";
-        } else {
-            StrFormBtn += "<input type=button value=\"確定存檔\" class=\"cbutton\" id=\"btnSubmit\">\n";
         }
     }
 </script>
