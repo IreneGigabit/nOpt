@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -237,6 +237,8 @@
             $("#dfx_end_date").val("<%#Util.parseDBDate(RS.TryGet("end_date","").ToString(),"yyyy/M/d")%>");
             $("#tfx_sysremark").val("<%#RS.TryGet("sysremark","")%>");
             $("#tfx_mark").val("<%#RS.TryGet("mark","")%>");
+        } else {
+            $("#dfx_end_date").val("2079/6/6");
         }
     }
 
