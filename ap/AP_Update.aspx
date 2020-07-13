@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -47,12 +47,12 @@
                 cnn.Commit();
                 //cnn.RollBack();
 
-                if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
             }
             catch (Exception ex) {
                 cnn.RollBack();
-                Sys.errorLog(ex, cnn.exeSQL, prgid);
-
+                string sqlno = Sys.errorLog(ex, cnn.exeSQL, prgid);
+                msg = "入檔失敗\\n(" + sqlno + ")" + ex.Message;
+                strOut.AppendLine("alert('" + msg + "');");
                 //throw new Exception(msg, ex);
             }
             finally {
@@ -90,6 +90,7 @@
         SQL += "Where syscode='" + Request["pfx_syscode"] + "' AND LoginGrp='" + Request["pfx_syscode"] + "admin' AND apcode='" + Request["pfx_APcode"] + "'";
         using (SqlDataReader dr = cnn.ExecuteReader(SQL)) {
             if (!dr.HasRows) {
+                dr.Close();
                 SQL = "insert into LoginAp (SYScode,LoginGrp,Apcode,Rights,beg_date,end_date,tran_date,tran_scode";
                 SQL += ")values(";
                 SQL += "'" + Request["pfx_syscode"] + "','" + Request["pfx_syscode"] + "admin','" + Request["pfx_APcode"] + "',255";
@@ -100,6 +101,7 @@
 
         msg = "新增完成！";
         strOut.AppendLine("alert('" + msg + "');");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 
@@ -123,7 +125,7 @@
         
         msg = "資料更新成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
-        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
     }
 
     private void doDel(DBHelper cnn) {
@@ -132,6 +134,7 @@
         
         msg = "資料刪除成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
     }
 </script>
 
