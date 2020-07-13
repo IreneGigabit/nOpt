@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -224,7 +224,11 @@
     //關閉視窗
     $(".imgCls,#btnClose").click(function (e) {
         if (window.parent.tt !== undefined) {
-            window.parent.tt.rows = "100%,0%";
+            if (window.parent.Etop.goSearch !== undefined) {
+                window.parent.Etop.goSearch();
+            } else {
+                window.parent.tt.rows = "100%,0%";
+            }
         } else {
             window.close();
         }
