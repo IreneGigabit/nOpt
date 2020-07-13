@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -17,8 +17,8 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
-        //syscode = Sys.getAppSetting("Sysmenu");
-        syscode = Sys.GetSession("Syscode");
+        syscode = Sys.getAppSetting("Sysmenu");
+        //syscode = Sys.GetSession("Syscode");
         if ((Request["Syscode"] ?? "") != "") syscode = Request["Syscode"];
 
         Token myToken = new Token(HTProgCode);
