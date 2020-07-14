@@ -51,7 +51,7 @@
             catch (Exception ex) {
                 cnn.RollBack();
                 string sqlno = Sys.errorLog(ex, cnn.exeSQL, prgid);
-                msg = "入檔失敗\\n(" + sqlno + ")" + ex.Message;
+                msg = "入檔失敗\\n(" + sqlno + ")" + ex.Message.Replace("'", "\\'");
                 strOut.AppendLine("alert('" + msg + "');");
                 //throw new Exception(msg, ex);
             }
