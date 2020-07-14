@@ -128,18 +128,22 @@
 
     <table border="0" cellspacing="1" cellpadding="1" class="apcat-bg" width="98%" align="center">
     <tr>
-        <td align="center" colspan="13" class="aprights">群組:&nbsp;<b style="color:red"><%#GrpID%>&nbsp;<%#GrpName%></b></td>
+        <td align="left" class="aprights">群組:&nbsp;<b style="color:red"><%#GrpID%>&nbsp;<%#GrpName%></b></td>
+        <td align="center" class="aprights" width="150">
+            <input type="button" value="全部折疊" id="CloseAll" class="cbutton">
+            <input type="button" value="全部展開" id="OpenAll" class="cbutton">
+        </td>
     </tr>
-   <asp:Repeater id="APcatResults" OnItemDataBound="APcatResults_ItemDataBound" runat="server">
+    <asp:Repeater id="APcatResults" OnItemDataBound="APcatResults_ItemDataBound" runat="server">
     <ItemTemplate>
     <tr>
-        <td align="left" class="apcat-fw">&nbsp;
-            <input type="image" class="ximg" src="../images/2.gif" apcat="#tr<%#DataBinder.Eval(Container.DataItem, "APcatID")%>" />
+        <td align="left" colspan="2" class="apcat-fw" apcat="#tr<%#DataBinder.Eval(Container.DataItem, "APcatID")%>">&nbsp;
+            <input type="image" src="../images/2.gif" class="ximg" />
             &nbsp;<%#DataBinder.Eval(Container.DataItem, "APcatCName")%>
         </td>
     </tr>
     <tr id="tr<%#DataBinder.Eval(Container.DataItem, "APcatID")%>" style="display:block">
-        <td class="whitetablebg">
+        <td class="whitetablebg" colspan="2">
             <table border="0" cellspacing="1" cellpadding="1" width="100%" class="ap-bg" align="center">
                 <tr>
                     <td align="center" width="250" class="aphead">群組</td>
@@ -206,16 +210,15 @@
       </ItemTemplate>
     </asp:Repeater>
     </table>
-  <%#DebugStr%>
-</form>
 
-<table border="0" width="98%" cellspacing="0" cellpadding="0" >
-<tr id="tr_button1">
-    <td align="center">
-        <%#StrFormBtn%>
-    </td>
-</tr>
-</table>
+    <table border="0" width="98%" cellspacing="0" cellpadding="0" >
+    <tr id="tr_button1">
+        <td align="center">
+            <%#StrFormBtn%><%#DebugStr%>
+        </td>
+    </tr>
+    </table>
+</form>
 
 <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
@@ -230,12 +233,24 @@
         this_init();
     });
 
+    //全部折疊
+    $("#CloseAll").click(function () {
+        $("input.ximg").attr("src", "../images/1.gif");
+        $("tr[id^='tr']").children().hide();
+    });
+
+    //全部展開
+    $("#OpenAll").click(function () {
+        $("input.ximg").attr("src", "../images/2.gif");
+        $("tr[id^='tr']").children().show();
+    });
+
     //折疊
-    $("input.ximg").click(function () {
+    $(".apcat-fw").click(function () {
         var obj = this;
-        var apid = 'tr' + obj.apcat;
+        var apid = $(obj).attr("apcat");
         $(apid).children().toggle();
-        $(obj).attr("src", ($(apid).children().is(":hidden")) ? "../images/2.gif" : "../images/1.gif");
+        $("input.ximg",obj).attr("src", ($(apid).children().is(":hidden")) ? "../images/1.gif" : "../images/2.gif");
         return false;
     }).css('cursor', 'pointer');
 
@@ -276,7 +291,7 @@
     //新增/修改
     $("#btnSubmit").click(function () {
         $("select,textarea,input,span").unlock();
-        $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
+        $("#btnSubmit").lock(!$("#chkTest").prop("checked"));
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         reg.submit();
