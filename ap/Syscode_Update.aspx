@@ -14,6 +14,7 @@
     protected string msg = "";
 
     protected string submitTask = "";
+    protected string task = "";
     protected string syscode = "";
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
@@ -25,6 +26,7 @@
         Response.Expires = -1;
 
         submitTask = (Request["submittask"] ?? "");
+        task = (Request["task"] ?? "");
         syscode = (Request["pfx_syscode"] ?? "");
 
         ReqVal = Util.GetRequestParam(Context,Request["chkTest"] == "TEST");
@@ -34,11 +36,11 @@
         if (HTProgRight >= 0) {
             DBHelper cnn = new DBHelper(Conn.ODBCDSN).Debug(Request["chkTest"] == "TEST");
             try {
-                if (submitTask == "A") {//新增
+                if (task == "A") {//新增
                     doAdd(cnn);
-                } else if (submitTask == "U") {//修改
+                } else if (task == "U") {//修改
                     doUpdate(cnn);
-                } else if (submitTask == "D") {//刪除
+                } else if (task == "D") {//刪除
                     doDel(cnn);
                 }
 
