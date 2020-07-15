@@ -141,7 +141,7 @@
         <ItemTemplate>
         <tr>
             <td align="left" class="apname">&nbsp;
-                <a href="sys14List.asp?SysCode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>">
+                <a href="sys14_List.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>">
                 <%#Eval("LoginGrp")%>_<%#Eval("GrpName")%>(<%#Eval("gcount")%>)
                 </a>
             </td>
