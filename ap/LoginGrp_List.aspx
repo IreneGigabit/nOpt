@@ -74,13 +74,6 @@
             for (int i = 0; i < page.pagedTable.Rows.Count; i++) {
             }
 
-            var settings = new JsonSerializerSettings()
-            {
-                Formatting = Formatting.None,
-                ContractResolver = new LowercaseContractResolver(),//key統一轉小寫
-                Converters = new List<JsonConverter> { new DBNullCreationConverter(), new TrimCreationConverter() }//dbnull轉空字串且trim掉
-            };
-
             dataRepeater.DataSource = page.pagedTable;
             dataRepeater.DataBind();
         }
