@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -18,7 +18,7 @@
         myToken.CheckMe(false,true);
 
         using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
-            isql = "select a.*,''fseq,''optap_cname ";
+            isql = "select a.*,''fseq,''optap_cname,''aspx ";
             isql += "from vbr_opt a ";
             isql += "where (a.Bstat_code like 'NN%' or a.Bstat_code like 'NX%') and Bmark='N' ";
 
@@ -75,6 +75,12 @@
                 page.pagedTable.Rows[i]["optap_cname"] = ap_cname.CutData(20);
                 //案件名稱
                 page.pagedTable.Rows[i]["appl_name"] = page.pagedTable.Rows[i].SafeRead("appl_name", "").CutData(20);
+
+                if (page.pagedTable.Rows[i].SafeRead("case_no", "") != "") {
+                    page.pagedTable.Rows[i]["aspx"] = "Edit.aspx";
+                } else {
+                    page.pagedTable.Rows[i]["aspx"] = "EditA.aspx";
+                }
             }
 
             var settings = new JsonSerializerSettings()
