@@ -17,7 +17,7 @@
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected string hiddenText = "";
-    protected Paging page = new Paging(1, 10);
+    protected Paging page = new Paging(1, 20);
     protected string syscode = "";
     protected string logingrp = "";
 
@@ -66,7 +66,7 @@
 
             //處理分頁
             int nowPage = Convert.ToInt32(Request["GoPage"] ?? "1"); //第幾頁
-            int PerPageSize = Convert.ToInt32(Request["PerPage"] ?? "10"); //每頁筆數
+            int PerPageSize = Convert.ToInt32(Request["PerPage"] ?? "20"); //每頁筆數
             page = new Paging(nowPage, PerPageSize, string.Join(";", cnn.exeSQL.ToArray()));
             page.GetPagedTable(dt);
 
@@ -107,8 +107,8 @@
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>查詢結果清單</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
             <a href="<%#HTProgPrefix%>_Edit.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>&LoginGrp=<%=logingrp%>&submittask=A" target="Eblank">[新增群組]</a>
-           <a href="<%#prgid%>.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>">[查詢]</a>
-           	<a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
+            <a href="<%#prgid%>.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>">[查詢]</a>
+            <a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a>
         </td>
     </tr>
     <tr>
@@ -167,10 +167,10 @@
                     <TD class=whitetablebg><p align=center><%#Eval("GrpName")%></TD>
                     <TD class=whitetablebg><p align=center><%#Eval("Remark")%></TD>
                     <TD class=whitetablebg><p align=center>
-                        <a href="LoginGrpEdit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>" target="Eblank">[編修群組]</a>
+                        <a href="LoginGrp_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>&submitTask=U" target="Eblank">[編修群組]</a>
                         <a href="EditLoginGrpAP.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&GrpID=<%#Eval("LoginGrp")%>&GrpName=<%#Eval("GrpName")%>" target="Eblank">[編修權限]</a>
-                        <a href="sys14List.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>" target="Eblank">[查詢使用者]</a>
-                        <a href="LoginGrpCopy.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>" target="Eblank">[權限複製]</a>
+                        <a href="sys14_List.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>">[查詢使用者]</a>
+                        <a href="LoginGrp_Copy.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>" target="Eblank">[權限複製]</a>
                     </TD>
 				</tr>
 			</ItemTemplate>
