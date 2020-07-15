@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -97,7 +97,7 @@
         catch (Exception ex) {
             conn.RollBack();
             string sqlno = Sys.errorLog(ex, conn.exeSQL, prgid);
-            msg = "收件失敗\\n(" + sqlno + ")" + ex.Message;
+            msg = "收件失敗\\n(" + sqlno + ")" + ex.Message.Replace("'", "\\'");
             throw new Exception(msg, ex);
         }
         finally {
