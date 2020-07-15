@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -49,8 +49,9 @@
             }
             catch (Exception ex) {
                 cnn.RollBack();
-                Sys.errorLog(ex, cnn.exeSQL, prgid);
-
+                string sqlno = Sys.errorLog(ex, cnn.exeSQL, prgid);
+                msg = "入檔失敗\\n(" + sqlno + ")" + ex.Message.Replace("'", "\\'");
+                strOut.AppendLine("alert('" + msg + "');");
                 //throw new Exception(msg, ex);
             }
             finally {
@@ -67,8 +68,7 @@
             if(dr.HasRows){
                 msg = "資料已存在!!請重新輸入!";
                 strOut.AppendLine("alert('"+msg+"');");
-
-                throw new Exception(msg);
+                return;
             }
         }
         
