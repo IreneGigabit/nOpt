@@ -108,6 +108,7 @@
 <br>
 <form id="reg" name="reg" method="post">
 	<input type="hidden" id="submittask" name="submittask" value="<%=submitTask%>">
+	<input type="hidden" id="task" name="task" value="">
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 	<input type="hidden" id="syscode" name="syscode" value="<%=syscode%>">
 
@@ -291,6 +292,7 @@
 
         $("select,textarea,input,span").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
+        $("#task").val($("#submittask").val());
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         reg.submit();
@@ -301,7 +303,7 @@
         if (confirm("注意！\n\n　你確定刪除資料嗎？")) {
             $("select,textarea,input,span").unlock();
             $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
-            $("#submittask").val("D");
+            $("#task").val("D");
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
             reg.target = "ActFrame";
             reg.submit();
