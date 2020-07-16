@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opte/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opte/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -55,6 +55,7 @@
         if (prgid == "opte22") {
             HTProgCap = "出口爭救案判行作業";
             SLock = "false";
+            YYLock = "false";
             ALock = "false";
         } else if (prgid == "opte24") {
             HTProgCap = "出口爭救案已判行維護作業";
