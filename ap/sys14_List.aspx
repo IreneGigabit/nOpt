@@ -12,12 +12,14 @@
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//程式代碼
     protected int HTProgRight = 0;
     protected string Title = "";
+    protected string StrFormBtnTop = "";
 
     protected string SQL = "";
 
     protected Dictionary<string, string> ReqVal = new Dictionary<string, string>();
     protected string hiddenText = "";
     protected Paging page = new Paging(1, 10);
+    protected string ff = "";
     protected string syscode = "";
     protected string logingrp = "";
     protected string sysnameC = "";
@@ -28,6 +30,7 @@
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
 
+        ff = Request["ff"] ?? "";
         syscode = Request["Syscode"] ?? "";
         logingrp = Request["logingrp"] ?? "";
         
@@ -43,12 +46,24 @@
         HTProgRight = myToken.CheckMe();
         Title = myToken.Title;
         if (HTProgRight >= 0) {
+            PageLayout();
             QueryData();
             
             this.DataBind();
         }
     }
 
+    private void PageLayout() {
+        if (ff == "1") {
+            StrFormBtnTop += "<a class=\"imgCls\" href=\"javascript:void(0);\" >[關閉視窗]</a>";
+        } else {
+            if ((HTProgRight & 4) > 0) {
+                StrFormBtnTop += "<a href=\""+HTProgPrefix+"_Edit.aspx?prgid="+prgid+"&SYScode="+syscode+"&LoginGrp="+logingrp+"&submittask=A\" target=\"Eblank\">[新增]</a>\n";
+                StrFormBtnTop += "<a href=\"javascript:history.go(-1)\">[回上一頁]</a>";
+            }
+        }
+    }
+    
     private void QueryData() {
         using (DBHelper cnn = new DBHelper(Conn.ODBCDSN, false).Debug(Request["chkTest"] == "TEST")) {
             SQL = "Select C.*,D.sc_name,E.GrpName,F.sysnameC ";
@@ -104,10 +119,7 @@
     <tr>
         <td class="text9" nowrap="nowrap">&nbsp;【<%=prgid%><%=Title%>】<span style="color:blue"><%=HTProgCap%></span>查詢結果清單</td>
         <td class="FormLink" valign="top" align="right" nowrap="nowrap">
-            <a href="<%#HTProgPrefix%>_Edit.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>&LoginGrp=<%=logingrp%>&submittask=A" target="Eblank">[新增]</a>
-            <!--a href="<%#prgid%>.aspx?prgid=<%=prgid%>&SYScode=<%=syscode%>">[查詢]</a -->
-            <!--a class="imgRefresh" href="javascript:void(0);" >[重新整理]</a -->
-            <a href="javascript:history.go(-1)">[回上一頁]</a>
+            <%#StrFormBtnTop%>
         </td>
     </tr>
     <tr>
