@@ -44,6 +44,8 @@
                     doUpdate(cnn);
                 } else if (task == "D") {//刪除
                     doDel(cnn);
+                } else if (task == "C") {//複製
+                    doCopy(cnn);
                 }
 
                 cnn.Commit();
@@ -53,7 +55,7 @@
             catch (Exception ex) {
                 cnn.RollBack();
                 string sqlno = Sys.errorLog(ex, cnn.exeSQL, prgid);
-                msg = "入檔失敗\\n(" + sqlno + ")" + ex.Message.Replace("'", "\\'");
+                msg = "入檔失敗\\n(" + sqlno + ")" + ex.Message.Replace("'", "\\'").Replace("\r\n","\\n");
                 strOut.AppendLine("alert('" + msg + "');");
                 //throw new Exception(msg, ex);
             }
@@ -123,6 +125,24 @@
         msg = "資料刪除成功!!!";
         strOut.AppendLine("alert('" + msg + "');");
         if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
+    }
+
+    private void doCopy(DBHelper cnn) {
+        int copy_num = Convert.ToInt32("0" + Request["count"]);
+        for (int i = 1; i <= copy_num; i++) {
+            if (ReqVal.TryGet("chk_" + i) == "Y") {
+                SQL = "DELETE FROM loginap WHERE syscode='" + Request["syscode"] + "' AND LoginGrp='" + Request["loginGrpData_" + i] + "'";
+                cnn.ExecuteNonQuery(SQL);
+
+                SQL = "insert into loginap (SYScode,LoginGrp,Apcode,Rights,beg_date,end_date,tran_date,tran_scode) ";
+                SQL += "select SYScode,'" + Request["loginGrpData_" + i] + "',Apcode,Rights,beg_date,end_date,getdate(),'" + Session["scode"] + "' ";
+                SQL += "from loginap where SYScode = '" + Request["syscode"] + "' and LoginGrp = '" + Request["tfx_source"] + "'";
+                cnn.ExecuteNonQuery(SQL);
+            }
+        }
+        msg = "複製完成!!!";
+        strOut.AppendLine("alert('" + msg + "');");
+        if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.reload();");
     }
 </script>
 
