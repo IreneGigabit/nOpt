@@ -87,6 +87,7 @@
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.datepick.min.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.datepick-zh-TW.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/toastr.min.js")%>"></script>
+<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.autocomplete.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.irene.form.js")%>"></script>
 <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/jquery.Snoopy.date.js")%>"></script>
@@ -120,6 +121,8 @@
             <TD colspan="3" class=bluedata>
                 <input type=text id=tfx_scode name=tfx_scode size=10 maxlength=10>
                 <input type=text id=xxx_name1 name=xxx_name1 size=10>
+                <input type="text" name="country" id="autocomplete"/>
+
                 <input type=button value="姓名查詢" class=cbutton onclick="vbscript: GetName1" id=button11 name=button11>
             </TD>		
         </tr>
@@ -309,5 +312,19 @@
             valueFormat: "{LoginGrp}",
             textFormat: "{LoginGrp}_{GrpName}"
         });
+    });
+
+    
+    var countries = [
+        { value: 'Andorra\tAD', data: 'AD' },
+        { value: 'Zimbabwe\tZZ', data: 'ZZ' }
+    ];
+
+    $('#autocomplete').autocomplete({
+        lookup: countries,
+        onSelect: function (suggestion) {
+            $(this).val(suggestion.data);
+            console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+        }
     });
 </script>
