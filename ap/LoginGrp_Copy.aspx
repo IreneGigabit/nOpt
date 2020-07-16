@@ -16,6 +16,7 @@
     protected string submitTask = "";
     protected string syscode = "";
     protected string LoginGrp = "";
+    protected int count = 0;
 
     protected string ULock = "false";
 
@@ -71,6 +72,8 @@
             DataTable dt = new DataTable();
             cnn.DataTable(SQL, dt);
 
+            count = dt.Rows.Count;
+            
             dataRepeater.DataSource = dt;
             dataRepeater.DataBind();
         }
@@ -113,8 +116,9 @@
 	<input type="hidden" id="prgid" name="prgid" value="<%=prgid%>">
 	<input type="hidden" id="syscode" name="syscode" value="<%=syscode%>">
 	<input type="hidden" id="LoginGrp" name="LoginGrp" value="<%=LoginGrp%>">
+	<input type="hidden" id="count" name="count" value="<%=count%>">
 
-    <table align="center" border="0" cellspacing="1" cellpadding="3" width="40%" class="bluetable">
+    <table align="center" border="0" cellspacing="1" cellpadding="3" width="30%" class="bluetable">
         <tr>    
             <td align="center" class="lightbluetable" width="30%">權限來源</td>
             <td class="whitetablebg">
@@ -122,32 +126,28 @@
             </td>
         </tr>
     </table>
-
+    <br />
     <asp:Repeater id="dataRepeater" runat="server">
 <HeaderTemplate>
-    <table style="display:<%#page.totRow==0?"none":""%>" border="0" class="bluetable" cellspacing="1" cellpadding="2" width="98%" align="center" id="dataList">
+    <table border="0" class="bluetable" cellspacing="1" cellpadding="2" width="50%" align="center" id="dataList">
 	    <thead>
-            <Tr>
-	            <td align=center class=lightbluetable>群組代碼</td>
-	            <td align=center class=lightbluetable>群組名稱</td>
-	            <td align=center class=lightbluetable>備註說明</td>
-	            <td align=center class=lightbluetable>作業</td>	
+            <tr>    
+                <td align="center" class="lightbluetable" colspan=2>權限目的</td>
             </tr>
 	    </thead>
 	    <tbody>
 </HeaderTemplate>
 			<ItemTemplate>
- 		        <tr class="<%#(Container.ItemIndex+1)%2== 1 ?"sfont9":"lightbluetable3"%>">
-                    <TD class=whitetablebg><p align=center><%#Eval("LoginGrp")%></TD>	
-                    <TD class=whitetablebg><p align=center><%#Eval("GrpName")%></TD>
-                    <TD class=whitetablebg><p align=center><%#Eval("Remark")%></TD>
-                    <TD class=whitetablebg><p align=center>
-                        <a href="LoginGrp_Edit.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>&submitTask=U" target="Eblank">[編修群組]</a>
-                        <a href="EditLoginGrpAP.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&GrpID=<%#Eval("LoginGrp")%>&GrpName=<%#Eval("GrpName")%>" target="Eblank">[編修權限]</a>
-                        <a href="sys14_List.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>">[查詢使用者]</a>
-                        <a href="LoginGrp_Copy.aspx?prgid=<%#prgid%>&Syscode=<%#Eval("Syscode")%>&LoginGrp=<%#Eval("LoginGrp")%>" target="Eblank">[權限複製]</a>
-                    </TD>
-				</tr>
+	         <tr>
+		        <td class="whitetablebg" width="50%">
+		            <label><input type=checkbox id="LG" name="chk_<%#(Container.ItemIndex+1)%>" value="Y">
+                    <%#Eval("LoginGrp").ToString().Trim()%>_<%#Eval("GrpName").ToString().Trim()%></label>
+		            <input type=hidden id="loginGrpData_<%#(Container.ItemIndex+1)%>" name="loginGrpData_<%#(Container.ItemIndex+1)%>" value="<%#Eval("LoginGrp")%>">
+		        </td>
+		        <td class="whitetablebg" width="50%">
+		            <a href="javascript:openW('<%#Eval("Syscode").ToString().Trim()%>','<%#Eval("LoginGrp").ToString().Trim()%>')">查詢使用者</a>
+		        </td>
+	        </tr>
 			</ItemTemplate>
 <FooterTemplate>
 	    </tbody>
@@ -210,59 +210,38 @@
         }
     })
 
-    //新增/修改
+    //複製存檔
     $("#btnSubmit").click(function () {
-        if ($("#pfx_Syscode").val() == "") {
-            alert("請務必填寫「網路作業系統代碼」，不得為空白！");
-            $("#pfx_Syscode").focus();
-            return false;
-        }
-        if ($("#pfx_LoginGrp").val() == "") {
-            alert("請務必填寫「登錄群組代碼」，不得為空白！");
-            $("#pfx_LoginGrp").focus();
-            return false;
-        }
-        if ($("#tfx_GrpName").val() == "") {
-            alert("請務必填寫「群組名稱」，不得為空白！");
-            $("#tfx_GrpName").focus();
-            return false;
-        }
-        if ($("#tfx_GrpType").val() == "") {
-            alert("請務必填寫「群組種類」，不得為空白！");
-            $("#tfx_GrpType").focus();
-            return false;
-        }
-        if ($("#dfx_beg_date").val() == "") {
-            alert("請務必填寫「有效起始日期」，不得為空白！");
-            $("#dfx_beg_date").focus();
-            return false;
-        }
-        ChkDate($("#dfx_beg_date")[0]);
-        ChkDate($("#dfx_end_date")[0]);
+        var errMsg = "";
 
-        if (!chkSEDate($("#dfx_beg_date").val(), $("#dfx_end_date").val(), "有效日期")) {
-            $("#dfx_end_date").focus();
+        if ($("#tfx_source").val() == "") {
+            alert("權限來源..未選取！");
+            $("#tfx_source").focus();
+            return false;
+        }
+
+        $("input[id='LG']").each(function (i) {
+            if ($(this).prop("checked")) {
+                if ($("#tfx_source").val() == $("#loginGrpData_" + (i + 1)).val()) {
+                    alert("權限來源與目的不能相同!!");
+                    $(this).focus();
+                    return false;
+                }
+            }
+        });
+
+        var check = $("input[id='LG']:checked").length;
+        if (check == 0) {
+            alert("權限目的..未勾選任何資料!!");
             return false;
         }
 
         $("select,textarea,input,span").unlock();
         $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
-        $("#task").val($("#submittask").val());
+        $("#task").val("C");
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
         reg.submit();
-    });
-
-    //刪除
-    $("#btnDel").click(function () {
-        if (confirm("注意！\n\n　你確定刪除資料嗎？")) {
-            $("select,textarea,input,span").unlock();
-            $("#btnSubmit,#btnDel,#btnReset").lock(!$("#chkTest").prop("checked"));
-            $("#task").val("D");
-            reg.action = "<%=HTProgPrefix%>_Update.aspx";
-            reg.target = "ActFrame";
-            reg.submit();
-        }
     });
 
     //重置
@@ -270,4 +249,10 @@
         reg.reset();
         this_init();
     });
+
+    function openW(x1, x2) {
+        var url='sys14_List.aspx?prgid=' + $("#prgid").val() + '&Syscode=' + x1 + '&LoginGrp=' + x2 + '&ff=1';
+        //var attwnd = OpenWnd('Attach', 'sys14_List.aspx?prgid=' + $("#prgid").val() + '&Syscode=' + x1 + '&LoginGrp=' + x2 + '&ff=1', 600, 400, 1);
+        window.open(url, 'sys14Win', "width=600,height=400,resizable=yes,scrollbars=no,status=0,top=80,left=200");
+    }
 </script>
