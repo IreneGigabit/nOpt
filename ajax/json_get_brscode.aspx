@@ -13,16 +13,20 @@
     protected string SQL = "";
     protected string strConnB = "";
 
-    protected string query = "";
+    protected string branch = "";
 
     protected void Page_Load(object sender, EventArgs e) {
-        query = Request["query"] ?? "";
+        branch = Request["branch"]??"K";
 
         DataTable dt = new DataTable();
-        using (DBHelper cnn = new DBHelper(Conn.ODBCDSN, false)) {
-            SQL = "select scode+'_'+sc_name value,scode,sc_name ";
-            SQL+="from scode where (sc_name like '%" + query + "%' or scode like '" + query + "%') order by scode ";
-            cnn.DataTable(SQL, dt);
+        using (DBHelper connB = new DBHelper(Conn.OptK, false)) {
+            SQL = "select distinct in_scode,scode_name ";
+            SQL+="from vbr_opt  ";
+            SQL += " where mark<>'D' ";
+            if (branch != "") {
+                SQL += " and Branch='" + branch + "' ";
+            }
+            connB.DataTable(SQL, dt);
         }
         
         var settings = new JsonSerializerSettings() {
@@ -31,9 +35,6 @@
                 Converters = new List<JsonConverter> { new DBNullCreationConverter(), new TrimCreationConverter() }//dbnull轉空字串且trim掉
         };
 
-        //Response.Write(JsonConvert.SerializeObject(dt, settings).ToUnicode());
-        Response.Write("{");
-        Response.Write("\"suggestions\":" + JsonConvert.SerializeObject(dt, settings).ToUnicode() + "\n");
-        Response.Write("}");
+        Response.Write(JsonConvert.SerializeObject(dt, settings).ToUnicode());
     }
 </script>

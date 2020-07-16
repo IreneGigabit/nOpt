@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -120,10 +120,7 @@
             <TD width="20%" class=bluetext align=right>使用者薪號：</TD>
             <TD colspan="3" class=bluedata>
                 <input type=text id=tfx_scode name=tfx_scode size=10 maxlength=10>
-                <input type=text id=xxx_name1 name=xxx_name1 size=10>
-                <input type="text" name="country" id="autocomplete"/>
-
-                <input type=button value="姓名查詢" class=cbutton onclick="vbscript: GetName1" id=button11 name=button11>
+                <span id="xxx_scname"></span>
             </TD>		
         </tr>
         <tr>  
@@ -314,17 +311,17 @@
         });
     });
 
-    
-    var countries = [
-        { value: 'Andorra\tAD', data: 'AD' },
-        { value: 'Zimbabwe\tZZ', data: 'ZZ' }
-    ];
-
-    $('#autocomplete').autocomplete({
-        lookup: countries,
+    //查姓名
+    $('#tfx_scode').autocomplete({
+        width: 150,
+        noCache:true,
+        serviceUrl: getRootPath() + "/ajax/json_get_scode.aspx",
         onSelect: function (suggestion) {
-            $(this).val(suggestion.data);
-            console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+            $(this).val(suggestion.scode);
+            $("#xxx_scname").html(suggestion.sc_name);
+        },
+        onSearchStart: function (suggestion) {
+            $("#xxx_scname").html("");
         }
     });
 </script>

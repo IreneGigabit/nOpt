@@ -283,7 +283,7 @@
         var tbranch=$(this).val();
         $("#qrycust_area").val(tbranch);
         //$("#qryin_scode").getOption({//營洽
-        //    url: getRootPath() + "/ajax/json_get_scode.aspx?branch="+tbranch,
+        //    url: getRootPath() + "/ajax/json_get_brscode.aspx?branch="+tbranch,
         //    valueFormat: "{in_scode}",
         //    textFormat: "{in_scode}_{scode_name}",
         //    showEmpty:false,

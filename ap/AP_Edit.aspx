@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -133,7 +133,7 @@
 				<Select id=tfx_APcat NAME=tfx_APcat></Select>
 		  </TD>		
 		  <TD class=lightbluetable align=right>程式實體主機：</TD>
-		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_APserver NAME=tfx_APserver SIZE=5 MAXLENGTH=50></TD>
+		  <TD class=whitetablebg><INPUT TYPE=text id=tfx_APserver NAME=tfx_APserver SIZE=10 MAXLENGTH=50></TD>
 		</TR>
 		<TR>
 		  <TD class=lightbluetable align=right>程式實體路徑：</TD>

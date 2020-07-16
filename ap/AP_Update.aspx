@@ -1,4 +1,4 @@
-<%@ Page Language="C#" CodePage="65001"%>
+﻿<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -95,7 +95,7 @@
                 dr.Close();
                 SQL = "insert into LoginAp (SYScode,LoginGrp,Apcode,Rights,beg_date,end_date,tran_date,tran_scode";
                 SQL += ")values(";
-                SQL += "'" + Request["pfx_syscode"] + "','" + Request["pfx_syscode"] + "admin','" + Request["pfx_APcode"] + "',255";
+                SQL += "'" + Request["pfx_syscode"] + "','" + Request["pfx_syscode"] + "admin','" + Request["pfx_APcode"] + "',1023";
                 SQL += ",'" + DateTime.Today.ToShortDateString() + "','2079/6/6','" + DateTime.Today.ToShortDateString() + "','" + Session["scode"] + "')";
                 cnn.ExecuteNonQuery(SQL);
             }
