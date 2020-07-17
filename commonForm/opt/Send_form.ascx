@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -190,7 +190,7 @@
         //總收發文日期,若無值,預設為發文日期後一天
         $("#mp_date").val(dateReviver(jOpt.mp_date, "yyyy/M/d"));
         if ($("#mp_date").val() == "" && $("#prgid").val() == "opt31_1") {//結辦
-            switch ((new Date($("#mp_date").val())).getDay()) {
+            switch ((new Date($("#GS_date").val())).getDay()) {
                 case 5:
                     $("#mp_date").val(new Date($("#GS_date").val()).addDays(3).format("yyyy/M/d"));//星期五加三天
                     break;
