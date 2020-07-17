@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Linq" %>
@@ -310,7 +310,7 @@
             textFormat: "{LoginGrp}_{GrpName}"
         });
     });
-
+    $(document).unbind();//autocomplete畫面會一直閃
     //查姓名
     $('#tfx_scode').autocomplete({
         width: 150,
