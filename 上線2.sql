@@ -29,3 +29,9 @@ from web02.sysctrl.dbo.sysctrl where syscode='opt' and scode in('m1583')
 --區所程式
 --\\web02\wwwroot$\Btbrt\Brt1m\Brt18Update.asp
 --\\web02\wwwroot$\Btbrt\brtam\brta33List.asp.asp
+
+--電子送件程式
+--\\web08\wwwroot$\Nopt\ajax\json_sendway.aspx(48):            SQL += "where code_type='GSEND_WAY' ";
+--\\web08\wwwroot$\Nopt\commonForm\opt\BR_formA.ascx(18):            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
+--\\web08\wwwroot$\Nopt\commonForm\opt\case_form.ascx(23):            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY'and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
+--\\web08\wwwroot$\Nopt\commonForm\opt\Send_form.ascx(21):            send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
