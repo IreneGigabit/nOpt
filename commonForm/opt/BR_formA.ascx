@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="br_formA" %>
+<%@ Control Language="C#" ClassName="br_formA" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -15,7 +15,7 @@
         submitTask = Request["submitTask"] ?? "";
 
         using (DBHelper connB = new DBHelper(Conn.OptB("K")).Debug(false)) {
-            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
+            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
             tfy_receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
         }
         
@@ -102,7 +102,7 @@
 		    <select id="tfy_receipt_type" name="tfy_receipt_type" class="QLock">
 			    <option value='' style='color:blue'>請選擇</option>
 			    <option value="P">紙本收據</option>
-			    <!--option value="E">電子收據</option-->
+			    <option value="E">電子收據</option>
 		    </select>
 	    </TD>
 	    <TD class=lightbluetable align=right>收據抬頭：</TD>
