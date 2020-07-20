@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -191,14 +191,13 @@
             }
 
             //取得列印程式
-            using (DBHelper connB = new DBHelper(Conn.OptB(branch), false).Debug(Request["chkTest"] == "TEST")) {
-                SQL = "select reportp from code_br e where rs_code='" + Arcase + "' ";
-                SQL += " AND e.dept = 'T' AND e.cr = 'Y' and e.no_code = 'N' ";
-                SQL += " and e.rs_type='" + ReqVal.TryGet("rs_type", "") + "' and e.prt_code not in ('null','ZZ','D9Z','D3')";
-                using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
-                    if (dr.Read()) {
-                        reportp = dr.SafeRead("reportp", "").Trim();
-                    }
+            SQL = "select classp from " + Sys.kdbname + ".dbo.code_br e where rs_code='" + Arcase + "' ";
+            SQL += " AND e.dept = 'T' AND e.cr = 'Y' and e.no_code = 'N' ";
+            SQL += " and e.rs_type='" + ReqVal.TryGet("rs_type", "") + "' ";
+            //SQL += " and e.prt_code not in ('null','ZZ','D9Z','D3')";
+            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                if (dr.Read()) {
+                    reportp = dr.SafeRead("classp", "").Trim();
                 }
             }
 
@@ -226,7 +225,7 @@
                 }
             } else if (submitTask == "P") {
                 if (end_flag == "Y") {
-                    strOut.AppendLine("window.parent.Etop.goSearch();");
+                    strOut.AppendLine("window.parent.parent.Etop.goSearch();");
                 } else {
                     string thref = "opt31Edit.aspx?prgid=opt31&opt_sqlno=" + opt_sqlno + "&opt_no=" + opt_no + "&branch=" + branch + "&case_no=" + case_no + "&arcase=" + Arcase;
                     if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.location.href='" + thref + "';");
