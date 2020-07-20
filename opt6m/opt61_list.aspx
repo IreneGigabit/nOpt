@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -22,7 +22,7 @@
 			isql += ",e.rs_detail AS case_name";
 			isql += ",e.rs_class  AS Ar_form";
 			isql += ",e.prt_code  AS prt_code";
-            isql += ",e.reportp  AS reportp";
+            isql += ",e.classp  AS reportp";//reportp=紙本申請書,classp=電子申請書(全面改為電子申請書)
             isql += " from vbr_opt a ";
 			isql += " inner join "+Sys.kdbname+".dbo.code_br e on e.rs_code=a.arcase AND e.dept = 'T' AND e.cr = 'Y' and e.no_code = 'N' and e.rs_type=a.arcase_type and e.prt_code not in ('null','D9Z','D3') ";
             isql += " LEFT OUTER JOIN " + Sys.kdbname + ".dbo.case_fee c ON a.arcase = c.rs_code and c.dept = 'T' AND c.country = 'T' AND (GETDATE() BETWEEN c.beg_date AND c.end_date) ";
