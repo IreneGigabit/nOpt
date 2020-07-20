@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -244,6 +244,7 @@
 <table border="0" width="98%" cellspacing="0" cellpadding="0">
 <tr id="tr_button1">
     <td width="100%" align="center">
+        <input type=button value="電子申請附件檢查" class="c1button" id="btnchkAttach">
 		<input type=button value="判行" class="cbutton" onClick="formSaveSubmit('U')" id="btnSaveSubmitU">
 		<input type=button value="編修存檔" class="cbutton" onClick="formSaveSubmit('S')" id="btnSaveSubmitS">
 		<input type=button value="退回承辦" class="redbutton" id="btnBack1Submit">
@@ -256,6 +257,7 @@
     </td>
 </tr>
 </table>
+<div id="msg" style='text-align:left;height:100px'></div>
 
 <iframe id="ActFrame" name="ActFrame" src="about:blank" width="100%" height="500" style="display:none"></iframe>
 </body>
@@ -448,5 +450,26 @@
         $("#tr_button1,#tabAP").show();
         $("#tr_button2,#tabreject").hide();
         $("#tr_button1 input:button").unlock();
+    });
+
+    //電子申請附件檢查
+    $("#btnchkAttach").click(function () {
+        if ($("#send_way").val() != "E") {
+            return false;
+        }
+
+        $.ajax({
+            url: "opt22checkWord.aspx?opt_sqlno=" + $('#opt_sqlno').val() + "&debug=Y",
+            cache: false,
+            type: 'GET',
+            dataType: "script",//回傳的格式為script
+            beforeSend: function (xhr) {
+                $('#msg').html("檢查中..");
+            },
+            error: function (xhr) {
+                $('#msg').html("<Font align=left color='red' size=3>檢查【附送書件】發生未知錯誤，請聯繫資訊人員!!</font>");
+                alert('檢查【附送書件】發生錯誤!!');
+            }
+        });
     });
 </script>
