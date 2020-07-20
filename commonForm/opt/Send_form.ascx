@@ -18,7 +18,7 @@
         send_cl = Funcs.getcust_code_mul("SEND_CL","","").Option("{cust_code}", "{code_name}");
         send_sel = Funcs.getcust_code_mul("SEND_SEL","","").Option("{cust_code}", "{code_name}");
         using (DBHelper connB = new DBHelper(Conn.OptB(branch)).Debug(false)) {
-            send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
+            send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
             receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
         }
 
@@ -106,7 +106,7 @@
 		    <select id="receipt_type" name="receipt_type" class="SELock">
 			    <option value='' style='color:blue'>請選擇</option>
 			    <option value="P">紙本收據</option>
-			    <!--option value="E">電子收據</option-->
+			    <option value="E">電子收據</option>
 		    </select>
 	    </TD>
 	    <TD class=lightbluetable align=right>收據抬頭：</TD>
