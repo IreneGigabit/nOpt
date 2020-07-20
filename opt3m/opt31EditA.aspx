@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -515,6 +515,12 @@
             }
         }
         
+        if ($("#send_way").val() == "E") {
+            if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
+                alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
+            }
+        }
+
         reg.prgid.value="opt31";
         $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
