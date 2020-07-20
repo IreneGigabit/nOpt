@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="case_form" %>
+<%@ Control Language="C#" ClassName="case_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -20,7 +20,7 @@
             F_tscode = SHtml.Option(connB, "select distinct scode,sc_name,scode1 from sysctrl.dbo.vscode_roles where branch='"+branch+"' and dept='T' and syscode='"+branch+"Tbrt' and roles='sales' order by scode1", "{scode}", "{sc_name}");
             //tfy_Ar_mark = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='ar_mark' and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)", "{cust_code}", "{code_name}");
             //tfy_source = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='Source' AND cust_code<> '__' AND End_date is null order by cust_code", "{cust_code}", "({cust_code}---{code_name})");
-            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY'and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
+            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' order by sortfld", "{cust_code}", "{code_name}");
             tfy_receipt_title = SHtml.Option(connB, "select cust_code,code_name,mark from cust_code where code_type='rec_titleT' order by sortfld", "{cust_code}", "{code_name}");
         }
         tfy_Ar_mark = Funcs.getcust_code_mul("ar_mark","and (mark1 like '%" + Session["SeBranch"] + Session["Dept"] + "%' or mark1 is null)","").Option("{cust_code}", "{code_name}");
@@ -148,7 +148,7 @@
 		<select id="tfy_receipt_type" name="tfy_receipt_type" class="QLock">
 			<option value='' style='color:blue'>請選擇</option>
 			<option value="P">紙本收據</option>
-			<!--option value="E">電子收據</option-->
+			<option value="E">電子收據</option>
 		</select>
 	</TD>
 	<TD class=lightbluetable align=right>收據抬頭：</TD>
