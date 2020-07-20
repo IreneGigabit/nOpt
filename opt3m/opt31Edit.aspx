@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
+<%@ Import Namespace = "System.Data.SqlClient"%>
 
 <%@ Register Src="~/commonForm/opt/cust_form.ascx" TagPrefix="uc1" TagName="cust_form" %>
 <%@ Register Src="~/commonForm/opt/attent_form.ascx" TagPrefix="uc1" TagName="attent_form" %>
@@ -135,10 +136,20 @@
         }
 
         //決定有沒有列印button
-        if (",DO1,DI1,DR1,DE1,AD7".IndexOf(","+Request["arcase"]+",")>-1) {
-            word_show_flag="Y";
+        //if (",DO1,DI1,DR1,DE1,AD7,".IndexOf(","+Request["arcase"]+",")>-1) {
+        //    word_show_flag="Y";
+        //}
+        using (DBHelper conn = new DBHelper(Conn.OptK, false).Debug(Request["chkTest"] == "TEST")) {
+            string SQL = "select classp from " + Sys.kdbname + ".dbo.code_br e where rs_code='" + Request["arcase"] + "' ";
+            SQL += " AND e.dept = 'T' AND e.cr = 'Y' and e.no_code = 'N' ";
+            SQL += " and e.rs_type=(select arcase_type from vbr_opt where opt_sqlno='" + opt_sqlno + "') ";
+            //SQL += " and e.prt_code not in ('null','ZZ','D9Z','D3')";
+            object objResult0 = conn.ExecuteScalar(SQL);
+            if (objResult0 != DBNull.Value && objResult0 != null) {
+                word_show_flag = "Y";
+            }
         }
-
+        
         //判行內容/品質評分欄位要不要顯示
         if (End_flag == "Y") {
             string dojob_scode = "";
@@ -189,7 +200,7 @@
             if (prgid == "opt31") {
                 StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
             } else if (prgid == "opt31_1") {
-                StrFormBtn += "<input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
+                StrFormBtn += " <input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
             }
             if (word_show_flag == "Y") {
                 StrFormBtn += " <input type=button value=\"申請書列印\" class=\"cbutton\" id=\"btnPrintSubmit\">";
@@ -496,6 +507,7 @@
             if (!confirm("是否存檔？")){//確認列印申請書表格
                 return false;
             }
+            reg.prgid.value = "opt31";
         }
 	    
         if ($("#send_way").val()==""){
@@ -661,6 +673,12 @@
             }
         }
         
+        if ($("#send_way").val() == "E") {
+            if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
+                alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
+            }
+        }
+
         reg.prgid.value="opt31";
         $("select,textarea,input,span").unlock();
         $("#tr_button1 input:button").lock(!$("#chkTest").prop("checked"));
