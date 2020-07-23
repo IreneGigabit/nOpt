@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -44,9 +44,14 @@ public class Funcs {
     /// <summary>  
     /// 抓取上傳附件種類
     /// </summary>  
-    public static DataTable getdoc_type() {
+    public static DataTable getdoc_type(string arcase) {
         using (DBHelper conn = new DBHelper(Conn.OptK, false)) {
-            string SQL = "select cust_code,code_name,remark from cust_code where code_type='Odoc_type' order by sortfld";
+            string SQL = "select cust_code,code_name,remark from cust_code ";
+            SQL += "where code_type='Odoc_type' ";
+            if (arcase != "") {
+                SQL += "and (remark is null or remark like '%" + arcase + "%') ";
+            }
+            SQL += "order by sortfld";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
 
