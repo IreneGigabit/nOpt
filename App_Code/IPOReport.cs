@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -528,18 +528,11 @@ public class IPOReport : OpenXmlHelper {
 		CopyBlock("b_fees");
 
 		//20191230因申請書列印無相關request參數,直接抓case_dmt的值
-		if (this.RectitleFlag == "") {
-			this.RectitleTitle = Opt.Rows[0].SafeRead("receipt_title", "B");//若db無值則為空白
-			if (this.RectitleTitle != "B" && this.RectitleTitle != "") {
-				this.RectitleFlag = "Y";
-			} else {
-				this.RectitleFlag = "N";
-			}
-		}
+		this.RectitleTitle = Opt.Rows[0].SafeRead("receipt_title", "B");//若db無值則為空白
 		//串申請人
 		string RectitleNameStr = "";
-        for (int i = 1; i < Apcust.Rows.Count; i++) {
-				if (RectitleNameStr != "") RectitleNameStr += "、";
+        for (int i = 0; i < Apcust.Rows.Count; i++) {
+            if (RectitleNameStr != "") RectitleNameStr += "、";
                 RectitleNameStr += Apcust.Rows[i].SafeRead("ap_cname", "");
         }
 
