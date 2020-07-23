@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -60,17 +60,17 @@
             if ((Request["qrysend_dept"] ?? "") != "") wSQL += " and send_dept='" + Request["qrysend_dept"] + "'";
 
             SQL = "select send_cl,send_clnm,branch,Bseq,Bseq1,rs_no,gs_date,rs_detail,apply_no";
-            SQL += ",Bfees,pr_scode,'正本' as sendmark,receipt_type,appl_name,bstep_grade,class,sortfld";
+            SQL += ",Bfees,pr_scode,'正本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
             SQL += ",''fseq,''branchname,''pr_scodenm,''rectitle";
             SQL += " from vbr_opt where Bstat_code='YS' and Bmark='N'";
             SQL += wSQL;
             SQL += " union ";
             SQL += "select send_cl1 as send_cl,send_cl1nm as send_clnm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no";
-            SQL += ",0 Bfees,pr_scode,'副本' as sendmark,receipt_type,appl_name,bstep_grade,class,sortfld";
+            SQL += ",0 Bfees,pr_scode,'副本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
             SQL += ",''fseq,''branchname,''pr_scodenm,''rectitle";
             SQL += " from vbr_opt where Bstat_code='YS' and Bmark='N'";
             SQL += wSQL + " and send_cl1 is not null";
-            SQL += " group by send_cl,rs_no,send_clnm,send_cl1,send_cl1nm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,Bfees,pr_scode,receipt_type,appl_name,bstep_grade,class,sortfld";
+            SQL += " group by send_cl,rs_no,send_clnm,send_cl1,send_cl1nm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,Bfees,pr_scode,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
             SQL += " order by sortfld,Branch,send_cl,Bseq,Bseq1,rs_no";
             conn.DataTable(SQL, dt);
 
