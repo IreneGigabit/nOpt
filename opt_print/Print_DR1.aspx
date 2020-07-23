@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -139,6 +139,7 @@
             
             ipoRpt.CopyBlock("b_content");
             using (DataTable dtTran = ipoRpt.Tran) {
+                string tran_ymd = "__年__月__日", O1 = "______", O2 = "______";
                 if (dtTran.Rows.Count > 0) {
                     //註冊已滿3年之使用情形說明
                     ipoRpt.ReplaceBookmark("tran_remark4", dtTran.Rows[0]["tran_remark4"].ToString(),true);
@@ -150,21 +151,20 @@
                         if (oitem.Length > 0) {
                             DateTime dateValue;
                             if (DateTime.TryParse(oitem[0].ToString(), out dateValue)) {
-                                ipoRpt.ReplaceBookmark("tran_ymd", dateValue.ToLongTwDate().Replace("民國", ""));
+                                tran_ymd = dateValue.ToLongTwDate().Replace("民國", "");
                             }
-                            if (oitem.Length > 1) ipoRpt.ReplaceBookmark("O1", oitem[1].ToString());
-                            if (oitem.Length > 2) ipoRpt.ReplaceBookmark("O2", oitem[2].ToString());
+                            if (oitem.Length > 1 && oitem[1].ToString() != "") {
+                                O1 = oitem[1].ToString();
+                            }
+                            if (oitem.Length > 2 && oitem[2].ToString() != "") {
+                                O2 = oitem[2].ToString();
+                            }
                         }
-                    } else {
-                        ipoRpt.ReplaceBookmark("tran_ymd", "　");
-                        ipoRpt.ReplaceBookmark("O1", "　");
-                        ipoRpt.ReplaceBookmark("O2", "　");
                     }
-                } else {
-                    ipoRpt.ReplaceBookmark("tran_ymd", "　");
-                    ipoRpt.ReplaceBookmark("O1", "　");
-                    ipoRpt.ReplaceBookmark("O2", "　");
                 }
+                ipoRpt.ReplaceBookmark("tran_ymd", tran_ymd);
+                ipoRpt.ReplaceBookmark("O1", O1);
+                ipoRpt.ReplaceBookmark("O2", O2);
             }
 
 			//繳費資訊
@@ -205,7 +205,7 @@
                     foreach (var r in mod_dmt) {
                         string[] fileArr = { "ncname1", "ncname2", "nename1", "nename2", "ncrep", "nerep", "neaddr1", "neaddr2", "neaddr3", "neaddr4" };
                         foreach (string file in fileArr) {
-                            if (!r.IsNull(file)) {
+                            if (!r.IsNull(file) && r[file] != "") {
                                 ipoRpt.CopyBlock("b_view2");
                                 string drawPath = r[file].ToString();
                                 try {
@@ -217,6 +217,11 @@
                                     //實體目錄
                                     drawPath = @"\\" + Sys.uploadservername(branch) + @"\" + drawPath.Replace("/", @"\");
                                     ipoRpt.AppendImage(new ImageFile(drawPath));
+                                }
+                                catch (ArgumentException) {
+                                    ipoRpt.AddParagraph();
+                                    ipoRpt.AddText("路徑錯誤[" + file + "](" + drawPath + ")！！", System.Drawing.Color.Red);
+                                    ipoRpt.AddParagraph();
                                 }
                                 catch (FileNotFoundException) {
                                     ipoRpt.AddParagraph();
@@ -241,7 +246,7 @@
                     foreach (var r in mod_dmt) {
                         string[] fileArr = { "ncname1", "ncname2", "nename1", "nename2", "ncrep", "nerep", "neaddr1", "neaddr2", "neaddr3", "neaddr4" };
                         foreach (string file in fileArr) {
-                            if (!r.IsNull(file)) {
+                            if (!r.IsNull(file) && r[file] != "") {
                                 ipoRpt.CopyBlock("b_view3");
                                 string drawPath = r[file].ToString();
                                 try {
@@ -253,6 +258,11 @@
                                     //實體目錄
                                     drawPath = @"\\" + Sys.uploadservername(branch) + @"\" + drawPath.Replace("/", @"\");
                                     ipoRpt.AppendImage(new ImageFile(drawPath));
+                                }
+                                catch (ArgumentException) {
+                                    ipoRpt.AddParagraph();
+                                    ipoRpt.AddText("路徑錯誤[" + file + "](" + drawPath + ")！！", System.Drawing.Color.Red);
+                                    ipoRpt.AddParagraph();
                                 }
                                 catch (FileNotFoundException) {
                                     ipoRpt.AddParagraph();
