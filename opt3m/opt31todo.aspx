@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -50,7 +50,7 @@
             SQL += " from todo_opt as a ";
             SQL += " where opt_sqlno =  '" + opt_sqlno + "' ";
             SQL += " and branch =  '" + branch + "' ";
-            SQL += " order by resp_date desc";
+            SQL += " order by in_date desc";
             DataTable dt = new DataTable();
             conn.DataTable(SQL, dt);
             
