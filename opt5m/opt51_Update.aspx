@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -59,14 +59,13 @@
 
                     //抓前一todo的流水號
                     string pre_sqlno = "", todo_scode = "";
-                    SQL = "Select max(sqlno) as maxsqlno,in_scode from todo_opt ";
+                    SQL = "Select max(sqlno) as maxsqlno from todo_opt ";
                     SQL += "where syscode='" + ReqVal.TryGet("Branch" + i, "") + "TBRT' ";
                     SQL += "and apcode='brt34' and opt_sqlno='" + ReqVal.TryGet("opt_sqlno" + i, "") + "' ";
-                    SQL += "and dowhat='DD' group by in_scode ";
+                    SQL += "and dowhat='DD' ";
                     using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                         if (dr.Read()) {
                             pre_sqlno = dr.SafeRead("maxsqlno", "");
-                            todo_scode = dr.SafeRead("in_scode", "");
                         }
                     }
 
