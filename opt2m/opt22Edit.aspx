@@ -65,7 +65,6 @@
             SLock = "false";
             ALock = "false";
             YYLock = "false";
-            YZLock = "false";
         } else if (prgid == "opt24") {
             HTProgCap = "已判行維護作業";
             if (stat_code == "YY") {//已判行,未發文
@@ -296,7 +295,9 @@
         $(".ALock").lock(<%#ALock%>);
         $(".P1Lock").lock(<%#P1Lock%>);
         $(".YYLock").lock(<%#YYLock%>);
-        $(".YZLock").lock(<%#YZLock%>);
+        if(!<%#YZLock%>){
+            $(".YZLock").lock(<%#YZLock%>);
+        }
 
         //取得案件資料
         $.ajax({
@@ -333,7 +334,7 @@
         ap_form.init();
 
         if($("#prgid").val()=="opt24" && ($("#stat_code").val()=="YY" || $("#stat_code").val()=="YS")){
-            $("#btnSaveSubmitU,#btnBack1Submit").hide();//判行/退回承辦
+            $("#btnSaveSubmitU,#btnBack1Submit,#btnchkAttach").hide();//判行/退回承辦
             $("#btnSaveSubmitS").show();//編修存檔
         }else{
             $("#btnSaveSubmitS").hide();//編修存檔
@@ -363,6 +364,16 @@
     //判行
     function formSaveSubmit(dowhat){
         settab("#br");
+        if (dowhat == "U" && $("#send_way").val() == "E") {
+            if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
+                alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
+            }
+            //未檢查通過
+            if (!document.getElementById('btnchkAttach').disabled) {
+                alert("請先執行電子申請附件檢查!!");
+                return false;
+            }
+        }
 
         if($("#code_br_agt_no").val()!=""&&$("#Pagt_no").val()!=""){
             if($("#code_br_agt_no").val()!=$("#Pagt_no").val()){
@@ -454,6 +465,7 @@
 
     //電子申請附件檢查
     $("#btnchkAttach").click(function () {
+        $(document).unbind();//檢查時會卡太久
         if ($("#send_way").val() != "E") {
             return false;
         }
