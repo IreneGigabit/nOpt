@@ -45,14 +45,17 @@
         string SQL = "select * from attach_opt ";
         SQL += "where opt_sqlno = '" + Request["opt_sqlno"] + "' ";
         SQL += "and (source_name like '%.doc' or source_name like '%.docx') ";
-        SQL += "and attach_desc like '%申請書%' ";
+        //SQL += "and attach_desc like '%申請書%' ";
+        SQL += "and doc_type='03' ";
         SQL += "and attach_flag<>'D' ";
+        SQL += "and doc_flag<>'E' ";
         DataTable dt = new DataTable();
         conn.DataTable(SQL, dt);
         strOut.AppendLine("$('#msg').html('');");
 
         if (dt.Rows.Count == 0) {
-            strOut.AppendLine("$('#msg').html('<Font align=left color=\"red\" size=3>找不到申請書Word檔，請先上傳!!〈word檔判斷規則：副檔名為.doc或.docx，附件說明含有「申請書」字樣，<u>不可</u>勾□電子送件檔〉</font><BR>');");
+            //strOut.AppendLine("$('#msg').html('<Font align=left color=\"red\" size=3>找不到申請書Word檔，請先上傳!!〈word檔判斷規則：副檔名為.doc或.docx，附件說明含有「申請書」字樣，<u>不可</u>勾□電子送件檔〉</font><BR>');");
+            strOut.AppendLine("$('#msg').html('<Font align=left color=\"red\" size=3>找不到申請書Word檔，請先上傳!!〈word檔判斷規則：副檔名為.doc或.docx，文件種類為「申請書」，<u>不可</u>勾□電子送件檔〉</font><BR>');");
             if ((Request["debug"] ?? "").ToUpper() == "Y") {
                 strOut.AppendLine("$('#msg').append('" + SQL.Replace("'", "\\'") + "<BR>');");
             }
@@ -136,7 +139,7 @@
                         strOut.AppendLine("	errFlag=true;");
                         strOut.AppendLine("	$('#msg').append('<Font align=left color=\"red\" size=3>申請書PDF檔名有誤，檔名須含有<font color=\"black\">" + required_name + "</font>，透過增益集轉檔後產生的檔名請勿任意修改!!</font><BR>');");
                         if ((Request["debug"] ?? "").ToUpper() == "Y") {
-                            strOut.AppendLine("$('#msg').append('" + SQL.Replace("'", "\\'") + "<BR>');");
+                            strOut.AppendLine("$('#msg').append('" + SQL.Replace("\\", "\\\\").Replace("'", "\\'") + "<BR>');");
                         }
                     } else {
                         applyOrgPath = dr1.SafeRead("attach_path", "");
@@ -249,12 +252,12 @@
                 strOut.AppendLine("for(var x=0;x<tagCount;x++)");
                 strOut.AppendLine("{");
                 strOut.AppendLine("	var chkOK=false;");
-                strOut.AppendLine("	var filenum = document.getElementById('opt_file_filenum').value;");
+                strOut.AppendLine("	var filenum = $('#opt_file_filenum').val();");
                 strOut.AppendLine("	for (var no = 1; no <= filenum; no++) {");
-                strOut.AppendLine("		if (document.getElementById('opt_file_source_name_'+no).value!=''&&document.getElementById('opt_file_source_name_'+no).value==TagItem[x][1]&&document.getElementById('opt_file_doc_flag_'+no).checked==true){");
+                strOut.AppendLine("		if ($('#opt_file_source_name_'+no).val()!=''&&$('#opt_file_source_name_'+no).val()==TagItem[x][1]&&document.getElementById('opt_file_doc_flag_'+no).checked==true){");
                 strOut.AppendLine("			chkOK=true;");
                 strOut.AppendLine("			break;");
-                strOut.AppendLine("		}else if (document.getElementById('opt_file_source_name_'+no).value==''&&document.getElementById('opt_file_name'+no).value==TagItem[x][1]&&document.getElementById('opt_file_doc_flag_'+no).checked==true){");
+                strOut.AppendLine("		}else if ($('#opt_file_source_name_'+no).val()==''&&$('#opt_file_name_'+no).val()==TagItem[x][1]&&document.getElementById('opt_file_doc_flag_'+no).checked==true){");
                 strOut.AppendLine("			chkOK=true;");
                 strOut.AppendLine("			break;");
                 strOut.AppendLine("		}");
@@ -262,13 +265,13 @@
                 strOut.AppendLine("	if(!chkOK)");
                 strOut.AppendLine("	{");
                 strOut.AppendLine("		errFlag=true;");
-                strOut.AppendLine("		$('#msg').append('<Font align=left color=\"red\" size=3>'+TagItem[x][0]+'<b>'+TagItem[x][1]+'</b> 抓取對應附件有錯誤，請檢查附送書件之檔案是否已經上傳 !!</font><BR>');");
+                strOut.AppendLine("		$('#msg').append('<Font align=left color=\"red\" size=3>'+TagItem[x][0]+'<b>'+TagItem[x][1]+'</b> 抓取對應附件有錯誤，請檢查附送書件之檔案是否已經上傳且☑電子送件檔 !!</font><BR>');");
                 strOut.AppendLine("	}");
                 strOut.AppendLine("}");
 
                 strOut.AppendLine("if (!errFlag){");
-                strOut.AppendLine("	$('#msg').html('<Font align=left color=\"darkblue\" size=3>檢查完成，請執行確認!!</font><BR>');");
-                strOut.AppendLine("	$('#button0').attr('disabled', true);");
+                strOut.AppendLine("	$('#msg').html('<Font align=left color=\"darkblue\" size=3>檢查完成，請執行「判行」!!</font><BR>');");
+                strOut.AppendLine("	$('#btnchkAttach').attr('disabled', true);");
                 strOut.AppendLine("}");
             }
             catch (Exception ex) {
