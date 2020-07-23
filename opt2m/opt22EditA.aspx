@@ -264,7 +264,7 @@
         ap_form.init();
 
         if($("#prgid").val()=="opt24" && ($("#stat_code").val()=="YY" || $("#stat_code").val()=="YS")){
-            $("#btnSaveSubmitU,#btnBack1Submit").hide();//判行/退回承辦
+            $("#btnSaveSubmitU,#btnBack1Submit,#btnchkAttach").hide();//判行/退回承辦
             $("#btnSaveSubmitS").show();//編修存檔
         }else{
             $("#btnSaveSubmitS").hide();//編修存檔
@@ -293,6 +293,17 @@
 
     //判行
     function formSaveSubmit(dowhat){
+        if (dowhat == "U" && $("#send_way").val() == "E") {
+            if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
+                alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
+            }
+            //未檢查通過
+            if (!document.getElementById('btnchkAttach').disabled) {
+                alert("請先執行電子申請附件檢查!!");
+                return false;
+            }
+        }
+
         $("#rs_agt_no").val($("#code_br_agt_no").val());
 
         if ($("#PRY_hour").val()==""||$("#PRY_hour").val()=="0"){
@@ -305,17 +316,6 @@
         if ($("#AP_hour").val()==""||$("#AP_hour").val()=="0"){
             if(!confirm("是否確定不輸入判行核稿時數？？")) {
                 $("#AP_hour").focus();
-                return false;
-            }
-        }
-        
-        if ($("#send_way").val() == "E") {
-            if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
-                alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
-            }
-            //未檢查通過
-            if (!document.getElementById('btnchkAttach').disabled) {
-                alert("請先執行電子申請附件檢查!!");
                 return false;
             }
         }
@@ -364,6 +364,7 @@
 
     //電子申請附件檢查
     $("#btnchkAttach").click(function () {
+        $(document).unbind();//檢查時會卡太久
         if ($("#send_way").val() != "E") {
             return false;
         }
