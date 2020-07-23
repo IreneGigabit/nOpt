@@ -57,10 +57,10 @@
 
             //抓前一todo的流水號
             string pre_sqlno = "";
-            SQL = "Select max(sqlno) as maxsqlno,in_scode from todo_opt ";
+            SQL = "Select max(sqlno) as maxsqlno from todo_opt ";
             SQL += "where syscode='" + branch + "TBRT' ";
             SQL += "and apcode='brt18' and opt_sqlno='" + opt_sqlno + "' ";
-            SQL += "and dowhat='RE' group by in_scode ";
+            SQL += "and dowhat='RE' ";
             using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
                 if (dr.Read()) {
                     pre_sqlno = dr.SafeRead("maxsqlno", "");
@@ -151,7 +151,7 @@
             SQL += ",job_status='XX' ";
             SQL += " where apcode='brt18' and opt_sqlno='" + opt_sqlno + "' ";
             SQL += " and dowhat='RE' and syscode='" + branch + "TBRT' ";
-            SQL += " and sqlno=" + pre_sqlno;
+            SQL += " and sqlno='" + pre_sqlno + "'";
             conn.ExecuteNonQuery(SQL);
 
             CreateMail(conn,pre_sqlno,todo_scode);
