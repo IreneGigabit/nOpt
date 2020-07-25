@@ -28,26 +28,19 @@
 
   <body>
     <div class="dm-uploader">
-
-        <div class="row">
-            <div id="drag-and-drop-zone" class="col-md-12 col-sm-12">
-                <div class="card h-100">
-                    <div class="card-header">
-                    多檔上傳
-                    </div>
-                    <ul class="list-unstyled p-2 d-flex flex-column col" id="files">
-                        <li class="text-muted text-center empty">No files uploaded.</li>
-                    </ul>
-                    <div class="card-body">
-                        <div class="btn btn-primary btn-block">
-                            <span>瀏覽...</span>
-                            <input type="file" title='Click to add Files' />
-                        </div>
-                    </div>
-                </div>
+        <!-- Our markup, the important part here! -->
+        <div id="drag-and-drop-zone">
+           <div class="fieldset flash" id="fsUploadProgress2">
+                <span class="legend">多檔上傳</span>
+                <ul class="list-unstyled p-2 d-flex flex-column col" id="files">
+                    <li class="text-muted text-center empty">No files uploaded.</li>
+                </ul>
             </div>
-        </div><!-- /file list -->
-
+            <div class="btn btn-primary btn-block">
+                <span>瀏覽...</span>
+                <input type="file" title='Click to add Files' />
+            </div>
+        </div><!-- /uploader -->
         <br /><br />
 
         <div class="fieldset">
