@@ -7,8 +7,8 @@
 
 .dm-uploader {
 	cursor: default;
-    margin: 0 auto;
-    width:60%;
+    /*margin: 0 auto;*/
+    /*width:60%;*/
 
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -18,36 +18,30 @@
 	user-select: none;
 }
 
+.dm-uploader .card{
+    height: 500px;
+}
+.dm-uploader .card-header{
+    color: #73b304;
+}
+.dm-uploader .card-body {
+    overflow-y: scroll;
+}
+
 .dm-uploader .btn {
-    /*width:100%;*/
-	/*position: relative;*/
+    width:100%;
+	position: relative;
 	overflow: hidden;
 }
 
 .dm-uploader .btn input[type="file"] {
-	/*position: absolute;*/
+	position: absolute;
 	top: 0;
 	right: 0;
 	margin: 0;
 	border: solid transparent;
 	width: 100%;
-	/*opacity: 0;*/
+	opacity: 0;
 	cursor: pointer;
 }
-/* -- Form Styles ------------------------------- */
 
-div.fieldset {
-	/*width: 80%;*/
-	border:  1px solid #868e96;/*afe14c*/
-	margin: 10px 0;
-	/*padding: 20px 10px;*/
-}
-div.fieldset span.legend {
-	position: relative;
-	background-color: #FFF;
-	padding: 3px;
-	top: -10px;
-	left: 5px;
-	font: 700 14px Arial, Helvetica, sans-serif;
-	color: #73b304;/*73b304*/
-}
