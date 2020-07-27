@@ -224,7 +224,7 @@
         }
         catch (Exception ex) {
             conn.RollBack();
-            Sys.errorLog(ex, conn.exeSQL, prgid);
+            //Sys.errorLog(ex, conn.exeSQL, prgid);
             if (qBr == "N") {
                 msg = "區所交辦資料複製失敗！";
             } else {
