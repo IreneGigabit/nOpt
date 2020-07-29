@@ -22,7 +22,7 @@
     height: 500px;
 }
 .dm-uploader .card-header{
-    color: #73b304;
+    /*color: #73b304;*/
 }
 .dm-uploader .card-body {
     overflow-y: scroll;
