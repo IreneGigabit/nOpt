@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -963,7 +963,7 @@ public class OpenXmlHelper
             WordprocessingDocument srcDoc = tplDoc[srcDocName];
             IEnumerable<TableProperties> tableProperties = srcDoc.MainDocumentPart.RootElement.Descendants<TableProperties>().Where(tp => tp.TableCaption != null);
             foreach (TableProperties tProp in tableProperties) {
-                if (tProp.TableCaption.Val.Equals(name)) {
+                if (tProp.TableCaption.Val == name) {
                     Table table = (Table)tProp.Parent;
                     outBody.AppendChild(table.CloneNode(true));
                 }
