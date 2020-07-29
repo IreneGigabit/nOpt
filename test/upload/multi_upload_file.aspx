@@ -1,11 +1,21 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
+    protected string QueryString = "";
+    protected string prgid = "";
+    protected string type = "";
+    protected string upfolder = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        QueryString = Request.ServerVariables["QUERY_STRING"];
+        prgid = Request["prgid"] ?? "";
+        type = Request["type"] ?? "";
+        upfolder = Request["upfolder"] ?? "";
     }
 </script>
 
@@ -32,7 +42,7 @@
             <div id="drag-and-drop-zone" class="col-md-6 col-sm-12">
                 <br />
                 <div class="card">
-                  <div class="card-header p-1 text-center">
+                  <div class="card-header p-1 text-center bg-secondary text-white">
                     多檔上傳
                   </div>
                   <div class="card-body p-2">
@@ -40,19 +50,23 @@
                         <li class="text-muted text-center empty">No files uploaded.</li>
                     </ul>
                   </div>
-                  <div class="card-footer p-0">
+                  <!--div class="card-footer p-0">
                       <div class="btn btn-primary btn-block">
                             <span>瀏覽...</span>
                             <input type="file" title='Click to add Files' />
                         </div>
-                  </div>
+                  </div-->
                 </div><!-- /file list -->
+                <div role="button" class="btn btn-primary mr-2">
+                    <i class="fa fa-folder-o fa-fw"></i> 瀏覽...
+                    <input type="file" title="Click to add Files">
+                </div>
             </div>
 
             <div class="col-md-6 col-sm-12">
                 <br />
                 <div class="card">
-                  <div class="card-header p-1 text-center">
+                  <div class="card-header p-1 text-center bg-info text-white">
                     Debug Messages
                   </div>
                   <div class="card-body p-2">
@@ -95,7 +109,6 @@
 <script type="text/javascript" language="javascript">
 $(function () {
     $(document).unbind();//上傳時畫面會一直閃
-
     /*
     * For the sake keeping the code clean and the examples simple this file
     * contains only the plugin configuration & callbacks.
@@ -103,8 +116,9 @@ $(function () {
     * UI functions ui_* can be located in: demo-ui.js
     */
     $('#drag-and-drop-zone').dmUploader({ //
-        url: getRootPath() + '/sub/UpLoadFile.ashx',
-        maxFileSize: 41943040, // 40 Megs 
+        url: getRootPath() + '/sub/UpLoadFile.ashx?<%=QueryString%>',
+        //maxFileSize: 41943040, // 40 Megs 40*1024*1024
+        maxFileSize: 3145728, // 3 Megs 
         onDragEnter: function () {
             // Happens when dragging something over the DnD area
             this.addClass('active');
@@ -147,6 +161,8 @@ $(function () {
             ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
             ui_multi_update_file_status(id, 'success', '上傳成功');
             ui_multi_update_file_progress(id, 100, 'success', false);
+            //上傳成功要帶回畫面的function,要宣告在opener頁
+            opener.uploadSuccess(JSON.stringify(data));
         },
         onUploadError: function (id, xhr, status, message) {
             //console.log(message);//Internal Server Error
