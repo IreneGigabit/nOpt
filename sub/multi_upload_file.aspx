@@ -43,7 +43,7 @@
                     </ul>
                   </div>
                 </div><!-- /file list -->
-                <div class="btn btn-primary mr-2">
+                <div class="btn btn-info mr-2">
                     瀏覽...
                     <input type="file" title="Click to add Files">
                 </div>
