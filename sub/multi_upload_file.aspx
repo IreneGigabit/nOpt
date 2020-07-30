@@ -2,10 +2,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
+    protected string QueryString = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        QueryString = Request.ServerVariables["QUERY_STRING"];
     }
 </script>
 
@@ -16,51 +20,54 @@
 
     <title>多檔上傳</title>
 
-    <!-- Custom styles -->
-    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">--%>
     <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/bootstrap.min.css")%>" />
     <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.dm-uploader.css")%>" />
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.dm-uploader.js")%>"></script>
-    <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
-    <%--<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.dm-config.js")%>"></script>--%>
  </head>
 
   <body>
-    <div class="dm-uploader">
-
+    <div class="container-fluid dm-uploader">
         <div class="row">
-            <div id="drag-and-drop-zone" class="col-md-12 col-sm-12">
-                <div class="card text-center" style="min-height: 30vh">
-                  <div class="card-header">
-                    多檔上傳
-                  </div>
+            <div class="col-md-3 col-sm-6">
+                <button type="button" class="btn btn-warning settab" href="#drag-and-drop-zone">檔案清單</button>
+                <button type="button" class="btn btn-info settab" href="#debug-zone">詳細資訊</button>
+            </div>
+        </div>
+        <div class="row">
+            <div id="drag-and-drop-zone" class="col-md-6 col-sm-12 bg-warning p-1">
+                <div class="card">
                   <div class="card-body p-2">
                     <ul class="list-unstyled p-0 d-flex flex-column col" id="files">
                         <li class="text-muted text-center empty">No files uploaded.</li>
                     </ul>
                   </div>
-                  <div class="card-footer">
-                      <div class="btn btn-primary btn-block">
-                            <span>瀏覽...</span>
-                            <input type="file" title='Click to add Files' />
-                        </div>
-                  </div>
+                </div><!-- /file list -->
+                <div class="btn btn-primary mr-2">
+                    瀏覽...
+                    <input type="file" title="Click to add Files">
                 </div>
-
+                <div class="btn btn-secondary mr-2 imgCls">
+                    關閉視窗
+                </div>
             </div>
-        </div><!-- /file list -->
 
-        <br /><br />
-
-        <div class="fieldset" style="display:none">
-            <span class="legend">Debug Messages</span>
-            <ul class="list-group list-group-flush" id="debug">
-                <li class="list-group-item text-muted empty">Loading plugin....</li>
-            </ul>
-        </div><!-- /debug -->
+            <div id="debug-zone" class="col-md-6 col-sm-12 bg-info p-1">
+                <div class="card">
+                  <div class="card-body p-2">
+                    <ul class="list-group list-group-flush" id="debug">
+                        <li class="list-group-item text-muted empty">Loading plugin....</li>
+                    </ul>
+                  </div>
+                </div><!-- /debug -->
+                <div class="btn btn-secondary mr-2 imgCls">
+                    關閉視窗
+                </div>
+            </div>
+        </div>
     </div>
 
+    <br />
     <!-- File item template -->
     <script type="text/html" id="files-template">
       <li>
@@ -82,15 +89,14 @@
 
     <!-- Debug item template -->
     <script type="text/html" id="debug-template">
-        <li class="list-group-item text-%%color%%"><strong>%%date%%</strong>: %%message%%</li>
+        <li class="list-group-item text-%%color%% p-0"><strong>%%date%%</strong>: %%message%%</li>
     </script>
   </body>
 </html>
 
 <script type="text/javascript" language="javascript">
 $(function () {
-    $(document).unbind();//上傳時畫面會一直閃
-
+    settab("#drag-and-drop-zone");
     /*
     * For the sake keeping the code clean and the examples simple this file
     * contains only the plugin configuration & callbacks.
@@ -98,8 +104,9 @@ $(function () {
     * UI functions ui_* can be located in: demo-ui.js
     */
     $('#drag-and-drop-zone').dmUploader({ //
-        url: getRootPath() + '/sub/UpLoadFile.ashx',
-        maxFileSize: 41943040, // 40 Megs 
+        url: 'UpLoadFile.ashx?<%=QueryString%>',
+        //maxFileSize: 41943040, // 40 Megs 40*1024*1024
+        maxFileSize: 3145728, // 3 Megs 
         onDragEnter: function () {
             // Happens when dragging something over the DnD area
             this.addClass('active');
@@ -140,8 +147,15 @@ $(function () {
             // A file was successfully uploaded
             ui_add_log('Server Response for file #' + id + ': ' + JSON.stringify(data));
             ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
-            ui_multi_update_file_status(id, 'success', '上傳成功');
-            ui_multi_update_file_progress(id, 100, 'success', false);
+            if (data.msg != "") {
+                ui_multi_update_file_status(id, 'warning', data.msg);
+                ui_multi_update_file_progress(id, 100, 'warning', false);
+            } else {
+                ui_multi_update_file_status(id, 'success', '上傳成功');
+                ui_multi_update_file_progress(id, 100, 'success', false);
+            }
+            //上傳成功要帶回畫面的function,要宣告在opener頁
+            opener.uploadSuccess(data);
         },
         onUploadError: function (id, xhr, status, message) {
             //console.log(message);//Internal Server Error
@@ -222,4 +236,22 @@ function ui_multi_update_file_progress(id, percent, color, active) {
         bar.addClass('bg-' + color);
     }
 }
+
+// 切換頁籤
+$(".settab").click(function (e) {
+    settab($(this).attr('href'));
+});
+function settab(k) {
+    $("#drag-and-drop-zone,#debug-zone").hide();
+    $(k).show();
+}
+
+//關閉視窗
+$(".imgCls").click(function (e) {
+    if (window.parent.tt !== undefined) {
+        window.parent.tt.rows = "100%,0%";
+    } else {
+        window.close();
+    }
+})
 </script>

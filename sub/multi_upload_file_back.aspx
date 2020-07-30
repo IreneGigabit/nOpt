@@ -2,10 +2,20 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
+    protected string QueryString = "";
+    protected string prgid = "";
+    protected string type = "";
+    protected string upfolder = "";
+
     private void Page_Load(System.Object sender, System.EventArgs e) {
         Response.CacheControl = "no-cache";
         Response.AddHeader("Pragma", "no-cache");
         Response.Expires = -1;
+
+        QueryString = Request.ServerVariables["QUERY_STRING"];
+        prgid = Request["prgid"] ?? "";
+        type = Request["type"] ?? "";
+        upfolder = Request["upfolder"] ?? "";
     }
 </script>
 
@@ -16,65 +26,75 @@
 
     <title>多檔上傳</title>
 
-    <!-- Custom styles -->
-    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">--%>
     <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/bootstrap.min.css")%>" />
     <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.dm-uploader.css")%>" />
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.dm-uploader.js")%>"></script>
-    <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/util.js")%>"></script>
-    <%--<script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery.dm-config.js")%>"></script>--%>
  </head>
 
   <body>
-    <div class="dm-uploader">
-        <!-- Our markup, the important part here! -->
-        <div id="drag-and-drop-zone">
-           <div class="fieldset flash" id="fsUploadProgress2">
-                <span class="legend">多檔上傳</span>
-                <ul class="list-unstyled p-2 d-flex flex-column col" id="files">
-                    <li class="text-muted text-center empty">No files uploaded.</li>
-                </ul>
+    <div class="container-fluid dm-uploader">
+        <div class="row">
+            <div id="drag-and-drop-zone" class="col-md-6 col-sm-12">
+                <br />
+                <div class="card">
+                  <div class="card-header p-1 text-center bg-secondary text-white">
+                    多檔上傳
+                  </div>
+                  <div class="card-body p-2">
+                    <ul class="list-unstyled p-0 d-flex flex-column col" id="files">
+                        <li class="text-muted text-center empty">No files uploaded.</li>
+                    </ul>
+                  </div>
+                </div><!-- /file list -->
+                <div class="btn btn-primary mr-2">
+                    <span class="glyphicon glyphicon-folder-open"></span> 瀏覽...
+                    <input type="file" title="Click to add Files">
+                </div>
+                <div class="btn btn-secondary mr-2 imgCls">
+                    <i class="fa fa-folder-o fa-fw"></i> 關閉視窗
+                </div>
             </div>
-            <div class="btn btn-primary btn-block">
-                <span>瀏覽...</span>
-                <input type="file" title='Click to add Files' />
+
+            <div class="col-md-6 col-sm-12">
+                <br />
+                <div class="card">
+                  <div class="card-header p-1 text-center bg-info text-white">
+                    Debug Messages
+                  </div>
+                  <div class="card-body p-2">
+                    <ul class="list-group list-group-flush" id="debug">
+                        <li class="list-group-item text-muted empty">Loading plugin....</li>
+                    </ul>
+                  </div>
+                </div><!-- /debug -->
             </div>
-        </div><!-- /uploader -->
-        <br /><br />
-
-        <div class="fieldset">
-            <span class="legend">Debug Messages</span>
-            <ul class="list-group list-group-flush" id="debug">
-                <li class="list-group-item text-muted empty">Loading plugin....</li>
-            </ul>
-        </div><!-- /debug -->
-
-
+        </div>
     </div>
 
+    <br />
     <!-- File item template -->
     <script type="text/html" id="files-template">
-      <li class="media">
-        <div class="media-body mb-1">
-          <p class="mb-2">
+      <li>
+        <div class="mb-1">
+          <p class="mb-0">
             <strong>%%filename%%</strong> - 狀態: <span class="text-muted">Waiting</span>
           </p>
-          <div class="progress mb-2">
+          <div class="progress">
             <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
               role="progressbar"
               style="width: 0%" 
               aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             </div>
           </div>
-          <hr class="mt-1 mb-1" />
+          <hr class="mt-0 mb-1" />
         </div>
       </li>
     </script>
 
     <!-- Debug item template -->
     <script type="text/html" id="debug-template">
-        <li class="list-group-item text-%%color%%"><strong>%%date%%</strong>: %%message%%</li>
+        <li class="list-group-item text-%%color%% p-0"><strong>%%date%%</strong>: %%message%%</li>
     </script>
   </body>
 </html>
@@ -88,8 +108,9 @@ $(function () {
     * UI functions ui_* can be located in: demo-ui.js
     */
     $('#drag-and-drop-zone').dmUploader({ //
-        url: getRootPath() + '/sub/UpLoadFile.ashx',
-        maxFileSize: 41943040, // 40 Megs 
+        url: 'UpLoadFile.ashx?<%=QueryString%>',
+        //maxFileSize: 41943040, // 40 Megs 40*1024*1024
+        maxFileSize: 3145728, // 3 Megs 
         onDragEnter: function () {
             // Happens when dragging something over the DnD area
             this.addClass('active');
@@ -130,8 +151,15 @@ $(function () {
             // A file was successfully uploaded
             ui_add_log('Server Response for file #' + id + ': ' + JSON.stringify(data));
             ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
-            ui_multi_update_file_status(id, 'success', '上傳成功');
-            ui_multi_update_file_progress(id, 100, 'success', false);
+            if (data.msg != "") {
+                ui_multi_update_file_status(id, 'warning', data.msg);
+                ui_multi_update_file_progress(id, 100, 'warning', false);
+            } else {
+                ui_multi_update_file_status(id, 'success', '上傳成功');
+                ui_multi_update_file_progress(id, 100, 'success', false);
+            }
+            //上傳成功要帶回畫面的function,要宣告在opener頁
+            opener.uploadSuccess(data);
         },
         onUploadError: function (id, xhr, status, message) {
             //console.log(message);//Internal Server Error
@@ -212,4 +240,13 @@ function ui_multi_update_file_progress(id, percent, color, active) {
         bar.addClass('bg-' + color);
     }
 }
+
+//關閉視窗
+$(".imgCls").click(function (e) {
+    if (window.parent.tt !== undefined) {
+        window.parent.tt.rows = "100%,0%";
+    } else {
+        window.close();
+    }
+})
 </script>

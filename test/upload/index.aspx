@@ -1,4 +1,4 @@
-<%@ Page Language="C#"%>
+﻿<%@ Page Language="C#"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -25,19 +25,18 @@
     案件編號：<input type="text" name="opt_no" id="opt_no" value="2011000060" class="SEdit" readonly>
     流水號：<input type="text" name="opt_sqlno" id="opt_sqlno" value="78" class="SEdit" readonly>
     <br />
-    <input type="text" name="<%=uploadfield%>_filenum" id="<%=uploadfield%>_filenum" value="0"><!--dmp_attach.attach_no-->
     <input type="text" name="<%=uploadfield%>_sqlnum" id="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
-    <input type="text" name="<%=uploadfield%>_maxAttach_no" id="<%=uploadfield%>_maxAttach_no" value="0"><!--isnull(max(dmp_attach.attach_no),0)-->
-    <input type="text" name="<%=uploadfield%>_maxfilenum" id="<%=uploadfield%>_maxfilenum" value="0"><!--dmp_attach.attach_no-->
-    <input type="text" name="<%=uploadfield%>_attach_cnt" id="<%=uploadfield%>_attach_cnt" value="0"><!--dmp_attach目前table的筆數-->
     <input type="text" name="uploadfield" id="uploadfield" value="<%=uploadfield%>">
     <TABLE id='tabfile<%=uploadfield%>' border=0 class="bluetable" cellspacing=1 cellpadding=2 width="80%">
-	    <TR>
-		    <TD class=whitetablebg align=center colspan=5>
-			    <input type=button value="增加一筆附件" class="c1button" id="<%=uploadfield%>_Add_button" name="<%=uploadfield%>_Add_button" onclick="multi_upload_form.appendFile()">
-                <input type="button" value="檔案上傳(可批次)" class="greenbutton" onclick="multi_upload_onclick()" id="multi_upload_button" name="multi_upload_button">
-		    </TD>
-	    </TR>
+        <thead>
+	        <TR>
+		        <TD class=whitetablebg align=center colspan=5>
+			        <input type=button value="增加一筆附件" class="c1button" id="<%=uploadfield%>_Add_button" name="<%=uploadfield%>_Add_button" onclick="multi_upload_form.appendFile()">
+                    <input type="button" value="檔案上傳(可批次)" class="greenbutton" onclick="multi_upload_onclick()" id="multi_upload_button" name="multi_upload_button">
+		        </TD>
+	        </TR>
+        </thead>
+        <tbody></tbody>
     </table>
 
 
@@ -73,33 +72,30 @@
 <script type="text/javascript" language="javascript">
     var multi_upload_form = {};
 
-    //增加一筆
-    multi_upload_form.appendFile = function () {
-        var fld = "<%=uploadfield%>";
-        var tfilenum = parseInt($("#" + fld + "_filenum").val(), 10) + 1;//attach_no
-        var tsqlnum = parseInt($("#" + fld + "_sqlnum").val(), 10) + 1;//畫面顯示NO
-        var maxattach_no = parseInt($("#" + fld + "_maxAttach_no").val(), 10) + 1;//table+畫面顯示 NO
-
-        var template = $('#attach-template').text().replace(/##/g, tsqlnum);
-        $('#tabfile' + fld).append(template);
-
-        $("#" + fld + "_filenum").val(tfilenum);
-        $("#" + fld + "_sqlnum").val(tsqlnum);
-        $("#" + fld + "_maxAttach_no").val(maxattach_no);
-    };
-
     //多檔上傳
     function multi_upload_onclick() {
         var popt_no = $("#opt_no").val().Left(4);
         var topt_no = $("#opt_no").val().substr(4);
-        var tfolder = "attach" + "/" + popt_no + "/" + topt_no;
-        var urlasp = "multi_upload_file.aspx?type=doc&prgid=<%=prgid%>&remark=" + escape("多檔上傳");
-        urlasp += "&upfolder=" + tfolder + "&temptable=attachtemp_opt&attach_tablename=attach_opt";
-        urlasp += "&nfilename=KT-" + $("#opt_no").val() + "-{{attach_no}}m";
-        //attachtemp_opt的key值
-        urlasp += "&syscode=<%=Session["Syscode"]%>&apcode=&branch=K&dept=T&opt_sqlno=" + $("#opt_no").val();
+        var tfolder = "attach" + "/" + popt_no + "/" + topt_no;//存檔路徑
+        var nfilename = "KT-" + $("#opt_no").val() + "-{{attach_no}}m";//新檔名格式
+
+        var urlasp = getRootPath() + "/sub/multi_upload_file.aspx?type=doc&prgid=<%=prgid%>&remark=" + escape("多檔上傳");
+        urlasp += "&temptable=attachtemp_opt&attach_tablename=attach_opt";
+        urlasp += "&upfolder=" + tfolder + "&nfilename=" + nfilename;
+        urlasp += "&syscode=<%=Session["Syscode"]%>&apcode=&branch=K&dept=T&opt_sqlno=" + $("#opt_no").val();//attachtemp_opt的key值
         window.open(urlasp, "", "width=700 height=600 top=50 left=150 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=yes scrollbars=yes");
     }
+
+    //增加一筆
+    multi_upload_form.appendFile = function () {
+        var fld = "<%=uploadfield%>";
+        var tsqlnum = parseInt($("#" + fld + "_sqlnum").val(), 10) + 1;//畫面顯示NO
+
+        var template = $('#attach-template').text().replace(/##/g, tsqlnum);
+        $('#tabfile' + fld+' tbody').append(template);
+
+        $("#" + fld + "_sqlnum").val(tsqlnum);
+    };
 
     //上傳後回傳資料顯示於畫面上
     function uploadSuccess(rvalue) {
