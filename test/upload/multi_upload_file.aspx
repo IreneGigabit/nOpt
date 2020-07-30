@@ -27,7 +27,6 @@
     <title>多檔上傳</title>
 
     <!-- Custom styles -->
-    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">--%>
     <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/bootstrap.min.css")%>" />
     <link rel="stylesheet" type="text/css" href="<%=Page.ResolveUrl("~/js/lib/jquery.dm-uploader.css")%>" />
     <script type="text/javascript" src="<%=Page.ResolveUrl("~/js/lib/jquery-1.12.4.min.js")%>"></script>
@@ -58,8 +57,11 @@
                   </div-->
                 </div><!-- /file list -->
                 <div role="button" class="btn btn-primary mr-2">
-                    <i class="fa fa-folder-o fa-fw"></i> 瀏覽...
+                    <span class="glyphicon glyphicon-folder-open"></span> 瀏覽...
                     <input type="file" title="Click to add Files">
+                </div>
+                <div role="button" class="btn btn-secondary mr-2 imgCls">
+                    <i class="fa fa-folder-o fa-fw"></i> 關閉視窗
                 </div>
             </div>
 
@@ -159,10 +161,15 @@ $(function () {
             // A file was successfully uploaded
             ui_add_log('Server Response for file #' + id + ': ' + JSON.stringify(data));
             ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
-            ui_multi_update_file_status(id, 'success', '上傳成功');
-            ui_multi_update_file_progress(id, 100, 'success', false);
+            if (data.msg != "") {
+                ui_multi_update_file_status(id, 'warning', data.msg);
+                ui_multi_update_file_progress(id, 100, 'warning', false);
+            } else {
+                ui_multi_update_file_status(id, 'success', '上傳成功');
+                ui_multi_update_file_progress(id, 100, 'success', false);
+            }
             //上傳成功要帶回畫面的function,要宣告在opener頁
-            opener.uploadSuccess(JSON.stringify(data));
+            opener.uploadSuccess(data);
         },
         onUploadError: function (id, xhr, status, message) {
             //console.log(message);//Internal Server Error
@@ -243,4 +250,13 @@ function ui_multi_update_file_progress(id, percent, color, active) {
         bar.addClass('bg-' + color);
     }
 }
+
+//關閉視窗
+$(".imgCls").click(function (e) {
+    if (window.parent.tt !== undefined) {
+        window.parent.tt.rows = "100%,0%";
+    } else {
+        window.close();
+    }
+})
 </script>
