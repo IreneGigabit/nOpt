@@ -4,7 +4,6 @@
 <script runat="server">
     protected string prgid = "";
     protected string uploadfield = "attach";
-    protected string uploadsource = "PR";
     protected string html_attach_doc = "";
 
     private void Page_Load(System.Object sender, System.EventArgs e) {
@@ -23,15 +22,15 @@
 </head>
 
 <body>
-    案件編號：<input type="text" name="opt_no" id="opt_no" value="2011000060">
-
+    案件編號：<input type="text" name="opt_no" id="opt_no" value="2011000060" class="SEdit" readonly>
+    流水號：<input type="text" name="opt_sqlno" id="opt_sqlno" value="78" class="SEdit" readonly>
+    <br />
     <input type="text" name="<%=uploadfield%>_filenum" id="<%=uploadfield%>_filenum" value="0"><!--dmp_attach.attach_no-->
     <input type="text" name="<%=uploadfield%>_sqlnum" id="<%=uploadfield%>_sqlnum" value="0"><!--畫面NO顯示編號-->
     <input type="text" name="<%=uploadfield%>_maxAttach_no" id="<%=uploadfield%>_maxAttach_no" value="0"><!--isnull(max(dmp_attach.attach_no),0)-->
     <input type="text" name="<%=uploadfield%>_maxfilenum" id="<%=uploadfield%>_maxfilenum" value="0"><!--dmp_attach.attach_no-->
     <input type="text" name="<%=uploadfield%>_attach_cnt" id="<%=uploadfield%>_attach_cnt" value="0"><!--dmp_attach目前table的筆數-->
     <input type="text" name="uploadfield" id="uploadfield" value="<%=uploadfield%>">
-    <input type="text" name="uploadsource" id="uploadsource" value="<%=uploadsource%>">
     <TABLE id='tabfile<%=uploadfield%>' border=0 class="bluetable" cellspacing=1 cellpadding=2 width="80%">
 	    <TR>
 		    <TD class=whitetablebg align=center colspan=5>
@@ -45,7 +44,7 @@
     <script type="text/html" id="attach-template">
     	<TR>
 		    <TD class=lightbluetable align=center>
-                附件<input type=text name='<%=uploadfield%>_sqlno_##' class=gsedit1 readonly size=2 value='##'>.
+                附件<input type=text name='<%=uploadfield%>_sqlno_##' class=SEdit readonly size=2 value='##'>.
 		    </TD>
 		    <TD class=sfont9 align=left colspan="2">
  	            附件名稱：<input type=text id='<%=uploadfield%>_name_##' name='<%=uploadfield%>_name_##' class="Lock" size=45 maxlength=50>
@@ -61,9 +60,9 @@
 	            <input type='hidden' id='<%=uploadfield%>_add_scode_##' name='<%=uploadfield%>_add_scode_##' value=''>
                 <br>文件種類：<Select id='<%=uploadfield%>_doc_type_##' name='<%=uploadfield%>_doc_type_##' Onchange="upload_form.getdesc('##')" class="BLock YZLock"><%=html_attach_doc%></Select>
                 <br>附件說明：<input type=text name='<%=uploadfield%>_desc_##' id='<%=uploadfield%>_desc_##' size=50 maxlength=50 onblur="fChkDataLen(this,'附件說明')">
-                <br>上傳日期：<input type=text name='<%=uploadfield%>_in_date_##' id='<%=uploadfield%>_in_date_##' class='sedit' readonly size=24 onblur="fChkDataLen(this,'上傳日期')">
-                &nbsp;原始檔名：<input type=text name='<%=uploadfield%>_source_name_##' id='<%=uploadfield%>_source_name_##' class=sedit readonly size=45 maxlength=50>
-                <span id='span_<%=uploadfield%>_size_##' style='display:none'>&nbsp;檔案大小：<input type=text name='<%=uploadfield%>_size_##' id='<%=uploadfield%>_size_##' class=sedit readonly size=12>Byte</span>
+                <br>上傳日期：<input type=text name='<%=uploadfield%>_in_date_##' id='<%=uploadfield%>_in_date_##' class='SEdit' readonly size=24 onblur="fChkDataLen(this,'上傳日期')">
+                &nbsp;原始檔名：<input type=text name='<%=uploadfield%>_source_name_##' id='<%=uploadfield%>_source_name_##' class=SEdit readonly size=45 maxlength=50>
+                &nbsp;檔案大小：<input type=text name='<%=uploadfield%>_size_##' id='<%=uploadfield%>_size_##' class=SEdit readonly size=12>Byte
 		    </TD>
 	    </TR>
     </script>
@@ -87,7 +86,6 @@
         $("#" + fld + "_filenum").val(tfilenum);
         $("#" + fld + "_sqlnum").val(tsqlnum);
         $("#" + fld + "_maxAttach_no").val(maxattach_no);
-        $("#" + fld + "_attach_no_" + tfilenum).val(maxattach_no);
     };
 
     //多檔上傳
@@ -95,12 +93,11 @@
         var popt_no = $("#opt_no").val().Left(4);
         var topt_no = $("#opt_no").val().substr(4);
         var tfolder = "attach" + "/" + popt_no + "/" + topt_no;
-        var urlasp = "multi_upload_file.aspx?type=doc";
-        urlasp += "&prgid=<%=prgid%>&upfolder=" + tfolder;
-        //fsql = "EXEC sp_get_attach_no 'cust_file','','<%=Session["SeBranch"]%>','',''," + $("#apsqlno").val() + ", '',0,'<%=Session["scode"]%>','<%=prgid%>'";
-        //attachtemp的key值
-        urlasp += "&syscode=<%=Session["Syscode"]%>&apcode=&branch=K&dept=T&seq_area=I";
-        urlasp += "&seq=" + $("#opt_no").val() + "&seq1=&step_grade=";
+        var urlasp = "multi_upload_file.aspx?type=doc&prgid=<%=prgid%>&remark=" + escape("多檔上傳");
+        urlasp += "&upfolder=" + tfolder + "&temptable=attachtemp_opt&attach_tablename=attach_opt";
+        urlasp += "&nfilename=KT-" + $("#opt_no").val() + "-{{attach_no}}m";
+        //attachtemp_opt的key值
+        urlasp += "&syscode=<%=Session["Syscode"]%>&apcode=&branch=K&dept=T&opt_sqlno=" + $("#opt_no").val();
         window.open(urlasp, "", "width=700 height=600 top=50 left=150 toolbar=no, menubar=no, location=no, directories=no resizeable=no status=yes scrollbars=yes");
     }
 
@@ -108,19 +105,15 @@
     function uploadSuccess(rvalue) {
         var fld = "<%=uploadfield%>";
         multi_upload_form.appendFile();
-        console.log(rvalue);
-        var arvalue = rvalue.split("#@#");
         //傳回:檔案名稱，虛擬完整路徑，原始檔名，檔案大小，attach_no
-        //alert(arvalue[0]);
-        //alert(arvalue[1]);
-        var listno = document.getElementById(fld + "_sqlnum").value;
-        //alert(listno);
-        //document.getElementById(fld + "_name_" + listno).value = arvalue[0];
-        //document.getElementById(fld + "_path_" + listno).value = arvalue[1];
-        //document.getElementById(fld + "_" + listno).value = arvalue[1];
-        //document.getElementById(fld + "_source_name_" + listno).value = arvalue[2];
-        //document.getElementById(fld + "_size_" + listno).value = arvalue[3];
-        //document.getElementById(fld + "_attach_no_" + listno).value = arvalue[4];
-        //document.getElementById(fld + "_dbflag_" + listno).value = "A"; //新增
+        var listno = $("#" + fld + "_sqlnum").val();
+        $("#" + fld + "_name_" + listno).val(rvalue.name);
+        $("#" + fld + "_path_" + listno).val(rvalue.path);
+        $("#" + fld + "_" + listno).val(rvalue.path);
+        $("#" + fld + "_source_name_" + listno).val(rvalue.source);
+        $("#" + fld + "_desc_" + listno).val(rvalue.desc);
+        $("#" + fld + "_size_" + listno).val(rvalue.size);
+        $("#" + fld + "_attach_no_" + listno).val(rvalue.attach_no);
+        $("#" + fld + "_dbflag_" + listno).val("A"); //新增
     }
 </script>
