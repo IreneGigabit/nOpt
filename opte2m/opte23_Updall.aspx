@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -130,7 +130,7 @@
         SQL = "update opte_detail set opt_sqlno = opt_sqlno";
         SQL += ",your_no='" + Request["your_no_" + pno] + "'";
         SQL += ",tr_date=getdate()";
-        SQL += ",where='" + Session["scode"] + "'";
+        SQL += ",tr_scode='" + Session["scode"] + "'";
         SQL += " where opt_sqlno = '" + Request["opt_sqlno_" + pno] + "'";
         conn.ExecuteNonQuery(SQL);
     }
