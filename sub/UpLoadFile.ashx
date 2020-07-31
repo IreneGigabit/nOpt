@@ -62,7 +62,7 @@ public class UpLoaded : IHttpHandler, IRequiresSessionState
         uploadedFile.SaveAs(file_path + saveFName);
 
         JObject obj = new JObject(
-                 new JProperty("msg", msg),//回傳訊息,KT-2011000060-14m.png
+                 new JProperty("msg", msg),//回傳訊息
                  new JProperty("name", saveFName),//實體檔名,KT-2011000060-14m.png
                  new JProperty("path", pattach_path + saveFName),//虛擬完整路徑+實體檔名,/nopt/opt_file/attach/2011/000060/KT-2011000060-14m.png
                  new JProperty("source", psource_name),//原始檔名,[立體商標註冊申請書]-TI-54531-IT_[立體商標註冊申請書]_0000.png
