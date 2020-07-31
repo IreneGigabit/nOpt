@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <script runat="server">
@@ -30,39 +30,32 @@
     <div class="container-fluid dm-uploader">
         <div class="row">
             <div class="col-md-3 col-sm-6">
-                <button type="button" class="btn btn-warning settab" href="#drag-and-drop-zone">檔案清單</button>
-                <button type="button" class="btn btn-info settab" href="#debug-zone">詳細資訊</button>
+                <button type="button" class="btn btn-warning btn-sm settab" href="#drag-and-drop-zone">檔案清單</button>
+                <button type="button" class="btn btn-info btn-sm settab" href="#debug-zone">詳細資訊</button>
             </div>
         </div>
         <div class="row">
             <div id="drag-and-drop-zone" class="col-md-6 col-sm-12 bg-warning p-1">
-                <div class="card">
+                <div class="card mb-1">
                   <div class="card-body p-2">
                     <ul class="list-unstyled p-0 d-flex flex-column col" id="files">
                         <li class="text-muted text-center empty">No files uploaded.</li>
                     </ul>
                   </div>
                 </div><!-- /file list -->
-                <div class="btn btn-info mr-2">
-                    瀏覽...
-                    <input type="file" title="Click to add Files">
-                </div>
-                <div class="btn btn-secondary mr-2 imgCls">
-                    關閉視窗
-                </div>
+                <div class="btn btn-info btn-sm mr-2">瀏覽...<input type="file" title="瀏覽..."></div>
+                <div class="btn btn-secondary btn-sm mr-2 imgCls">關閉視窗</div>
             </div>
 
             <div id="debug-zone" class="col-md-6 col-sm-12 bg-info p-1">
-                <div class="card">
+                <div class="card mb-1">
                   <div class="card-body p-2">
                     <ul class="list-group list-group-flush" id="debug">
                         <li class="list-group-item text-muted empty">Loading plugin....</li>
                     </ul>
                   </div>
                 </div><!-- /debug -->
-                <div class="btn btn-secondary mr-2 imgCls">
-                    關閉視窗
-                </div>
+                <div class="btn btn-secondary btn-sm mr-2 imgCls">關閉視窗</div>
             </div>
         </div>
     </div>
@@ -72,8 +65,8 @@
     <script type="text/html" id="files-template">
       <li>
         <div class="mb-1">
-          <p class="mb-0">
-            <strong>%%filename%%</strong> - 狀態: <span class="text-muted">Waiting</span>
+          <p class="mb-0" style="font-size:0.8em">
+            %%filename%% - 狀態: <span class="text-muted">Waiting</span>
           </p>
           <div class="progress">
             <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
@@ -117,7 +110,8 @@ $(function () {
         },
         onInit: function () {
             // Plugin is ready to use
-            ui_add_log('Penguin initialized :)', 'info');
+            //ui_add_log('Penguin initialized :)', 'info');
+            ui_add_log('初始化完成', 'info');
         },
         onComplete: function () {
             // All files in the queue are processed (success or error)
@@ -148,8 +142,8 @@ $(function () {
             ui_add_log('Server Response for file #' + id + ': ' + JSON.stringify(data));
             ui_add_log('Upload of file #' + id + ' COMPLETED', 'success');
             if (data.msg != "") {
-                ui_multi_update_file_status(id, 'warning', data.msg);
-                ui_multi_update_file_progress(id, 100, 'warning', false);
+                ui_multi_update_file_status(id, 'info', data.msg);
+                ui_multi_update_file_progress(id, 100, 'info', false);
             } else {
                 ui_multi_update_file_status(id, 'success', '上傳成功');
                 ui_multi_update_file_progress(id, 100, 'success', false);
