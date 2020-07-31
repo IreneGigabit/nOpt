@@ -35,3 +35,44 @@ from web02.sysctrl.dbo.sysctrl where syscode='opt' and scode in('m1583')
 --\\web08\wwwroot$\Nopt\commonForm\opt\BR_formA.ascx(18):            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
 --\\web08\wwwroot$\Nopt\commonForm\opt\case_form.ascx(23):            tfy_send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY'and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
 --\\web08\wwwroot$\Nopt\commonForm\opt\Send_form.ascx(21):            send_way = SHtml.Option(connB, "select cust_code,code_name from cust_code where code_type='GSEND_WAY' and cust_code='M' order by sortfld", "{cust_code}", "{code_name}");
+
+
+USE [sikopt]
+GO
+
+/****** Object:  Table [dbo].[attachtemp_opt]    Script Date: 2020/7/31 下午 02:24:28 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[attachtemp_opt](
+	[temp_sqlno] [int] IDENTITY(1,1) NOT NULL,
+	[syscode] [varchar](10) NOT NULL,
+	[apcode] [varchar](10) NOT NULL,
+	[branch] [varchar](2) NOT NULL,
+	[dept] [varchar](5) NOT NULL,
+	[opt_sqlno] [int] NOT NULL,
+	[attach_no] [int] NOT NULL,
+	[in_date] [datetime] NULL,
+	[in_scode] [varchar](5) NULL,
+	[tran_date] [smalldatetime] NULL,
+	[tran_scode] [varchar](5) NULL,
+	[remark] [varchar](255) NULL,
+ CONSTRAINT [PK_attachtemp_tech] PRIMARY KEY CLUSTERED 
+(
+	[temp_sqlno] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+
