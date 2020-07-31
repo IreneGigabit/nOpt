@@ -327,8 +327,8 @@
         //strpath = strpath.Replace(@"/btbrt/", @"/nopt/");
         strpath = Sys.Path2Nopt(strpath);
 
-        //第一層目錄：日期+區所別，如20160907-NT
-        string tfoldername = String.Format("{0}-{1}", DateTime.Now.ToString("yyyyMMdd"), branch + Sys.GetSession("dept"));
+        //第一層目錄：日期+B區所別，如20160907-BNT
+        string tfoldername = String.Format("{0}-B{1}", DateTime.Now.ToString("yyyyMMdd"), branch + Sys.GetSession("dept"));
         //第二層目錄：案號+副碼+進度+案性前6碼，如NT12345-_-2-申請商標註冊
         tfoldername += "/" + String.Format("{0}-{1}-{2}-{3}"
             , branch + Sys.GetSession("dept") + bseq
