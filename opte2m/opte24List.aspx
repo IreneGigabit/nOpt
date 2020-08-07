@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
+<%@ Page Language="C#" CodePage="65001" AutoEventWireup="true"  %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Text"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
@@ -41,6 +41,9 @@
             }
             if ((Request["qryBSeq1"] ?? "").Trim() != "") {
                 isql += " and a.Bseq1='" + Request["qryBSeq1"] + "'";
+            }
+            if ((Request["qryyour_no"] ?? "").Trim() != "") {
+                isql += " and a.your_no='" + Request["qryyour_no"] + "'";
             }
             //權限控制
             if (!((HTProgRight & 64) != 0)) {
