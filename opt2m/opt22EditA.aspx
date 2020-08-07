@@ -366,6 +366,7 @@
     $("#btnchkAttach").click(function () {
         $(document).unbind();//檢查時會卡太久
         if ($("#send_way").val() != "E") {
+            alert("非電子送件不需檢查!");
             return false;
         }
 
