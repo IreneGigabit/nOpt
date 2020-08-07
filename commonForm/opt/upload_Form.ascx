@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="upload_form" %>
+<%@ Control Language="C#" ClassName="upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -126,7 +126,7 @@
             //$("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
             $("#open_path_" + nRow).val(item.preview_path);
 
-            if (item.add_scode != "<%#Session["scode"]%>") {
+            if (item.add_scode != "<%#Session["scode"]%>" && "<%#Sys.IsAdmin()%>"!="True") {
                 $("#btn" + fld + "_D_" + nRow).prop("disabled", true);
                 $("#span_" + fld + "_add_scodenm_" + nRow).show();
                 $("#" + fld + "_desc_" + nRow).lock();
