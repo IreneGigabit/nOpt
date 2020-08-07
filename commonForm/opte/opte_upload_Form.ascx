@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="opte_upload_form" %>
+<%@ Control Language="C#" ClassName="opte_upload_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -112,7 +112,7 @@
             $("#" + fld + "_size_" + nRow).val(item.attach_size);
             $("#" + fld + "_path_" + nRow).val(item.attach_path);
             $("#" + fld + "_source_name_" + nRow).val(item.source_name);
-            $("#" + fld + "_add_date_" + nRow).val(dateReviver(item.add_date, "yyyy/M/d t HH:mm:ss"));
+            $("#" + fld + "_add_date_" + nRow).val(dateReviver(item.add_date, "yyyy/M/d"));
             if (item.attach_branch == "BR"){
                 $("#" + fld + "_attach_branch_" + nRow).prop("checked", true);
             }
@@ -126,7 +126,7 @@
             $("input[name='brdmt_branch_" + nRow + "'][value='" + item.attach_branch + "']").prop("checked", true);
             //$("#open_path_" + nRow).val(item.preview_path);
 
-            if (item.add_scode != "<%#Session["scode"]%>") {
+            if (item.add_scode != "<%#Session["scode"]%>" && "<%#Sys.IsAdmin()%>"!="True") {
                 $("#btn" + fld + "_D_" + nRow).prop("disabled", true);
                 $("#span_" + fld + "_add_scodenm_" + nRow).show();
                 $("#" + fld + "_desc_" + nRow).lock();
