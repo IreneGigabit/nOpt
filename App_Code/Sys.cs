@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Data.SqlClient;
@@ -154,6 +154,9 @@ public class Sys
                 if (pBranch.ToUpper() == "C") rtnStr = "sic10.sicdbs.dbo";
                 if (pBranch.ToUpper() == "S") rtnStr = "sis10.sisdbs.dbo";
                 if (pBranch.ToUpper() == "K") rtnStr = "sik10.sikdbs.dbo";
+                break;
+            case "web10":
+                rtnStr = "web10.sindbs.dbo";//測試環境
                 break;
             default:
                 rtnStr = "sindbs.dbo";//開發環境
