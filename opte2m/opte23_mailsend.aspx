@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
@@ -163,7 +163,7 @@
                 //Response.Write("**4**"+pdfpath+"<HR>");
                 pdfpath = pdfpath.Replace(ReqVal.TryGet("source_server", "")+@"\", ReqVal.TryGet("brupload_server" + i, "") + @"\");//如果是apserver則轉成對應uploadserver
                 //Response.Write("**5**"+pdfpath+"<HR>");
-                pdfpath = @"\\" + pdfpath;
+                pdfpath = @"\\" + pdfpath.ToUnicode();
                 //Response.Write("**6**"+pdfpath+"<HR>");
 
                 arrAttach.Add(new string[] { pdfpath, ReqVal.TryGet("pdfname" + i, "") });
