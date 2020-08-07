@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -94,6 +94,9 @@ public class OpenXmlHelper
 			outDoc.MainDocumentPart.Document.Body.RemoveAllChildren();
 			//List<OpenXmlElement> child = outDoc.MainDocumentPart.Document.Body.ChildElements.TakeWhile(d => d.GetType() != typeof(SectionProperties)).ToList();
 			//child.ForEach(c => c.Remove());
+        } else {
+            outDoc.MainDocumentPart.Document.Body.RemoveAllChildren<SdtElement>();
+            outDoc.MainDocumentPart.Document.Body.RemoveAllChildren<Paragraph>();
 		}
 
 		outBody = outDoc.MainDocumentPart.Document.Body;
