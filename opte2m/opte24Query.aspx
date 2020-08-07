@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -86,6 +86,9 @@
 		        ◎區所案件編號:
 			    <Select id="qryBranch" name="qryBranch"></Select>
 			    <input type="text" name="qryBSeq" id="qryBSeq" size="5" maxLength="5">-<input type="text" name="qryBSeq1" id="qryBSeq1" size="1" maxLength="1">
+	        </td>
+	        <td class="text9">
+		        ◎對方號:<input type=text id="qryyour_no" name="qryyour_no" size=20>
 	        </td>
 	        <td class="text9">
 		        ◎排序: <select id="qryOrder" name="qryOrder">
