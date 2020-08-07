@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -286,7 +286,7 @@
             } else if (dbflag == "D") {
                 Funcs.insert_log_table(conn, "U", prgid, "attach_opte", "attach_sqlno", ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, ""));
                 //當attach_sqlno <> empty時,表示db有值,必須刪除data(update attach_flag = 'D')
-                if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") == "") {
+                if (ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") != "") {
                     SQL = "update attach_opte set attach_flag='D'";
                     //SQL += " OUTPUT 'U', GETDATE(),'" + Session["scode"] + "'," + Util.dbnull(prgid) + "," + "DELETED.* INTO attach_opt_log";
                     SQL += " where attach_sqlno='" + ReqVal.TryGet(opt_uploadfield + "_attach_sqlno_" + i, "") + "'";
