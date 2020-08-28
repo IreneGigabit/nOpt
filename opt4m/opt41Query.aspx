@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -373,7 +373,7 @@
                 $("#opt_sqlno"+i).val("");
             }
         }
-        $("btnSubmit,#btnBack").lock(!$("#chkTest").prop("checked"));
+        $("#btnSubmit,#btnBack").lock(!$("#chkTest").prop("checked"));
         reg.submittask.value="U";
         reg.action = "<%=HTProgPrefix%>_Update.aspx";
         reg.target = "ActFrame";
@@ -404,7 +404,7 @@
                     $("#opt_sqlno"+i).val("");
                 }
             }
-            $("btnSubmit,#btnBack").lock(!$("#chkTest").prop("checked"));
+            $("#btnSubmit,#btnBack").lock(!$("#chkTest").prop("checked"));
             reg.submittask.value="B";
             reg.action = "<%=HTProgPrefix%>_Update.aspx";
             reg.target = "ActFrame";
