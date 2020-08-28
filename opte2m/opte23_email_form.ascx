@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Classname="opte23_email_form" %>
+<%@ Control Language="C#" Classname="opte23_email_form" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 <%@ Import Namespace = "System.Data.SqlClient"%>
 <%@ Import Namespace = "System.Data" %>
@@ -111,12 +111,12 @@
             string fseq = Funcs.formatSeq(RS.TryGet("Bseq", "").ToString(), RS.TryGet("Bseq1", "").ToString(), RS.TryGet("country", "").ToString(), RS.TryGet("branch", "").ToString(), Sys.GetSession("dept") + "E");
             string fext_seq = Funcs.formatSeq(RS.TryGet("ext_seq", "").ToString(), RS.TryGet("ext_seq1", "").ToString(), RS.TryGet("country", "").ToString(), "", Sys.GetSession("dept") + "E");
             tf_content = tf_content.Replace("/*fseq*/", fseq);
-            tf_content = tf_content.Replace("/*fext_seq*/", fext_seq);
-            tf_content = tf_content.Replace("/*your_no*/", RS.TryGet("your_no", "").ToString());
-            tf_content = tf_content.Replace("/*appl_name*/", RS.TryGet("appl_name", "").ToString());
-            tf_content = tf_content.Replace("/*apply_no*/", RS.TryGet("apply_no", "").ToString());
-            tf_content = tf_content.Replace("/*issue_no*/", RS.TryGet("issue_no", "").ToString());
-            tf_content = tf_content.Replace("/*class*/", RS.TryGet("class", "").ToString());
+            tf_content = tf_content.Replace("/*fext_seq*/", (RS.TryGet("ext_seq") == "" ? "_____" : fext_seq));
+            tf_content = tf_content.Replace("/*your_no*/", (RS.TryGet("your_no") == "" ? "_____" : RS.TryGet("your_no")));
+            tf_content = tf_content.Replace("/*appl_name*/", RS.TryGet("appl_name"));
+            tf_content = tf_content.Replace("/*apply_no*/", RS.TryGet("apply_no"));
+            tf_content = tf_content.Replace("/*issue_no*/", RS.TryGet("issue_no"));
+            tf_content = tf_content.Replace("/*class*/", RS.TryGet("class"));
             string ap_cname = "";
             using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
                 SQL = "select ap_cname from caseopte_ap where opt_sqlno=" + Request["opt_sqlno"];
