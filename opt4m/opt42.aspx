@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Collections.Generic"%>
 
@@ -25,8 +25,11 @@
 
         step_date = (Request["step_date"] ?? "").Trim();
         rs_no = (Request["rs_no"] ?? "").Trim();
-        emg_scode = Funcs.GetRoleScode(Sys.GetSession("syscode"), Sys.GetSession("dept"), "mg_pror");//總管處程序人員-正本
-        emg_agscode = Funcs.GetRoleScode(Sys.GetSession("syscode"), Sys.GetSession("dept"), "mg_prorm");//總管處程序人員-副本
+        //emg_scode = Funcs.GetRoleScode(Sys.GetSession("syscode"), Sys.GetSession("dept"), "mg_pror");//總管處程序人員-正本
+        //emg_agscode = Funcs.GetRoleScode(Sys.GetSession("syscode"), Sys.GetSession("dept"), "mg_prorm");//總管處程序人員-副本
+        
+        emg_scode = Funcs.GetRoleScode("KTBRT", Sys.GetSession("dept"), "mg_pror");//總管處程序人員-正本
+        emg_agscode = Funcs.GetRoleScode("KTBRT", Sys.GetSession("dept"), "mg_prorm");//總管處程序人員-副本
 
         Token myToken = new Token(HTProgCode);
         HTProgRight = myToken.CheckMe();
