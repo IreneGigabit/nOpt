@@ -73,80 +73,83 @@
             SQL += ",tran_scode='" + Session["scode"] + "'";
             SQL += ",tran_date=getdate()";
             SQL += " where opt_sqlno='" + opt_sqlno + "'";
-            conn.ExecuteNonQuery(SQL);
+            SQL += " and stat_code like 'NY%'";
+            int cc = conn.ExecuteNonQuery(SQL);
 
-            //修改流程狀態
-            SQL = "update todo_opte set approve_scode='" + Session["scode"] + "'";
-            SQL += ",resp_date=getdate()";
-            SQL += ",job_status='YY'";
-            SQL += " where sqlno=" + todo_sqlno + " and syscode='" + Session["Syscode"] + "' and apcode='opte31' ";
-            SQL += " and dowhat='AP' and job_status='NN' ";
-            conn.ExecuteNonQuery(SQL);
+            if (cc > 0) {
+                //修改流程狀態
+                SQL = "update todo_opte set approve_scode='" + Session["scode"] + "'";
+                SQL += ",resp_date=getdate()";
+                SQL += ",job_status='YY'";
+                SQL += " where sqlno=" + todo_sqlno + " and syscode='" + Session["Syscode"] + "' and apcode='opte31' ";
+                SQL += " and dowhat='AP' and job_status='NN' ";
+                conn.ExecuteNonQuery(SQL);
 
-            //區所交辦寫回區所回稿待確認
-            if (ReqVal.TryGet("br_source", "") == "br") {
-                //新增bstep_ext_temp
-                SQL = "insert into bstep_ext_temp(branch,seq,seq1,bstep_grade,bcase_date,last_date,case_no,opt_sqlno,your_no,in_date,in_scode,send_remark) values ";
-                SQL += "('" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "") + "'," + ReqVal.TryGet("bstep_grade", "");
-                SQL += ",'" + ReqVal.TryGet("bcase_date", "") + "','" + ReqVal.TryGet("tfy_last_date", "") + "','" + case_no + "'," + opt_sqlno;
-                SQL += ",'" + ReqVal.TryGet("tfzd_your_no", "") + "',getdate(),'" + Session["scode"] + "','" + ReqVal.TryGet("send_remark", "").ToBig5() + "')";
-                connB.ExecuteNonQuery(SQL);
+                //區所交辦寫回區所回稿待確認
+                if (ReqVal.TryGet("br_source", "") == "br") {
+                    //新增bstep_ext_temp
+                    SQL = "insert into bstep_ext_temp(branch,seq,seq1,bstep_grade,bcase_date,last_date,case_no,opt_sqlno,your_no,in_date,in_scode,send_remark) values ";
+                    SQL += "('" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "") + "'," + ReqVal.TryGet("bstep_grade", "");
+                    SQL += ",'" + ReqVal.TryGet("bcase_date", "") + "','" + ReqVal.TryGet("tfy_last_date", "") + "','" + case_no + "'," + opt_sqlno;
+                    SQL += ",'" + ReqVal.TryGet("tfzd_your_no", "") + "',getdate(),'" + Session["scode"] + "','" + ReqVal.TryGet("send_remark", "").ToBig5() + "')";
+                    connB.ExecuteNonQuery(SQL);
 
-                //抓insert後的流水號
-                SQL = "SELECT SCOPE_IDENTITY() AS Current_Identity";
-                object objResult1 = connB.ExecuteScalar(SQL);
-                string Getbstep_sqlno = objResult1.ToString();
+                    //抓insert後的流水號
+                    SQL = "SELECT SCOPE_IDENTITY() AS Current_Identity";
+                    object objResult1 = connB.ExecuteScalar(SQL);
+                    string Getbstep_sqlno = objResult1.ToString();
 
-                //新增battach_ext_temp
-                string opt_uploadfield = ReqVal.TryGet("opt_uploadfield", "");
-                int sqlnum = Convert.ToInt32("0" + ReqVal.TryGet(opt_uploadfield + "_sqlnum", ""));
-                for (int i = 1; i <= sqlnum; i++) {
-                    //有勾選上傳區所才需寫入
-                    if (ReqVal.TryGet(opt_uploadfield + "_attach_branch_" + i, "") == "BR") {
-                        SQL = "insert into battach_ext_temp(seq,seq1,opt_sqlno,temp_sqlno,source,in_date,in_scode,attach_no,attach_path,doc_type,attach_desc";
-                        SQL += ",attach_name,source_name,attach_size,attach_flag) values ";
-                        SQL += "(" + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "").Trim() + "'," + opt_sqlno + "," + Getbstep_sqlno + ",'opt',getdate()";
-                        SQL += ",'" + Session["scode"] + "'," + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "").Trim() + ",'" + ReqVal.TryGet(opt_uploadfield + "_" + i, "") + "'";
-                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").Trim().ToBig5() + "'";
-                        SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").Trim().ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").Trim().ToBig5() + "'";
-                        SQL += "," + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_flag_" + i, "") + "')";
-                        connB.ExecuteNonQuery(SQL);
+                    //新增battach_ext_temp
+                    string opt_uploadfield = ReqVal.TryGet("opt_uploadfield", "");
+                    int sqlnum = Convert.ToInt32("0" + ReqVal.TryGet(opt_uploadfield + "_sqlnum", ""));
+                    for (int i = 1; i <= sqlnum; i++) {
+                        //有勾選上傳區所才需寫入
+                        if (ReqVal.TryGet(opt_uploadfield + "_attach_branch_" + i, "") == "BR") {
+                            SQL = "insert into battach_ext_temp(seq,seq1,opt_sqlno,temp_sqlno,source,in_date,in_scode,attach_no,attach_path,doc_type,attach_desc";
+                            SQL += ",attach_name,source_name,attach_size,attach_flag) values ";
+                            SQL += "(" + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "").Trim() + "'," + opt_sqlno + "," + Getbstep_sqlno + ",'opt',getdate()";
+                            SQL += ",'" + Session["scode"] + "'," + ReqVal.TryGet(opt_uploadfield + "_attach_no_" + i, "").Trim() + ",'" + ReqVal.TryGet(opt_uploadfield + "_" + i, "") + "'";
+                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_doc_type_" + i, "") + "','" + ReqVal.TryGet(opt_uploadfield + "_desc_" + i, "").Trim().ToBig5() + "'";
+                            SQL += ",'" + ReqVal.TryGet(opt_uploadfield + "_name_" + i, "").Trim().ToBig5() + "','" + ReqVal.TryGet(opt_uploadfield + "_source_name_" + i, "").Trim().ToBig5() + "'";
+                            SQL += "," + ReqVal.TryGet(opt_uploadfield + "_size_" + i, "") + ",'" + ReqVal.TryGet(opt_uploadfield + "_attach_flag_" + i, "") + "')";
+                            connB.ExecuteNonQuery(SQL);
+                        }
                     }
+
+                    //新增回稿確認流程檔
+                    //抓取區所承辦人員，依營洽抓取對應承辦人員
+                    SQL = "select a.pr_scode,b.grpid ";
+                    SQL += " from sysctrl.dbo.scode_group a ";
+                    SQL += " left outer join sysctrl.dbo.scode_group b on a.pr_scode=b.scode and a.grpclass=b.grpclass ";
+                    SQL += " where a.grpclass='" + branch + "' and a.scode='" + ReqVal.TryGet("F_tscode", "").Trim() + "' and a.pr_scode is not null ";
+                    SQL += " order by b.grpid";
+                    using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
+                        if (dr.Read()) {
+                            job_scode = dr.SafeRead("pr_scode", "").Trim();
+                            job_team = dr.SafeRead("grpid", "").Trim();
+                        }
+                    }
+
+                    //新增流程控制檔
+                    SQL = "insert into todo_ext(syscode,apcode,from_flag,branch,seq,seq1,step_grade,case_in_scode,in_no,case_no,att_no,in_scode,in_date,dowhat,job_scode,job_team,job_status) values ";
+                    SQL += "('" + Session["Syscode"] + "','" + prgid + "','CGRS1','" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "") + "'";
+                    SQL += "," + ReqVal.TryGet("bstep_grade", "") + ",'" + ReqVal.TryGet("F_tscode", "").Trim() + "','" + ReqVal.TryGet("attach_in_no", "").Trim() + "'";
+                    SQL += ",'" + case_no + "'," + Getbstep_sqlno + ",'" + Session["scode"] + "',getdate(),'DP_RR','" + job_scode + "','" + job_team + "','NN')";
+                    connB.ExecuteNonQuery(SQL);
                 }
 
-                //新增回稿確認流程檔
-                //抓取區所承辦人員，依營洽抓取對應承辦人員
-                SQL = "select a.pr_scode,b.grpid ";
-                SQL += " from sysctrl.dbo.scode_group a ";
-                SQL += " left outer join sysctrl.dbo.scode_group b on a.pr_scode=b.scode and a.grpclass=b.grpclass ";
-                SQL += " where a.grpclass='" + branch + "' and a.scode='" + ReqVal.TryGet("F_tscode", "").Trim() + "' and a.pr_scode is not null ";
-                SQL += " order by b.grpid";
-                using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
-                    if (dr.Read()) {
-                        job_scode = dr.SafeRead("pr_scode", "").Trim();
-                        job_team = dr.SafeRead("grpid", "").Trim();
-                    }
-                }
-
-                //新增流程控制檔
-                SQL = "insert into todo_ext(syscode,apcode,from_flag,branch,seq,seq1,step_grade,case_in_scode,in_no,case_no,att_no,in_scode,in_date,dowhat,job_scode,job_team,job_status) values ";
-                SQL += "('" + Session["Syscode"] + "','" + prgid + "','CGRS1','" + branch + "'," + ReqVal.TryGet("tfzb_seq", "") + ",'" + ReqVal.TryGet("tfzb_seq1", "") + "'";
-                SQL += "," + ReqVal.TryGet("bstep_grade", "") + ",'" + ReqVal.TryGet("F_tscode", "").Trim() + "','" + ReqVal.TryGet("attach_in_no", "").Trim() + "'";
-                SQL += ",'" + case_no + "'," + Getbstep_sqlno + ",'" + Session["scode"] + "',getdate(),'DP_RR','" + job_scode + "','" + job_team + "','NN')";
-                connB.ExecuteNonQuery(SQL);
-            }
-
-            //區所交辦，通知區所已承辦完成
-            if (ReqVal.TryGet("br_source", "") == "br") {
                 //區所交辦，通知區所已承辦完成
-                Sendmail_br(conn,opt_sqlno,job_scode);
+                if (ReqVal.TryGet("br_source", "") == "br") {
+                    //區所交辦，通知區所已承辦完成
+                    Sendmail_br(conn, opt_sqlno, job_scode);
+                }
+
+                conn.Commit();
+                connB.Commit();
+                //conn.RollBack();
+                //connB.RollBack();
             }
-
-            conn.Commit();
-            connB.Commit();
-            //conn.RollBack();
-            //connB.RollBack();
-
+            
             msg = "判行成功";
             strOut.AppendLine("alert('" + msg + "');");
             if (Request["chkTest"] != "TEST") strOut.AppendLine("window.parent.parent.Etop.goSearch();");
