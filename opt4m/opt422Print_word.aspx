@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -45,7 +45,7 @@
 
         string SQL = "", wSQL = "";
         DataTable dt = new DataTable();
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(true)) {
+        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
             if ((Request["send_way"] ?? "") != "") wSQL += " and send_way='" + Request["send_way"] + "'";
             if ((Request["sdate"] ?? "") != "") wSQL += " and GS_date>='" + Request["sdate"] + "'";
             if ((Request["edate"] ?? "") != "") wSQL += " and GS_date<='" + Request["edate"] + "'";
