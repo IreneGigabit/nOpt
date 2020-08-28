@@ -333,7 +333,7 @@
         SQL += ",Jappl_name=" + Util.dbnull(ReqVal.TryGet("PJappl_name", null)).ToBig5() + "";
         SQL += ",Zappl_name1=" + Util.dbnull(ReqVal.TryGet("PZappl_name1", null)).ToBig5() + "";
         SQL += ",Draw=" + Util.dbnull(ReqVal.TryGet("PDraw", null)) + "";
-        SQL += ",Remark3='" + ReqVal.TryGet("Remark3", "").ToBig5() + "'";
+        SQL += ",Remark3='" + ReqVal.TryGet("Premark3", "").ToBig5() + "'";
         SQL += ",Mark=" + Util.dbnull(ReqVal.TryGet("PMark", null)).ToBig5() + "";
         SQL += " where opt_sqlno='" + opt_sqlno + "'";
         conn.ExecuteNonQuery(SQL);
@@ -406,8 +406,8 @@
                 SQL += ",mod_field,mod_count,ncname1,new_no";
                 SQL += ") values (";
                 SQL += "'" + opt_sqlno + "','" + branch + "'," + Util.dbnull(case_no) + "";
-                SQL += ",'" + Pfield + "'," + Util.dbnull(pno) + ",'" + ReqVal.TryGet("Pmod_aprep_ncname1" + i, "").ToBig5() + "'";
-                SQL += ",'" + ReqVal.TryGet("Pmod_aprep_new_no" + i, "") + "')";
+                SQL += ",'" + Pfield + "'," + Util.dbnull(pno) + ",'" + ReqVal.TryGet("Pmod_aprep_ncname1_" + i, "").ToBig5() + "'";
+                SQL += ",'" + ReqVal.TryGet("Pmod_aprep_new_no_" + i, "") + "')";
                 conn.ExecuteNonQuery(SQL);
             }
         } else if (Pfield == "mod_dmt") {
