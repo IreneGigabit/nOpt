@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodePage="65001"%>
+<%@ Page Language="C#" CodePage="65001"%>
 
 <%@ Register Src="~/commonForm/opt/BR_formA.ascx" TagPrefix="uc1" TagName="BR_formA" %>
 <%@ Register Src="~/commonForm/opt/BR_form.ascx" TagPrefix="uc1" TagName="BR_form" %>
@@ -519,6 +519,15 @@
             if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
                 alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
             }
+        }
+
+        //20200827增加檢查預計發文日期/總發文日期不可小於系統日
+        var sdate = new Date($("#GS_date").val()).setHours(0, 0, 0, 0);
+        var mdate = new Date($("#mp_date").val()).setHours(0, 0, 0, 0);
+        var today = new Date().setHours(0, 0, 0, 0);
+        if (sdate < today || mdate < today) {
+            alert("預計發文日期或總收發文日期不可小於系統日！");
+            return false;
         }
 
         reg.prgid.value="opt31";
