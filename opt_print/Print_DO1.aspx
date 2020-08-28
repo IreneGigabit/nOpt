@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"%>
+<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -193,6 +193,11 @@
             if (opt.Rows[0]["draw_file"].ToString() != "") {
                 try {
                     ipoRpt.AppendImage(new ImageFile(opt.Rows[0]["draw_file"].ToString()));
+                }
+                catch (ArgumentException) {
+                    ipoRpt.AddParagraph();
+                    ipoRpt.AddText("路徑錯誤，請檢查標的圖樣是否有上傳！！(" + opt.Rows[0]["draw_file"].ToString() + ")", System.Drawing.Color.Red);
+                    ipoRpt.AddParagraph();
                 }
                 catch (FileNotFoundException) {
                     ipoRpt.AddParagraph();
