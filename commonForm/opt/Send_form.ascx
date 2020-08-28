@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" ClassName="send_form" %>
+<%@ Control Language="C#" ClassName="send_form" %>
 
 <script runat="server">
     protected string prgid = HttpContext.Current.Request["prgid"] ?? "";//功能權限代碼
@@ -205,10 +205,11 @@
                     break;
             }
         }
-        //電子送件之總發文日為當天
+
+        //電子送件之總發文日為預計發文日期
         if ($("#prgid").val() == "opt31" || $("#prgid").val() == "opt31_1") {//承辦結辦
-            if ($("#send_way").val() == "E" || $("#send_way").val() == "EA") {
-                $("#mp_date").val(new Date().format("yyyy/M/d"));
+            if (jOpt.send_way == "E" || jOpt.send_way == "EA") {
+                $("#mp_date").val($("#GS_date").val());
             }
         }
 
@@ -349,7 +350,12 @@
 
     //是否輸入評分
     $("input[name='score_flag']").click(function () {
-        $("#tabQu").hideFor($("input[name='score_flag']:checked").val()=="N");
+        $("#tabQu").hideFor($("input[name='score_flag']:checked").val() == "N");
+        if ($("input[name='score_flag']:checked").val() == "Y") {
+            $("#Score,#opt_Remark").unlock();
+        } else {
+            $("#Score,#opt_Remark").lock();
+        }
     });
 
     $("#Send_Fees").blur(function () {
