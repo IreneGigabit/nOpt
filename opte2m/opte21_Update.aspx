@@ -193,24 +193,24 @@
             conn.ExecuteNonQuery(SQL);
             
             //抓前一todo的流水號
-            string pre_sqlno = "";
-            SQL = "Select max(sqlno) as maxsqlno from todo_opte ";
-            SQL += "where syscode='" + Session["Syscode"] + "' ";
-            SQL += "and apcode='opte11' and opt_sqlno='" + opt_sqlno + "' ";
-            SQL += "and dowhat='BR' ";
-            using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
-                if (dr.Read()) {
-                    pre_sqlno = dr.SafeRead("maxsqlno", "");
-                }
-            }
+            //string pre_sqlno = "";
+            //SQL = "Select max(sqlno) as maxsqlno from todo_opte ";
+            //SQL += "where syscode='" + Session["Syscode"] + "' ";
+            //SQL += "and apcode='opte11' and opt_sqlno='" + opt_sqlno + "' ";
+            //SQL += "and dowhat='BR' ";
+            //using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+            //    if (dr.Read()) {
+            //        pre_sqlno = dr.SafeRead("maxsqlno", "");
+            //    }
+            //}
 
             SQL = "update todo_opte set approve_scode='" + Session["scode"] + "' ";
             SQL += ",approve_desc='刪除分案' ";
             SQL += ",resp_date=getdate() ";
             SQL += ",job_status='XX' ";
-            SQL += " where apcode='opte11' and opt_sqlno='" + opt_sqlno + "'";
+            SQL += " where apcode in('opte11','opte31') and opt_sqlno='" + opt_sqlno + "'";
             SQL += " and dowhat='BR' and syscode='" + Session["Syscode"] + "' ";
-            SQL += " and sqlno=" + pre_sqlno;
+            SQL += " and sqlno=" + todo_sqlno;
             conn.ExecuteNonQuery(SQL);
 
             conn.Commit();

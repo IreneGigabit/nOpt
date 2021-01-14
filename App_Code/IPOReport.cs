@@ -533,7 +533,7 @@ public class IPOReport : OpenXmlHelper {
 		string RectitleNameStr = "";
         for (int i = 0; i < Apcust.Rows.Count; i++) {
             if (RectitleNameStr != "") RectitleNameStr += "、";
-                RectitleNameStr += Apcust.Rows[i].SafeRead("ap_cname", "");
+            RectitleNameStr += Apcust.Rows[i].SafeRead("ap_cname", "").ToUnicode();
         }
 
 		if (this.RectitleTitle == "A") {//專利權人

@@ -179,6 +179,8 @@
                         show_qu_form = "Y";
                 }
             }
+            sameap_flag = "Y";
+
         }
 
         //交辦內容欄位畫面
@@ -200,9 +202,7 @@
             if (prgid == "opt31") {
                 StrFormBtn += "<input type=button value=\"編修存檔\" class=\"cbutton\" onClick=\"formSaveSubmit('U','opt31')\" id=\"btnSaveSubmit\">";
             } else if (prgid == "opt31_1") {
-				if(sameap_flag=="Y"){
-					StrFormBtn += " <input type=button value=\"電子申請附件檢查\" class=\"c1button\" id=\"btnchkAttach\">";
-				}
+                StrFormBtn += " <input type=button value=\"電子申請附件檢查\" class=\"c1button\" id=\"btnchkAttach\">";
                 StrFormBtn += " <input type=button value=\"結辦\" class=\"cbutton\" onClick=\"formEndSubmit('U')\" id=\"btnEndSubmit\">";
             }
             if (word_show_flag == "Y") {
@@ -681,13 +681,11 @@
             if ($("input[name='send_dept']:checked").val() != "B" || $("#send_cl").val() != "1") {
                 alert("選擇「電子送件」時，發文單位須為「自行發文」且發文對象須為「智慧財產局」！");
             }
-            //結辦暨行..未檢查通過
-			if ($("#sameap_flag").val()=="Y"){
-				if (!document.getElementById('btnchkAttach').disabled) {
-					alert("請先執行電子申請附件檢查!!");
-					return false;
-				}
-			}
+            //未檢查通過
+            if (!document.getElementById('btnchkAttach').disabled) {
+                alert("請先執行電子申請附件檢查!!");
+                return false;
+            }
         }
 
         //20200827增加檢查預計發文日期/總發文日期不可小於系統日

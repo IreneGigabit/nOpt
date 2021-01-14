@@ -1,4 +1,4 @@
-﻿(function ($) {
+(function ($) {
 	//#region labelfor 把radio/checkbox加上labelfor
 	$.fn.labelfor = function () {
 		return this.each(function () {
@@ -474,5 +474,4 @@
 	}
     //#endregion
 })(jQuery);
-
 

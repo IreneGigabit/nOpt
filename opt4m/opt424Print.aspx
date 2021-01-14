@@ -174,7 +174,7 @@
 
                         send_detail += "\n收據抬頭：" + rectitle_name;
                     }
-                    Rpt.ReplaceBookmark("send_detail", send_detail);
+                    Rpt.ReplaceBookmark("send_detail", send_detail.ToUnicode());
 
                     //本所編號
                     string seq = dt.Rows[i].SafeRead("branch", "") + dept + dt.Rows[i].SafeRead("Bseq", "");
@@ -182,7 +182,7 @@
                         seq = dt.Rows[i].SafeRead("Bseq", "") + "-" + dt.Rows[i].SafeRead("Bseq1", "");
                     Rpt.ReplaceBookmark("seq", seq);
 
-                    //最後期限，法定期限(本次官發銷管的管制日期)
+                    //最後期限
                     Rpt.ReplaceBookmark("ctrl_date", Util.parseDBDate(dt.Rows[i].SafeRead("last_date", ""), "yyyy/M/d"));
 
                     //規費

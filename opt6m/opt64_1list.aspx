@@ -212,7 +212,7 @@
 
             //符合條件的所有明細
             SQL = "select month(a." + Request["qrykinddate"] + ")m_ap_date,* from vopt_641 as a ";
-            SQL += "where a.Bmark<>'B' and a.form_name is not null ";
+            SQL += "where a.Bmark<>'B' ";//and a.form_name is not null ";
             if ((Request["qrykind"] ?? "") == "rs_class") {//類別
                 SQL += " and a." + Request["qrykinddate"] + ">='" + ReqVal["qrySdate"] + "'";
                 SQL += " and a." + Request["qrykinddate"] + "<='" + ReqVal["qryEdate"] + "'";
@@ -244,7 +244,7 @@
                 SQL += " and a.branch='" + Request["qryBranch"] + "' ";
             }
             if ((Request["qryClass"] ?? "") != "") {
-                SQL += "and a.form_name in('" + Request["qryClass"].Replace(";", "','") + "')";
+                SQL += "and isnull(a.form_name,'') in('" + Request["qryClass"].Replace(";", "','") + "')";
             }
             conn.DataTable(SQL, dt);
 

@@ -59,18 +59,18 @@
             if ((Request["ecust_seq"] ?? "") != "") wSQL += " and cust_seq<=" + Request["ecust_seq"];
             if ((Request["qrysend_dept"] ?? "") != "") wSQL += " and send_dept='" + Request["qrysend_dept"] + "'";
 
-            SQL = "select send_cl,send_clnm,branch,Bseq,Bseq1,rs_no,gs_date,rs_detail,apply_no";
-            SQL += ",Bfees,pr_scode,'正本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
+            SQL = "select send_cl,send_clnm,branch,Bseq,Bseq1,rs_no,gs_date,rs_detail,apply_no,issue_no";
+            SQL += ",Bfees,pr_scode,'正本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld,last_date";
             SQL += ",''fseq,''branchname,''pr_scodenm,''rectitle";
             SQL += " from vbr_opt where Bstat_code='YS' and Bmark='N'";
             SQL += wSQL;
             SQL += " union ";
-            SQL += "select send_cl1 as send_cl,send_cl1nm as send_clnm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no";
-            SQL += ",0 Bfees,pr_scode,'副本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
+            SQL += "select send_cl1 as send_cl,send_cl1nm as send_clnm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,issue_no";
+            SQL += ",0 Bfees,pr_scode,'副本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld,last_date";
             SQL += ",''fseq,''branchname,''pr_scodenm,''rectitle";
             SQL += " from vbr_opt where Bstat_code='YS' and Bmark='N'";
             SQL += wSQL + " and send_cl1 is not null";
-            SQL += " group by send_cl,rs_no,send_clnm,send_cl1,send_cl1nm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,Bfees,pr_scode,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
+            SQL += " group by send_cl,rs_no,send_clnm,send_cl1,send_cl1nm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,issue_no,Bfees,pr_scode,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld,last_date";
             SQL += " order by sortfld,Branch,send_cl,Bseq,Bseq1,rs_no";
             conn.DataTable(SQL, dt);
 
@@ -149,7 +149,7 @@
                     for (int d = 0; d < dtDtl.Rows.Count; d++) {
                         Rpt.CopyTable("tbl_detail");
                         Rpt.ReplaceBookmark("seq", dtDtl.Rows[d].SafeRead("fseq", ""));
-                        Rpt.ReplaceBookmark("rs_detail", dtDtl.Rows[d].SafeRead("rs_detail", ""));
+                        Rpt.ReplaceBookmark("rs_detail", dtDtl.Rows[d].SafeRead("rs_detail", "").ToUnicode());
                         Rpt.ReplaceBookmark("send_cl", dtDtl.Rows[d].SafeRead("sendmark", ""));
                         Rpt.ReplaceBookmark("step_date", Util.parseDBDate(dtDtl.Rows[d].SafeRead("GS_date", ""), "yyyy/M/d"));
                         Rpt.ReplaceBookmark("rs_no", dtDtl.Rows[d].SafeRead("rs_no", ""));
@@ -157,10 +157,11 @@
                         Rpt.ReplaceBookmark("apply_no", dtDtl.Rows[d].SafeRead("apply_no", ""));
                         Rpt.ReplaceBookmark("issue_no", dtDtl.Rows[d].SafeRead("issue_no", ""));
                         Rpt.ReplaceBookmark("fees", dtDtl.Rows[d].SafeRead("Bfees", ""));
-                        Rpt.ReplaceBookmark("appl_name", dtDtl.Rows[d].SafeRead("appl_name", ""));
+                        Rpt.ReplaceBookmark("appl_name", dtDtl.Rows[d].SafeRead("appl_name", "").ToUnicode());
                         Rpt.ReplaceBookmark("pr_nm", dtDtl.Rows[d].SafeRead("pr_scodenm", ""));
                         Rpt.ReplaceBookmark("rectitle", dtDtl.Rows[d].SafeRead("rectitle", ""));
                         Rpt.ReplaceBookmark("class", dtDtl.Rows[d].SafeRead("class", ""));
+                        Rpt.ReplaceBookmark("ctrl_date", Util.parseDBDate(dtDtl.Rows[d].SafeRead("last_date", ""), "yyyy/M/d"));//最後期限
 
                         fees += Convert.ToInt32(dtDtl.Rows[d].SafeRead("Bfees", "0"));//小計規費
                         totfees += Convert.ToInt32(dtDtl.Rows[d].SafeRead("Bfees", ""));//總計規費

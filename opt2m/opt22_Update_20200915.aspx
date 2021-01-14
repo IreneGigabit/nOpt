@@ -243,21 +243,15 @@
 
             //已發文
             if (ReqVal.TryGet("stat_code", "") == "YS") {
-                SQL = "select Branch,Bseq,Bseq1,rs_no,rs_type,rs_class,rs_code,act_code,rs_detail ";
+                SQL = "select rs_no,rs_type,rs_class,rs_code,act_code,rs_detail ";
                 SQL += ",rs_class_name,rs_code_name,act_code_name ";
                 SQL += " from vbr_opt where opt_sqlno='" + opt_sqlno + "'";
                 DataTable dt = new DataTable();
                 conn.DataTable(SQL, dt);
-
-                string Branch = "", seq = "", seq1 = "", rs_detail = "";
                 string rs_no = "", act_code_name = "";
                 if (dt.Rows.Count != 0) {
-                    Branch = dt.Rows[0].SafeRead("Branch", "").Trim();
-                    seq = dt.Rows[0].SafeRead("Bseq", "").Trim();
-                    seq1 = dt.Rows[0].SafeRead("Bseq1", "").Trim();
                     rs_no = dt.Rows[0].SafeRead("rs_no", "").Trim();
                     act_code_name = dt.Rows[0].SafeRead("act_code_name", "").Trim();
-                    rs_detail = dt.Rows[0].SafeRead("rs_detail", "").Trim().ToBig5();
                 }
 
                 //[區所]:爭救案專案室所上傳的檔案
@@ -266,25 +260,21 @@
                 SQL += "and seq1='" + Request["bseq1"] + "' ";
                 SQL += "and rs_no='" + rs_no + "' ";
                 connB.ExecuteNonQuery(SQL);
-                
                 SQL = "Select * from attach_opt where opt_sqlno='" + opt_sqlno + "' and attach_flag<>'D'";
-                DataTable dt1 = new DataTable();
-                conn.DataTable(SQL, dt1);
-                if (ReqVal.TryGet("send_way", "") == "E" && ReqVal.TryGet("mconf", "") == "N") {
-                    copy_attach_iposend(Branch, seq, seq1, "", rs_detail, dt1); //電子送件檔且總管處未送件確認要複製到總收發
-                }
-                for (var i = 0; i < dt1.Rows.Count; i++) {
-                    SQL = "insert into bdmt_attach_temp(rs_no,Seq,Seq1,Source,attach_no,attach_path";
-                    SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,in_date,in_scode,doc_flag";
-                    SQL += ") values (";
-                    SQL += " '" + rs_no + "'," + Request["bseq"] + ",'" + Request["bseq1"] + "','OPT','" + dt1.Rows[i].SafeRead("attach_no", "").Trim() + "'";
-                    SQL += ",'" + dt1.Rows[i].SafeRead("attach_path", "").Trim() + "','" + dt1.Rows[i].SafeRead("attach_desc", "").Trim().ToBig5() + "'";
-                    SQL += ",'" + dt1.Rows[i].SafeRead("attach_name", "").Trim().ToBig5() + "','" + dt1.Rows[i].SafeRead("source_name", "").Trim().ToBig5() + "'";
-                    SQL += ",'" + dt1.Rows[i].SafeRead("attach_size", "").Trim() + "','" + dt1.Rows[i].SafeRead("attach_flag", "").Trim() + "'";
-                    SQL += ",'" + dt1.Rows[i].SafeRead("doc_type", "").Trim() + "',getdate(),'" + Session["scode"] + "'";
-                    SQL += ",'" + dt1.Rows[i].SafeRead("doc_flag", "").Trim() + "'";
-                    SQL += ")";
-                    connB.ExecuteNonQuery(SQL);
+                using (SqlDataReader dr = conn.ExecuteReader(SQL)) {
+                    while (dr.Read()) {
+                        SQL = "insert into bdmt_attach_temp(rs_no,Seq,Seq1,Source,attach_no,attach_path";
+                        SQL += ",attach_desc,attach_name,source_name,attach_size,attach_flag,doc_type,in_date,in_scode,doc_flag";
+                        SQL += ") values (";
+                        SQL += " '" + rs_no + "'," + Request["bseq"] + ",'" + Request["bseq1"] + "','OPT','" + dr.SafeRead("attach_no", "").Trim() + "'";
+                        SQL += ",'" + dr.SafeRead("attach_path", "").Trim() + "','" + dr.SafeRead("attach_desc", "").Trim().ToBig5() + "'";
+                        SQL += ",'" + dr.SafeRead("attach_name", "").Trim().ToBig5() + "','" + dr.SafeRead("source_name", "").Trim().ToBig5() + "'";
+                        SQL += ",'" + dr.SafeRead("attach_size", "").Trim() + "','" + dr.SafeRead("attach_flag", "").Trim() + "'";
+                        SQL += ",'" + dr.SafeRead("doc_type", "").Trim() + "',getdate(),'" + Session["scode"] + "'";
+                        SQL += ",'" + dr.SafeRead("doc_flag", "").Trim() + "'";
+                        SQL += ")";
+                        connB.ExecuteNonQuery(SQL);
+                    }
                 }
                 
                 //總管處未送件確認才可改
@@ -533,65 +523,6 @@
         body += "◎請至承辦作業－＞承辦暨結辦作業，重新承辦。 ";
 
         Sys.DoSendMail(Subject, body, strFrom, strTo, strCC, strBCC);
-    }
-
-    //複製到iposend
-    private bool copy_attach_iposend(string branch, string bseq, string bseq1, string brstepgrade, string rs_detail, DataTable dt1) {
-        //第一層目錄：日期+B區所別，如20160907-BNT
-        string tfoldername = String.Format("{0}-B{1}", DateTime.Now.ToString("yyyyMMdd"), branch + Sys.GetSession("dept"));
-        //第二層目錄：案號+副碼+進度+案性前6碼，如NT12345-_-2-申請商標註冊
-        tfoldername += "/" + String.Format("{0}-{1}-{2}-{3}"
-            , branch + Sys.GetSession("dept") + bseq
-            , bseq1
-            , brstepgrade
-            , rs_detail.ToUnicode().Left(6).Trim());
-
-        //先備份舊檔案
-        string sendt_path = Sys.IPODir + "/" + tfoldername;
-        Check_CreateFolder_virtual(sendt_path);
-        Check_CreateFolder_virtual(sendt_path + "/backup");//備份路徑
-        var sourceDir = Server.MapPath(sendt_path);
-        var backupDir = Server.MapPath(sendt_path + "/backup");
-        string[] ipoList = System.IO.Directory.GetFiles(sourceDir);
-        foreach (string f in ipoList) {
-            string firstName = System.IO.Path.GetFileNameWithoutExtension(f);
-            string extName = System.IO.Path.GetExtension(f);
-            string stamp = DateTime.Now.ToString("yyyyMMddhhmmss") + "-" + Session["scode"];//備份註記(_時間-薪號)
-            if (Request["chkTest"] == "TEST") {
-                Response.Write("move..備份舊檔案..<BR>" + f + "<BR>" + backupDir + "\\" + firstName + "_" + stamp + extName + "<HR>");
-            }
-            System.IO.File.Move(f, backupDir + "\\" + firstName + "_" + stamp + extName);
-        }
-
-        for (var i = 0; i < dt1.Rows.Count; i++) {
-            //電子送件檔要複製到總收發,總管處未送件確認才可複製
-            if (dt1.Rows[i].SafeRead("doc_flag", "").Trim() == "E" && ReqVal.TryGet("mconf", "") == "N") {
-                string strpath = dt1.Rows[i].SafeRead("attach_path", "").Trim();
-                string attach_name = dt1.Rows[i].SafeRead("attach_name", "").Trim();
-                //因資料庫儲存的路徑仍為舊系統路徑,要改為project路徑
-                //strpath = strpath.Replace(@"\opt\", @"\nopt\");
-                //strpath = strpath.Replace(@"/btbrt/", @"/nopt/");
-                strpath = Sys.Path2Nopt(strpath);
-
-                //要將檔案copy至sin07/iposend
-                if (Request["chkTest"] == "TEST") {
-                    //Response.Write("create..<BR>" + sendt_path + "→" + Server.MapPath(sendt_path) + "<HR>");
-                    //Response.Write("copy..虛擬目錄..<BR>" + strpath + "→" + sendt_path + "/" + attach_name + "<HR>");
-                    Response.Write("copy..複製新檔案..<BR>" + Server.MapPath(strpath) + "→" + Server.MapPath(sendt_path + "/" + attach_name) + "<HR>");
-                }
-                System.IO.File.Copy(Server.MapPath(strpath), Server.MapPath(sendt_path + "/" + attach_name), true);
-            }
-        }
-
-        return true;
-    }
-    
-    //檢查目錄是否存在,若不存在則建立
-    private void Check_CreateFolder_virtual(string strFolder) {
-        if (!System.IO.Directory.Exists(Server.MapPath(strFolder))) {
-            //新增資料夾
-            System.IO.Directory.CreateDirectory(Server.MapPath(strFolder));
-        }
     }
 </script>
 

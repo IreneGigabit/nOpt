@@ -100,9 +100,11 @@
         //如果存在的話原來的要備份起來,備份規則：檔名_年月日時分秒
         System.IO.FileInfo fi = new System.IO.FileInfo(Server.MapPath(file_path + ee + sExt));
         if (fi.Exists) {
-            string File_name_new = String.Format("{0}_{1}{2}", ee, DateTime.Now.ToString("yyyyMMddHHmmss"), sExt);
-            fi.MoveTo(Server.MapPath(file_path + File_name_new));
-            msg = "此檔案已存在！已覆蓋檔案！";
+            //20201111改為不允許上傳
+            //string File_name_new = String.Format("{0}_{1}{2}", ee, DateTime.Now.ToString("yyyyMMddHHmmss"), sExt);
+            //fi.MoveTo(Server.MapPath(file_path + File_name_new));
+            //msg = "此檔案已存在！已覆蓋檔案！";
+            msg = "此檔案已存在！請重新更名上傳！";
         }
 
         SrvrVal["aa"] = (file_path + ee + sExt).Replace("\\", "\\\\");//最後儲存的檔名(含路徑)
@@ -119,30 +121,35 @@
             Response.Write("saveAs=" + Server.MapPath(file_path + ee + sExt) + "<BR>");
             Response.End();
         }
-        uploadedFile.SaveAs(Server.MapPath(file_path + ee + sExt));
+        if (msg == "") {
+            uploadedFile.SaveAs(Server.MapPath(file_path + ee + sExt));
+        }
              
         //傳回window.opener之欄位
         StringBuilder strOut = new StringBuilder();
         strOut.AppendLine("<script language=javascript>");
-        if (msg!="")
-            strOut.AppendLine("alert('"+msg+"');");
-         strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["form_name"]+"').value = '"+SrvrVal["aa"]+"';");
-        if(SrvrVal["size_name"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["size_name"]+"').value = '"+attach_size+"';");
-        if(SrvrVal["file_name"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["file_name"]+"').value = '"+SrvrVal["ee"]+"';");
-        if(SrvrVal["doc_add_date"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["doc_add_date"]+"').value = '"+DateTime.Now.ToShortDateString()+"';");
-        if(SrvrVal["doc_add_scode"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["doc_add_scode"]+"').value = '"+Session["scode"]+"';");
-        if(SrvrVal["source_name"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["source_name"]+"').value = '"+SrvrVal["bb"]+"';");
-        if(SrvrVal["desc"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["desc"]+"').value = '"+SrvrVal["zz"]+"';");
-        if(SrvrVal["btnname"].Length>0)
-            strOut.AppendLine("window.opener.document.getElementById('"+SrvrVal["btnname"]+"').disabled = true;");
-       
-        strOut.AppendLine("window.close();");
+        if (msg != "") {
+            strOut.AppendLine("alert('" + msg + "');");
+            strOut.AppendLine("window.close();");
+        } else {
+            strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["form_name"] + "').value = '" + SrvrVal["aa"] + "';");
+            if (SrvrVal["size_name"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["size_name"] + "').value = '" + attach_size + "';");
+            if (SrvrVal["file_name"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["file_name"] + "').value = '" + SrvrVal["ee"] + "';");
+            if (SrvrVal["doc_add_date"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["doc_add_date"] + "').value = '" + DateTime.Now.ToShortDateString() + "';");
+            if (SrvrVal["doc_add_scode"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["doc_add_scode"] + "').value = '" + Session["scode"] + "';");
+            if (SrvrVal["source_name"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["source_name"] + "').value = '" + SrvrVal["bb"] + "';");
+            if (SrvrVal["desc"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["desc"] + "').value = '" + SrvrVal["zz"] + "';");
+            if (SrvrVal["btnname"].Length > 0)
+                strOut.AppendLine("window.opener.document.getElementById('" + SrvrVal["btnname"] + "').disabled = true;");
+
+            strOut.AppendLine("window.close();");
+        }
         strOut.AppendLine("<" + "/script>");
 
         Response.Write(strOut.ToString());

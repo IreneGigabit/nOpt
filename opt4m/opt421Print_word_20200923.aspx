@@ -26,7 +26,7 @@
         }
         catch(Exception ex) {
             strOut.AppendLine("<script language=\"javascript\">");
-            strOut.AppendLine("    alert(\"爭救案件官發規費明細表 Word 產生失敗!!!\");");
+            strOut.AppendLine("    alert(\"爭救案件官發發文明細表 Word 產生失敗!!!\");");
             strOut.AppendLine("<" + "/script>");
             Response.Write(strOut.ToString());
             Response.Write(ex.Message);
@@ -39,13 +39,13 @@
 
     protected void WordOut() {
         Dictionary<string, string> _tplFile = new Dictionary<string, string>();
-        _tplFile.Add("gsrpt", Server.MapPath("~/ReportTemplate/報表/官方規費明細表.docx"));
+        _tplFile.Add("gsrpt", Server.MapPath("~/ReportTemplate/報表/發文明細表.docx"));
         Rpt.CloneFromFile(_tplFile, true);
-        string docFileName = string.Format("GS{0}-512T-{1:yyyyMMdd}.docx", send_way, DateTime.Today);
+        string docFileName = string.Format("GS{0}-511T-{1:yyyyMMdd}.docx", send_way, DateTime.Today);
 
         string SQL = "", wSQL = "";
         DataTable dt = new DataTable();
-        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(false)) {
+        using (DBHelper conn = new DBHelper(Conn.OptK).Debug(true)) {
             if ((Request["send_way"] ?? "") != "") wSQL += " and send_way='" + Request["send_way"] + "'";
             if ((Request["sdate"] ?? "") != "") wSQL += " and GS_date>='" + Request["sdate"] + "'";
             if ((Request["edate"] ?? "") != "") wSQL += " and GS_date<='" + Request["edate"] + "'";
@@ -59,13 +59,19 @@
             if ((Request["ecust_seq"] ?? "") != "") wSQL += " and cust_seq<=" + Request["ecust_seq"];
             if ((Request["qrysend_dept"] ?? "") != "") wSQL += " and send_dept='" + Request["qrysend_dept"] + "'";
 
-            SQL = "select distinct send_cl,send_clnm,sortfld,branch,Bseq,Bseq1,cust_area,cust_seq,ap_cname,rs_no,GS_date,rs_code,rs_detail";
-            SQL += ",Bfees,Service,in_scode,appl_name,case_no,scode_name,rs_no";
-            SQL += ",(select ar_mark from case_opt where opt_sqlno=a.opt_sqlno and a.mark='N') as ar_mark";
-            SQL += ",''branchname,''fseq,''cust_name,''mp_text";
-            SQL += " from vbr_opt a where a.Bstat_code='YS' and a.Bmark='N' ";
-            SQL += wSQL + " and Bfees>0";
-            SQL += " order by send_cl,sortfld,Bseq,Bseq1,a.rs_no";
+            SQL = "select send_cl,send_clnm,branch,Bseq,Bseq1,rs_no,gs_date,rs_detail,apply_no,issue_no";
+            SQL += ",Bfees,pr_scode,'正本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
+            SQL += ",''fseq,''branchname,''pr_scodenm,''rectitle";
+            SQL += " from vbr_opt where Bstat_code='YS' and Bmark='N'";
+            SQL += wSQL;
+            SQL += " union ";
+            SQL += "select send_cl1 as send_cl,send_cl1nm as send_clnm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,issue_no";
+            SQL += ",0 Bfees,pr_scode,'副本' as sendmark,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
+            SQL += ",''fseq,''branchname,''pr_scodenm,''rectitle";
+            SQL += " from vbr_opt where Bstat_code='YS' and Bmark='N'";
+            SQL += wSQL + " and send_cl1 is not null";
+            SQL += " group by send_cl,rs_no,send_clnm,send_cl1,send_cl1nm,branch,Bseq,Bseq1,rs_no,GS_date,rs_detail,apply_no,issue_no,Bfees,pr_scode,receipt_type,receipt_title,appl_name,bstep_grade,class,sortfld";
+            SQL += " order by sortfld,Branch,send_cl,Bseq,Bseq1,rs_no";
             conn.DataTable(SQL, dt);
 
             //整理資料
@@ -78,29 +84,35 @@
                     string fseq = dt.Rows[i].SafeRead("branch", "") + Sys.GetSession("dept") + dt.Rows[i].SafeRead("bseq", "");
                     if (dt.Rows[i].SafeRead("bseq1", "") != "_") fseq += "-" + dt.Rows[i].SafeRead("bseq1", "");
                     dt.Rows[i]["fseq"] = fseq;
-
-                    if (Request["sdate"].ToString() == Request["edate"].ToString()) {
-                        if (dt.Rows[i].SafeRead("mp_date", "") != "") {
-                            dt.Rows[i]["mp_text"] = "總發文日期：" + Util.parseDBDate(dt.Rows[i].SafeRead("mp_date", ""), "yyyy/M/d");
-                        }
+                    
+                    if (dt.Rows[i].SafeRead("issue_no", "") != "") {
+                        dt.Rows[i]["issue_no"] = "(" + dt.Rows[i].SafeRead("issue_no", "") + ")";
                     }
                     
-                    using (DBHelper connB = new DBHelper(Conn.OptB(dt.Rows[i].SafeRead("Branch", ""))).Debug(Request["chkTest"] == "TEST")) {
-                        SQL = "Select RTRIM(ISNULL(ap_cname1, '')) + RTRIM(ISNULL(ap_cname2, ''))  as cust_name from apcust as c ";
-                        SQL += " where c.cust_area='" + dt.Rows[i]["cust_area"] + "' and c.cust_seq='" + dt.Rows[i]["cust_seq"] + "'";
-                        dt.Rows[i]["cust_name"] = dt.Rows[i].SafeRead("cust_area", "") + dt.Rows[i].SafeRead("cust_seq", "").PadLeft(5, '0');
-                        using (SqlDataReader dr = connB.ExecuteReader(SQL)) {
-                            if (dr.Read()) {
-                                dt.Rows[i]["cust_name"] += dr.SafeRead("cust_name", "");
-                            }
+                    SQL = "select sc_name from scode where scode='" + dt.Rows[i]["pr_scode"] + "'";
+                    object objResult1 = cnn.ExecuteScalar(SQL);
+                    dt.Rows[i]["pr_scodenm"] = (objResult == DBNull.Value || objResult == null ? "" : objResult.ToString());
+
+                    if (dt.Rows[i].SafeRead("Bfees", "0") == "0") {
+                        dt.Rows[i]["rectitle"] = "";
+                    } else {
+                        if (dt.Rows[i].SafeRead("receipt_type", "") == "E") {
+                            dt.Rows[i]["rectitle"] = "電子收據(" + dt.Rows[i]["receipt_title"] + ")";
+                        } else {
+                            dt.Rows[i]["rectitle"] = "紙本收據";
                         }
                     }
                 }
             }
 
-            int fees = 0;//小計規費
-            int service = 0;//小計服務費
-		    int count = 0;//小計件數
+	        int fees = 0;//小計規費
+		    int Pcount = 0;//小計紙本收據件數
+		    int Ecount = 0;//小計電子收據件數
+		    int Zcount = 0;//小計無規費件數
+	        int totfees = 0;//總計規費
+		    int totPcount = 0;//總計紙本收據件數
+		    int totEcount = 0;//總計電子收據件數
+		    int totZcount = 0;//總計無規費件數
 
             //產生內容
             string title = "";
@@ -111,20 +123,25 @@
             }
             DataTable dtBranch = dt.DefaultView.ToTable(true, new string[] { "branch", "branchname" });
             for (int i = 0; i < dtBranch.Rows.Count; i++) {
+                totfees = 0;//總計規費
+                totPcount = 0;//總計紙本收據件數
+                totEcount = 0;//總計電子收據件數
+                totZcount = 0;//總計無規費件數
+
                 if (i != 0) Rpt.NewPage();
                 Rpt.CopyTable("tbl_title");
                 Rpt.ReplaceBookmark("br_nm", dtBranch.Rows[i].SafeRead("branchname", ""));
                 Rpt.ReplaceBookmark("send_way", title);
                 Rpt.ReplaceBookmark("sdate", Request["sdate"]);
                 Rpt.ReplaceBookmark("edate", Request["edate"]);
-                Rpt.ReplaceBookmark("mp_date", dtBranch.Rows[i].SafeRead("mp_text", ""));
                 Rpt.ReplaceBookmark("pdate", DateTime.Today.ToShortDateString());
 
                 DataTable dtCL = dt.Select("branch='" + dtBranch.Rows[i].SafeRead("branch", "") + "'").CopyToDataTable().DefaultView.ToTable(true, new string[] { "branch", "send_cl", "send_clnm" });
                 for (int c = 0; c < dtCL.Rows.Count; c++) {
                     fees = 0;//小計規費
-                    service = 0;//小計服務費
-                    count = 0;//小計件數
+                    Pcount = 0;//小計紙本收據件數
+                    Ecount = 0;//小計電子收據件數
+                    Zcount = 0;//小計無規費件數
 
                     Rpt.CopyTable("tbl_cltitle");
                     Rpt.ReplaceBookmark("send_clnm", dtCL.Rows[c].SafeRead("send_clnm", ""));
@@ -132,24 +149,51 @@
                     for (int d = 0; d < dtDtl.Rows.Count; d++) {
                         Rpt.CopyTable("tbl_detail");
                         Rpt.ReplaceBookmark("seq", dtDtl.Rows[d].SafeRead("fseq", ""));
-                        Rpt.ReplaceBookmark("appl_name", dtDtl.Rows[d].SafeRead("appl_name", "").ToUnicode());
-                        Rpt.ReplaceBookmark("rs_code", dtDtl.Rows[d].SafeRead("rs_code", ""));
                         Rpt.ReplaceBookmark("rs_detail", dtDtl.Rows[d].SafeRead("rs_detail", "").ToUnicode());
-                        Rpt.ReplaceBookmark("cust_name", dtDtl.Rows[d].SafeRead("cust_name", "").ToUnicode());
-                        Rpt.ReplaceBookmark("case_no", dtDtl.Rows[d].SafeRead("case_no", ""));
-                        Rpt.ReplaceBookmark("service", dtDtl.Rows[d].SafeRead("service", "0") + (dtDtl.Rows[d].SafeRead("ar_mark", "") == "D" ? "(D)" : ""));
-                        Rpt.ReplaceBookmark("fees", dtDtl.Rows[d].SafeRead("Bfees", "0"));
-                        Rpt.ReplaceBookmark("sc_name", dtDtl.Rows[d].SafeRead("scode_name", ""));
+                        Rpt.ReplaceBookmark("send_cl", dtDtl.Rows[d].SafeRead("sendmark", ""));
+                        Rpt.ReplaceBookmark("step_date", Util.parseDBDate(dtDtl.Rows[d].SafeRead("GS_date", ""), "yyyy/M/d"));
+                        Rpt.ReplaceBookmark("rs_no", dtDtl.Rows[d].SafeRead("rs_no", ""));
+                        Rpt.ReplaceBookmark("step_grade", dtDtl.Rows[d].SafeRead("bstep_grade", ""));
+                        Rpt.ReplaceBookmark("apply_no", dtDtl.Rows[d].SafeRead("apply_no", ""));
+                        Rpt.ReplaceBookmark("issue_no", dtDtl.Rows[d].SafeRead("issue_no", ""));
+                        Rpt.ReplaceBookmark("fees", dtDtl.Rows[d].SafeRead("Bfees", ""));
+                        Rpt.ReplaceBookmark("appl_name", dtDtl.Rows[d].SafeRead("appl_name", "").ToUnicode());
+                        Rpt.ReplaceBookmark("pr_nm", dtDtl.Rows[d].SafeRead("pr_scodenm", ""));
+                        Rpt.ReplaceBookmark("rectitle", dtDtl.Rows[d].SafeRead("rectitle", ""));
+                        Rpt.ReplaceBookmark("class", dtDtl.Rows[d].SafeRead("class", ""));
 
                         fees += Convert.ToInt32(dtDtl.Rows[d].SafeRead("Bfees", "0"));//小計規費
-                        service += Convert.ToInt32(dtDtl.Rows[d].SafeRead("service", "0"));//總計規費
-                        count += 1;
+                        totfees += Convert.ToInt32(dtDtl.Rows[d].SafeRead("Bfees", ""));//總計規費
+                        
+                        if(Convert.ToInt32(dtDtl.Rows[d].SafeRead("Bfees", "0"))==0){
+                            Zcount += 1;
+                            totZcount += 1;
+                        } else {
+                            if (dtDtl.Rows[d].SafeRead("receipt_type", "") == "E") {
+                                Ecount += 1;
+                                totEcount += 1;
+                            } else {
+                                Pcount += 1;
+                                totPcount += 1;
+                            }
+                        }
                     }
                     Rpt.CopyTable("tbl_subtot");
-                    Rpt.ReplaceBookmark("cnt", count.ToString());
-                    Rpt.ReplaceBookmark("sub_service", service.ToString());
+                    Rpt.ReplaceBookmark("ecnt", Ecount.ToString());
+                    Rpt.ReplaceBookmark("pcnt", Pcount.ToString());
+                    Rpt.ReplaceBookmark("zcnt", Zcount.ToString());
+                    Rpt.ReplaceBookmark("cnt", (Ecount + Pcount + Zcount).ToString());
                     Rpt.ReplaceBookmark("sub_fees", fees.ToString());
                 }
+                Rpt.CopyTable("tbl_total");
+                Rpt.ReplaceBookmark("tot_ecnt", totEcount.ToString());
+                Rpt.ReplaceBookmark("tot_pcnt", totPcount.ToString());
+                Rpt.ReplaceBookmark("tot_zcnt", totZcount.ToString());
+                Rpt.ReplaceBookmark("tot_cnt", (totEcount + totPcount + totZcount).ToString());
+                Rpt.ReplaceBookmark("tot_fees", totfees.ToString());
+                
+                Rpt.AddParagraph();
+                Rpt.CopyBlock("b_foot");
             }
 
             if (dt.Rows.Count > 0) {

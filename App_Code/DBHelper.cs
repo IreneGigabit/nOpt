@@ -52,6 +52,15 @@ public class DBHelper : IDisposable
 	}
 	#endregion
 
+    #region +void BeginTran()
+    public void BeginTran() {
+        if (this._tran.Connection == null) {
+            this._tran = _conn.BeginTransaction();
+            this._cmd = new SqlCommand("", _conn, _tran);
+        }
+    }
+    #endregion
+
 	#region +void Commit()
     public void Commit() {
         if (this._debug) {
@@ -74,10 +83,10 @@ public class DBHelper : IDisposable
 	/// 執行查詢，取得SqlDataReader；SqlDataReader使用後須Close，否則會Lock(強烈建議使用using)。
 	/// </summary>
 	public SqlDataReader ExecuteReader(string commandText) {
-		if (this._debug) {
-			HttpContext.Current.Response.Write(commandText + "<HR>\n");
-		}
-        this.exeSQL.Add(commandText);
+        //if (this._debug) {
+        //    HttpContext.Current.Response.Write(commandText + "<HR>\n");
+        //}
+        //this.exeSQL.Add(commandText);
 		this._cmd.CommandText = commandText;
 		SqlDataReader dr = this._cmd.ExecuteReader();
 
@@ -90,6 +99,7 @@ public class DBHelper : IDisposable
 	/// 執行T-SQL，並傳回受影響的資料筆數。
 	/// </summary>
 	public int ExecuteNonQuery(string commandText) {
+        try {
 		if (this._debug) {
             HttpContext.Current.Response.Write(commandText + "<HR>\n");
 		}
@@ -97,6 +107,10 @@ public class DBHelper : IDisposable
 		this._cmd.CommandText = commandText;
 		return this._cmd.ExecuteNonQuery();
 	}
+        catch (Exception ex) {
+            throw new Exception(commandText, ex);
+        }
+    }
 	#endregion
 
 	#region 執行查詢，取得第一行第一欄資料，會忽略其他的資料行或資料列 +object ExecuteScalar(string commandText)
@@ -104,13 +118,18 @@ public class DBHelper : IDisposable
 	/// 執行查詢，取得第一行第一欄資料，會忽略其他的資料行或資料列。
 	/// </summary>
 	public object ExecuteScalar(string commandText) {
-		if (this._debug) {
-            HttpContext.Current.Response.Write(commandText + "<HR>\n");
-		}
-        this.exeSQL.Add(commandText);
+        try {
+            //if (this._debug) {
+            //    HttpContext.Current.Response.Write(commandText + "<HR>\n");
+            //}
+            //this.exeSQL.Add(commandText);
 		this._cmd.CommandText = commandText;
 		return this._cmd.ExecuteScalar();
 	}
+        catch (Exception ex) {
+            throw new Exception(commandText, ex);
+        }
+    }
 	#endregion
 
 	#region 執行查詢，並傳回DataTable +void DataTable(string commandText, DataTable dt)
@@ -118,10 +137,11 @@ public class DBHelper : IDisposable
 	/// 執行查詢，並傳回DataTable。
 	/// </summary>
 	public void DataTable(string commandText, DataTable dt) {
-		if (this._debug) {
-            HttpContext.Current.Response.Write(commandText + "<HR>\n");
-		}
-        this.exeSQL.Add(commandText);
+        try {
+            //if (this._debug) {
+            //    HttpContext.Current.Response.Write(commandText + "<HR>\n");
+            //}
+            //this.exeSQL.Add(commandText);
 		using (SqlDataAdapter adapter = new SqlDataAdapter(commandText, this._conn)) {
 			if (this._isTran) {
 				adapter.SelectCommand.Transaction = this._tran;
@@ -129,24 +149,90 @@ public class DBHelper : IDisposable
 			adapter.Fill(dt);
 		}
 	}
+        catch (Exception ex) {
+            throw new Exception(commandText, ex);
+        }
+    }
 	#endregion
 
-	#region 執行查詢，並傳回DataSet +void DataSet(string commandText, DataSet ds)
-	/// <summary>
-	/// 執行查詢，並傳回DataSet。
-	/// </summary>
-	public void DataSet(string commandText, DataSet ds) {
-		if (this._debug) {
-            HttpContext.Current.Response.Write(commandText + "<HR>\n");
-		}
-        this.exeSQL.Add(commandText);
-		using (SqlDataAdapter adapter = new SqlDataAdapter(commandText, this._conn)) {
-			if (this._isTran) {
-				adapter.SelectCommand.Transaction = this._tran;
-			}
-			//DataSet ds = new DataSet();
-			adapter.Fill(ds);
-		}
-	}
-	#endregion
+    #region 執行查詢，並傳回DataSet +void DataSet(string commandText, DataSet ds)
+    /// <summary>
+    /// 執行查詢，並傳回DataSet。
+    /// </summary>
+    public void DataSet(string commandText, DataSet ds) {
+        try {
+            //if (this._debug) {
+            //    HttpContext.Current.Response.Write(commandText + "<HR>\n");
+            //}
+            //this.exeSQL.Add(commandText);
+            using (SqlDataAdapter adapter = new SqlDataAdapter(commandText, this._conn)) {
+                if (this._isTran) {
+                    adapter.SelectCommand.Transaction = this._tran;
+                }
+                //DataSet ds = new DataSet();
+                adapter.Fill(ds);
+            }
+        }
+        catch (Exception ex) {
+            throw new Exception(commandText, ex);
+        }
+    }
+    #endregion
+
+    #region 執行StoreProcedure，並傳回DataTable +void Procedure(string commandText, Dictionary<string, string> param, DataTable dt)
+    /// <summary>
+    /// 執行StoreProcedure，並傳回DataTable。
+    /// </summary>
+    public void Procedure(string commandText, Dictionary<string, string> param, DataTable dt) {
+        try {
+            if (this._debug) {
+                HttpContext.Current.Response.Write(commandText + "<HR>\n");
+            }
+            this.exeSQL.Add(commandText);
+
+            using (SqlDataAdapter adapter = new SqlDataAdapter(this._cmd)) {
+                this._cmd.CommandType = CommandType.StoredProcedure;
+                this._cmd.CommandText = commandText;
+
+                if (this._isTran) {
+                    adapter.SelectCommand.Transaction = this._tran;
+                }
+
+                foreach (KeyValuePair<string, string> pair in param) {
+                    this._cmd.Parameters.AddWithValue("@" + pair.Key, pair.Value);
+                }
+                adapter.Fill(dt);
+            }
+        }
+        catch (Exception ex) {
+            throw new Exception(commandText, ex);
+        }
+    }
+    #endregion
+
+    #region 執行StoreProcedure，並傳回SqlDataReader +void Procedure(string commandText, Dictionary<string, string> param)
+    /// <summary>
+    /// 執行StoreProcedure，並傳回SqlDataReader。
+    /// </summary>
+    public SqlDataReader Procedure(string commandText, Dictionary<string, string> param) {
+        try {
+            if (this._debug) {
+                HttpContext.Current.Response.Write(commandText + "<HR>\n");
+            }
+            this.exeSQL.Add(commandText);
+
+            this._cmd.CommandType = CommandType.StoredProcedure;
+            this._cmd.CommandText = commandText;
+            foreach (KeyValuePair<string, string> pair in param) {
+                this._cmd.Parameters.AddWithValue("@" + pair.Key, pair.Value);
+            }
+
+            SqlDataReader dr = this._cmd.ExecuteReader();
+            return dr;
+        }
+        catch (Exception ex) {
+            throw new Exception(commandText, ex);
+        }
+    }
+    #endregion
 }

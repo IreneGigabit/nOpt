@@ -1,4 +1,4 @@
-<%@ Page Language="C#"%>
+﻿<%@ Page Language="C#"%>
 <%@ Import Namespace = "System.Data" %>
 <%@ Import Namespace = "System.Data.SqlClient" %>
 <%@ Import Namespace = "System.IO"%>
@@ -35,26 +35,26 @@
 		}
 	}
 
-	protected void WordOut() {
+    protected void WordOut() {
         string docFileName = "[評定]-" + ipoRpt.Seq + ".docx";
 
-		Dictionary<string, string> _tplFile = new Dictionary<string, string>(){
+        Dictionary<string, string> _tplFile = new Dictionary<string, string>(){
 			{"apply", Server.MapPath("~/ReportTemplate/申請書/302評定申請書DI1.docx")},
 			{"base", Server.MapPath("~/ReportTemplate/申請書/00基本資料表.docx")}
 		};
-		ipoRpt.CloneFromFile(_tplFile, true);
+        ipoRpt.CloneFromFile(_tplFile, true);
 
         DataTable opt = ipoRpt.Opt;
         if (opt.Rows.Count > 0) {
-			//標題區塊
-			ipoRpt.CopyBlock("b_title");
-			//註冊號
+            //標題區塊
+            ipoRpt.CopyBlock("b_title");
+            //註冊號
             ipoRpt.ReplaceBookmark("issue_no", opt.Rows[0]["issue_no"].ToString().Trim());
-			//事務所或申請人案件編號
-			ipoRpt.ReplaceBookmark("seq", ipoRpt.Seq + "(" + DateTime.Today.ToString("yyyyMMdd") + ")");
-			//商標或標章名稱
+            //事務所或申請人案件編號
+            ipoRpt.ReplaceBookmark("seq", ipoRpt.Seq + "(" + DateTime.Today.ToString("yyyyMMdd") + ")");
+            //商標或標章名稱
             ipoRpt.ReplaceBookmark("appl_name", opt.Rows[0]["appl_name"].ToString().ToXmlUnicode());
-			//商標或標章種類
+            //商標或標章種類
             ipoRpt.ReplaceBookmark("s_mark", opt.Rows[0]["s_marknm"].ToString());
             //主張圖樣違法部分
             if (opt.Rows[0]["cappl_name"].ToString() == "C")
@@ -71,49 +71,49 @@
                 ipoRpt.ReplaceBookmark("appl_name_type", "中文/英文/日文/圖形/其他");
 
             ipoRpt.ReplaceBookmark("remark3", opt.Rows[0]["remark3"].ToString());
-        
-			//申請人
-			using (DataTable dtAp = ipoRpt.Apcust) {
-				for (int i = 0; i < dtAp.Rows.Count; i++) {
-					ipoRpt.CopyBlock("b_apply");
+
+            //申請人
+            using (DataTable dtAp = ipoRpt.Apcust) {
+                for (int i = 0; i < dtAp.Rows.Count; i++) {
+                    ipoRpt.CopyBlock("b_apply");
                     ipoRpt.ReplaceBookmark("apply_type", ipoRpt.BaseRptAPTag);
                     ipoRpt.ReplaceBookmark("apply_num", (i + 1).ToString());
-					ipoRpt.ReplaceBookmark("ap_country", dtAp.Rows[i]["Country_name"].ToString());
-					ipoRpt.ReplaceBookmark("ap_cname_title", dtAp.Rows[i]["Title_cname"].ToString());
-					ipoRpt.ReplaceBookmark("ap_ename_title", dtAp.Rows[i]["Title_ename"].ToString());
-					ipoRpt.ReplaceBookmark("ap_cname", dtAp.Rows[i]["Cname_string"].ToString().ToXmlUnicode());
-					ipoRpt.ReplaceBookmark("ap_ename", dtAp.Rows[i]["Ename_string"].ToString().ToXmlUnicode(true), true);
-				}
-			}
+                    ipoRpt.ReplaceBookmark("ap_country", dtAp.Rows[i]["Country_name"].ToString());
+                    ipoRpt.ReplaceBookmark("ap_cname_title", dtAp.Rows[i]["Title_cname"].ToString());
+                    ipoRpt.ReplaceBookmark("ap_ename_title", dtAp.Rows[i]["Title_ename"].ToString());
+                    ipoRpt.ReplaceBookmark("ap_cname", dtAp.Rows[i]["Cname_string"].ToString().ToXmlUnicode());
+                    ipoRpt.ReplaceBookmark("ap_ename", dtAp.Rows[i]["Ename_string"].ToString().ToXmlUnicode(true), true);
+                }
+            }
             //代理人
-			ipoRpt.CopyBlock("b_agent");
-			using (DataTable dtAgt = ipoRpt.Agent) {
+            ipoRpt.CopyBlock("b_agent");
+            using (DataTable dtAgt = ipoRpt.Agent) {
                 ipoRpt.ReplaceBookmark("agent_type1", ipoRpt.BaseRptAPTag);
                 ipoRpt.ReplaceBookmark("agent_type2", ipoRpt.BaseRptAPTag);
-				ipoRpt.ReplaceBookmark("agt_name1", dtAgt.Rows[0]["agt_name1"].ToString());
-				ipoRpt.ReplaceBookmark("agt_name2", dtAgt.Rows[0]["agt_name2"].ToString());
-			}
+                ipoRpt.ReplaceBookmark("agt_name1", dtAgt.Rows[0]["agt_name1"].ToString());
+                ipoRpt.ReplaceBookmark("agt_name2", dtAgt.Rows[0]["agt_name2"].ToString());
+            }
             //關係人
             using (DataTable dtModAp = ipoRpt.TranListAP) {
                 for (int i = 0; i < dtModAp.Rows.Count; i++) {
                     ipoRpt.CopyBlock("b_apply");
                     ipoRpt.ReplaceBookmark("apply_type", ipoRpt.BaseRptModTag);
                     ipoRpt.ReplaceBookmark("apply_num", (i + 1).ToString());
-                    ipoRpt.ReplaceBookmark("ap_country", "",true);
+                    ipoRpt.ReplaceBookmark("ap_country", "", true);
                     ipoRpt.ReplaceBookmark("ap_cname_title", "中文名稱");
-                    ipoRpt.ReplaceBookmark("ap_ename_title", "",true);
+                    ipoRpt.ReplaceBookmark("ap_ename_title", "", true);
                     ipoRpt.ReplaceBookmark("ap_cname", dtModAp.Rows[i]["ncname1"].ToString().ToXmlUnicode());
                 }
             }
             //評定聲明
             ipoRpt.CopyBlock("b_pul");
-            string line1="",line2="";
+            string line1 = "", line2 = "";
             var pul1 = ipoRpt.TranListE.Where(a => a["mod_field"].ToString() == "mod_pul" && a["mod_type"].ToString().Trim().Left(1) != "I");
             foreach (var r in pul1) {
-                string mod_type="";
-                if(r["mod_type"].ToString().Trim()=="Tmark")mod_type="商標";
-                if(r["mod_type"].ToString().Trim()=="Lmark")mod_type="標章";
-                line1=string.Format("第{0}號「{1}」{2}",r["new_no"].ToString().Trim(),r["ncname1"].ToString().Trim(),mod_type);
+                string mod_type = "";
+                if (r["mod_type"].ToString().Trim() == "Tmark") mod_type = "商標";
+                if (r["mod_type"].ToString().Trim() == "Lmark") mod_type = "標章";
+                line1 = string.Format("第{0}號「{1}」{2}", r["new_no"].ToString().Trim(), r["ncname1"].ToString().Trim().ToUnicode(), mod_type);
             }
             var pul2 = ipoRpt.TranListE.Where(a => a["mod_field"].ToString() == "mod_pul" && a["mod_type"].ToString().Trim().Left(1) == "I");
             foreach (var r in pul2) {
@@ -137,7 +137,7 @@
                     ipoRpt.ReplaceBookmark("other_item1", "延展註冊");
                 else
                     ipoRpt.ReplaceBookmark("other_item1", "");
-                
+
                 if (mod_oitem1.Length > 1) {
                     string[] oitem = mod_oitem1[1].Split('|');
                     if (oitem.Length > 0 && oitem[0] != "")
@@ -157,7 +157,7 @@
                     mod_aprep += "\n註冊第" + r["new_no"].ToString() + "號";
             }
             ipoRpt.ReplaceBookmark("mod_aprep", mod_aprep);
-            
+
             ipoRpt.CopyBlock("b_content");
             using (DataTable dtTran = ipoRpt.Tran) {
                 string tran_ymd = "__年__月__日", O1 = "______", O2 = "______";
@@ -167,7 +167,7 @@
                     //註冊已滿3年之使用情形說明
                     ipoRpt.ReplaceBookmark("tran_remark4", dtTran.Rows[0]["tran_remark4"].ToString());
                     //事實及理由
-                    ipoRpt.ReplaceBookmark("tran_remark1", dtTran.Rows[0]["tran_remark1"].ToString());
+                    ipoRpt.ReplaceBookmark("tran_remark1", dtTran.Rows[0]["tran_remark1"].ToString().ToUnicode());
                     //相關聯案件
                     if (dtTran.Rows[0]["other_item"].ToString().Trim().IndexOf(";") > -1) {
                         string[] oitem = dtTran.Rows[0]["other_item"].ToString().Trim().Split(';');
@@ -190,19 +190,19 @@
                 ipoRpt.ReplaceBookmark("O2", O2);
             }
             //Response.End();
-			//繳費資訊
-			ipoRpt.CreateFees();
-            
-			//附送書件
+            //繳費資訊
+            ipoRpt.CreateFees();
+
+            //附送書件
             //ipoRpt.CreateAttach();
             List<AttachMapping> mapList = new List<AttachMapping>();
             string remark1 = ipoRpt.Opt.Rows[0]["remark1"].ToString();//文件勾選值
             mapList.Add(new AttachMapping { mapValue = "*", docType = "02" });//委任書(*表必備文件)
             mapList.Add(new AttachMapping { mapValue = "*", docType = "17" });//基本資料表(*表必備文件)
             ipoRpt.CreateAttach(mapList);
-            
+
             //具結
-			ipoRpt.CopyBlock("b_sign");
+            ipoRpt.CopyBlock("b_sign");
 
             //評定標的圖樣
             ipoRpt.CopyBlock("b_view1");
@@ -267,14 +267,14 @@
                     }
                 }
             }
-            
-			bool baseflag = true;//是否產生基本資料表
-			ipoRpt.CopyPageFoot("apply", baseflag);//申請書頁尾
-			if (baseflag) {
-				ipoRpt.AppendBaseData("base");//產生基本資料表
-			}
-		}
-		ipoRpt.Flush(docFileName);
-		ipoRpt.SetPrint();
-	}
+
+            bool baseflag = true;//是否產生基本資料表
+            ipoRpt.CopyPageFoot("apply", baseflag);//申請書頁尾
+            if (baseflag) {
+                ipoRpt.AppendBaseData("base");//產生基本資料表
+            }
+        }
+        ipoRpt.Flush(docFileName);
+        ipoRpt.SetPrint();
+    }
 </script>

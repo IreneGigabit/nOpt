@@ -235,7 +235,7 @@
             qBrMsg="區所案件";
 
         if (confirm("注意！！確定要以"+qBrMsg+"資料或補入資料覆蓋，並更新資料庫嗎？(按是，之前所輸入資料將會被清除)")) {
-		    $("select,textarea,input,span").unlock();
+            $("select,textarea,input,span").unlock();
 		    $("#btnSubmit").lock(!$("#chkTest").prop("checked"));
 		    //reg.action = "opte31_GetCase_act.aspx";
 		    //reg.target = "ActFrame";

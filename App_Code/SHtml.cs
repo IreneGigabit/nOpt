@@ -11,16 +11,16 @@ using System.Text.RegularExpressions;
 /// </summary>
 public static class SHtml
 {
-    #region 產生Option字串 +static string Option(DBHelper)
-    /// <summary>
-    /// 產生Option字串(內建「請選擇」)
-    /// </summary> 
-    /// <param name="conn">DBHelper物件</param>
-    /// <param name="sql">SQL語法</param>
-    /// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
-    /// <param name="textFormat">option的文字格式用{}包住欄位,ex:{scode}_{sc_name}</param>
-    /// <returns></returns>
-    public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat) {
+	#region 產生Option字串 +static string Option(DBHelper)
+	/// <summary>
+	/// 產生Option字串(內建「請選擇」)
+	/// </summary> 
+	/// <param name="conn">DBHelper物件</param>
+	/// <param name="sql">SQL語法</param>
+	/// <param name="valueFormat">option的value格式用{}包住欄位,ex:{scode}</param>
+	/// <param name="textFormat">option的文字格式用{}包住欄位,ex:{scode}_{sc_name}</param>
+	/// <returns></returns>
+	public static string Option(DBHelper conn, string sql, string valueFormat, string textFormat) {
 		return Option(conn, sql, valueFormat, textFormat, "", true);
 	}
 
